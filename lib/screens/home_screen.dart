@@ -5,9 +5,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("findenigg");
     return Scaffold(
       body: Center(
-        child: Text("Frederic home screen"),
+        child: Text(
+          "Frederic home screen",
+          style: TextStyle(color: Colors.red),
+        ),
       ),
     );
   }

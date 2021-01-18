@@ -9,9 +9,14 @@ class RouteGenerator {
 
     if (path == "/") {
       return MaterialPageRoute(builder: (context) => LoginScreen());
-    } else if (path == "/main") {
+    } else if (path == '/home') {
       return MaterialPageRoute(builder: (context) => HomeScreen());
     }
-    return MaterialPageRoute(builder: (context) => Scaffold());
+    return MaterialPageRoute(
+        builder: (context) => Scaffold(
+              body: Center(
+                child: Text("no route"),
+              ),
+            ));
   }
 }
