@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/authentication_service.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +13,12 @@ class FredericApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance),
+        Provider<FredericBackend>(
+          create: (_) => FredericBackend(FirebaseAuth.instance),
         ),
         StreamProvider(
           create: (context) =>
-              context.read<AuthenticationService>().authStateChanges,
+              context.read<FredericBackend>().authService.authStateChanges,
         )
       ],
       child: MaterialApp(

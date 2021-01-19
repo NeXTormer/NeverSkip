@@ -13,7 +13,12 @@ class AuthenticationService {
           email: email, password: password);
       return null;
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      if (e.code == 'user-not-found') {
+        return 'User not found';
+      } else if (e.code == 'wrong-password') {
+        return 'Wrong password';
+      }
+      return 'Other error';
     }
   }
 

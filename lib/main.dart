@@ -1,8 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/frederic_app.dart';
-import 'package:frederic/routing/route_generator.dart';
-import 'package:frederic/screens/screens.dart';
 
 class Frederic extends StatelessWidget {
   const Frederic({Key key}) : super(key: key);

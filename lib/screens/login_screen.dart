@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication_service.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/util/palette.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -146,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.white,
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          context.read<AuthenticationService>().signIn(
+                          context.read<FredericBackend>().authService.signIn(
                               emailController.text.trim(),
                               passwordController.text.trim());
                         }
