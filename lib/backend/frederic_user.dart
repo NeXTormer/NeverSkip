@@ -8,6 +8,7 @@ class FredericUser {
   String _username;
   String _profileImage;
   String _bannerImage;
+  String _currentWorkoutID;
   DateTime _birthday;
 
   String get uid => _uid;
@@ -15,6 +16,7 @@ class FredericUser {
   String get username => _username;
   String get profileImage => _profileImage;
   String get bannerImage => _bannerImage;
+  String get currentWorkoutID => _currentWorkoutID;
   DateTime get birthday => _birthday;
 
   int get age {
@@ -36,6 +38,12 @@ class FredericUser {
     _profileImage = userEntry.data()['profileimage'];
     _bannerImage = userEntry.data()['bannerimage'];
     _birthday = userEntry.data()['birthday'].toDate();
+    _currentWorkoutID = userEntry.data()['currentworkout'];
     return this;
+  }
+
+  @override
+  String toString() {
+    return 'FredericUser[name: $username, email: $email, birthday: $birthday, currentworkout: $currentWorkoutID, uid: $uid]';
   }
 }

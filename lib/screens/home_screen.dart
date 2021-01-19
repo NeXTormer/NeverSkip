@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_activity.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/frederic_user.dart';
 import 'package:provider/provider.dart';
 
@@ -8,14 +10,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FredericBackend backend = context.watch<FredericBackend>();
+    test(backend);
+
     User user = context.watch<User>();
     FredericUser fUser = FredericUser(user);
-    print("findenigg");
     return Scaffold(
       backgroundColor: Colors.cyan,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             "Username: ${fUser.username}",
@@ -30,5 +33,10 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> test(FredericBackend backend) async {
+    List<FredericActivity> a = await backend.getUserActivities();
+    print(a[0].toString());
   }
 }

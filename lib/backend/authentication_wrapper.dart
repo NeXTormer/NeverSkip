@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:provider/provider.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
@@ -15,6 +16,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final User firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
+      context.read<FredericBackend>().reloadUserData();
       return homePage;
     } else {
       return loginPage;
