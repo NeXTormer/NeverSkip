@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/frederic_app.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/screens.dart';
 
@@ -17,23 +18,10 @@ class Frederic extends StatelessWidget {
             return _errorScreen(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return _startApp();
+            return FredericApp();
           }
           return _loadingScreen();
         });
-  }
-
-  Widget _startApp() {
-    return MaterialApp(
-      title: 'Frederic',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.red[400],
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      onGenerateRoute: RouteGenerator.generateRoute,
-      home: LoginScreen(),
-    );
   }
 
   Widget _loadingScreen() {

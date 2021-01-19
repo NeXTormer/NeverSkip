@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication_service.dart';
 import 'package:frederic/util/palette.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -143,9 +145,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(8)),
                       color: Colors.white,
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {}
-
-                        //Navigator.of(context).pushNamed('/home');
+                        if (_formKey.currentState.validate()) {
+                          context.read<AuthenticationService>().signIn(
+                              emailController.text.trim(),
+                              passwordController.text.trim());
+                        }
                       },
                       child: Text("Log in",
                           style: GoogleFonts.varelaRound(
