@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/routing/route_generator.dart';
@@ -11,6 +12,7 @@ class FredericApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MultiProvider(
       providers: [
         Provider<FredericBackend>(

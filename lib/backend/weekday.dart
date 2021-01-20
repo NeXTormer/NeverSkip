@@ -1,0 +1,11 @@
+enum Weekday {
+  EVERYDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY,
+  NEVER
+}

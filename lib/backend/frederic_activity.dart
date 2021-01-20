@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FredericActivity {
-  FredericActivity(
+  const FredericActivity(
       {@required this.id,
       @required this.name,
       @required this.description,
