@@ -13,7 +13,7 @@ class FredericBackend {
   FredericUser user;
 
   AuthenticationService get authService => _authenticationService;
-
+/*
   /// ==========================================================================
   /// Gets all global activities
   ///
@@ -62,6 +62,7 @@ class FredericBackend {
     }
     return activities;
   }
+  */
 
   /// ==========================================================================
   /// updates the local userdata with new data from firebase

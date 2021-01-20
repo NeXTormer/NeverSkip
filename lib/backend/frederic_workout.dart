@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/frederic_workout_activity.dart';
+import 'package:frederic/backend/frederic_activity.dart';
 
 class FredericWorkout {
   FredericWorkout(
@@ -9,7 +9,7 @@ class FredericWorkout {
       @required this.owner,
       @required this.ownerName});
 
-  List<FredericWorkoutActivity> activities;
+  List<FredericActivity> activities;
   String description;
   String image;
   String owner;

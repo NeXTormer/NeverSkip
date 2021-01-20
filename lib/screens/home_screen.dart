@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Future<void> test(FredericBackend backend) async {
-    List<FredericActivity> a = await backend.getUserActivities();
-    print(a[0].toString());
+    //List<FredericActivity> a = await backend.getUserActivities();
+    //print(a[0].toString());
   }
 }
