@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_set.dart';
 
 ///
@@ -64,8 +63,6 @@ class FredericActivity {
   Future<void> loadData() async {
     if (activityID == null) return false;
 
-    //load Activity
-
     DocumentReference activityDocument =
         FirebaseFirestore.instance.collection('activities').doc(activityID);
 
@@ -94,14 +91,28 @@ class FredericActivity {
 
     for (int i = 0; i < progressSnapshot.docs.length; i++) {
       var map = progressSnapshot.docs[0];
-      _sets.add(FredericSet(reps: map['reps'], weight: map['weight']));
+      _sets.add(FredericSet(
+          reps: map['reps'],
+          weight: map['weight'],
+          timestamp: map['timestamp']));
     }
   }
 
   void insertDataBulk() {}
 
   @override
+  bool operator ==(Object other) {
+    if (other is FredericActivity) return this.activityID == other.activityID;
+    return false;
+  }
+
+  @override
   String toString() {
-    return 'FredericActivity[name: $name, description: $description, owner: $owner]';
+    String s =
+        'FredericActivity[name: $name, description: $description, weekday: $_weekday, order: $_order, owner: $owner]';
+    for (int i = 0; i < _sets.length; i++) {
+      s += '\n ----> ${_sets[i].toString()}';
+    }
+    return s;
   }
 }

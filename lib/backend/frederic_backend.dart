@@ -14,7 +14,7 @@ class FredericBackend {
 
   AuthenticationService get authService => _authenticationService;
 /*
-  /// ==========================================================================
+  // ===========================================================================
   /// Gets all global activities
   ///
   Future<List<FredericActivity>> getPublicActivities() async {
@@ -38,7 +38,7 @@ class FredericBackend {
     return activities;
   }
 
-  /// ==========================================================================
+  // ===========================================================================
   /// Gets all activities of the currently logged in user
   ///
   Future<List<FredericActivity>> getUserActivities() async {
@@ -64,7 +64,7 @@ class FredericBackend {
   }
   */
 
-  /// ==========================================================================
+  // ===========================================================================
   /// updates the local userdata with new data from firebase
   ///
   void reloadUserData() {
