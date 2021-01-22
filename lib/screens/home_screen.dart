@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_activity.dart';
 import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/frederic_user.dart';
+import 'package:frederic/backend/frederic_workout.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,6 +16,12 @@ class HomeScreen extends StatelessWidget {
 
     User user = context.watch<User>();
     FredericUser fUser = FredericUser(user);
+
+    FredericWorkout workout = FredericWorkout('wCiDw2K3mV30ro6HGlfj');
+    workout.loadData().then((value) {
+      print(workout.toString());
+    });
+
     return Scaffold(
       backgroundColor: Colors.cyan,
       body: Column(

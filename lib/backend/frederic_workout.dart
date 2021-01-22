@@ -12,8 +12,8 @@ class FredericWorkout {
   String owner;
   String ownerName;
 
-  Future<void> loadData() async {
-    if (this.workoutID == null) return;
+  Future<String> loadData() async {
+    if (this.workoutID == null) return 'no-workout-id';
 
     DocumentReference workoutsDocument =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
@@ -25,15 +25,21 @@ class FredericWorkout {
     owner = documentSnapshot['owner'];
     ownerName = documentSnapshot['ownerName'];
 
-    List<Map<String, dynamic>> wa = documentSnapshot['activities'];
+    QuerySnapshot activitiesSnapshot =
+        await workoutsDocument.collection('activities').get();
 
-    for (int i = 0; i < 8; i++) {
-      activities.activities[i] = List<FredericActivity>();
+    activities = FredericWorkoutActivities();
+
+    for (int i = 0; i < activitiesSnapshot.docs.length; i++) {
+      int weekday = activitiesSnapshot.docs[i]['weekday'];
+      if (weekday > 8) return 'wrong-weekday-in-db-($weekday)';
+      FredericActivity a =
+          FredericActivity(activitiesSnapshot.docs[i]['activity']);
+      activities.activities[weekday].add(a);
+      await a.loadData();
     }
 
-    wa.forEach((element) {
-      activities.activities[element['weekday']].add(element['activity']);
-    });
+    return 'success';
   }
 
   void insertDataBulk() {}
@@ -58,10 +64,50 @@ class FredericWorkout {
     _removeActivityDB(activity, day);
   }
 
-  Future<void> _addActivityDB(FredericActivity activity, Weekday day) async {}
+  void moveActivityToOtherDay(FredericActivity activity, Weekday to) async {
+    int fromWeekday = activity.weekday;
+    int toWeekday = to.index;
+
+    CollectionReference collectionReference = FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(workoutID)
+        .collection('activities');
+
+    QuerySnapshot snapshot = await collectionReference
+        .where('activity', isEqualTo: activity.activityID)
+        .where('weekday', isEqualTo: fromWeekday)
+        .get();
+
+    if (snapshot.docs.length != 1) return;
+
+    String docID = snapshot.docs[0].id;
+    collectionReference.doc(docID).update({'weekday': toWeekday});
+  }
+
+  void _addActivityDB(FredericActivity activity, Weekday day) {
+    DocumentReference workoutReference =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+
+    workoutReference
+        .collection('activities')
+        .add({'activity': activity.activityID, 'weekday': day.index});
+  }
+
   Future<void> _removeActivityDB(FredericActivity activity, Weekday day) async {
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('workouts').doc('');
+    CollectionReference collectionReference = FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(workoutID)
+        .collection('activities');
+
+    QuerySnapshot snapshot = await collectionReference
+        .where('activity', isEqualTo: activity.activityID)
+        .where('weekday', isEqualTo: day.index)
+        .get();
+
+    if (snapshot.docs.length != 1) return;
+
+    String docID = snapshot.docs[0].id;
+    collectionReference.doc(docID).delete();
   }
 
   @override
@@ -69,9 +115,11 @@ class FredericWorkout {
     String s =
         'FredericWorkout[name: $name, description: $description, ID: $workoutID, image: $image, owner: $owner, ownerName: $ownerName]';
     for (int i = 0; i < 8; i++) {
-      s += '\n--> ${Weekday.values[i]}\n';
+      if (activities.activities[i].isNotEmpty) {
+        s += '\n╚> ${Weekday.values[i]}\n';
+      }
       activities.activities[i].forEach((element) {
-        s += element.toString() + '\n';
+        s += '╚=> ' + element.toString() + '\n';
       });
     }
 
@@ -80,6 +128,12 @@ class FredericWorkout {
 }
 
 class FredericWorkoutActivities {
+  FredericWorkoutActivities() {
+    for (int i = 0; i < 8; i++) {
+      activities[i] = List<FredericActivity>();
+    }
+  }
+
   List<List<FredericActivity>> activities = List<List<FredericActivity>>(8);
 
   List<FredericActivity> get everyday => activities[0];

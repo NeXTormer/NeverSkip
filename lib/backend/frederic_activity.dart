@@ -90,11 +90,11 @@ class FredericActivity {
     _sets = List<FredericSet>();
 
     for (int i = 0; i < progressSnapshot.docs.length; i++) {
-      var map = progressSnapshot.docs[0];
+      var map = progressSnapshot.docs[i];
+      Timestamp ts = map['timestamp'];
+
       _sets.add(FredericSet(
-          reps: map['reps'],
-          weight: map['weight'],
-          timestamp: map['timestamp']));
+          reps: map['reps'], weight: map['weight'], timestamp: ts.toDate()));
     }
   }
 
@@ -110,8 +110,10 @@ class FredericActivity {
   String toString() {
     String s =
         'FredericActivity[name: $name, description: $description, weekday: $_weekday, order: $_order, owner: $owner]';
+    if (!hasProgress) return s;
+
     for (int i = 0; i < _sets.length; i++) {
-      s += '\n ----> ${_sets[i].toString()}';
+      s += '\n ╚=> ${_sets[i].toString()}';
     }
     return s;
   }
