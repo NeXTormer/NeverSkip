@@ -28,12 +28,20 @@ dependencies:
   firebase_analytics: ^7.0.1
   firebase_auth: ^0.20.0+1
   firebase_core: ^0.7.0
+  flutter_native_splash: ^0.2.7
   google_fonts: ^1.1.1
   provider: ^4.3.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_native_splash:
+  color: "#F56C64"  
+  image: assets/splash.png
+  android_disable_fullscreen: true
+
+  #image: assets/images/splash.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

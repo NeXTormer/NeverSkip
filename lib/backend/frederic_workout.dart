@@ -48,19 +48,21 @@ class FredericWorkout {
     }
     list.add(activity);
 
-    _addActivityToDB(activity, day);
+    _addActivityDB(activity, day);
     return 'success';
   }
 
   void removeActivity(FredericActivity activity, Weekday day) {
     List<FredericActivity> list = activities.activities[day.index];
     list.remove(activity);
-    _removeActivityFromDB(activity, day);
+    _removeActivityDB(activity, day);
   }
 
-  Future<void> _addActivityToDB(FredericActivity activity, Weekday day) async {}
-  Future<void> _removeActivityFromDB(
-      FredericActivity activity, Weekday day) async {}
+  Future<void> _addActivityDB(FredericActivity activity, Weekday day) async {}
+  Future<void> _removeActivityDB(FredericActivity activity, Weekday day) async {
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('workouts').doc('');
+  }
 
   @override
   String toString() {
