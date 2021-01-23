@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Username: ${fUser.username}",
+            "Username: ${fUser.name}",
             style: TextStyle(color: Colors.red),
           ),
           MaterialButton(

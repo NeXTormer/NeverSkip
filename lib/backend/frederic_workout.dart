@@ -7,6 +7,8 @@ import 'package:frederic/backend/frederic_activity.dart';
 /// A list of activities can either be accessed by [activities.<weekday>] or by
 /// [activities.activities[<weekday_id>]
 ///
+/// All setters perform basic value checks, e.g. if an empty string is passed in,
+/// it is ignored
 ///
 class FredericWorkout {
   FredericWorkout(this.workoutID);
@@ -26,23 +28,29 @@ class FredericWorkout {
   String get ownerName => _ownerName;
 
   set name(String value) {
-    FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'name': value});
-    _name = value;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'name': value});
+      _name = value;
+    }
   }
 
   set description(String value) {
-    FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'description': value});
-    _description = value;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'description': value});
+      _description = value;
+    }
   }
 
   set image(String value) {
-    FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'image': value});
-    _image = value;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'image': value});
+      _image = value;
+    }
   }
 
   ///
   /// Loads data from the DB corresponding to the [workoutID]
-  /// returns a future when done
+  /// returns a future string when done
   ///
   Future<String> loadData() async {
     if (this.workoutID == null) return 'no-workout-id';
@@ -64,6 +72,7 @@ class FredericWorkout {
       int weekday = activitiesSnapshot.docs[i]['weekday'];
       if (weekday > 8) return 'wrong-weekday-in-db-($weekday)';
       FredericActivity a = FredericActivity(activitiesSnapshot.docs[i]['activity']);
+      a.weekday = weekday;
       _activities.activities[weekday].add(a);
       await a.loadData();
     }

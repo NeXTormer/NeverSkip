@@ -23,6 +23,9 @@ import 'package:frederic/backend/frederic_set.dart';
 ///
 /// If there is progress from the user the [hasProgress] property is true.
 ///
+/// All setters perform basic value checks, e.g. if an empty string is passed in,
+/// it is ignored
+///
 class FredericActivity {
   FredericActivity(this.activityID);
 
@@ -41,7 +44,6 @@ class FredericActivity {
   String get image => _image;
   String get owner => _owner;
   int get weekday => _weekday;
-  int get order => _order;
   List<FredericSet> get sets => _sets;
 
   bool get isSingleActivity {
@@ -57,22 +59,34 @@ class FredericActivity {
   }
 
   set name(String value) {
-    FirebaseFirestore.instance.collection('activities').doc(activityID).update({'name': value});
-    _name = value;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'name': value});
+      _name = value;
+    }
   }
 
   set description(String value) {
-    FirebaseFirestore.instance.collection('activities').doc(activityID).update({'description': value});
-    _description = value;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'description': value});
+      _description = value;
+    }
   }
 
   set image(String value) {
-    FirebaseFirestore.instance.collection('activities').doc(activityID).update({'image': value});
-    _image = value;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'image': value});
+      _image = value;
+    }
   }
 
-  set order(int value) {}
-  set sets(List<FredericSet> value) {}
+  ///
+  /// Does not update DB
+  ///
+  set weekday(int value) {
+    if (value >= 0 && value <= 7) {
+      _weekday = value;
+    }
+  }
 
   ///
   /// Loads data from the DB corresponding to the [activityID]
@@ -109,8 +123,34 @@ class FredericActivity {
       var map = progressSnapshot.docs[i];
       Timestamp ts = map['timestamp'];
 
-      _sets.add(FredericSet(reps: map['reps'], weight: map['weight'], timestamp: ts.toDate()));
+      _sets.add(FredericSet(map.id, map['reps'], map['weight'], ts.toDate()));
     }
+  }
+
+  ///
+  /// Adds the [reps] and [weight] passed to a new set, with the current time
+  /// as the [timestamp]
+  /// The set is added to the list in this Activity and to the DB
+  ///
+  void addProgress(int reps, int weight) async {
+    CollectionReference setsCollection = FirebaseFirestore.instance.collection('sets');
+
+    DocumentReference docRef = await setsCollection.add({
+      'reps': reps,
+      'weight': weight,
+      'owner': FirebaseAuth.instance.currentUser.uid,
+      'timestamp': Timestamp.now(),
+      'activity': activityID
+    });
+    _sets.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
+  }
+
+  ///
+  /// Removes the passed [fset] from the list in this Activity and from the DB
+  ///
+  void removeProgress(FredericSet fset) {
+    _sets.remove(fset);
+    FirebaseFirestore.instance.collection('sets').doc(fset.setID).delete();
   }
 
   ///

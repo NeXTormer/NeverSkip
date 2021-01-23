@@ -19,8 +19,7 @@ class FredericApp extends StatelessWidget {
           create: (_) => FredericBackend(FirebaseAuth.instance),
         ),
         StreamProvider(
-          create: (context) =>
-              context.read<FredericBackend>().authService.authStateChanges,
+          create: (context) => context.read<FredericBackend>().authService.authStateChanges,
         )
       ],
       child: MaterialApp(

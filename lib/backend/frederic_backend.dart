@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frederic/backend/frederic_workout.dart';
 import 'backend.dart';
 
 class FredericBackend {
-  FredericBackend(this._firebaseAuth)
-      : _authenticationService = AuthenticationService(_firebaseAuth);
+  FredericBackend(this._firebaseAuth) : _authenticationService = AuthenticationService(_firebaseAuth);
 
   final FirebaseAuth _firebaseAuth;
   final AuthenticationService _authenticationService;
@@ -67,8 +64,9 @@ class FredericBackend {
   // ===========================================================================
   /// updates the local userdata with new data from firebase
   ///
-  void reloadUserData() {
+  Future<FredericUser> reloadUserData() {
     user = FredericUser(_firebaseAuth.currentUser);
+    return user.loadData();
   }
 
   //Future<FredericWorkout> getCurrentWorkout() async {}
