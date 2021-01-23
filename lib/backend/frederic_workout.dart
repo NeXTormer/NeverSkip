@@ -1,55 +1,87 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/frederic_activity.dart';
 
+///
+/// Contains all the data for a workout
+///
+/// A list of activities can either be accessed by [activities.<weekday>] or by
+/// [activities.activities[<weekday_id>]
+///
+///
 class FredericWorkout {
   FredericWorkout(this.workoutID);
 
-  FredericWorkoutActivities activities;
-  String workoutID;
-  String name;
-  String description;
-  String image;
-  String owner;
-  String ownerName;
+  final workoutID;
+  FredericWorkoutActivities _activities;
+  String _name;
+  String _description;
+  String _image;
+  String _owner;
+  String _ownerName;
 
+  String get name => _name;
+  String get description => _description;
+  String get image => _image;
+  String get owner => _owner;
+  String get ownerName => _ownerName;
+
+  set name(String value) {
+    FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'name': value});
+    _name = value;
+  }
+
+  set description(String value) {
+    FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'description': value});
+    _description = value;
+  }
+
+  set image(String value) {
+    FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'image': value});
+    _image = value;
+  }
+
+  ///
+  /// Loads data from the DB corresponding to the [workoutID]
+  /// returns a future when done
+  ///
   Future<String> loadData() async {
     if (this.workoutID == null) return 'no-workout-id';
 
-    DocumentReference workoutsDocument =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
     DocumentSnapshot documentSnapshot = await workoutsDocument.get();
-    name = documentSnapshot['name'];
-    description = documentSnapshot['description'];
-    image = documentSnapshot['image'];
-    owner = documentSnapshot['owner'];
-    ownerName = documentSnapshot['ownerName'];
+    _name = documentSnapshot['name'];
+    _description = documentSnapshot['description'];
+    _image = documentSnapshot['image'];
+    _owner = documentSnapshot['owner'];
+    _ownerName = documentSnapshot['ownerName'];
 
-    QuerySnapshot activitiesSnapshot =
-        await workoutsDocument.collection('activities').get();
+    QuerySnapshot activitiesSnapshot = await workoutsDocument.collection('activities').get();
 
-    activities = FredericWorkoutActivities();
+    _activities = FredericWorkoutActivities();
 
     for (int i = 0; i < activitiesSnapshot.docs.length; i++) {
       int weekday = activitiesSnapshot.docs[i]['weekday'];
       if (weekday > 8) return 'wrong-weekday-in-db-($weekday)';
-      FredericActivity a =
-          FredericActivity(activitiesSnapshot.docs[i]['activity']);
-      activities.activities[weekday].add(a);
+      FredericActivity a = FredericActivity(activitiesSnapshot.docs[i]['activity']);
+      _activities.activities[weekday].add(a);
       await a.loadData();
     }
 
     return 'success';
   }
 
-  void insertDataBulk() {}
-
+  ///
+  /// Adds an activity to the workout on the specified weekday
+  /// Use this to add an activity instead of using activities.add() because
+  /// this also adds it to the DB
+  ///
   String addActivity(FredericActivity activity, Weekday day) {
-    List<FredericActivity> list = activities.activities[day.index];
+    List<FredericActivity> list = _activities.activities[day.index];
     if (list.contains(activity)) {
       return 'activity-already-in-list';
     }
-    if (activities.everyday.contains(activity)) {
+    if (_activities.everyday.contains(activity)) {
       return 'activity-already-in-everyday-list';
     }
     list.add(activity);
@@ -58,20 +90,26 @@ class FredericWorkout {
     return 'success';
   }
 
+  ///
+  /// Removes an activity from the workout on the specified weekday
+  /// Use this to remove an activity instead of using activities.remove() because
+  /// this also removes it on the DB
+  ///
   void removeActivity(FredericActivity activity, Weekday day) {
-    List<FredericActivity> list = activities.activities[day.index];
+    List<FredericActivity> list = _activities.activities[day.index];
     list.remove(activity);
     _removeActivityDB(activity, day);
   }
 
+  ///
+  /// Moves the activity to another day in the workout plan
+  ///
   void moveActivityToOtherDay(FredericActivity activity, Weekday to) async {
     int fromWeekday = activity.weekday;
     int toWeekday = to.index;
 
-    CollectionReference collectionReference = FirebaseFirestore.instance
-        .collection('workouts')
-        .doc(workoutID)
-        .collection('activities');
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID).collection('activities');
 
     QuerySnapshot snapshot = await collectionReference
         .where('activity', isEqualTo: activity.activityID)
@@ -85,19 +123,14 @@ class FredericWorkout {
   }
 
   void _addActivityDB(FredericActivity activity, Weekday day) {
-    DocumentReference workoutReference =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    DocumentReference workoutReference = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
-    workoutReference
-        .collection('activities')
-        .add({'activity': activity.activityID, 'weekday': day.index});
+    workoutReference.collection('activities').add({'activity': activity.activityID, 'weekday': day.index});
   }
 
   Future<void> _removeActivityDB(FredericActivity activity, Weekday day) async {
-    CollectionReference collectionReference = FirebaseFirestore.instance
-        .collection('workouts')
-        .doc(workoutID)
-        .collection('activities');
+    CollectionReference collectionReference =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID).collection('activities');
 
     QuerySnapshot snapshot = await collectionReference
         .where('activity', isEqualTo: activity.activityID)
@@ -113,12 +146,12 @@ class FredericWorkout {
   @override
   String toString() {
     String s =
-        'FredericWorkout[name: $name, description: $description, ID: $workoutID, image: $image, owner: $owner, ownerName: $ownerName]';
+        'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownerName: $_ownerName]';
     for (int i = 0; i < 8; i++) {
-      if (activities.activities[i].isNotEmpty) {
+      if (_activities.activities[i].isNotEmpty) {
         s += '\n╚> ${Weekday.values[i]}\n';
       }
-      activities.activities[i].forEach((element) {
+      _activities.activities[i].forEach((element) {
         s += '╚=> ' + element.toString() + '\n';
       });
     }
@@ -145,7 +178,7 @@ class FredericWorkoutActivities {
   List<FredericActivity> get saturday => activities[6];
   List<FredericActivity> get sunday => activities[7];
 
-  // ===========================================================================
+  ///
   /// the count of all activities in this workout
   ///
   int get count {
@@ -160,13 +193,4 @@ class FredericWorkoutActivities {
   }
 }
 
-enum Weekday {
-  Everyday,
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday
-}
+enum Weekday { Everyday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }

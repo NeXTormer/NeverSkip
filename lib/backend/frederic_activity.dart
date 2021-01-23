@@ -3,22 +3,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/frederic_set.dart';
 
 ///
-/// Should only be created/constructed by 'FredericBackend'!
+/// Contains all the data for an Activity ([name], [description], [image], [owner]), the
+/// [sets] the user has done (if there are any), and the [weekday] and [order] of the
+/// activity in a workout (if it is in a workout).
 ///
-/// Activities with the same ID, but a different weekday can exist
+/// Calling the constructor does not load any data, use [loadData()] to load the data.
 ///
-/// The Weekday is stored as an int, with Monday being 1, ...
+/// Activities with the same [ID], but a different [weekday] can exist
+///
+/// The Weekday is stored as an int, with Monday being 1, Tuesday being 2, ...
 /// 0 means everyday
 ///
 /// Changing a property of this class also changes it on the Database
 ///
-/// Users can not view the 'FredericActivity' from other users, therefore
-/// the 'FredericActivity' of a Workout contains the current users progress
-/// and the methods to modify the progress.
+/// All actions performed on an FredericActivity are relative to the current logged in
+/// user
 ///
-/// If the activity is not part of a workout, the 'isSingleActivity' property is true.
+/// If the activity is not part of a workout, the [isSingleActivity] property is true.
 ///
-/// If there is no logged progress form the user the 'hasProgress' property is false.
+/// If there is progress from the user the [hasProgress] property is true.
 ///
 class FredericActivity {
   FredericActivity(this.activityID);
@@ -29,7 +32,7 @@ class FredericActivity {
   String _description;
   String _image;
   String _owner;
-  int _weekday; //maybe don't store weekday in here? we'll see when implementing workout
+  int _weekday;
   int _order;
   List<FredericSet> _sets;
 
@@ -53,18 +56,32 @@ class FredericActivity {
     return _owner == 'global';
   }
 
-  set name(String value) {}
-  set description(String value) {}
-  set image(String value) {}
-  set weekday(int value) {}
+  set name(String value) {
+    FirebaseFirestore.instance.collection('activities').doc(activityID).update({'name': value});
+    _name = value;
+  }
+
+  set description(String value) {
+    FirebaseFirestore.instance.collection('activities').doc(activityID).update({'description': value});
+    _description = value;
+  }
+
+  set image(String value) {
+    FirebaseFirestore.instance.collection('activities').doc(activityID).update({'image': value});
+    _image = value;
+  }
+
   set order(int value) {}
   set sets(List<FredericSet> value) {}
 
+  ///
+  /// Loads data from the DB corresponding to the [activityID]
+  /// returns a future when done
+  ///
   Future<void> loadData() async {
     if (activityID == null) return false;
 
-    DocumentReference activityDocument =
-        FirebaseFirestore.instance.collection('activities').doc(activityID);
+    DocumentReference activityDocument = FirebaseFirestore.instance.collection('activities').doc(activityID);
 
     DocumentSnapshot snapshot = await activityDocument.get();
 
@@ -75,11 +92,10 @@ class FredericActivity {
 
     String userid = FirebaseAuth.instance.currentUser.uid;
 
-    CollectionReference activitiyProgressCollection =
-        FirebaseFirestore.instance.collection('sets');
+    CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
 
     QuerySnapshot progressSnapshot = await activitiyProgressCollection
-        .where('user', isEqualTo: userid)
+        .where('owner', isEqualTo: userid)
         .where('activity', isEqualTo: activityID)
         .orderBy('timestamp', descending: true)
         .get();
@@ -93,12 +109,35 @@ class FredericActivity {
       var map = progressSnapshot.docs[i];
       Timestamp ts = map['timestamp'];
 
-      _sets.add(FredericSet(
-          reps: map['reps'], weight: map['weight'], timestamp: ts.toDate()));
+      _sets.add(FredericSet(reps: map['reps'], weight: map['weight'], timestamp: ts.toDate()));
     }
   }
 
-  void insertDataBulk() {}
+  ///
+  /// Copies one activity (can be global, from another user, or from logged in user) to
+  /// the users activities
+  ///
+  static Future<FredericActivity> copyActivity(FredericActivity activity) {
+    return newActivity(activity.name, activity.description, activity.image);
+  }
+
+  ///
+  /// Creates a new activity using the passed [name], [description], and [image] in the
+  /// DB and returns it as a future when finished.
+  /// The [owner] is the current user
+  ///
+  static Future<FredericActivity> newActivity(String name, String description, String image) async {
+    CollectionReference activities = FirebaseFirestore.instance.collection('activities');
+    DocumentReference newActivity = await activities.add(
+        {'name': name, 'description': description, 'image': image, 'owner': FirebaseAuth.instance.currentUser.uid});
+
+    FredericActivity a = new FredericActivity(newActivity.id);
+    a._description = description;
+    a._name = name;
+    a._image = image;
+    a._owner = FirebaseAuth.instance.currentUser.uid;
+    return a;
+  }
 
   @override
   bool operator ==(Object other) {
