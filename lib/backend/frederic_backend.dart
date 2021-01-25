@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'backend.dart';
 
@@ -10,16 +11,18 @@ class FredericBackend {
   FredericUser user;
 
   AuthenticationService get authService => _authenticationService;
-/*
-  // ===========================================================================
-  /// Gets all global activities
-  ///
-  Future<List<FredericActivity>> getPublicActivities() async {
-    CollectionReference activitiesCollection =
-        FirebaseFirestore.instance.collection('activities');
 
-    QuerySnapshot snapshot =
-        await activitiesCollection.where('owner', isEqualTo: 'global').get();
+  // ===========================================================================
+  /// Gets all global activities and the activities of the current user
+  ///
+  /*
+  Stream<List<FredericActivity>> getAllActivities([bool loadSets = false]) {
+    CollectionReference activitiesCollection = FirebaseFirestore.instance.collection('activities');
+
+    Stream<QuerySnapshot> globalStream = activitiesCollection
+        .where('owner', isEqualTo: 'global')
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .snapshots();
 
     List<FredericActivity> activities = List<FredericActivity>();
 

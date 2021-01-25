@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/frederic_activity.dart';
 
@@ -5,27 +7,35 @@ import 'package:frederic/backend/frederic_activity.dart';
 /// Contains all the data for a workout
 ///
 /// A list of activities can either be accessed by [activities.<weekday>] or by
-/// [activities.activities[<weekday_id>]
+/// [activities.activities(<weekday_id>)]
 ///
 /// All setters perform basic value checks, e.g. if an empty string is passed in,
 /// it is ignored
+///
+/// TODO: add possibility to only load the workout without the activities, to improve
+/// performance when viewing a lot of workouts in a list
 ///
 class FredericWorkout {
   FredericWorkout(this.workoutID);
 
   final workoutID;
   FredericWorkoutActivities _activities;
+  StreamController<FredericWorkout> _streamController;
   String _name;
   String _description;
   String _image;
   String _owner;
   String _ownerName;
+  bool _isStream = false;
+  bool _isFuture = false;
 
   String get name => _name;
   String get description => _description;
   String get image => _image;
   String get owner => _owner;
   String get ownerName => _ownerName;
+  bool get isStream => _isStream;
+  bool get isNotStream => !_isStream;
 
   set name(String value) {
     if (value.isNotEmpty) {
@@ -48,39 +58,80 @@ class FredericWorkout {
     }
   }
 
-  ///
+  //============================================================================
   /// Loads data from the DB corresponding to the [workoutID]
   /// returns a future string when done
   ///
   Future<String> loadData() async {
     if (this.workoutID == null) return 'no-workout-id';
-
+    if (_isStream) return 'already-a-stream';
+    _isFuture = true;
     DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
     DocumentSnapshot documentSnapshot = await workoutsDocument.get();
-    _name = documentSnapshot['name'];
-    _description = documentSnapshot['description'];
-    _image = documentSnapshot['image'];
-    _owner = documentSnapshot['owner'];
-    _ownerName = documentSnapshot['ownerName'];
+    _processDocumentSnapshot(documentSnapshot);
 
     QuerySnapshot activitiesSnapshot = await workoutsDocument.collection('activities').get();
 
-    _activities = FredericWorkoutActivities();
-
-    for (int i = 0; i < activitiesSnapshot.docs.length; i++) {
-      int weekday = activitiesSnapshot.docs[i]['weekday'];
-      if (weekday > 8) return 'wrong-weekday-in-db-($weekday)';
-      FredericActivity a = FredericActivity(activitiesSnapshot.docs[i]['activity']);
-      a.weekday = weekday;
-      _activities.activities[weekday].add(a);
-      await a.loadData();
-    }
-
+    await _processQuerySnapshot(activitiesSnapshot);
     return 'success';
   }
 
+  //============================================================================
+  /// Loads data from the DB corresponding to the [workoutID]
+  /// returns a [Stream] of [FredericWorkout]
   ///
+  Stream<FredericWorkout> asStream() {
+    if (this.workoutID == null) return null;
+    if (_isFuture) return null;
+    _isStream = true;
+
+    Stream<DocumentSnapshot> documentStream =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID).snapshots();
+
+    Stream<QuerySnapshot> queryStream =
+        FirebaseFirestore.instance.collection('workout').doc(workoutID).collection('activities').snapshots();
+
+    documentStream.listen(_processDocumentSnapshot);
+    queryStream.listen(_processQuerySnapshot);
+
+    _streamController = StreamController<FredericWorkout>();
+
+    return _streamController.stream;
+  }
+
+  Future<void> _processQuerySnapshot(QuerySnapshot snapshot) async {
+    _activities = FredericWorkoutActivities();
+
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      int weekday = snapshot.docs[i]['weekday'];
+      if (weekday > 8) return;
+      FredericActivity a = FredericActivity(snapshot.docs[i]['activity']);
+      a.weekday = weekday;
+      _activities.activities[weekday].add(a);
+      if (_isStream) {
+        a.asStream().listen((event) => _updateOutgoingStream());
+      } else {
+        await a.loadData();
+      }
+    }
+    if (_isStream) _updateOutgoingStream();
+  }
+
+  void _updateOutgoingStream() {
+    _streamController?.add(this);
+  }
+
+  void _processDocumentSnapshot(DocumentSnapshot snapshot) {
+    _name = snapshot['name'];
+    _description = snapshot['description'];
+    _image = snapshot['image'];
+    _owner = snapshot['owner'];
+    _ownerName = snapshot['ownerName'];
+    if (_isStream) _updateOutgoingStream();
+  }
+
+  //============================================================================
   /// Adds an activity to the workout on the specified weekday
   /// Use this to add an activity instead of using activities.add() because
   /// this also adds it to the DB
@@ -99,7 +150,7 @@ class FredericWorkout {
     return 'success';
   }
 
-  ///
+  //============================================================================
   /// Removes an activity from the workout on the specified weekday
   /// Use this to remove an activity instead of using activities.remove() because
   /// this also removes it on the DB
@@ -110,7 +161,7 @@ class FredericWorkout {
     _removeActivityDB(activity, day);
   }
 
-  ///
+  //============================================================================
   /// Moves the activity to another day in the workout plan
   ///
   void moveActivityToOtherDay(FredericActivity activity, Weekday to) async {

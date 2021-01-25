@@ -17,6 +17,8 @@ class HomeScreen extends StatelessWidget {
     User user = context.watch<User>();
     FredericUser fUser = FredericUser(user);
 
+    FredericActivity a = FredericActivity('0J8B5ByMcar6InMY7aQb');
+
     FredericWorkout workout = FredericWorkout('wCiDw2K3mV30ro6HGlfj');
     workout.loadData().then((value) {
       print(workout.toString());
@@ -25,13 +27,44 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.cyan,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Container(
+            height: 200,
+            color: Colors.yellow,
+          ),
+          Container(
+              child: StreamBuilder(
+                  stream: a.asStream(),
+                  builder: (BuildContext context, AsyncSnapshot<FredericActivity> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading");
+                    }
+                    return Container(
+                      height: 200,
+                      color: Colors.white,
+                      child: Center(
+                        child: Text(snapshot.data.name),
+                      ),
+                    );
+                  })),
           Text(
             "Username: ${fUser.name}",
             style: TextStyle(color: Colors.red),
           ),
           MaterialButton(
+            child: Text("change name"),
+            onPressed: () {
+              a.name = "Werner Mosers Sitzpositions";
+            },
+            color: Colors.red,
+          ),
+          MaterialButton(
+            child: Text("Logout"),
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },

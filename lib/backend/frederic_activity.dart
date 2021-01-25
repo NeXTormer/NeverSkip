@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/frederic_set.dart';
@@ -7,10 +9,10 @@ import 'package:frederic/backend/frederic_set.dart';
 /// [sets] the user has done (if there are any), and the [weekday] and [order] of the
 /// activity in a workout (if it is in a workout).
 ///
-/// Calling the constructor does not load any data, use [loadData()] to load the data.
+/// Calling the constructor does not load any data, use [loadData()] or [asStream()] to
+/// load the data.
 ///
-/// Activities with the same [ID], but a different [weekday] can exist
-///
+/// Activities with the same ID but with different weekdays can exist.
 /// The Weekday is stored as an int, with Monday being 1, Tuesday being 2, ...
 /// 0 means everyday
 ///
@@ -37,7 +39,11 @@ class FredericActivity {
   String _owner;
   int _weekday;
   int _order;
+  bool _isStream = false;
+  bool _setStreamExists = false;
+  bool _isFuture = false;
   List<FredericSet> _sets;
+  StreamController<FredericActivity> _streamController;
 
   String get name => _name;
   String get description => _description;
@@ -45,13 +51,15 @@ class FredericActivity {
   String get owner => _owner;
   int get weekday => _weekday;
   List<FredericSet> get sets => _sets;
+  bool get isStream => _isStream;
+  bool get isNotStream => !_isStream;
 
   bool get isSingleActivity {
     return _weekday == null ? true : false;
   }
 
   bool get hasProgress {
-    return _sets == null ? false : true;
+    return _sets == null || _sets.isEmpty;
   }
 
   bool get isGlobalActivity {
@@ -61,25 +69,25 @@ class FredericActivity {
   set name(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('activities').doc(activityID).update({'name': value});
-      _name = value;
+      if (_isFuture) _name = value;
     }
   }
 
   set description(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('activities').doc(activityID).update({'description': value});
-      _description = value;
+      if (_isFuture) _description = value;
     }
   }
 
   set image(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('activities').doc(activityID).update({'image': value});
-      _image = value;
+      if (_isFuture) _image = value;
     }
   }
 
-  ///
+  //============================================================================
   /// Does not update DB
   ///
   set weekday(int value) {
@@ -88,46 +96,141 @@ class FredericActivity {
     }
   }
 
-  ///
+  //============================================================================
   /// Loads data from the DB corresponding to the [activityID]
   /// returns a future when done
+  /// Optional parameter [loadSets] is false by default
+  /// If [loadSets] is set to true, the user progress on this activity
+  /// is loaded as well
   ///
-  Future<void> loadData() async {
-    if (activityID == null) return false;
+  /// Either use this or [asStream()], not both
+  ///
+  Future<FredericActivity> loadData([bool loadSets = false]) async {
+    if (activityID == null) return null;
+    if (_isStream) return null;
+    _isFuture = true;
+    _sets = List<FredericSet>();
 
     DocumentReference activityDocument = FirebaseFirestore.instance.collection('activities').doc(activityID);
 
     DocumentSnapshot snapshot = await activityDocument.get();
+    _processDocumentSnapshot(snapshot);
 
-    _name = snapshot.data()['name'];
-    _description = snapshot.data()['description'];
-    _image = snapshot.data()['image'];
-    _owner = snapshot.data()['owner'];
+    if (loadSets) _loadSetsOnce();
+
+    return this;
+  }
+
+  //============================================================================
+  /// Returns a stream of [FredericActivity], which supports real time updates
+  ///
+  /// Either use this or [loadData()], but not both
+  ///
+  /// If [loadSets] is set to true, the user progress on this activity
+  /// is loaded as well
+  ///
+  Stream<FredericActivity> asStream([loadSets = false]) {
+    if (_isFuture) return null;
+    if (activityID == null) return null;
+    _isStream = true;
+    _sets = List<FredericSet>();
+    _streamController = StreamController<FredericActivity>();
+
+    Stream<DocumentSnapshot> documentStream =
+        FirebaseFirestore.instance.collection('activities').doc(activityID).snapshots();
+    documentStream.listen(_processDocumentSnapshot);
+
+    if (loadSets) _loadSetsStream();
+
+    return _streamController.stream;
+  }
+
+  //============================================================================
+  /// Use this method to either:
+  ///   - Load or update the sets if using normal loading
+  ///   - Load the sets and add them to the Stream if using stream loading
+  ///
+  /// only really async when not using streams
+  ///
+  Future<void> loadSets() async {
+    if (_isStream) {
+      _loadSetsStream();
+    } else if (_isFuture) {
+      await _loadSetsOnce();
+    }
+  }
+
+  //============================================================================
+  /// Used to populate the data from other classes
+  ///
+  void insertData(String name, String description, String image, String owner) {
+    _name = name;
+    _description = description;
+    _image = image;
+    _owner = owner;
+  }
+
+  //============================================================================
+  /// Loads the sets and adds it to the stream if it has not been added yet
+  ///
+  void _loadSetsStream() {
+    if (_setStreamExists) return;
+    _setStreamExists = true;
 
     String userid = FirebaseAuth.instance.currentUser.uid;
-
     CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
 
+    Stream<QuerySnapshot> setStream = activitiyProgressCollection
+        .where('owner', isEqualTo: userid)
+        .where('activity', isEqualTo: activityID)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+    setStream.listen(_processSetQuerySnapshot);
+  }
+
+  //============================================================================
+  /// loads or updates the sets
+  ///
+  Future<void> _loadSetsOnce() async {
+    String userid = FirebaseAuth.instance.currentUser.uid;
+    CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
     QuerySnapshot progressSnapshot = await activitiyProgressCollection
         .where('owner', isEqualTo: userid)
         .where('activity', isEqualTo: activityID)
         .orderBy('timestamp', descending: true)
         .get();
 
-    if (progressSnapshot.docs.length == 0) {
-      return;
-    }
-    _sets = List<FredericSet>();
+    _processSetQuerySnapshot(progressSnapshot);
+  }
 
-    for (int i = 0; i < progressSnapshot.docs.length; i++) {
-      var map = progressSnapshot.docs[i];
+  //============================================================================
+  /// Reads the QuerySnapshot from the activityprogress and fills the FredericSet
+  /// list
+  ///
+  void _processSetQuerySnapshot(QuerySnapshot snapshot) {
+    _sets.clear();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      var map = snapshot.docs[i];
       Timestamp ts = map['timestamp'];
 
       _sets.add(FredericSet(map.id, map['reps'], map['weight'], ts.toDate()));
     }
+    if (_isStream) _streamController.add(this);
   }
 
+  //============================================================================
   ///
+  /// Reads the DocumentSnapshot and inserts its values in the activity properties
+  ///
+  void _processDocumentSnapshot(DocumentSnapshot snapshot) {
+    _name = snapshot.data()['name'];
+    _description = snapshot.data()['description'];
+    _image = snapshot.data()['image'];
+    _owner = snapshot.data()['owner'];
+    if (_isStream) _streamController.add(this);
+  }
+
+  //============================================================================
   /// Adds the [reps] and [weight] passed to a new set, with the current time
   /// as the [timestamp]
   /// The set is added to the list in this Activity and to the DB
@@ -145,7 +248,7 @@ class FredericActivity {
     _sets.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
   }
 
-  ///
+  //============================================================================
   /// Removes the passed [fset] from the list in this Activity and from the DB
   ///
   void removeProgress(FredericSet fset) {
@@ -153,7 +256,7 @@ class FredericActivity {
     FirebaseFirestore.instance.collection('sets').doc(fset.setID).delete();
   }
 
-  ///
+  //============================================================================
   /// Copies one activity (can be global, from another user, or from logged in user) to
   /// the users activities
   ///
@@ -161,7 +264,7 @@ class FredericActivity {
     return newActivity(activity.name, activity.description, activity.image);
   }
 
-  ///
+  //============================================================================
   /// Creates a new activity using the passed [name], [description], and [image] in the
   /// DB and returns it as a future when finished.
   /// The [owner] is the current user
