@@ -37,6 +37,8 @@ class FredericActivity {
   String _description;
   String _image;
   String _owner;
+  int _recommendedSets;
+  int _recommendedReps;
   int _weekday;
   int _order;
   bool _isStream = false;
@@ -49,6 +51,8 @@ class FredericActivity {
   String get description => _description;
   String get image => _image;
   String get owner => _owner;
+  int get recommendedReps => _recommendedReps;
+  int get recommendedSets => _recommendedSets;
   int get weekday => _weekday;
   List<FredericSet> get sets => _sets;
   bool get isStream => _isStream;
@@ -59,7 +63,9 @@ class FredericActivity {
   }
 
   bool get hasProgress {
-    return _sets == null || _sets.isEmpty;
+    if (_sets == null) return false;
+    if (_sets.isEmpty) return false;
+    return true;
   }
 
   bool get isGlobalActivity {
@@ -163,11 +169,14 @@ class FredericActivity {
   //============================================================================
   /// Used to populate the data from other classes
   ///
-  void insertData(String name, String description, String image, String owner) {
+  void insertData(
+      String name, String description, String image, String owner, int recommendedSets, int recommendedReps) {
     _name = name;
     _description = description;
     _image = image;
     _owner = owner;
+    _recommendedReps = recommendedReps;
+    _recommendedSets = recommendedSets;
   }
 
   //============================================================================
@@ -176,7 +185,6 @@ class FredericActivity {
   void _loadSetsStream() {
     if (_setStreamExists) return;
     _setStreamExists = true;
-
     String userid = FirebaseAuth.instance.currentUser.uid;
     CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
 
@@ -227,6 +235,8 @@ class FredericActivity {
     _description = snapshot.data()['description'];
     _image = snapshot.data()['image'];
     _owner = snapshot.data()['owner'];
+    _recommendedReps = snapshot.data()['recommendedreps'];
+    _recommendedSets = snapshot.data()['recommendedsets'];
     if (_isStream) _streamController.add(this);
   }
 
@@ -261,7 +271,8 @@ class FredericActivity {
   /// the users activities
   ///
   static Future<FredericActivity> copyActivity(FredericActivity activity) {
-    return newActivity(activity.name, activity.description, activity.image);
+    return newActivity(
+        activity.name, activity.description, activity.image, activity.recommendedSets, activity.recommendedReps);
   }
 
   //============================================================================
@@ -269,16 +280,20 @@ class FredericActivity {
   /// DB and returns it as a future when finished.
   /// The [owner] is the current user
   ///
-  static Future<FredericActivity> newActivity(String name, String description, String image) async {
+  static Future<FredericActivity> newActivity(
+      String name, String description, String image, int recommendedSets, int recommendedReps) async {
     CollectionReference activities = FirebaseFirestore.instance.collection('activities');
-    DocumentReference newActivity = await activities.add(
-        {'name': name, 'description': description, 'image': image, 'owner': FirebaseAuth.instance.currentUser.uid});
+    DocumentReference newActivity = await activities.add({
+      'name': name,
+      'description': description,
+      'image': image,
+      'recommendedsets': recommendedSets,
+      'recommendedreps': recommendedReps,
+      'owner': FirebaseAuth.instance.currentUser.uid
+    });
 
     FredericActivity a = new FredericActivity(newActivity.id);
-    a._description = description;
-    a._name = name;
-    a._image = image;
-    a._owner = FirebaseAuth.instance.currentUser.uid;
+    a.insertData(name, description, image, FirebaseAuth.instance.currentUser.uid, recommendedSets, recommendedReps);
     return a;
   }
 

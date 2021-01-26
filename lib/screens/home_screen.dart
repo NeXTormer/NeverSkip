@@ -19,9 +19,9 @@ class HomeScreen extends StatelessWidget {
 
     FredericActivity a = FredericActivity('0J8B5ByMcar6InMY7aQb');
 
-    FredericWorkout workout = FredericWorkout('wCiDw2K3mV30ro6HGlfj');
-    workout.loadData().then((value) {
-      print(workout.toString());
+    FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG');
+    workout.asStream().listen((value) {
+      print(value.toString());
     });
 
     return Scaffold(

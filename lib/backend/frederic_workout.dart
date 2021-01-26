@@ -29,6 +29,7 @@ class FredericWorkout {
   bool _isStream = false;
   bool _isFuture = false;
 
+  FredericWorkoutActivities get activities => _activities;
   String get name => _name;
   String get description => _description;
   String get image => _image;
@@ -101,21 +102,27 @@ class FredericWorkout {
   }
 
   Future<void> _processQuerySnapshot(QuerySnapshot snapshot) async {
+    print("======activity========");
     _activities = FredericWorkoutActivities();
-
+    print(snapshot.docs);
     for (int i = 0; i < snapshot.docs.length; i++) {
       int weekday = snapshot.docs[i]['weekday'];
       if (weekday > 8) return;
       FredericActivity a = FredericActivity(snapshot.docs[i]['activity']);
+      print(a);
       a.weekday = weekday;
       _activities.activities[weekday].add(a);
       if (_isStream) {
-        a.asStream().listen((event) => _updateOutgoingStream());
+        a.asStream().listen((event) {
+          _updateOutgoingStream();
+        });
       } else {
         await a.loadData();
       }
     }
-    if (_isStream) _updateOutgoingStream();
+    if (_isStream) {
+      _updateOutgoingStream();
+    }
   }
 
   void _updateOutgoingStream() {
@@ -127,8 +134,10 @@ class FredericWorkout {
     _description = snapshot['description'];
     _image = snapshot['image'];
     _owner = snapshot['owner'];
-    _ownerName = snapshot['ownerName'];
-    if (_isStream) _updateOutgoingStream();
+    _ownerName = snapshot['ownername'];
+    if (_isStream) {
+      _updateOutgoingStream();
+    }
   }
 
   //============================================================================
@@ -206,7 +215,7 @@ class FredericWorkout {
   @override
   String toString() {
     String s =
-        'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownerName: $_ownerName]';
+        'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownername: $_ownerName]';
     for (int i = 0; i < 8; i++) {
       if (_activities.activities[i].isNotEmpty) {
         s += '\n╚> ${Weekday.values[i]}\n';
@@ -237,6 +246,8 @@ class FredericWorkoutActivities {
   List<FredericActivity> get friday => activities[5];
   List<FredericActivity> get saturday => activities[6];
   List<FredericActivity> get sunday => activities[7];
+
+  List<FredericActivity> get today => activities[DateTime.now().weekday] + everyday;
 
   ///
   /// the count of all activities in this workout

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/widgets/calendar_screen/calendar_activity_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarWorkoutWidget extends StatelessWidget {
-  const CalendarWorkoutWidget({Key key}) : super(key: key);
+  const CalendarWorkoutWidget({Key key, @required this.workout}) : super(key: key);
+
+  final FredericWorkout workout;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class CalendarWorkoutWidget extends StatelessWidget {
                 Padding(
                     padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
                     child: Text(
-                      "Anabolika, Brust, Bizeps jeden Tag immer schub schub",
+                      workout.name,
                       style: GoogleFonts.varelaRound(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -25,15 +29,15 @@ class CalendarWorkoutWidget extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage('https://www.dw.com/image/54269410_401.jpg', scale: 1),
+                        backgroundImage: NetworkImage(workout.image, scale: 1),
                       ),
                       SizedBox(
-                        width: 12,
+                        width: 14,
                       ),
                       Expanded(
                         child: Container(
                           child: Text(
-                            'Ah, Farid der Boss, jage die Cops, komm mit einer Bande multikrimineller Killer bei dir rein Und mache dann aus deim Bodyguard Schrott per scharfem Geschoss aus der Kalaschnikow',
+                            workout.description,
                             style: TextStyle(fontSize: 16),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,

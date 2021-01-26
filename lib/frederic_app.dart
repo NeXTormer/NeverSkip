@@ -32,7 +32,7 @@ class FredericApp extends StatelessWidget {
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: CalendarScreen(),
+          homePage: HomeScreen(),
           loginPage: LoginScreen(),
         ),
       ),
