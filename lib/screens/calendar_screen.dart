@@ -40,12 +40,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           StreamBuilder<FredericWorkout>(
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  print(snapshot.data.activities.count);
-                  print(snapshot.data.toString());
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return Container(height: 50, color: Colors.yellow);
+                        return CalendarActivityWidget(activity: snapshot.data.activities.today[index]);
                       },
                       childCount: snapshot.data.activities.today.length,
                     ),

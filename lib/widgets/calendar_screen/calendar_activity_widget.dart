@@ -16,8 +16,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-        child: Card(
+    return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: handleTap,
@@ -82,7 +81,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
               ),
             )),
       ),
-    ));
+    );
   }
 
   void handleTap() {

@@ -87,11 +87,9 @@ class FredericWorkout {
     if (_isFuture) return null;
     _isStream = true;
 
-    Stream<DocumentSnapshot> documentStream =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID).snapshots();
-
-    Stream<QuerySnapshot> queryStream =
-        FirebaseFirestore.instance.collection('workout').doc(workoutID).collection('activities').snapshots();
+    DocumentReference workoutDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    Stream<DocumentSnapshot> documentStream = workoutDocument.snapshots();
+    Stream<QuerySnapshot> queryStream = workoutDocument.collection('activities').snapshots();
 
     documentStream.listen(_processDocumentSnapshot);
     queryStream.listen(_processQuerySnapshot);
@@ -104,7 +102,6 @@ class FredericWorkout {
   Future<void> _processQuerySnapshot(QuerySnapshot snapshot) async {
     print("======activity========");
     _activities = FredericWorkoutActivities();
-    print(snapshot.docs);
     for (int i = 0; i < snapshot.docs.length; i++) {
       int weekday = snapshot.docs[i]['weekday'];
       if (weekday > 8) return;

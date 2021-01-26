@@ -235,6 +235,7 @@ class FredericActivity {
     _description = snapshot.data()['description'];
     _image = snapshot.data()['image'];
     _owner = snapshot.data()['owner'];
+    _order = snapshot.data()['order'];
     _recommendedReps = snapshot.data()['recommendedreps'];
     _recommendedSets = snapshot.data()['recommendedsets'];
     if (_isStream) _streamController.add(this);
