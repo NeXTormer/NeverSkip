@@ -15,7 +15,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
-    FredericWorkout w = FredericWorkout('kKOnczVnBbBHvmx96cjG');
+    FredericWorkout w = FredericWorkout('kKOnczVnBbBHvmx96cjG', true, true);
     Stream<FredericWorkout> stream = w.asStream();
     var broadcast = stream.asBroadcastStream();
 

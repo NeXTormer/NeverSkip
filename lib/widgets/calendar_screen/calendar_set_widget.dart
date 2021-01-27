@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_set.dart';
 
 class CalendarSetWidget extends StatelessWidget {
-  const CalendarSetWidget({Key key}) : super(key: key);
+  const CalendarSetWidget({Key key, @required this.fredericSet}) : super(key: key);
+  final FredericSet fredericSet;
 
   @override
   Widget build(BuildContext context) {

@@ -16,9 +16,12 @@ import 'package:frederic/backend/frederic_activity.dart';
 /// performance when viewing a lot of workouts in a list
 ///
 class FredericWorkout {
-  FredericWorkout(this.workoutID);
+  FredericWorkout(this.workoutID, this.loadActivities, this.loadSets);
 
-  final workoutID;
+  final String workoutID;
+  final bool loadActivities;
+  final bool loadSets;
+
   FredericWorkoutActivities _activities;
   StreamController<FredericWorkout> _streamController;
   String _name;
@@ -110,11 +113,11 @@ class FredericWorkout {
       a.weekday = weekday;
       _activities.activities[weekday].add(a);
       if (_isStream) {
-        a.asStream().listen((event) {
+        a.asStream(loadSets).listen((event) {
           _updateOutgoingStream();
         });
       } else {
-        await a.loadData();
+        await a.loadData(loadSets);
       }
     }
     if (_isStream) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/calendar_screen/calender_set_widget.dart';
+import 'package:frederic/backend/frederic_set.dart';
+import 'package:frederic/widgets/calendar_screen/calendar_set_widget.dart';
 
 class CalendarActivityWidget extends StatefulWidget {
   CalendarActivityWidget({Key key, @required this.activity}) : super(key: key);
@@ -65,23 +66,24 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                       )
                     ],
                   ),
-                  Container(
-                      child: _extended
-                          ? Column(
-                              children: [
-                                CalendarSetWidget(),
-                                CalendarSetWidget(),
-                                CalendarSetWidget(),
-                                CalendarSetWidget(),
-                                CalendarSetWidget()
-                              ],
-                            )
-                          : null)
+                  Column(
+                    children: _extended ? createSetList() : [Container()],
+                  )
                 ],
               ),
             )),
       ),
     );
+  }
+
+  createSetList() {
+    var sets = <CalendarSetWidget>[];
+    widget.activity.sets.forEach((element) {
+      sets.add(CalendarSetWidget(
+        fredericSet: element,
+      ));
+    });
+    return sets;
   }
 
   void handleTap() {
