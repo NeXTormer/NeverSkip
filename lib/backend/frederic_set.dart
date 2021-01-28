@@ -18,9 +18,9 @@ class FredericSet implements Comparable {
   int _weight;
   DateTime _timestamp;
 
-  int get reps => _reps;
-  int get weight => _weight;
-  DateTime get timestamp => _timestamp;
+  int get reps => _reps ?? -1;
+  int get weight => _weight ?? -1;
+  DateTime get timestamp => _timestamp ?? DateTime.now();
 
   set reps(int value) {
     if (value > 0) {

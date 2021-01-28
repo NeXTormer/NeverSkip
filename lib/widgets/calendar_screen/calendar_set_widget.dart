@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_set.dart';
+import 'package:intl/intl.dart';
 
 class CalendarSetWidget extends StatelessWidget {
   const CalendarSetWidget({Key key, @required this.fredericSet}) : super(key: key);
@@ -15,7 +16,7 @@ class CalendarSetWidget extends StatelessWidget {
           children: [
             SizedBox(width: 54),
             Icon(Icons.arrow_forward_ios_outlined, size: 16),
-            Text("60 sets with 50"),
+            Text('${fredericSet.reps} reps with ${fredericSet.weight}'),
             SizedBox(width: 4),
             Icon(
               Icons.fitness_center,
@@ -25,7 +26,7 @@ class CalendarSetWidget extends StatelessWidget {
             Expanded(
               child: Container(),
             ),
-            Text("on 12.12.2020")
+            Text("on ${DateFormat.yMMMd().add_Hm().format(fredericSet.timestamp.toLocal())}")
           ],
         )
       ],

@@ -83,6 +83,17 @@ class FredericActivity {
     return _owner == 'global';
   }
 
+  int get bestWeight {
+    if (hasProgress) {
+      int max = 0;
+      _sets.forEach((element) {
+        if (element.weight > max) max = element.weight;
+      });
+      return max;
+    }
+    return 0;
+  }
+
   ///
   /// Also updates the name on the Database
   ///

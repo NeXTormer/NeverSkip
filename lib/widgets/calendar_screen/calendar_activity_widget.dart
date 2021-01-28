@@ -56,7 +56,8 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                       SizedBox(width: 4),
                       Row(
                         children: [
-                          Text('50', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                          Text('${widget.activity.bestWeight}',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                           SizedBox(width: 4),
                           Icon(
                             Icons.fitness_center,
@@ -66,7 +67,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                       )
                     ],
                   ),
-                  Container(child: _extended ? Text("  dd ") : null)
+                  Column(children: _extended ? createSetList() : [])
                 ],
               ),
             )),
@@ -75,7 +76,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
   }
 
   createSetList() {
-    var sets = <CalendarSetWidget>[];
+    var sets = <Widget>[];
     widget.activity.sets.forEach((element) {
       sets.add(CalendarSetWidget(
         fredericSet: element,

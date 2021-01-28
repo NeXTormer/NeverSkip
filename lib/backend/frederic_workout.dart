@@ -48,11 +48,11 @@ class FredericWorkout {
     return null;
   }
 
-  String get name => _name;
-  String get description => _description;
-  String get image => _image;
-  String get owner => _owner;
-  String get ownerName => _ownerName;
+  String get name => _name ?? 'emptyname';
+  String get description => _description ?? 'emptydescription';
+  String get image => _image ?? 'https://via.placeholder.com/400x400?text=noimage';
+  String get owner => _owner ?? 'emptyowner';
+  String get ownerName => _ownerName ?? 'emptyownername';
   bool get isStream => _isStream;
   bool get isNotStream => !_isStream;
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
