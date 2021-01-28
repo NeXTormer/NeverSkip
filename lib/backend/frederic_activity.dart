@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,6 +42,7 @@ class FredericActivity {
   int _recommendedReps;
   int _weekday;
   int _order;
+  bool _areSetsLoaded = false;
   bool _isStream = false;
   bool _setStreamExists = false;
   bool _isFuture = false;
@@ -54,9 +56,17 @@ class FredericActivity {
   int get recommendedReps => _recommendedReps;
   int get recommendedSets => _recommendedSets;
   int get weekday => _weekday;
-  List<FredericSet> get sets => _sets;
   bool get isStream => _isStream;
   bool get isNotStream => !_isStream;
+  bool get areSetsLoaded => _areSetsLoaded;
+
+  List<FredericSet> get sets {
+    if (_areSetsLoaded || _sets != null) {
+      return _sets;
+    }
+    stderr.writeln('[FredericActivity] Error: tried accessing sets when they are not loaded');
+    return null;
+  }
 
   bool get isSingleActivity {
     return _weekday == null ? true : false;
@@ -72,6 +82,9 @@ class FredericActivity {
     return _owner == 'global';
   }
 
+  ///
+  /// Also updates the name on the Database
+  ///
   set name(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('activities').doc(activityID).update({'name': value});
@@ -79,6 +92,9 @@ class FredericActivity {
     }
   }
 
+  ///
+  /// Also updates the description on the Database
+  ///
   set description(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('activities').doc(activityID).update({'description': value});
@@ -86,6 +102,9 @@ class FredericActivity {
     }
   }
 
+  ///
+  /// Also updates the image on the Database
+  ///
   set image(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('activities').doc(activityID).update({'image': value});
@@ -93,7 +112,27 @@ class FredericActivity {
     }
   }
 
-  //============================================================================
+  ///
+  /// Also updates the recommended reps on the Database
+  ///
+  set recommendedReps(int value) {
+    if (value >= 0) {
+      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'recommendedreps': value});
+      if (_isFuture) _recommendedReps = value;
+    }
+  }
+
+  ///
+  /// Also updates the recommended sets on the Database
+  ///
+  set recommendedSets(int value) {
+    if (value >= 0) {
+      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'recommendedsets': value});
+      if (_isFuture) _recommendedSets = value;
+    }
+  }
+
+  ///
   /// Does not update DB
   ///
   set weekday(int value) {
@@ -122,7 +161,10 @@ class FredericActivity {
     DocumentSnapshot snapshot = await activityDocument.get();
     _processDocumentSnapshot(snapshot);
 
-    if (loadSets) _loadSetsOnce();
+    if (loadSets) {
+      _loadSetsOnce();
+      _areSetsLoaded = true;
+    }
 
     return this;
   }
@@ -146,7 +188,10 @@ class FredericActivity {
         FirebaseFirestore.instance.collection('activities').doc(activityID).snapshots();
     documentStream.listen(_processDocumentSnapshot);
 
-    if (loadSets) _loadSetsStream();
+    if (loadSets) {
+      _loadSetsStream();
+      _areSetsLoaded = true;
+    }
 
     return _streamController.stream;
   }
@@ -163,6 +208,8 @@ class FredericActivity {
       _loadSetsStream();
     } else if (_isFuture) {
       await _loadSetsOnce();
+    } else {
+      stderr.writeln('Error: Trying to load the Sets but the activity has not been loaded');
     }
   }
 

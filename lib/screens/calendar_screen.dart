@@ -34,7 +34,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 if (snapshot.hasData) {
                   return CalendarWorkoutWidget(workout: snapshot.data);
                 }
-                return SliverToBoxAdapter(child: Text("Loading..."));
+                return SliverToBoxAdapter(child: Text("Loading workout data..."));
               },
               stream: broadcast),
           StreamBuilder<FredericWorkout>(
@@ -43,13 +43,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return CalendarActivityWidget(activity: snapshot.data.activities.today[index]);
+                        return SliverToBoxAdapter(
+                          child: Text("werner"),
+                        );
                       },
-                      childCount: snapshot.data.activities.today.length,
+                      childCount: 3,
                     ),
                   );
                 }
-                return SliverToBoxAdapter(child: Text('Loading...'));
+                return SliverToBoxAdapter(child: Text('Loading activity data...'));
               },
               stream: broadcast)
         ],

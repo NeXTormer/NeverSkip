@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/frederic_activity.dart';
@@ -16,11 +17,13 @@ import 'package:frederic/backend/frederic_activity.dart';
 /// performance when viewing a lot of workouts in a list
 ///
 class FredericWorkout {
-  FredericWorkout(this.workoutID, this.loadActivities, this.loadSets);
+  FredericWorkout(this.workoutID, [bool shouldLoadActivities = false, bool shouldLoadSets = false]) {
+    _loadActivities = shouldLoadActivities;
+    _loadSets = shouldLoadSets;
+    if (_loadSets && !_loadActivities) _loadSets = false;
+  }
 
   final String workoutID;
-  final bool loadActivities;
-  final bool loadSets;
 
   FredericWorkoutActivities _activities;
   StreamController<FredericWorkout> _streamController;
@@ -31,8 +34,20 @@ class FredericWorkout {
   String _ownerName;
   bool _isStream = false;
   bool _isFuture = false;
+  bool _hasActivitiesLoaded = false;
+  bool _hasSetsLoaded = false;
+  bool _loadActivities = false;
+  bool _loadSets = false;
 
-  FredericWorkoutActivities get activities => _activities;
+  FredericWorkoutActivities get activities {
+    if (_loadActivities) {
+      return _activities;
+    }
+    stderr.writeln(
+        'Error: Attempted to access the activities of a FredericWorkout which has not loaded the activities yet');
+    return null;
+  }
+
   String get name => _name;
   String get description => _description;
   String get image => _image;
@@ -40,7 +55,11 @@ class FredericWorkout {
   String get ownerName => _ownerName;
   bool get isStream => _isStream;
   bool get isNotStream => !_isStream;
+  bool get hasActivitiesLoaded => _hasActivitiesLoaded;
+  bool get hasSetsLoaded => _hasSetsLoaded;
 
+  /// Also updates the name on the Database
+  ///
   set name(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'name': value});
@@ -48,6 +67,9 @@ class FredericWorkout {
     }
   }
 
+  ///
+  /// Also updates the description on the Database
+  ///
   set description(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'description': value});
@@ -55,6 +77,9 @@ class FredericWorkout {
     }
   }
 
+  ///
+  /// Also updates the image on the Database
+  ///
   set image(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'image': value});
@@ -70,14 +95,14 @@ class FredericWorkout {
     if (this.workoutID == null) return 'no-workout-id';
     if (_isStream) return 'already-a-stream';
     _isFuture = true;
-    DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
+    DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     DocumentSnapshot documentSnapshot = await workoutsDocument.get();
     _processDocumentSnapshot(documentSnapshot);
 
-    QuerySnapshot activitiesSnapshot = await workoutsDocument.collection('activities').get();
-
-    await _processQuerySnapshot(activitiesSnapshot);
+    if (_loadActivities) {
+      await _loadActivitiesOnce();
+    }
     return 'success';
   }
 
@@ -89,21 +114,60 @@ class FredericWorkout {
     if (this.workoutID == null) return null;
     if (_isFuture) return null;
     _isStream = true;
+    _streamController = StreamController<FredericWorkout>();
 
     DocumentReference workoutDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     Stream<DocumentSnapshot> documentStream = workoutDocument.snapshots();
-    Stream<QuerySnapshot> queryStream = workoutDocument.collection('activities').snapshots();
-
     documentStream.listen(_processDocumentSnapshot);
-    queryStream.listen(_processQuerySnapshot);
 
-    _streamController = StreamController<FredericWorkout>();
+    if (_loadActivities) {
+      _loadActivitiesStream();
+    }
 
     return _streamController.stream;
   }
 
+  //============================================================================
+  /// If the workout is loaded as a Future, this either reloads or loads the activities,
+  /// with sets, or without, based on [loadSets] which is false by default can
+  /// be omitted.
+  ///
+  /// If the workout is loaded as a stream, this adds the activities to the stream,
+  /// eihter with sets or without, based on [loadSets]
+  ///
+  /// To additionally load the sets after this method has been called, use the [loadSets()]
+  /// method from [FredericActiivty]
+  ///
+  Future<void> loadActivities([bool loadSets = false]) async {
+    _loadSets |= loadSets;
+    if (_isFuture) {
+      await _loadActivitiesOnce();
+    } else if (_isStream) {
+      _loadActivitiesStream();
+    } else {
+      stderr.writeln('[FredericWorkout] Error: tried loading activities before loading the workout');
+    }
+  }
+
+  Future<void> _loadActivitiesOnce() async {
+    DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    QuerySnapshot activitiesSnapshot = await workoutsDocument.collection('activities').get();
+
+    await _processQuerySnapshot(activitiesSnapshot);
+  }
+
+  void _loadActivitiesStream() {
+    if (_hasActivitiesLoaded) {
+      stderr.writeln('[FredericWorkout] Error: tried loading activities twice');
+      return;
+    }
+    DocumentReference workoutDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    Stream<QuerySnapshot> queryStream = workoutDocument.collection('activities').snapshots();
+    queryStream.listen(_processQuerySnapshot);
+    _hasActivitiesLoaded = true;
+  }
+
   Future<void> _processQuerySnapshot(QuerySnapshot snapshot) async {
-    print("======activity========");
     _activities = FredericWorkoutActivities();
     for (int i = 0; i < snapshot.docs.length; i++) {
       int weekday = snapshot.docs[i]['weekday'];
@@ -113,16 +177,17 @@ class FredericWorkout {
       a.weekday = weekday;
       _activities.activities[weekday].add(a);
       if (_isStream) {
-        a.asStream(loadSets).listen((event) {
+        a.asStream(_loadSets).listen((event) {
           _updateOutgoingStream();
         });
       } else {
-        await a.loadData(loadSets);
+        await a.loadData(_loadSets);
       }
     }
     if (_isStream) {
       _updateOutgoingStream();
     }
+    _hasSetsLoaded = _loadSets;
   }
 
   void _updateOutgoingStream() {

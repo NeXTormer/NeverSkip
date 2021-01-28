@@ -66,9 +66,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                       )
                     ],
                   ),
-                  Column(
-                    children: _extended ? createSetList() : [Container()],
-                  )
+                  Container(child: _extended ? Text("  dd ") : null)
                 ],
               ),
             )),
