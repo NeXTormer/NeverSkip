@@ -43,11 +43,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return SliverToBoxAdapter(
-                          child: Text("werner"),
-                        );
+                        return CalendarActivityWidget(activity: snapshot.data.activities.today[index]);
                       },
-                      childCount: 3,
+                      childCount: snapshot.data.activities.today.length,
                     ),
                   );
                 }

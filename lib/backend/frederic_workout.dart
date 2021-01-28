@@ -173,7 +173,6 @@ class FredericWorkout {
       int weekday = snapshot.docs[i]['weekday'];
       if (weekday > 8) return;
       FredericActivity a = FredericActivity(snapshot.docs[i]['activity']);
-      print(a);
       a.weekday = weekday;
       _activities.activities[weekday].add(a);
       if (_isStream) {
@@ -190,8 +189,23 @@ class FredericWorkout {
     _hasSetsLoaded = _loadSets;
   }
 
+  //============================================================================
+  /// TODO: when the workout has a lot of activities with a lot of sets this is
+  /// called really often when loading the workout for the first time, maybe bad
+  /// for performance.
+  /// Maybe stop pause for a few miliseconds after loading?
+  ///
+  /// 1st fix: dont update stream if one activity is still null (or the name of
+  /// the activity is null)
+  ///
   void _updateOutgoingStream() {
-    _streamController?.add(this);
+    bool isFinishedLoading = true;
+    if (_activities != null) {
+      _activities.all.forEach((element) {
+        if (element.isNull) isFinishedLoading = false;
+      });
+    }
+    if (isFinishedLoading) _streamController?.add(this);
   }
 
   void _processDocumentSnapshot(DocumentSnapshot snapshot) {
@@ -281,6 +295,7 @@ class FredericWorkout {
   String toString() {
     String s =
         'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownername: $_ownerName]';
+    if (_activities == null) return s;
     for (int i = 0; i < 8; i++) {
       if (_activities.activities[i].isNotEmpty) {
         s += '\n╚> ${Weekday.values[i]}\n';
@@ -289,7 +304,6 @@ class FredericWorkout {
         s += '╚=> ' + element.toString() + '\n';
       });
     }
-
     return s;
   }
 }
@@ -312,7 +326,15 @@ class FredericWorkoutActivities {
   List<FredericActivity> get saturday => activities[6];
   List<FredericActivity> get sunday => activities[7];
 
+  ///
+  /// List of activities either due today or everyday
+  ///
   List<FredericActivity> get today => activities[DateTime.now().weekday] + everyday;
+
+  ///
+  /// List of all activities
+  ///
+  List<FredericActivity> get all => everyday + monday + tuesday + wednesday + thursday + friday + saturday + sunday;
 
   ///
   /// the count of all activities in this workout

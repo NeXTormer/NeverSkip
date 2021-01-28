@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
 
     FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG', true, true);
     workout.asStream().listen((value) {
+      print('=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
       print(value.toString());
     });
 
@@ -59,7 +60,7 @@ class HomeScreen extends StatelessWidget {
           MaterialButton(
             child: Text("change name"),
             onPressed: () {
-              a.name = "Werner Mosers Sitzpositions";
+              a.name = "Werner Mosers Sitzposition";
             },
             color: Colors.red,
           ),

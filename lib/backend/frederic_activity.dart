@@ -49,16 +49,17 @@ class FredericActivity {
   List<FredericSet> _sets;
   StreamController<FredericActivity> _streamController;
 
-  String get name => _name;
-  String get description => _description;
-  String get image => _image;
-  String get owner => _owner;
+  String get name => _name ?? 'emptyname';
+  String get description => _description ?? 'emptydescription';
+  String get image => _image ?? 'https://via.placeholder.com/400x400?text=noimage';
+  String get owner => _owner ?? 'emptyowner';
   int get recommendedReps => _recommendedReps;
   int get recommendedSets => _recommendedSets;
   int get weekday => _weekday;
   bool get isStream => _isStream;
   bool get isNotStream => !_isStream;
   bool get areSetsLoaded => _areSetsLoaded;
+  bool get isNull => _name == null;
 
   List<FredericSet> get sets {
     if (_areSetsLoaded || _sets != null) {
@@ -270,7 +271,7 @@ class FredericActivity {
 
       _sets.add(FredericSet(map.id, map['reps'], map['weight'], ts.toDate()));
     }
-    if (_isStream) _streamController.add(this);
+    if (_isStream && _name != null) _streamController.add(this);
   }
 
   //============================================================================
@@ -285,7 +286,7 @@ class FredericActivity {
     _order = snapshot.data()['order'];
     _recommendedReps = snapshot.data()['recommendedreps'];
     _recommendedSets = snapshot.data()['recommendedsets'];
-    if (_isStream) _streamController.add(this);
+    if (_isStream && _name != null) _streamController.add(this);
   }
 
   //============================================================================
@@ -354,7 +355,7 @@ class FredericActivity {
   @override
   String toString() {
     String s =
-        'FredericActivity[name: $name, description: $description, weekday: $_weekday, order: $_order, owner: $owner]';
+        'FredericActivity[id: $activityID, name: $name, description: $description, weekday: $_weekday, order: $_order, owner: $owner]';
     if (!hasProgress) return s;
 
     for (int i = 0; i < _sets.length; i++) {
