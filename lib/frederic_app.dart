@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/routing/route_generator.dart';
-import 'package:frederic/screens/all_activities_screen.dart';
-import 'package:frederic/screens/calendar_screen.dart';
+import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
 

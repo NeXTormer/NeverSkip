@@ -216,11 +216,12 @@ class FredericActivity {
   ///
   /// only really async when not using streams
   ///
-  Future<void> loadSets() async {
+  Future<FredericActivity> loadSets() async {
     if (_isStream) {
       _loadSetsStream();
     } else {
       await _loadSetsOnce();
+      return this;
     }
   }
 
@@ -245,7 +246,37 @@ class FredericActivity {
   ///
   void insertSnapshot(DocumentSnapshot snapshot) {
     _isFuture = true;
+    _isStream = false;
     _processDocumentSnapshot(snapshot);
+  }
+
+  //============================================================================
+  /// Used by FredericBackend when bulk loading a lot of activities using an
+  /// outside stream
+  ///
+  void loadSetsUsingOutsideStream(StreamController<FredericActivity> stream) {
+    if (!_isStream) {
+      stderr.writeln('[FredericActivity] Error: is not a stream');
+      return;
+    }
+    if (_setStreamExists) {
+      stderr.writeln('[FredericActivity] Error: Set Stream already exists');
+      return;
+    }
+    _setStreamExists = true;
+    String userid = FirebaseAuth.instance.currentUser.uid;
+    CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
+
+    Stream<QuerySnapshot> setStream = activitiyProgressCollection
+        .where('owner', isEqualTo: userid)
+        .where('activity', isEqualTo: activityID)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+
+    setStream.listen((event) {
+      _processSetQuerySnapshot(event);
+      stream.add(this);
+    });
   }
 
   //============================================================================
@@ -308,7 +339,7 @@ class FredericActivity {
     _order = snapshot.data()['order'];
     _recommendedReps = snapshot.data()['recommendedreps'];
     _recommendedSets = snapshot.data()['recommendedsets'];
-    if (_isStream && _name != null) _streamController.add(this);
+    if (_isStream && _name != null) _streamController?.add(this);
   }
 
   //============================================================================
@@ -372,6 +403,10 @@ class FredericActivity {
   bool operator ==(Object other) {
     if (other is FredericActivity) return this.activityID == other.activityID;
     return false;
+  }
+
+  void dispose() {
+    _streamController.close();
   }
 
   @override

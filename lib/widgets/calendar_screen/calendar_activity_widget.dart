@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_set.dart';
 import 'package:frederic/widgets/calendar_screen/calendar_set_widget.dart';
 
 class CalendarActivityWidget extends StatefulWidget {
@@ -14,6 +13,8 @@ class CalendarActivityWidget extends StatefulWidget {
 
 class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
   bool _extended = false;
+
+  Widget setWidget = Container();
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                       )
                     ],
                   ),
-                  Column(children: _extended ? createSetList() : [])
+                  Container(child: _extended ? setWidget : null),
                 ],
               ),
             )),
@@ -77,18 +78,31 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
 
   createSetList() {
     var sets = <Widget>[];
-    if (widget.activity.sets == null) return sets;
-    widget.activity.sets.forEach((element) {
-      sets.add(CalendarSetWidget(
-        fredericSet: element,
-      ));
-    });
+    Future<FredericActivity> setFuture = widget.activity.loadSets();
+
+    setWidget = FutureBuilder(
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          sets.clear();
+          snapshot.data.sets.forEach((element) {
+            sets.add(CalendarSetWidget(
+              fredericSet: element,
+            ));
+          });
+          return Column(children: sets);
+        }
+        return Container();
+      },
+      future: setFuture,
+    );
+
     return sets;
   }
 
   void handleTap() {
     setState(() {
       _extended = !_extended;
+      if (_extended) createSetList();
     });
   }
 }

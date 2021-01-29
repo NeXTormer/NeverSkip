@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'backend.dart';
@@ -43,6 +44,37 @@ class FredericBackend {
       activities.add(a);
     }
     return activities;
+  }
+
+  // ===========================================================================
+  /// Loads all activities the user has access to in a stream
+  /// returns a StreamController because the controller has to be closed on dispose
+  ///
+  static StreamController<List<FredericActivity>> getAllActivitiesStream() {
+    CollectionReference activitiesCollection = FirebaseFirestore.instance.collection('activities');
+    List<FredericActivity> activities = List<FredericActivity>();
+    StreamController<List<FredericActivity>> controller = StreamController<List<FredericActivity>>();
+
+    Stream<QuerySnapshot> stream1 =
+        activitiesCollection.where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid).snapshots();
+    Stream<QuerySnapshot> stream2 = activitiesCollection.where('owner', isEqualTo: 'global').snapshots();
+
+    Stream<QuerySnapshot> stream = StreamGroup.merge([stream1, stream2]);
+
+    stream.listen((event) {
+      for (int i = 0; i < event.docs.length; i++) {
+        var map = event.docs[i];
+        FredericActivity a = FredericActivity(map.id);
+        a.insertSnapshot(map);
+        if (activities.contains(a)) {
+          activities.remove(a);
+        }
+        activities.add(a);
+      }
+      controller.add(activities);
+    });
+
+    return controller;
   }
 
   // ===========================================================================
