@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'backend.dart';
@@ -15,54 +17,33 @@ class FredericBackend {
   // ===========================================================================
   /// Gets all global activities and the activities of the current user
   ///
-  /*
-  Stream<List<FredericActivity>> getAllActivities([bool loadSets = false]) {
-    CollectionReference activitiesCollection = FirebaseFirestore.instance.collection('activities');
-
-    Stream<QuerySnapshot> globalStream = activitiesCollection
-        .where('owner', isEqualTo: 'global')
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
-        .snapshots();
-
-    List<FredericActivity> activities = List<FredericActivity>();
-
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      var map = snapshot.docs[i];
-      activities.add(FredericActivity(
-          name: map['name'],
-          description: map['description'],
-          image: map['image'],
-          owner: map['owner'],
-          id: 'TODO: Impelment id'));
-    }
-    return activities;
-  }
-
-  // ===========================================================================
-  /// Gets all activities of the currently logged in user
+  /// Not as versatile as loading activities one by one but much more performant
   ///
-  Future<List<FredericActivity>> getUserActivities() async {
-    CollectionReference activitiesCollection =
-        FirebaseFirestore.instance.collection('activities');
-
-    QuerySnapshot snapshot = await activitiesCollection
-        .where('owner', isEqualTo: _firebaseAuth.currentUser.uid)
-        .get();
-
+  static Future<List<FredericActivity>> getAllActivities([bool loadSets = false]) async {
+    CollectionReference activitiesCollection = FirebaseFirestore.instance.collection('activities');
     List<FredericActivity> activities = List<FredericActivity>();
 
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      var map = snapshot.docs[i];
-      activities.add(FredericActivity(
-          name: map['name'],
-          description: map['description'],
-          image: map['image'],
-          owner: map['owner'],
-          id: 'TODO: IMPLEMENT id'));
+    QuerySnapshot snapshot1 =
+        await activitiesCollection.where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid).get();
+
+    QuerySnapshot snapshot2 = await activitiesCollection.where('owner', isEqualTo: 'global').get();
+
+    for (int i = 0; i < snapshot1.docs.length; i++) {
+      var map = snapshot1.docs[i];
+      FredericActivity a = FredericActivity(map.id);
+      a.insertSnapshot(map);
+      if (loadSets) await a.loadSets();
+      activities.add(a);
+    }
+    for (int i = 0; i < snapshot2.docs.length; i++) {
+      var map = snapshot2.docs[i];
+      FredericActivity a = FredericActivity(map.id);
+      a.insertSnapshot(map);
+      if (loadSets) await a.loadSets();
+      activities.add(a);
     }
     return activities;
   }
-  */
 
   // ===========================================================================
   /// updates the local userdata with new data from firebase

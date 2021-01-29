@@ -77,6 +77,7 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
 
   createSetList() {
     var sets = <Widget>[];
+    if (widget.activity.sets == null) return sets;
     widget.activity.sets.forEach((element) {
       sets.add(CalendarSetWidget(
         fredericSet: element,

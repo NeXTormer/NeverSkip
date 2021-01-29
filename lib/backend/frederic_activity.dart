@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -218,24 +219,33 @@ class FredericActivity {
   Future<void> loadSets() async {
     if (_isStream) {
       _loadSetsStream();
-    } else if (_isFuture) {
-      await _loadSetsOnce();
     } else {
-      stderr.writeln('Error: Trying to load the Sets but the activity has not been loaded');
+      await _loadSetsOnce();
     }
   }
 
   //============================================================================
-  /// Used to populate the data from other classes
+  /// Used to populate the data from outside using literal data
+  /// Currently only for futures
   ///
   void insertData(
       String name, String description, String image, String owner, int recommendedSets, int recommendedReps) {
+    _isFuture = true;
     _name = name;
     _description = description;
     _image = image;
     _owner = owner;
     _recommendedReps = recommendedReps;
     _recommendedSets = recommendedSets;
+  }
+
+  //============================================================================
+  /// Used to populate the data from outside using a documentsnapshot
+  /// Currently only for futures
+  ///
+  void insertSnapshot(DocumentSnapshot snapshot) {
+    _isFuture = true;
+    _processDocumentSnapshot(snapshot);
   }
 
   //============================================================================
@@ -266,8 +276,8 @@ class FredericActivity {
         .where('activity', isEqualTo: activityID)
         .orderBy('timestamp', descending: true)
         .get();
-
     _processSetQuerySnapshot(progressSnapshot);
+    return;
   }
 
   //============================================================================
@@ -275,12 +285,13 @@ class FredericActivity {
   /// list
   ///
   void _processSetQuerySnapshot(QuerySnapshot snapshot) {
+    if (_sets == null) _sets = List<FredericSet>();
     _sets.clear();
     for (int i = 0; i < snapshot.docs.length; i++) {
       var map = snapshot.docs[i];
-      Timestamp ts = map['timestamp'];
+      Timestamp ts = map.data()['timestamp'];
 
-      _sets.add(FredericSet(map.id, map['reps'], map['weight'], ts.toDate()));
+      _sets.add(FredericSet(map.id, map.data()['reps'], map.data()['weight'], ts.toDate()));
     }
     if (_isStream && _name != null) _streamController.add(this);
   }
