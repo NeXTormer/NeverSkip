@@ -13,8 +13,8 @@ class FredericUser {
   String get uid => _uid;
   String get email => _email;
   String get name => _name;
-  String get profileImage => _profileImage;
-  String get bannerImage => _bannerImage;
+  String get image => _profileImage;
+  String get banner => _bannerImage;
   String get currentWorkoutID => _currentWorkoutID;
   DateTime get birthday => _birthday;
 
@@ -29,15 +29,15 @@ class FredericUser {
     }
   }
 
-  set profileImage(String value) {
+  set image(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({'profileimage': value});
+      FirebaseFirestore.instance.collection('users').doc(uid).update({'image': value});
     }
   }
 
-  set bannerImage(String value) {
+  set banner(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({'bannerimage': value});
+      FirebaseFirestore.instance.collection('users').doc(uid).update({'banner': value});
     }
   }
 
@@ -60,10 +60,10 @@ class FredericUser {
       return null;
     }
 
+    _email = FirebaseAuth.instance.currentUser.email;
     _name = userEntry.data()['name'];
-    _email = userEntry.data()['email'];
-    _profileImage = userEntry.data()['profileimage'];
-    _bannerImage = userEntry.data()['bannerimage'];
+    _profileImage = userEntry.data()['image'];
+    _bannerImage = userEntry.data()['banner'];
     _birthday = userEntry.data()['birthday'].toDate();
     _currentWorkoutID = userEntry.data()['currentworkout'];
     return this;
