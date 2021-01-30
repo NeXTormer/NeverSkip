@@ -25,14 +25,20 @@ class FredericSet implements Comparable {
   set reps(int value) {
     if (value > 0) {
       _reps = value;
-      FirebaseFirestore.instance.collection('sets').doc(setID).update({'reps': value});
+      FirebaseFirestore.instance
+          .collection('sets')
+          .doc(setID)
+          .update({'reps': value});
     }
   }
 
   set weight(int value) {
     if (value >= 0) {
       _weight = value;
-      FirebaseFirestore.instance.collection('sets').doc(setID).update({'weight': value});
+      FirebaseFirestore.instance
+          .collection('sets')
+          .doc(setID)
+          .update({'weight': value});
     }
   }
 

@@ -1,12 +1,20 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'backend.dart';
 
 class FredericBackend {
-  FredericBackend(this._firebaseAuth) : _authenticationService = AuthenticationService(_firebaseAuth);
+  FredericBackend(this._firebaseAuth)
+      : _authenticationService = AuthenticationService(_firebaseAuth);
+
+  static FredericBackend of(BuildContext context) {
+    return context.read<FredericBackend>();
+  }
 
   final FirebaseAuth _firebaseAuth;
   final AuthenticationService _authenticationService;
@@ -20,14 +28,18 @@ class FredericBackend {
   ///
   /// Not as versatile as loading activities one by one but much more performant
   ///
-  static Future<List<FredericActivity>> getAllActivities([bool loadSets = false]) async {
-    CollectionReference activitiesCollection = FirebaseFirestore.instance.collection('activities');
+  static Future<List<FredericActivity>> getAllActivities(
+      [bool loadSets = false]) async {
+    CollectionReference activitiesCollection =
+        FirebaseFirestore.instance.collection('activities');
     List<FredericActivity> activities = List<FredericActivity>();
 
-    QuerySnapshot snapshot1 =
-        await activitiesCollection.where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid).get();
+    QuerySnapshot snapshot1 = await activitiesCollection
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .get();
 
-    QuerySnapshot snapshot2 = await activitiesCollection.where('owner', isEqualTo: 'global').get();
+    QuerySnapshot snapshot2 =
+        await activitiesCollection.where('owner', isEqualTo: 'global').get();
 
     for (int i = 0; i < snapshot1.docs.length; i++) {
       var map = snapshot1.docs[i];
@@ -51,13 +63,17 @@ class FredericBackend {
   /// returns a StreamController because the controller has to be closed on dispose
   ///
   static StreamController<List<FredericActivity>> getAllActivitiesStream() {
-    CollectionReference activitiesCollection = FirebaseFirestore.instance.collection('activities');
+    CollectionReference activitiesCollection =
+        FirebaseFirestore.instance.collection('activities');
     List<FredericActivity> activities = List<FredericActivity>();
-    StreamController<List<FredericActivity>> controller = StreamController<List<FredericActivity>>();
+    StreamController<List<FredericActivity>> controller =
+        StreamController<List<FredericActivity>>();
 
-    Stream<QuerySnapshot> stream1 =
-        activitiesCollection.where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid).snapshots();
-    Stream<QuerySnapshot> stream2 = activitiesCollection.where('owner', isEqualTo: 'global').snapshots();
+    Stream<QuerySnapshot> stream1 = activitiesCollection
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .snapshots();
+    Stream<QuerySnapshot> stream2 =
+        activitiesCollection.where('owner', isEqualTo: 'global').snapshots();
 
     Stream<QuerySnapshot> stream = StreamGroup.merge([stream1, stream2]);
 

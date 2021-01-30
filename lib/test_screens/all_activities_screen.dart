@@ -29,7 +29,9 @@ class _AllActivitiesScreenState extends State<AllActivitiesScreen> {
             snap: true,
             floating: true,
             centerTitle: true,
-            title: Text('All Activities', style: GoogleFonts.varelaRound(textStyle: TextStyle(fontSize: 32))),
+            title: Text('All Activities',
+                style: GoogleFonts.varelaRound(
+                    textStyle: TextStyle(fontSize: 32))),
           ),
           StreamBuilder<List<FredericActivity>>(
             stream: activitiesStream,
@@ -49,11 +51,13 @@ class _AllActivitiesScreenState extends State<AllActivitiesScreen> {
                 if (snapshot.hasData) {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
-                      return CalendarActivityWidget(activity: snapshot.data[index]);
+                      return CalendarActivityWidget(
+                          activity: snapshot.data[index]);
                     }, childCount: snapshot.data.length),
                   );
                 }
-                return SliverToBoxAdapter(child: Text("Loading activity data..."));
+                return SliverToBoxAdapter(
+                    child: Text("Loading activity data..."));
               },
               future: FredericBackend.getAllActivities()),
         ],

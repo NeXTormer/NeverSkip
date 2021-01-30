@@ -41,7 +41,8 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                           children: [
                             Text(
                               widget.activity.name,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -60,7 +61,9 @@ class _CalendarActivityWidgetState extends State<CalendarActivityWidget> {
                             ? Row(
                                 children: [
                                   Text('${widget.activity.bestWeight}',
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500)),
                                   SizedBox(width: 4),
                                   Icon(
                                     Icons.fitness_center,

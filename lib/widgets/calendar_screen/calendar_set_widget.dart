@@ -3,7 +3,8 @@ import 'package:frederic/backend/frederic_set.dart';
 import 'package:intl/intl.dart';
 
 class CalendarSetWidget extends StatelessWidget {
-  const CalendarSetWidget({Key key, @required this.fredericSet}) : super(key: key);
+  const CalendarSetWidget({Key key, @required this.fredericSet})
+      : super(key: key);
   final FredericSet fredericSet;
 
   @override
@@ -26,7 +27,8 @@ class CalendarSetWidget extends StatelessWidget {
             Expanded(
               child: Container(),
             ),
-            Text("on ${DateFormat.yMMMd().add_Hm().format(fredericSet.timestamp.toLocal())}")
+            Text(
+                "on ${DateFormat.yMMMd().add_Hm().format(fredericSet.timestamp.toLocal())}")
           ],
         )
       ],

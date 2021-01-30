@@ -17,7 +17,8 @@ import 'package:frederic/backend/frederic_activity.dart';
 /// performance when viewing a lot of workouts in a list
 ///
 class FredericWorkout {
-  FredericWorkout(this.workoutID, [bool shouldLoadActivities = false, bool shouldLoadSets = false]) {
+  FredericWorkout(this.workoutID,
+      [bool shouldLoadActivities = false, bool shouldLoadSets = false]) {
     _loadActivities = shouldLoadActivities;
     _loadSets = shouldLoadSets;
     if (_loadSets && !_loadActivities) _loadSets = false;
@@ -50,7 +51,8 @@ class FredericWorkout {
 
   String get name => _name ?? 'emptyname';
   String get description => _description ?? 'emptydescription';
-  String get image => _image ?? 'https://via.placeholder.com/400x400?text=noimage';
+  String get image =>
+      _image ?? 'https://via.placeholder.com/400x400?text=noimage';
   String get owner => _owner ?? 'emptyowner';
   String get ownerName => _ownerName ?? 'emptyownername';
   bool get isStream => _isStream;
@@ -62,7 +64,10 @@ class FredericWorkout {
   ///
   set name(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'name': value});
+      FirebaseFirestore.instance
+          .collection('workouts')
+          .doc(workoutID)
+          .update({'name': value});
       _name = value;
     }
   }
@@ -72,7 +77,10 @@ class FredericWorkout {
   ///
   set description(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'description': value});
+      FirebaseFirestore.instance
+          .collection('workouts')
+          .doc(workoutID)
+          .update({'description': value});
       _description = value;
     }
   }
@@ -82,7 +90,10 @@ class FredericWorkout {
   ///
   set image(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('workouts').doc(workoutID).update({'image': value});
+      FirebaseFirestore.instance
+          .collection('workouts')
+          .doc(workoutID)
+          .update({'image': value});
       _image = value;
     }
   }
@@ -96,7 +107,8 @@ class FredericWorkout {
     if (_isStream) return 'already-a-stream';
     _isFuture = true;
 
-    DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    DocumentReference workoutsDocument =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     DocumentSnapshot documentSnapshot = await workoutsDocument.get();
     _processDocumentSnapshot(documentSnapshot);
 
@@ -116,7 +128,8 @@ class FredericWorkout {
     _isStream = true;
     _streamController = StreamController<FredericWorkout>();
 
-    DocumentReference workoutDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    DocumentReference workoutDocument =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     Stream<DocumentSnapshot> documentStream = workoutDocument.snapshots();
     documentStream.listen(_processDocumentSnapshot);
 
@@ -145,13 +158,16 @@ class FredericWorkout {
     } else if (_isStream) {
       _loadActivitiesStream();
     } else {
-      stderr.writeln('[FredericWorkout] Error: tried loading activities before loading the workout');
+      stderr.writeln(
+          '[FredericWorkout] Error: tried loading activities before loading the workout');
     }
   }
 
   Future<void> _loadActivitiesOnce() async {
-    DocumentReference workoutsDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-    QuerySnapshot activitiesSnapshot = await workoutsDocument.collection('activities').get();
+    DocumentReference workoutsDocument =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    QuerySnapshot activitiesSnapshot =
+        await workoutsDocument.collection('activities').get();
 
     await _processQuerySnapshot(activitiesSnapshot);
   }
@@ -161,8 +177,10 @@ class FredericWorkout {
       stderr.writeln('[FredericWorkout] Error: tried loading activities twice');
       return;
     }
-    DocumentReference workoutDocument = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-    Stream<QuerySnapshot> queryStream = workoutDocument.collection('activities').snapshots();
+    DocumentReference workoutDocument =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    Stream<QuerySnapshot> queryStream =
+        workoutDocument.collection('activities').snapshots();
     queryStream.listen(_processQuerySnapshot);
     _hasActivitiesLoaded = true;
   }
@@ -256,8 +274,10 @@ class FredericWorkout {
     int fromWeekday = activity.weekday;
     int toWeekday = to.index;
 
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID).collection('activities');
+    CollectionReference collectionReference = FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(workoutID)
+        .collection('activities');
 
     QuerySnapshot snapshot = await collectionReference
         .where('activity', isEqualTo: activity.activityID)
@@ -271,14 +291,19 @@ class FredericWorkout {
   }
 
   void _addActivityDB(FredericActivity activity, Weekday day) {
-    DocumentReference workoutReference = FirebaseFirestore.instance.collection('workouts').doc(workoutID);
+    DocumentReference workoutReference =
+        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
-    workoutReference.collection('activities').add({'activity': activity.activityID, 'weekday': day.index});
+    workoutReference
+        .collection('activities')
+        .add({'activity': activity.activityID, 'weekday': day.index});
   }
 
   Future<void> _removeActivityDB(FredericActivity activity, Weekday day) async {
-    CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID).collection('activities');
+    CollectionReference collectionReference = FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(workoutID)
+        .collection('activities');
 
     QuerySnapshot snapshot = await collectionReference
         .where('activity', isEqualTo: activity.activityID)
@@ -329,12 +354,21 @@ class FredericWorkoutActivities {
   ///
   /// List of activities either due today or everyday
   ///
-  List<FredericActivity> get today => activities[DateTime.now().weekday] + everyday;
+  List<FredericActivity> get today =>
+      activities[DateTime.now().weekday] + everyday;
 
   ///
   /// List of all activities
   ///
-  List<FredericActivity> get all => everyday + monday + tuesday + wednesday + thursday + friday + saturday + sunday;
+  List<FredericActivity> get all =>
+      everyday +
+      monday +
+      tuesday +
+      wednesday +
+      thursday +
+      friday +
+      saturday +
+      sunday;
 
   ///
   /// the count of all activities in this workout
@@ -351,4 +385,13 @@ class FredericWorkoutActivities {
   }
 }
 
-enum Weekday { Everyday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
+enum Weekday {
+  Everyday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday
+}

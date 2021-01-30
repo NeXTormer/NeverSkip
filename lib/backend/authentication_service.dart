@@ -18,7 +18,7 @@ class AuthenticationService {
       } else if (e.code == 'wrong-password') {
         return 'Wrong password';
       }
-      return 'Other error';
+      return 'Invalid credentials';
     }
   }
 
@@ -26,7 +26,7 @@ class AuthenticationService {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-      return null;
+      return 'success';
     } on FirebaseAuthException catch (e) {
       return e.message;
     }

@@ -27,14 +27,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
             snap: true,
             floating: true,
             centerTitle: true,
-            title: Text('Todays Workout', style: GoogleFonts.varelaRound(textStyle: TextStyle(fontSize: 32))),
+            title: Text('Todays Workout',
+                style: GoogleFonts.varelaRound(
+                    textStyle: TextStyle(fontSize: 32))),
           ),
           StreamBuilder<FredericWorkout>(
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return CalendarWorkoutWidget(workout: snapshot.data);
                 }
-                return SliverToBoxAdapter(child: Text("Loading workout data..."));
+                return SliverToBoxAdapter(
+                    child: Text("Loading workout data..."));
               },
               stream: broadcast),
           StreamBuilder<FredericWorkout>(
@@ -43,13 +46,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        return CalendarActivityWidget(activity: snapshot.data.activities.today[index]);
+                        return CalendarActivityWidget(
+                            activity: snapshot.data.activities.today[index]);
                       },
                       childCount: snapshot.data.activities.today.length,
                     ),
                   );
                 }
-                return SliverToBoxAdapter(child: Text('Loading activity data...'));
+                return SliverToBoxAdapter(
+                    child: Text('Loading activity data...'));
               },
               stream: broadcast)
         ],

@@ -98,12 +98,38 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
+  Future<void> showLoginError(String text) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login error'),
+          content: Text(text ?? ''),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void loginButtonHandler() {
     if (_formKey.currentState.validate()) {
       context
           .read<FredericBackend>()
           .authService
-          .signIn(emailController.text.trim(), passwordController.text.trim());
+          .signIn(emailController.text.trim(), passwordController.text.trim())
+          .then((value) {
+        if (value != 'success' && value != null) {
+          showLoginError(value);
+        }
+      });
     }
   }
 

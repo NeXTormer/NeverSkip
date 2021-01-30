@@ -4,7 +4,8 @@ import 'package:frederic/widgets/calendar_screen/calendar_activity_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarWorkoutWidget extends StatelessWidget {
-  const CalendarWorkoutWidget({Key key, @required this.workout}) : super(key: key);
+  const CalendarWorkoutWidget({Key key, @required this.workout})
+      : super(key: key);
 
   final FredericWorkout workout;
 
@@ -19,7 +20,9 @@ class CalendarWorkoutWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8, left: 12, right: 12),
                     child: Text(
                       workout.name,
-                      style: GoogleFonts.varelaRound(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style: GoogleFonts.varelaRound(
+                          textStyle: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     )),

@@ -52,7 +52,8 @@ class FredericActivity {
 
   String get name => _name ?? 'emptyname';
   String get description => _description ?? 'emptydescription';
-  String get image => _image ?? 'https://via.placeholder.com/400x400?text=noimage';
+  String get image =>
+      _image ?? 'https://via.placeholder.com/400x400?text=noimage';
   String get owner => _owner ?? 'emptyowner';
   int get recommendedReps => _recommendedReps;
   int get recommendedSets => _recommendedSets;
@@ -66,7 +67,8 @@ class FredericActivity {
     if (_areSetsLoaded || _sets != null) {
       return _sets;
     }
-    stderr.writeln('[FredericActivity] Error: tried accessing sets when they are not loaded');
+    stderr.writeln(
+        '[FredericActivity] Error: tried accessing sets when they are not loaded');
     return null;
   }
 
@@ -100,7 +102,10 @@ class FredericActivity {
   ///
   set name(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'name': value});
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'name': value});
       if (_isFuture) _name = value;
     }
   }
@@ -110,7 +115,10 @@ class FredericActivity {
   ///
   set description(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'description': value});
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'description': value});
       if (_isFuture) _description = value;
     }
   }
@@ -120,7 +128,10 @@ class FredericActivity {
   ///
   set image(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'image': value});
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'image': value});
       if (_isFuture) _image = value;
     }
   }
@@ -130,7 +141,10 @@ class FredericActivity {
   ///
   set recommendedReps(int value) {
     if (value >= 0) {
-      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'recommendedreps': value});
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'recommendedreps': value});
       if (_isFuture) _recommendedReps = value;
     }
   }
@@ -140,7 +154,10 @@ class FredericActivity {
   ///
   set recommendedSets(int value) {
     if (value >= 0) {
-      FirebaseFirestore.instance.collection('activities').doc(activityID).update({'recommendedsets': value});
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'recommendedsets': value});
       if (_isFuture) _recommendedSets = value;
     }
   }
@@ -169,7 +186,8 @@ class FredericActivity {
     _isFuture = true;
     _sets = List<FredericSet>();
 
-    DocumentReference activityDocument = FirebaseFirestore.instance.collection('activities').doc(activityID);
+    DocumentReference activityDocument =
+        FirebaseFirestore.instance.collection('activities').doc(activityID);
 
     DocumentSnapshot snapshot = await activityDocument.get();
     _processDocumentSnapshot(snapshot);
@@ -197,8 +215,10 @@ class FredericActivity {
     _sets = List<FredericSet>();
     _streamController = StreamController<FredericActivity>();
 
-    Stream<DocumentSnapshot> documentStream =
-        FirebaseFirestore.instance.collection('activities').doc(activityID).snapshots();
+    Stream<DocumentSnapshot> documentStream = FirebaseFirestore.instance
+        .collection('activities')
+        .doc(activityID)
+        .snapshots();
     documentStream.listen(_processDocumentSnapshot);
 
     if (loadSets) {
@@ -229,8 +249,8 @@ class FredericActivity {
   /// Used to populate the data from outside using literal data
   /// Currently only for futures
   ///
-  void insertData(
-      String name, String description, String image, String owner, int recommendedSets, int recommendedReps) {
+  void insertData(String name, String description, String image, String owner,
+      int recommendedSets, int recommendedReps) {
     _isFuture = true;
     _name = name;
     _description = description;
@@ -265,7 +285,8 @@ class FredericActivity {
     }
     _setStreamExists = true;
     String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
+    CollectionReference activitiyProgressCollection =
+        FirebaseFirestore.instance.collection('sets');
 
     Stream<QuerySnapshot> setStream = activitiyProgressCollection
         .where('owner', isEqualTo: userid)
@@ -286,7 +307,8 @@ class FredericActivity {
     if (_setStreamExists) return;
     _setStreamExists = true;
     String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
+    CollectionReference activitiyProgressCollection =
+        FirebaseFirestore.instance.collection('sets');
 
     Stream<QuerySnapshot> setStream = activitiyProgressCollection
         .where('owner', isEqualTo: userid)
@@ -301,7 +323,8 @@ class FredericActivity {
   ///
   Future<void> _loadSetsOnce() async {
     String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection = FirebaseFirestore.instance.collection('sets');
+    CollectionReference activitiyProgressCollection =
+        FirebaseFirestore.instance.collection('sets');
     QuerySnapshot progressSnapshot = await activitiyProgressCollection
         .where('owner', isEqualTo: userid)
         .where('activity', isEqualTo: activityID)
@@ -322,7 +345,8 @@ class FredericActivity {
       var map = snapshot.docs[i];
       Timestamp ts = map.data()['timestamp'];
 
-      _sets.add(FredericSet(map.id, map.data()['reps'], map.data()['weight'], ts.toDate()));
+      _sets.add(FredericSet(
+          map.id, map.data()['reps'], map.data()['weight'], ts.toDate()));
     }
     if (_isStream && _name != null) _streamController.add(this);
   }
@@ -348,7 +372,8 @@ class FredericActivity {
   /// The set is added to the list in this Activity and to the DB
   ///
   void addProgress(int reps, int weight) async {
-    CollectionReference setsCollection = FirebaseFirestore.instance.collection('sets');
+    CollectionReference setsCollection =
+        FirebaseFirestore.instance.collection('sets');
 
     DocumentReference docRef = await setsCollection.add({
       'reps': reps,
@@ -373,8 +398,8 @@ class FredericActivity {
   /// the users activities
   ///
   static Future<FredericActivity> copyActivity(FredericActivity activity) {
-    return newActivity(
-        activity.name, activity.description, activity.image, activity.recommendedSets, activity.recommendedReps);
+    return newActivity(activity.name, activity.description, activity.image,
+        activity.recommendedSets, activity.recommendedReps);
   }
 
   //============================================================================
@@ -382,9 +407,10 @@ class FredericActivity {
   /// DB and returns it as a future when finished.
   /// The [owner] is the current user
   ///
-  static Future<FredericActivity> newActivity(
-      String name, String description, String image, int recommendedSets, int recommendedReps) async {
-    CollectionReference activities = FirebaseFirestore.instance.collection('activities');
+  static Future<FredericActivity> newActivity(String name, String description,
+      String image, int recommendedSets, int recommendedReps) async {
+    CollectionReference activities =
+        FirebaseFirestore.instance.collection('activities');
     DocumentReference newActivity = await activities.add({
       'name': name,
       'description': description,
@@ -395,7 +421,13 @@ class FredericActivity {
     });
 
     FredericActivity a = new FredericActivity(newActivity.id);
-    a.insertData(name, description, image, FirebaseAuth.instance.currentUser.uid, recommendedSets, recommendedReps);
+    a.insertData(
+        name,
+        description,
+        image,
+        FirebaseAuth.instance.currentUser.uid,
+        recommendedSets,
+        recommendedReps);
     return a;
   }
 

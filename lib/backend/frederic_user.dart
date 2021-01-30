@@ -25,25 +25,37 @@ class FredericUser {
 
   set name(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({'name': value});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'name': value});
     }
   }
 
   set image(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({'image': value});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'image': value});
     }
   }
 
   set banner(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({'banner': value});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'banner': value});
     }
   }
 
   set currentWorkoutID(String value) {
     if (value.isNotEmpty) {
-      FirebaseFirestore.instance.collection('users').doc(uid).update({'currentworkout': value});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'currentworkout': value});
     }
   }
 
@@ -52,7 +64,8 @@ class FredericUser {
   }
 
   Future<FredericUser> loadData() async {
-    CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
     DocumentSnapshot userEntry = await usersCollection.doc(_uid).get();
 
     if (userEntry.data() == null) {

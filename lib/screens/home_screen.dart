@@ -19,7 +19,8 @@ class HomeScreen extends StatelessWidget {
 
     FredericActivity a = FredericActivity('0J8B5ByMcar6InMY7aQb');
 
-    FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG', true, true);
+    FredericWorkout workout =
+        FredericWorkout('kKOnczVnBbBHvmx96cjG', true, true);
     workout.asStream().listen((value) {
       print('=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
       print(value.toString());
@@ -38,7 +39,8 @@ class HomeScreen extends StatelessWidget {
           Container(
               child: StreamBuilder(
                   stream: a.asStream(),
-                  builder: (BuildContext context, AsyncSnapshot<FredericActivity> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<FredericActivity> snapshot) {
                     if (snapshot.hasError) {
                       return Text('Something went wrong');
                     }
