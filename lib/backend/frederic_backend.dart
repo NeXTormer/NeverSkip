@@ -19,8 +19,6 @@ class FredericBackend {
   final FirebaseAuth _firebaseAuth;
   final AuthenticationService _authenticationService;
 
-  FredericUser user;
-
   AuthenticationService get authService => _authenticationService;
 
   // ===========================================================================
@@ -92,14 +90,4 @@ class FredericBackend {
 
     return controller;
   }
-
-  // ===========================================================================
-  /// updates the local userdata with new data from firebase
-  ///
-  Future<FredericUser> reloadUserData() {
-    user = FredericUser(_firebaseAuth.currentUser);
-    return user.loadData();
-  }
-
-  //Future<FredericWorkout> getCurrentWorkout() async {}
 }

@@ -16,7 +16,6 @@ class AuthenticationWrapper extends StatelessWidget {
     final User firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
-      context.read<FredericBackend>().reloadUserData();
       return homePage;
     } else {
       return loginPage;

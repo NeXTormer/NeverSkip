@@ -1,7 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+///
+/// Represents the user of the app
+///
 class FredericUser {
+  FredericUser(String uid) {
+    _uid = uid;
+  }
+
   String _uid;
   String _email;
   String _name;
@@ -23,6 +30,9 @@ class FredericUser {
     return diff.inDays ~/ 365;
   }
 
+  ///
+  /// Also updates the name in the database
+  ///
   set name(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -32,6 +42,9 @@ class FredericUser {
     }
   }
 
+  ///
+  /// Also updates the image in the database
+  ///
   set image(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -41,6 +54,9 @@ class FredericUser {
     }
   }
 
+  ///
+  /// Also updates the banner in the database
+  ///
   set banner(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -50,6 +66,9 @@ class FredericUser {
     }
   }
 
+  ///
+  /// Also updates the currentworkout in the database
+  ///
   set currentWorkoutID(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -57,10 +76,6 @@ class FredericUser {
           .doc(uid)
           .update({'currentworkout': value});
     }
-  }
-
-  FredericUser(User user) {
-    _uid = user.uid;
   }
 
   Future<FredericUser> loadData() async {

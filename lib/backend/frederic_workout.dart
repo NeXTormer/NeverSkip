@@ -102,9 +102,15 @@ class FredericWorkout {
   /// Loads data from the DB corresponding to the [workoutID]
   /// returns a future string when done
   ///
-  Future<String> loadData() async {
-    if (this.workoutID == null) return 'no-workout-id';
-    if (_isStream) return 'already-a-stream';
+  Future<FredericWorkout> loadData() async {
+    if (this.workoutID == null) {
+      print('[FredericWorkout] Error: workoutID is null');
+      return null;
+    }
+    if (_isStream) {
+      print('[FredericWorkout] Error: loadData: already a stream');
+      return null;
+    }
     _isFuture = true;
 
     DocumentReference workoutsDocument =
@@ -115,7 +121,7 @@ class FredericWorkout {
     if (_loadActivities) {
       await _loadActivitiesOnce();
     }
-    return 'success';
+    return this;
   }
 
   //============================================================================
@@ -227,11 +233,15 @@ class FredericWorkout {
   }
 
   void _processDocumentSnapshot(DocumentSnapshot snapshot) {
-    _name = snapshot['name'];
-    _description = snapshot['description'];
-    _image = snapshot['image'];
-    _owner = snapshot['owner'];
-    _ownerName = snapshot['ownername'];
+    if (!snapshot.exists) {
+      _name = 'error loading, snapshot does not exist';
+      return;
+    }
+    _name = snapshot.data()['name'];
+    _description = snapshot.data()['description'];
+    _image = snapshot.data()['image'];
+    _owner = snapshot.data()['owner'];
+    _ownerName = snapshot.data()['ownername'];
     if (_isStream) {
       _updateOutgoingStream();
     }

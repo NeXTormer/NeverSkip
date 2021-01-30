@@ -11,11 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FredericBackend backend = context.watch<FredericBackend>();
-    test(backend);
-
-    User user = context.watch<User>();
-    FredericUser fUser = FredericUser(user);
+    FredericUser fUser = FredericUser(FirebaseAuth.instance.currentUser.uid);
 
     FredericActivity a = FredericActivity('0J8B5ByMcar6InMY7aQb');
 
@@ -76,10 +72,5 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<void> test(FredericBackend backend) async {
-    //List<FredericActivity> a = await backend.getUserActivities();
-    //print(a[0].toString());
   }
 }
