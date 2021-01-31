@@ -27,7 +27,8 @@ class Frederic extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
             body: Center(
-      child: Text("Loading...", style: TextStyle(fontSize: 28, color: Colors.black38)),
+      child: Text("Loading...",
+          style: TextStyle(fontSize: 28, color: Colors.black38)),
     )));
   }
 

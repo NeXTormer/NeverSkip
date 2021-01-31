@@ -35,7 +35,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     snap: true,
                     floating: true,
                     centerTitle: true,
-                    title: Text('Todays Workout',
+                    title: Text('Todays workout',
                         style: GoogleFonts.varelaRound(
                             textStyle: TextStyle(fontSize: 32))),
                   ),

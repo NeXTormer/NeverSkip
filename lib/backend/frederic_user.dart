@@ -4,9 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 ///
 /// Represents the user of the app
 ///
+/// Getting other users not yet supported but planned
+///
 class FredericUser {
-  FredericUser(String uid) {
-    _uid = uid;
+  FredericUser([String uid]) {
+    if (_uid == null) {
+      _uid = FirebaseAuth.instance.currentUser.uid;
+    } else {
+      _uid = uid;
+    }
   }
 
   String _uid;

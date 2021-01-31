@@ -10,7 +10,9 @@ import 'backend.dart';
 
 class FredericBackend {
   FredericBackend(this._firebaseAuth)
-      : _authenticationService = AuthenticationService(_firebaseAuth);
+      : _authenticationService = AuthenticationService(_firebaseAuth) {
+    currentUser = FredericUser();
+  }
 
   static FredericBackend of(BuildContext context) {
     return context.read<FredericBackend>();
@@ -18,6 +20,8 @@ class FredericBackend {
 
   final FirebaseAuth _firebaseAuth;
   final AuthenticationService _authenticationService;
+
+  FredericUser currentUser;
 
   AuthenticationService get authService => _authenticationService;
 

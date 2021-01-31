@@ -30,6 +30,7 @@ dependencies:
   firebase_auth: ^0.20.0+1
   firebase_core: ^0.7.0
   flutter_native_splash: ^0.2.7
+  get_it: ^5.0.6
   google_fonts: ^1.1.1
   intl: ^0.16.1
   provider: ^4.3.3

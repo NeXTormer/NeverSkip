@@ -8,6 +8,7 @@ import 'package:frederic/screens/calendar_screen.dart';
 import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/test_screens/show_workout_screen.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class FredericApp extends StatelessWidget {
@@ -16,6 +17,7 @@ class FredericApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return MultiProvider(
       providers: [
         Provider<FredericBackend>(
