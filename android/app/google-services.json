@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "301523012050",
+    "firebase_url": "https://hawkford-frederic-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "hawkford-frederic",
+    "storage_bucket": "hawkford-frederic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301523012050:android:4aa7b3b2bcaaf47028600b",
+        "android_client_info": {
+          "package_name": "io.hawkford.frederic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301523012050-sm5lu4ji2r7ff4tv7133asjjjdnvaee1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgJAxe9yJY8J-HtFHCADRxRO9TW17zfJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301523012050-sm5lu4ji2r7ff4tv7133asjjjdnvaee1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "301523012050-nsff5rrd86lhkmn3tmgl5gr9jib8hlr9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.hawkford.frederic"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
