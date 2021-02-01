@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/providers/activity.dart';
+import 'package:frederic/providers/goals.dart';
+import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/routing/route_generator.dart';
-import 'package:frederic/screens/calendar_screen.dart';
+import 'package:frederic/screens/profile_screen.dart';
+import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
-import 'package:frederic/test_screens/show_workout_screen.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class FredericApp extends StatelessWidget {
@@ -26,6 +28,15 @@ class FredericApp extends StatelessWidget {
         StreamProvider(
           create: (context) =>
               context.read<FredericBackend>().authService.authStateChanges,
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Goals(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ProgressGraph(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Activity(),
         )
       ],
       child: MaterialApp(
@@ -38,7 +49,7 @@ class FredericApp extends StatelessWidget {
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: AllActivitiesScreen(),
+          homePage: ProfileScreen2(),
           loginPage: LoginScreen(),
         ),
       ),
