@@ -44,7 +44,7 @@ class FredericWorkout {
     if (_loadActivities) {
       return _activities;
     }
-    stderr.writeln(
+    print(
         'Error: Attempted to access the activities of a FredericWorkout which has not loaded the activities yet');
     return null;
   }
@@ -164,7 +164,7 @@ class FredericWorkout {
     } else if (_isStream) {
       _loadActivitiesStream();
     } else {
-      stderr.writeln(
+      print(
           '[FredericWorkout] Error: tried loading activities before loading the workout');
     }
   }
@@ -180,7 +180,7 @@ class FredericWorkout {
 
   void _loadActivitiesStream() {
     if (_hasActivitiesLoaded) {
-      stderr.writeln('[FredericWorkout] Error: tried loading activities twice');
+      print('[FredericWorkout] Error: tried loading activities twice');
       return;
     }
     DocumentReference workoutDocument =

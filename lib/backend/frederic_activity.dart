@@ -67,7 +67,7 @@ class FredericActivity {
     if (_areSetsLoaded || _sets != null) {
       return _sets;
     }
-    stderr.writeln(
+    print(
         '[FredericActivity] Error: tried accessing sets when they are not loaded');
     return null;
   }
@@ -239,6 +239,7 @@ class FredericActivity {
   Future<FredericActivity> loadSets() async {
     if (_isStream) {
       _loadSetsStream();
+      return null;
     } else {
       await _loadSetsOnce();
       return this;
@@ -247,7 +248,7 @@ class FredericActivity {
 
   //============================================================================
   /// Used to populate the data from outside using literal data
-  /// Currently only for futures
+  /// Currently only for futures, does not update the database
   ///
   void insertData(String name, String description, String image, String owner,
       int recommendedSets, int recommendedReps) {
