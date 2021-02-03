@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/activity.dart';
-import 'package:frederic/widget/second_design/activity/activity_card.dart';
-import 'package:frederic/widget/second_design/appbar/activity_flexiable_appbar.dart';
+import 'package:frederic/widgets/profile_screen/activity/activity_card.dart';
+import 'package:frederic/widgets/profile_screen/appbar/activity_flexiable_appbar.dart';
+
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widget/profile_header.dart';
 
 class ProfileHeader extends StatelessWidget {
   @override

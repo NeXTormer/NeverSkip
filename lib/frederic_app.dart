@@ -7,9 +7,6 @@ import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/routing/route_generator.dart';
-import 'package:frederic/screens/profile_screen.dart';
-import 'package:frederic/screens/profile_screen_2.dart';
-import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +46,7 @@ class FredericApp extends StatelessWidget {
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: ProfileScreen2(),
+          homePage: HomeScreen(),
           loginPage: LoginScreen(),
         ),
       ),

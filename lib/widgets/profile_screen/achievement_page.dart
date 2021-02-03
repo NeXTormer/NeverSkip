@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/goals.dart';
-import 'package:frederic/widget/second_design/circle_item.dart';
+import 'package:frederic/widgets/profile_screen/circle_item.dart';
 import 'package:provider/provider.dart';
 
 /// The [AchievementPage] displays the finished and saved goals in a circular style

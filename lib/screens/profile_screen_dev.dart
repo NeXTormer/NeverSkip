@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-
-import '../widget/profile_header.dart';
-import '../widget/second_design/graph/progress_page.dart';
+import 'package:frederic/widgets/profile_header.dart';
+import 'package:frederic/widgets/profile_screen/graph/progress_page.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const routeName = '/profile';

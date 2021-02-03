@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/goals.dart';
-import 'package:frederic/widget/second_design/goal/goal_item.dart';
+import 'package:frederic/widgets/profile_screen/goal/goal_item.dart';
 import 'package:provider/provider.dart';
 
 /// Displays the [List<CardGoalItem>] corresponding to the user's currently created goals.

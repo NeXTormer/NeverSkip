@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/progress_graph.dart';
-import 'package:frederic/widget/second_design/graph/card_progress_tracker.dart';
+import 'package:frederic/widgets/profile_screen/graph/card_progress_tracker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:provider/provider.dart';
 
