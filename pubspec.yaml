@@ -33,6 +33,8 @@ dependencies:
   modal_bottom_sheet: ^1.0.0+1
   image_picker: ^0.6.7+21
   flutter_slidable: ^0.5.7
+  table_calendar: ^2.3.3
+  reorderables: ^0.3.2
   
   async: ^2.4.2
   cloud_firestore: ^0.16.0
