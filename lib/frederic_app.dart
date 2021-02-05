@@ -42,7 +42,7 @@ class FredericApp extends StatelessWidget {
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.red[400],
+          primaryColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: RouteGenerator.generateRoute,

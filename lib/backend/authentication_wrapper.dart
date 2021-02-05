@@ -21,7 +21,7 @@ class AuthenticationWrapper extends StatelessWidget {
           FredericBackend.of(context).currentUser =
               FredericUser(snapshot.data.uid);
           return FutureBuilder(
-              future: FredericBackend.of(context).currentUser.loadData(),
+              future: FredericBackend.of(context).loadCurrentUser(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return homePage;

@@ -21,7 +21,7 @@ class FredericUser {
   DateTime _birthday;
 
   String get uid => _uid;
-  String get email => _email ?? 'empty@hawkford.io';
+  String get email => _email ?? 'nouser@hawkford.io';
   String get name => _name ?? 'noname';
   String get description => _description ?? '';
   String get image => _profileImage;
@@ -95,6 +95,24 @@ class FredericUser {
     }
   }
 
+  void insertDocumentSnapshot(DocumentSnapshot snapshot) {
+    if (snapshot.data() == null) {
+      return null;
+    }
+
+    _email = FirebaseAuth.instance.currentUser.email;
+    _name = snapshot.data()['name'];
+    _description = snapshot.data()['description'];
+    _profileImage = snapshot.data()['image'];
+    _bannerImage = snapshot.data()['banner'];
+    _birthday = snapshot.data()['birthday'].toDate();
+    _currentWorkoutID = snapshot.data()['currentworkout'];
+  }
+
+  ///
+  /// This should not be used outside of [FredericBackend] because only
+  /// one user can be loaded at a time
+  ///
   Future<FredericUser> loadData() async {
     if (uid == null) {
       return null;
@@ -107,14 +125,7 @@ class FredericUser {
       //TODO: implement proper sign up process
       return null;
     }
-
-    _email = FirebaseAuth.instance.currentUser.email;
-    _name = userEntry.data()['name'];
-    _description = userEntry.data()['description'];
-    _profileImage = userEntry.data()['image'];
-    _bannerImage = userEntry.data()['banner'];
-    _birthday = userEntry.data()['birthday'].toDate();
-    _currentWorkoutID = userEntry.data()['currentworkout'];
+    insertDocumentSnapshot(userEntry);
     return this;
   }
 

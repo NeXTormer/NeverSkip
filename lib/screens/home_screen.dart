@@ -97,100 +97,127 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     user = FredericBackend.of(context).currentUser;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
-        child: AppBar(
-          title: Text(user.name),
-          leading: InkWell(
-              child: Icon(Icons.person),
-              onTap: () => FirebaseAuth.instance.signOut()),
-          actions: [
-            PopupMenuButton(
-              onSelected: (addOption) {
-                /// Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
-                if (addOption == AddOptions.Goal) {
-                  _onButtonPressed(null);
-                } else {
-                  Navigator.of(context).pushNamed(AddGraphScreen.routeName);
-                }
-              },
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  child: Text('Add Goal'),
-                  value: AddOptions.Goal,
-                ),
-                PopupMenuItem(
-                  child: Text('Add Graph'),
-                  value: AddOptions.Graph,
-                ),
-              ],
-              icon: Icon(Icons.add),
-            ),
-            IconButton(icon: Icon(Icons.list), onPressed: () {}),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  ProfileAvatar(imageUrl: user.image),
-                  buildProfileText(),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  buildStatisticText(context, 'Push Ups', '40'),
-                  buildStatisticText(context, 'Pull Ups', '10'),
-                  buildStatisticText(context, 'Dips', '20'),
-                ],
-              ),
-              Divider(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(left: 16.0, top: 6.0),
-                    child: Text(
-                      'Achievements',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+    return StreamBuilder<FredericUser>(
+      stream: FredericBackend.of(context).currentUserStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          user = snapshot.data;
+          return Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(50.0),
+                child: AppBar(
+                  title: Text(user.name),
+                  leading: InkWell(
+                      child: Icon(Icons.person),
+                      onTap: () => FirebaseAuth.instance.signOut()),
+                  actions: [
+                    PopupMenuButton(
+                      onSelected: (addOption) {
+                        /// Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
+                        if (addOption == AddOptions.Goal) {
+                          _onButtonPressed(null);
+                        } else {
+                          Navigator.of(context)
+                              .pushNamed(AddGraphScreen.routeName);
+                        }
+                      },
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          child: Text('Add Goal'),
+                          value: AddOptions.Goal,
+                        ),
+                        PopupMenuItem(
+                          child: Text('Add Graph'),
+                          value: AddOptions.Graph,
+                        ),
+                      ],
+                      icon: Icon(Icons.add),
                     ),
-                  ),
-                  AchievementPage(),
-                ],
+                    IconButton(icon: Icon(Icons.list), onPressed: () {}),
+                  ],
+                ),
               ),
-              GoalPage(_onButtonPressed),
-              SizedBox(height: 10.0),
-              Divider(),
-              SizedBox(height: 10.0),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      'Progress - Tracker',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+              body: SingleChildScrollView(
+                child: Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        // contains profile header
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                ProfileAvatar(imageUrl: user.image),
+                                buildProfileText(),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                buildStatisticText(context, 'Push Ups', '40'),
+                                buildStatisticText(context, 'Pull Ups', '10'),
+                                buildStatisticText(context, 'Dips', '20'),
+                              ],
+                            ),
+                            SizedBox(height: 12),
+                            Divider(
+                              height: 0,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding:
+                                const EdgeInsets.only(left: 16.0, top: 6.0),
+                            child: Text(
+                              'Achievements',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          AchievementPage(),
+                        ],
+                      ),
+                      GoalPage(_onButtonPressed),
+                      SizedBox(height: 10.0),
+                      Divider(),
+                      SizedBox(height: 10.0),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Text(
+                              'Progresstracker',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      ProgressPage(),
+                      SizedBox(height: 50),
+                    ],
                   ),
-                ],
-              ),
-              ProgressPage(),
-              SizedBox(height: 50),
-            ],
-          ),
-        ),
-      ),
+                ),
+              ));
+        } else {
+          return Scaffold(
+            body: Container(
+                child: Center(
+              child: Text('loading user data...'),
+            )),
+          );
+        }
+      },
     );
   }
 }

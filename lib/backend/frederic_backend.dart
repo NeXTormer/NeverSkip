@@ -19,8 +19,41 @@ class FredericBackend {
   final AuthenticationService _authenticationService;
 
   FredericUser currentUser;
+  Stream<FredericUser> _currentUserStream;
+  StreamController<FredericUser> _currentUserStreamController;
 
+  Stream<FredericUser> get currentUserStream => _currentUserStream;
   AuthenticationService get authService => _authenticationService;
+
+  ///
+  /// Use this to load the data for the currentUser, instead of using
+  /// currentUser.loadData().
+  ///
+  Future<FredericUser> loadCurrentUser() async {
+    await currentUser.loadData();
+    _currentUserStreamController = StreamController<FredericUser>();
+    _currentUserStream =
+        _currentUserStreamController.stream.asBroadcastStream();
+    _loadCurrentUserStream();
+    return currentUser;
+  }
+
+  void _loadCurrentUserStream() {
+    if (currentUser?.uid == null) {
+      return null;
+    }
+
+    CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    Stream<DocumentSnapshot> userStream =
+        usersCollection.doc(currentUser.uid).snapshots();
+
+    userStream.listen((event) {
+      currentUser.insertDocumentSnapshot(event);
+      _currentUserStreamController.add(currentUser);
+    });
+  }
 
   // ===========================================================================
   /// Gets all global activities and the activities of the current user
