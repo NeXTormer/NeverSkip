@@ -21,7 +21,7 @@ class _EditGoalSlidesheetState extends State<EditGoalSlidesheet> {
           color: const Color(0xFF167F67),
         )),
     const Item(
-        'Reputations',
+        'Repetitions',
         Icon(
           Icons.flag,
           color: const Color(0xFF167F67),

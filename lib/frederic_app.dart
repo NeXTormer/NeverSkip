@@ -7,7 +7,6 @@ import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/routing/route_generator.dart';
-import 'package:frederic/deprecated/profile_screen_dev.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
 

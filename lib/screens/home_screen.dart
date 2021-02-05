@@ -35,10 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
             user.name,
             style: TextStyle(
               fontSize: 20,
+              fontWeight: FontWeight.w500,
             ),
           ),
+          SizedBox(height: 6),
           Text(
             user.description,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 15, color: Colors.black54),
           )
         ],
@@ -149,7 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: [
                                 ProfileAvatar(imageUrl: user.image),
-                                buildProfileText(),
+                                Expanded(child: buildProfileText()),
+                                SizedBox(width: 16)
                               ],
                             ),
                             Row(
