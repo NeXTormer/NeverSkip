@@ -20,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  FredericUser user;
+
   /// Outsource the Profile-Text section
   ///
   /// Currently build a static [profile name] and [subtext].
@@ -30,13 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Sascha Huber',
+            user.name,
             style: TextStyle(
               fontSize: 20,
             ),
           ),
           Text(
-            'Hier ein Platzhalter Text, damit es gut aussieht',
+            user.description,
             style: TextStyle(fontSize: 15, color: Colors.black54),
           )
         ],
@@ -93,11 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    user = FredericBackend.of(context).currentUser;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
         child: AppBar(
-          title: Text(FredericBackend.of(context).currentUser.name),
+          title: Text(user.name),
           leading: InkWell(
               child: Icon(Icons.person),
               onTap: () => FirebaseAuth.instance.signOut()),
@@ -133,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 children: [
-                  ProfileAvatar(),
+                  ProfileAvatar(imageUrl: user.image),
                   buildProfileText(),
                 ],
               ),
@@ -153,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.only(left: 16.0, top: 6.0),
                     child: Text(
-                      'Achivements',
+                      'Achievements',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

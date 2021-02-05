@@ -14,18 +14,21 @@ class FredericUser {
   String _uid;
   String _email;
   String _name;
+  String _description;
   String _profileImage;
   String _bannerImage;
   String _currentWorkoutID;
   DateTime _birthday;
 
   String get uid => _uid;
-  String get email => _email;
-  String get name => _name;
+  String get email => _email ?? 'empty@hawkford.io';
+  String get name => _name ?? 'noname';
+  String get description => _description ?? '';
   String get image => _profileImage;
-  String get banner => _bannerImage;
-  String get currentWorkoutID => _currentWorkoutID;
-  DateTime get birthday => _birthday;
+  String get banner =>
+      _bannerImage ?? 'https://via.placeholder.com/1000x400?text=nobannerimage';
+  String get currentWorkoutID => _currentWorkoutID ?? '';
+  DateTime get birthday => _birthday ?? DateTime.now();
 
   int get age {
     var diff = _birthday.difference(DateTime.now());
@@ -80,6 +83,18 @@ class FredericUser {
     }
   }
 
+  ///
+  /// Also updates the description in the database
+  ///
+  set description(String value) {
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'description': value});
+    }
+  }
+
   Future<FredericUser> loadData() async {
     if (uid == null) {
       return null;
@@ -95,6 +110,7 @@ class FredericUser {
 
     _email = FirebaseAuth.instance.currentUser.email;
     _name = userEntry.data()['name'];
+    _description = userEntry.data()['description'];
     _profileImage = userEntry.data()['image'];
     _bannerImage = userEntry.data()['banner'];
     _birthday = userEntry.data()['birthday'].toDate();
