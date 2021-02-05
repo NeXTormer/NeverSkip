@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,9 +9,7 @@ import 'backend.dart';
 
 class FredericBackend {
   FredericBackend(this._firebaseAuth)
-      : _authenticationService = AuthenticationService(_firebaseAuth) {
-    currentUser = FredericUser();
-  }
+      : _authenticationService = AuthenticationService(_firebaseAuth);
 
   static FredericBackend of(BuildContext context) {
     return context.read<FredericBackend>();

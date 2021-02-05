@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/graph/progress_page.dart';
 
@@ -44,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
         child: AppBar(
-          title: Text('Sascha Huber'),
+          title: Text(FredericBackend.of(context).currentUser.name),
           leading: Icon(Icons.person),
           actions: [
             IconButton(icon: Icon(Icons.add), onPressed: () {}),
@@ -56,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             ProfileHeader(),
-            buildProfileText(context, 'Sascha Huber',
+            buildProfileText(context, 'Sascha Huberdd',
                 'Weijdnksdjnsdfkdjfnksnfdkfsdkfnsdfnkjnsdkfnsß net', 130.0),
             SizedBox(height: 16.0),
             Row(

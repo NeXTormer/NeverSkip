@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
         child: AppBar(
-          title: Text('Sascha Huber'),
+          title: Text(FredericBackend.of(context).currentUser.name),
           leading: InkWell(
               child: Icon(Icons.person),
               onTap: () => FirebaseAuth.instance.signOut()),

@@ -7,12 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// Getting other users not yet supported but planned
 ///
 class FredericUser {
-  FredericUser([String uid]) {
-    if (_uid == null) {
-      _uid = FirebaseAuth.instance.currentUser.uid;
-    } else {
-      _uid = uid;
-    }
+  FredericUser(String uid) {
+    _uid = uid;
   }
 
   String _uid;
@@ -85,6 +81,9 @@ class FredericUser {
   }
 
   Future<FredericUser> loadData() async {
+    if (uid == null) {
+      return null;
+    }
     CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('users');
     DocumentSnapshot userEntry = await usersCollection.doc(_uid).get();

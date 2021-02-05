@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
@@ -14,21 +13,30 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User firebaseUser = context.watch<User>();
-
-    if (firebaseUser != null) {
-      return FutureBuilder(
-        builder: (context, data) {
-          if (data.hasData) {
-            return homePage;
-          } else {
-            return Scaffold();
-          }
-        },
-        future: FredericBackend.of(context).currentUser.loadData(),
-      );
-    } else {
-      return loginPage;
-    }
+    return StreamBuilder<User>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data.uid != null) {
+          // if the user logged in load the userdata from firestore:
+          FredericBackend.of(context).currentUser =
+              FredericUser(snapshot.data.uid);
+          return FutureBuilder(
+              future: FredericBackend.of(context).currentUser.loadData(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return homePage;
+                } else {
+                  return Scaffold(
+                    body: Center(
+                      child: Text('User is logged in but not in DB'),
+                    ),
+                  );
+                }
+              });
+        } else {
+          return loginPage;
+        }
+      },
+    );
   }
 }
