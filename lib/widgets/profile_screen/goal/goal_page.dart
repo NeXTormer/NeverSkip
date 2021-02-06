@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_item.dart';
 import 'package:provider/provider.dart';
@@ -7,25 +9,31 @@ import 'package:provider/provider.dart';
 ///
 /// Takes a [Function] argument in the constructur, which get passed in the respectively [CardGoalItem] item.
 class GoalPage extends StatelessWidget {
-  final Function showSlidesheet;
   GoalPage(this.showSlidesheet);
+  final Function showSlidesheet;
   @override
   Widget build(BuildContext context) {
-    final goalsData = Provider.of<Goals>(context);
-    final goals = goalsData.unfinishedGoals;
-    return Container(
-      height: 231,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: goals.length,
-        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: goals[i],
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: CardGoalItem(goals[i], showSlidesheet),
-          ),
-        ),
-      ),
-    );
+    Stream<List<FredericGoal>> stream =
+        FredericBackend.of(context).loadGoalStream();
+
+    return StreamBuilder<List<FredericGoal>>(
+        stream: stream,
+        builder: (context, snapshot) {
+          if (snapshot.data == null || snapshot.data.length == 0)
+            return Container(child: Center(child: Text('no goals yet')));
+          return Container(
+            height: 240,
+            child: ListView.builder(
+                shrinkWrap: false,
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child:
+                          CardGoalItem(snapshot.data[index], showSlidesheet));
+                }),
+          );
+        });
   }
 }

@@ -4,6 +4,7 @@ import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_goal.dart';
 import 'package:provider/provider.dart';
 import 'backend.dart';
 
@@ -18,9 +19,15 @@ class FredericBackend {
   final FirebaseAuth _firebaseAuth;
   final AuthenticationService _authenticationService;
 
+  // Streamed objects
   FredericUser currentUser;
+  List<FredericGoal> goals;
+
+  // Streams and StreamControllers
   Stream<FredericUser> _currentUserStream;
   StreamController<FredericUser> _currentUserStreamController;
+
+  StreamController<List<FredericGoal>> _goalsStreamController;
 
   Stream<FredericUser> get currentUserStream => _currentUserStream;
   AuthenticationService get authService => _authenticationService;
@@ -123,5 +130,28 @@ class FredericBackend {
     });
 
     return controller;
+  }
+
+  Stream<List<FredericGoal>> loadGoalStream() {
+    CollectionReference goalsCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('goals');
+    Stream<QuerySnapshot> snapshots = goalsCollection.snapshots();
+    goals = List<FredericGoal>();
+    _goalsStreamController = StreamController<List<FredericGoal>>();
+    snapshots.listen(_processGoalStream);
+    return _goalsStreamController.stream;
+  }
+
+  void _processGoalStream(QuerySnapshot snapshot) {
+    goals.clear();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      var data = snapshot.docs[i];
+      FredericGoal goal = FredericGoal(data.id);
+      goal.insertData(data);
+      goals.add(goal);
+    }
+    _goalsStreamController.add(goals);
   }
 }
