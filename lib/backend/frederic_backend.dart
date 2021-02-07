@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_goal.dart';
+import 'package:frederic/backend/frederic_set.dart';
 import 'package:provider/provider.dart';
 import 'backend.dart';
 
@@ -25,9 +27,13 @@ class FredericBackend {
 
   // Streams and StreamControllers
   Stream<FredericUser> _currentUserStream;
-  StreamController<FredericUser> _currentUserStreamController;
 
+  StreamController<FredericUser> _currentUserStreamController;
   StreamController<List<FredericGoal>> _goalsStreamController;
+  StreamController<HashMap<String, FredericActivity>>
+      _activitiesStreamController;
+
+  HashMap<String, FredericActivity> activities;
 
   Stream<FredericUser> get currentUserStream => _currentUserStream;
   AuthenticationService get authService => _authenticationService;
@@ -133,6 +139,7 @@ class FredericBackend {
   }
 
   Stream<List<FredericGoal>> loadGoalStream() {
+    if (_goalsStreamController != null) return _goalsStreamController.stream;
     CollectionReference goalsCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser.uid)
@@ -150,7 +157,32 @@ class FredericBackend {
       var data = snapshot.docs[i];
       FredericGoal goal = FredericGoal(data.id);
       goal.insertData(data);
+
       goals.add(goal);
+    }
+
+    reloadGoalProgress();
+    //_goalsStreamController.add(goals); // already done in [reloadGoalProgress()]
+  }
+
+  void reloadGoalProgress([int limit = 5]) async {
+    CollectionReference setsCollection =
+        FirebaseFirestore.instance.collection('sets');
+    for (int i = 0; i < goals.length; i++) {
+      FredericGoal goal = goals[i];
+      QuerySnapshot snapshot = await setsCollection
+          .where('owner', isEqualTo: currentUser.uid)
+          .where('activity', isEqualTo: goal.activityID)
+          .orderBy('timestamp', descending: true)
+          .limit(limit)
+          .get();
+      goal.sets.clear();
+      for (int j = 0; j < snapshot.docs.length; j++) {
+        var data = snapshot.docs[j].data();
+        goal.sets.add(FredericSet(snapshot.docs[i].id, data['reps'],
+            data['weight'], data['timestamp'].toDate()));
+        goal.calculateCurrentProgress();
+      }
     }
     _goalsStreamController.add(goals);
   }

@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ///
   /// The bottom sheet contains the [EditSlideSheet] Widget
   /// so the user can interact with the goal.
-  void _onButtonPressed(String id) {
+  void _handleButtonPress(String id) {
     showModalBottomSheet<dynamic>(
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
@@ -107,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.hasData) {
           user = snapshot.data;
           return Scaffold(
+              backgroundColor: Colors.white,
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(50.0),
                 child: AppBar(
@@ -119,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onSelected: (addOption) {
                         /// Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
                         if (addOption == AddOptions.Goal) {
-                          _onButtonPressed(null);
+                          _handleButtonPress(null);
                         } else {
                           Navigator.of(context)
                               .pushNamed(AddGraphScreen.routeName);
@@ -190,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           AchievementPage(),
                         ],
                       ),
-                      GoalPage(_onButtonPressed),
+                      GoalPage(_handleButtonPress),
                       SizedBox(height: 10.0),
                       Divider(),
                       SizedBox(height: 10.0),

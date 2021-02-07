@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:frederic/backend/frederic_set.dart';
 
 ///
 /// A Goal and a achievement are the same object. Achieved goals are
@@ -18,11 +19,15 @@ class FredericGoal {
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection('goals')
         .doc(uid);
+    sets = List<FredericSet>();
   }
+
   String _uid;
   String _activityID;
 
   DocumentReference _documentReference;
+  List<FredericSet> sets;
+
   String _title;
   String _image;
   String _type;
@@ -42,10 +47,11 @@ class FredericGoal {
   String get type => _type;
   num get startState => _start ?? 0;
   num get endState => _end ?? 0;
-  num get currentState => _current ?? 0;
+  num get currentState => _current ?? -69;
   DateTime get startDate => _startDate.toDate() ?? DateTime.now();
   DateTime get endDate => _endDate.toDate() ?? DateTime.now();
   bool get isCompleted => _isCompleted ?? false;
+  bool get isNotCompleted => !_isCompleted;
   bool get isDeleted => _isDeleted ?? false;
   bool get isLoss => startState > endState;
 
@@ -114,8 +120,17 @@ class FredericGoal {
     _type = snapshot.data()['type'];
   }
 
-  //setter
-  //getter
-  //load
-  //
+  void calculateCurrentProgress() {
+    num max = 0;
+    if (_type == 'weight') {
+      sets.forEach((element) {
+        max = element.weight > max ? element.weight : max;
+      });
+    } else if (_type == 'reps') {
+      sets.forEach((element) {
+        max = element.reps > max ? element.reps : max;
+      });
+    }
+    _current = max;
+  }
 }
