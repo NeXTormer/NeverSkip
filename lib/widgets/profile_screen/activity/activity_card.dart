@@ -15,7 +15,7 @@ class _ActivityCardState extends State<ActivityCard> {
   int _countReps = 0;
   bool _expanded = false;
 
-  List<Container> buildSchadow() {
+  List<Container> buildShadow() {
     List<Container> output = [
       Container(
         decoration: BoxDecoration(
@@ -255,7 +255,7 @@ class _ActivityCardState extends State<ActivityCard> {
               child: Stack(
                 children: [
                   buildBackgroundImage(widget.activity.image),
-                  ...buildSchadow(),
+                  ...buildShadow(),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(

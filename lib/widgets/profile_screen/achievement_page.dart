@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
-import 'package:frederic/widgets/profile_screen/circle_item.dart';
+import 'package:frederic/widgets/profile_screen/achievement_item.dart';
 import 'package:provider/provider.dart';
 
 /// The [AchievementPage] displays the finished and saved goals in a circular style
 ///
 /// Gets all goals in a [List<GoalItem> achievements].
-/// Iterates through [achievements] and generates a corresponding [CircleItem], which takes a [GoalItem] as argument.
+/// Iterates through [achievements] and generates a corresponding [AchievementItem], which takes a [GoalItem] as argument.
 class AchievementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final achievementData = Provider.of<Goals>(context);
-    final achievements = achievementData.finishedGoals;
-    return achievements.isEmpty
-        ? Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            height: 90,
-            child: Column(
-              children: [
-                Text('-------Empty-------'),
-                // TO Do
-              ],
-            ),
-          )
-        : Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            height: 90,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: achievements.length,
-              itemBuilder: (ctx, i) => CircleItem(achievements[i]),
-            ),
-          );
+    Stream<List<FredericGoal>> stream =
+        FredericBackend.of(context).loadAchievementsStream();
+
+    return StreamBuilder<List<FredericGoal>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data == null || snapshot.data.length == 0) {
+            return Container();
+          } else {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              height: 65,
+              child: ListView.builder(
+                //TODO: maybe swap with GridView
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) =>
+                    AchievementItem(snapshot.data[index]),
+              ),
+            );
+          }
+        }
+        return Container();
+      },
+    );
   }
 }

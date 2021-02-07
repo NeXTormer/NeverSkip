@@ -27,7 +27,7 @@ class CardGoalItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 1,
       child: Container(
         width: 300,
         /* decoration: BoxDecoration(

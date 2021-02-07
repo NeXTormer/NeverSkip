@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
-import 'package:frederic/providers/goals.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_item.dart';
-import 'package:provider/provider.dart';
 
 /// Displays the [List<CardGoalItem>] corresponding to the user's currently created goals.
 ///
@@ -20,7 +18,21 @@ class GoalPage extends StatelessWidget {
         stream: stream,
         builder: (context, snapshot) {
           if (snapshot.data == null || snapshot.data.length == 0)
-            return Container(child: Center(child: Text('no goals yet')));
+            return Container(
+                child: Center(
+                    child: Column(
+              children: [
+                SizedBox(height: 12),
+                Text('You have not set any goals yet.',
+                    style: TextStyle(fontSize: 18, color: Colors.grey[500])),
+                SizedBox(
+                  height: 6,
+                ),
+                Text('Set a goal using the + button.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey[500])),
+                SizedBox(height: 2)
+              ],
+            )));
           return Container(
             height: 240,
             child: ListView.builder(

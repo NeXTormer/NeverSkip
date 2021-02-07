@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   actions: [
                     PopupMenuButton(
                       onSelected: (addOption) {
-                        /// Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
+                        // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
                         if (addOption == AddOptions.Goal) {
                           _handleButtonPress(null);
                         } else {
@@ -181,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding:
                                 const EdgeInsets.only(left: 16.0, top: 6.0),
                             child: Text(
-                              'Achievements',
+                              'Achievements and Goals',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

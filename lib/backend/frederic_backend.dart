@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,16 +23,14 @@ class FredericBackend {
   // Streamed objects
   FredericUser currentUser;
   List<FredericGoal> goals;
+  List<FredericGoal> achievements;
 
   // Streams and StreamControllers
   Stream<FredericUser> _currentUserStream;
 
   StreamController<FredericUser> _currentUserStreamController;
   StreamController<List<FredericGoal>> _goalsStreamController;
-  StreamController<HashMap<String, FredericActivity>>
-      _activitiesStreamController;
-
-  HashMap<String, FredericActivity> activities;
+  StreamController<List<FredericGoal>> _achievementsStreamController;
 
   Stream<FredericUser> get currentUserStream => _currentUserStream;
   AuthenticationService get authService => _authenticationService;
@@ -138,13 +135,42 @@ class FredericBackend {
     return controller;
   }
 
+  Stream<List<FredericGoal>> loadAchievementsStream() {
+    if (_achievementsStreamController != null)
+      return _achievementsStreamController.stream;
+    CollectionReference goalsCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('goals');
+    Stream<QuerySnapshot> snapshots =
+        goalsCollection.where('iscompleted', isEqualTo: true).snapshots();
+    achievements = List<FredericGoal>();
+    _achievementsStreamController = StreamController<List<FredericGoal>>();
+    snapshots.listen(_processAchievementStream);
+    return _achievementsStreamController.stream;
+  }
+
+  void _processAchievementStream(QuerySnapshot snapshot) {
+    achievements.clear();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      var data = snapshot.docs[i];
+      FredericGoal achievement = FredericGoal(data.id);
+      achievement.insertData(data);
+
+      achievements.add(achievement);
+    }
+
+    _achievementsStreamController.add(achievements);
+  }
+
   Stream<List<FredericGoal>> loadGoalStream() {
     if (_goalsStreamController != null) return _goalsStreamController.stream;
     CollectionReference goalsCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser.uid)
         .collection('goals');
-    Stream<QuerySnapshot> snapshots = goalsCollection.snapshots();
+    Stream<QuerySnapshot> snapshots =
+        goalsCollection.where('iscompleted', isEqualTo: false).snapshots();
     goals = List<FredericGoal>();
     _goalsStreamController = StreamController<List<FredericGoal>>();
     snapshots.listen(_processGoalStream);
@@ -170,6 +196,7 @@ class FredericBackend {
         FirebaseFirestore.instance.collection('sets');
     for (int i = 0; i < goals.length; i++) {
       FredericGoal goal = goals[i];
+      if (goal.isCompleted) continue;
       QuerySnapshot snapshot = await setsCollection
           .where('owner', isEqualTo: currentUser.uid)
           .where('activity', isEqualTo: goal.activityID)

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/providers/activity.dart';
-import 'package:frederic/providers/goals.dart';
 import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/screens.dart';
@@ -25,9 +24,6 @@ class FredericApp extends StatelessWidget {
         StreamProvider(
           create: (context) =>
               context.read<FredericBackend>().authService.authStateChanges,
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Goals(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => ProgressGraph(),
