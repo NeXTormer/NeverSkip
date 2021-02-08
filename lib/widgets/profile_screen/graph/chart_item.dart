@@ -30,7 +30,6 @@ class CardChartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int index = 0;
     return Container(
       padding: EdgeInsets.all(16.0),
       height: 200,

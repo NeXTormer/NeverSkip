@@ -134,3 +134,5 @@ class FredericGoal {
     _current = max;
   }
 }
+
+enum FredericGoalType { Weight, Reps }

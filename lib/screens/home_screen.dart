@@ -5,6 +5,7 @@ import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/graph/progress_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_avatar.dart';
+import 'package:frederic/widgets/progresschart/progress_chart.dart';
 import '../backend/backend.dart';
 
 enum AddOptions {
@@ -209,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      ProgressPage(),
+                      ProgressChart(),
                       SizedBox(height: 50),
                     ],
                   ),

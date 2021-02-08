@@ -43,6 +43,8 @@ dependencies:
   percent_indicator: ^2.1.9
   provider: ^4.3.3
   smooth_page_indicator: ^0.2.0
+  sorted_list: ^0.1.0
+  syncfusion_flutter_charts: ^18.4.41
 
 dev_dependencies:
   flutter_test:
