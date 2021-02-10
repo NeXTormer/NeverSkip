@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     iconData: Icons.vpn_key_outlined,
                   ),
-                  SizedBox(height: 55),
+                  SizedBox(height: 10),
                   LoginButton(text: 'Log in', onPressed: loginButtonHandler),
                   Expanded(child: Container()),
                   Container(
