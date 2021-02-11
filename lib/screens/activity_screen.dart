@@ -41,7 +41,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (ctx, index) => ActivityCard(activities[index]),
+              (ctx, index) => ActivityCard(activities[index], null, null),
               childCount: activities.length,
             ),
           ),

@@ -6,10 +6,12 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/providers/progress_graph.dart';
+import 'package:frederic/providers/workout_edit.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/screens/calendar_screen.dart';
 import 'package:frederic/screens/calender_screen.dart';
+import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
@@ -41,6 +43,9 @@ class FredericApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => Activity(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => WorkoutEdit(),
         )
       ],
       child: MaterialApp(
@@ -48,12 +53,12 @@ class FredericApp extends StatelessWidget {
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.red[400],
+          primaryColor: Colors.white, // Colors.red[400],
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: CalenderScreen(),
+          homePage: EditWorkoutScreen(),
           loginPage: LoginScreen(),
         ),
         routes: {

@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 
 class ActivityCard extends StatefulWidget {
   final ActivityItem activity;
+  final Function addToWorkout;
+  final int selectedDay;
 
-  ActivityCard(this.activity);
+  ActivityCard(this.activity, this.addToWorkout, this.selectedDay);
   @override
   _ActivityCardState createState() => _ActivityCardState();
 }
@@ -236,12 +238,23 @@ class _ActivityCardState extends State<ActivityCard> {
           closeOnScroll: true,
           actions: [
             IconSlideAction(
-              caption: 'Add',
-              color: Colors.green,
-              icon: Icons.add,
-              closeOnTap: false,
-              onTap: () {},
-            ),
+                caption: 'Add',
+                color: Colors.green,
+                icon: Icons.add,
+                closeOnTap: false,
+                onTap: () {
+                  final snackBar = SnackBar(
+                    content: Text('Activity Added'),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () {
+                        // Some code to undo the change.
+                      },
+                    ),
+                  );
+                  //Scaffold.of(context).showSnackBar(snackBar);
+                  widget.addToWorkout(widget.selectedDay, widget.activity);
+                }),
           ],
           child: Card(
             elevation: 5.0,
@@ -280,7 +293,11 @@ class _ActivityCardState extends State<ActivityCard> {
         ),
         if (_expanded)
           ...subActivites.map(
-            (activity) => ActivityCard(activity),
+            (activity) => ActivityCard(
+              activity,
+              widget.addToWorkout,
+              widget.selectedDay,
+            ),
           ),
       ],
     );
