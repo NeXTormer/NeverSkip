@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/frederic_activity.dart';
@@ -116,7 +115,7 @@ class FredericWorkout {
     DocumentReference workoutsDocument =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     DocumentSnapshot documentSnapshot = await workoutsDocument.get();
-    _processDocumentSnapshot(documentSnapshot);
+    insertDocumentSnapshot(documentSnapshot);
 
     if (_loadActivities) {
       await _loadActivitiesOnce();
@@ -137,7 +136,7 @@ class FredericWorkout {
     DocumentReference workoutDocument =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     Stream<DocumentSnapshot> documentStream = workoutDocument.snapshots();
-    documentStream.listen(_processDocumentSnapshot);
+    documentStream.listen(insertDocumentSnapshot);
 
     if (_loadActivities) {
       _loadActivitiesStream();
@@ -232,7 +231,11 @@ class FredericWorkout {
     if (isFinishedLoading) _streamController?.add(this);
   }
 
-  void _processDocumentSnapshot(DocumentSnapshot snapshot) {
+  //============================================================================
+  /// Takes a DocumentSnapshot and inserts its data into the workout. If the workout
+  /// is already loaded as a Stream, the stream is updated after inserting the data
+  ///
+  void insertDocumentSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) {
       _name = 'error loading, snapshot does not exist';
       return;

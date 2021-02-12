@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/frederic_set.dart';
+import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 
 ///
 /// Contains all the data for an Activity ([name], [description], [image], [owner]), the
@@ -31,7 +31,9 @@ import 'package:frederic/backend/frederic_set.dart';
 /// it is ignored
 ///
 class FredericActivity {
-  FredericActivity(this.activityID);
+  FredericActivity(this.activityID) {
+    _muscleGroups = List<FredericActivityMuscleGroup>();
+  }
 
   final String activityID;
 
@@ -47,7 +49,9 @@ class FredericActivity {
   bool _isStream = false;
   bool _setStreamExists = false;
   bool _isFuture = false;
+  FredericActivityType _type;
   List<FredericSet> _sets;
+  List<FredericActivityMuscleGroup> _muscleGroups;
   StreamController<FredericActivity> _streamController;
 
   String get name => _name ?? 'emptyname';
@@ -96,6 +100,10 @@ class FredericActivity {
     }
     return 0;
   }
+
+  List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
+
+  FredericActivityType get type => _type;
 
   ///
   /// Also updates the name on the Database
@@ -169,6 +177,29 @@ class FredericActivity {
     if (value >= 0 && value <= 7) {
       _weekday = value;
     }
+  }
+
+  //============================================================================
+  /// returns true if the activity matches the provided muscle group
+  ///
+  bool filterMuscle(List<FredericActivityMuscleGroup> parameters) {
+    for (int i = 0; i < parameters.length; i++) {
+      if (_muscleGroups.contains(parameters[i])) return true;
+    }
+    return false;
+  }
+
+  //============================================================================
+  /// returns true if the activity matches the provided Filter Controller
+  ///
+  bool matchFilterController(ActivityFilterController controller) {
+    if (!controller.types[_type]) return false;
+    for (var value in controller.muscleGroups.entries) {
+      if (value.value) {
+        if (_muscleGroups.contains(value.key)) return true;
+      }
+    }
+    return false;
   }
 
   //============================================================================
@@ -250,8 +281,15 @@ class FredericActivity {
   /// Used to populate the data from outside using literal data
   /// Currently only for futures, does not update the database
   ///
-  void insertData(String name, String description, String image, String owner,
-      int recommendedSets, int recommendedReps) {
+  void insertData(
+      String name,
+      String description,
+      String image,
+      String owner,
+      int recommendedSets,
+      int recommendedReps,
+      List<FredericActivityMuscleGroup> muscleGroups,
+      FredericActivityType type) {
     _isFuture = true;
     _name = name;
     _description = description;
@@ -259,6 +297,8 @@ class FredericActivity {
     _owner = owner;
     _recommendedReps = recommendedReps;
     _recommendedSets = recommendedSets;
+    _muscleGroups = muscleGroups;
+    _type = type;
   }
 
   //============================================================================
@@ -364,6 +404,13 @@ class FredericActivity {
     _order = snapshot.data()['order'];
     _recommendedReps = snapshot.data()['recommendedreps'];
     _recommendedSets = snapshot.data()['recommendedsets'];
+    _type = parseType(snapshot.data()['type']);
+
+    List<dynamic> musclegroups = snapshot.data()['musclegroup'];
+    musclegroups.forEach((element) {
+      if (element is String) _muscleGroups.add(parseSingleMuscleGroup(element));
+    });
+
     if (_isStream && _name != null) _streamController?.add(this);
   }
 
@@ -395,12 +442,113 @@ class FredericActivity {
   }
 
   //============================================================================
+  /// Parses the type String from the DB to the [FredericActivityType] object.
+  /// The String can be:
+  ///   - weighted
+  ///   - cali
+  ///   - stretch
+  ///
+  static FredericActivityType parseType(String typeString) {
+    if (typeString == null) return FredericActivityType.Weighted;
+    if (typeString == 'weighted') return FredericActivityType.Weighted;
+    if (typeString == 'cali') return FredericActivityType.Calisthenics;
+    if (typeString == 'stretch') return FredericActivityType.Stretch;
+    return FredericActivityType.Weighted;
+  }
+
+  //============================================================================
+  /// Parses a muscle groups list from the DB to the [List<FredericActivityMuscleGroup>] object.
+  /// The String can be:
+  ///   - arms
+  ///   - chest
+  ///   - back
+  ///   - legs
+  ///   - abs
+  ///   - '' or none
+  ///
+  static List<FredericActivityMuscleGroup> parseMuscleGroups(
+      List<String> muscleGroupsStrings) {
+    List<FredericActivityMuscleGroup> l = List<FredericActivityMuscleGroup>();
+    for (int i = 0; i < muscleGroupsStrings.length; i++) {
+      l.add(parseSingleMuscleGroup(muscleGroupsStrings[i]));
+    }
+  }
+
+  //============================================================================
+  /// Parses the muscle groups from the DB to the [FredericActivityMuscleGroup] object.
+  /// The String can be:
+  ///   - arms
+  ///   - chest
+  ///   - back
+  ///   - legs
+  ///   - abs
+  ///   - '' or none
+  ///
+  static FredericActivityMuscleGroup parseSingleMuscleGroup(
+      String muscleGroup) {
+    switch (muscleGroup) {
+      case 'arms':
+        return FredericActivityMuscleGroup.Arms;
+      case 'chest':
+        return FredericActivityMuscleGroup.Chest;
+      case 'back':
+        return FredericActivityMuscleGroup.Back;
+      case 'legs':
+        return FredericActivityMuscleGroup.Legs;
+      case 'abs':
+        return FredericActivityMuscleGroup.Abs;
+      default:
+        return FredericActivityMuscleGroup.None;
+    }
+  }
+
+  //============================================================================
+  /// Parses the [FredericActivityMuscleGroup] back to a string for the DB
+  ///
+  static String parseSingleMuscleGroupToString(
+      FredericActivityMuscleGroup group) {
+    switch (group) {
+      case FredericActivityMuscleGroup.Arms:
+        return 'arms';
+      case FredericActivityMuscleGroup.Chest:
+        return 'chest';
+      case FredericActivityMuscleGroup.Back:
+        return 'back';
+      case FredericActivityMuscleGroup.Legs:
+        return 'legs';
+      case FredericActivityMuscleGroup.Abs:
+        return 'abs';
+      default:
+        return 'none';
+    }
+  }
+
+  //============================================================================
+  /// Parses a [List<FredericActivityMuscleGroup>] back to a [List<String>] for
+  /// the DB
+  ///
+  static List<String> parseMuscleGroupListToStringList(
+      List<FredericActivityMuscleGroup> groupList) {
+    List<String> strings = List<String>();
+    for (int i = 0; i < groupList.length; i++) {
+      strings.add(parseSingleMuscleGroupToString(groupList[i]));
+    }
+    return strings;
+  }
+
+  //============================================================================
   /// Copies one activity (can be global, from another user, or from logged in user) to
   /// the users activities
   ///
   static Future<FredericActivity> copyActivity(FredericActivity activity) {
-    return newActivity(activity.name, activity.description, activity.image,
-        activity.recommendedSets, activity.recommendedReps);
+    return newActivity(
+        activity.name,
+        activity.description,
+        activity.image,
+        activity.recommendedSets,
+        activity.recommendedReps,
+        activity.muscleGroups,
+        activity.type);
   }
 
   //============================================================================
@@ -408,8 +556,14 @@ class FredericActivity {
   /// DB and returns it as a future when finished.
   /// The [owner] is the current user
   ///
-  static Future<FredericActivity> newActivity(String name, String description,
-      String image, int recommendedSets, int recommendedReps) async {
+  static Future<FredericActivity> newActivity(
+      String name,
+      String description,
+      String image,
+      int recommendedSets,
+      int recommendedReps,
+      List<FredericActivityMuscleGroup> muscleGroups,
+      FredericActivityType type) async {
     CollectionReference activities =
         FirebaseFirestore.instance.collection('activities');
     DocumentReference newActivity = await activities.add({
@@ -418,7 +572,8 @@ class FredericActivity {
       'image': image,
       'recommendedsets': recommendedSets,
       'recommendedreps': recommendedReps,
-      'owner': FirebaseAuth.instance.currentUser.uid
+      'owner': FirebaseAuth.instance.currentUser.uid,
+      'musclegroup': parseMuscleGroupListToStringList(muscleGroups)
     });
 
     FredericActivity a = new FredericActivity(newActivity.id);
@@ -428,7 +583,9 @@ class FredericActivity {
         image,
         FirebaseAuth.instance.currentUser.uid,
         recommendedSets,
-        recommendedReps);
+        recommendedReps,
+        muscleGroups,
+        type);
     return a;
   }
 
@@ -454,3 +611,7 @@ class FredericActivity {
     return s;
   }
 }
+
+enum FredericActivityType { Weighted, Calisthenics, Stretch }
+
+enum FredericActivityMuscleGroup { Arms, Chest, Back, Abs, Legs, None }

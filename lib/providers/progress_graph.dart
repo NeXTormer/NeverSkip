@@ -29,7 +29,7 @@ class ProgressGraph with ChangeNotifier {
   var _graphs = [
     ProgressGraphItem(
       id: 'gr1',
-      title: 'Reputations',
+      title: 'Repetitions',
       lines: [
         [1, 2, 2, 3, 4, 5],
         [2, 3, 3, 3, 5, 4],

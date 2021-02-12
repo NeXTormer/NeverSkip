@@ -1,28 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class ProfileAvatar extends StatefulWidget {
-  @override
-  _ProfileAvatarState createState() => _ProfileAvatarState();
-}
+class ProfileAvatar extends StatelessWidget {
+  const ProfileAvatar({@required this.imageUrl});
 
-class _ProfileAvatarState extends State<ProfileAvatar> {
-  File _image;
-  String _imgUrl =
-      'https://soziotypen.de/wp-content/uploads/2020/01/Sascha-Huber.jpg';
+  final String imageUrl;
 
   Future getImage() async {
+    print('TODO: implement file uploading [profile_avatar.dart]');
     final image = await ImagePicker().getImage(source: ImageSource.gallery);
-
-    setState(() {
-      _image = File(image.path);
-    });
   }
 
-  void onEditTap() {
+  void handleEditTap(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
@@ -56,10 +49,10 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
       padding: EdgeInsets.all(16.0),
       child: Stack(
         children: [
-          _image != null
+          imageUrl != null
               ? CircleAvatar(
                   radius: 60,
-                  backgroundImage: FileImage(_image),
+                  backgroundImage: NetworkImage(imageUrl),
                 )
               : Container(
                   decoration: BoxDecoration(
@@ -74,7 +67,7 @@ class _ProfileAvatarState extends State<ProfileAvatar> {
             right: 0.0,
             bottom: 0.0,
             child: GestureDetector(
-              onTap: () => onEditTap(),
+              onTap: () => handleEditTap(context),
               child: CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.blue,

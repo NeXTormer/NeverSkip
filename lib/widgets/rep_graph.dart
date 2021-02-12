@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:flutter/material.dart';
-import 'package:frederic/widget/line_titles.dart';
+import 'package:frederic/widgets/line_titles.dart';
 
 class RepGraph extends StatelessWidget {
   @override

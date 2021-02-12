@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './rep_graph.dart';
+import 'rep_graph.dart';
 
 class GraphCard extends StatelessWidget {
   @override

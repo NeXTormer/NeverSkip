@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/progress_graph.dart';
-
-import 'package:frederic/widget/second_design/graph/chart_item.dart';
+import 'package:frederic/widgets/profile_screen/graph/chart_item.dart';
 
 /// Displays title and the legend items of the corresponding [ProgressGraphItem], which is taken as constructor argument.
 ///
