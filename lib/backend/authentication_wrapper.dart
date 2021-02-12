@@ -27,7 +27,17 @@ class AuthenticationWrapper extends StatelessWidget {
                 } else {
                   return Scaffold(
                     body: Center(
-                      child: Text('User is logged in but not in DB'),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('User is logged in but not in DB'),
+                            MaterialButton(
+                              onPressed: () {
+                                FirebaseAuth.instance.signOut();
+                              },
+                              child: Text('sign out'),
+                            )
+                          ]),
                     ),
                   );
                 }

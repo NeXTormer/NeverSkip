@@ -19,6 +19,7 @@ class FredericUser {
   String _bannerImage;
   String _currentWorkoutID;
   DateTime _birthday;
+  List<String> _progressMonitors;
 
   String get uid => _uid;
   String get email => _email ?? 'nouser@hawkford.io';
@@ -29,6 +30,7 @@ class FredericUser {
       _bannerImage ?? 'https://via.placeholder.com/1000x400?text=nobannerimage';
   String get currentWorkoutID => _currentWorkoutID ?? '';
   DateTime get birthday => _birthday ?? DateTime.now();
+  List<String> get progressMonitors => _progressMonitors ?? [];
 
   int get age {
     var diff = _birthday.difference(DateTime.now());
@@ -107,6 +109,13 @@ class FredericUser {
     _bannerImage = snapshot.data()['banner'];
     _birthday = snapshot.data()['birthday'].toDate();
     _currentWorkoutID = snapshot.data()['currentworkout'];
+    List<dynamic> progressMonitorsList = snapshot.data()['progressmonitors'];
+    _progressMonitors = List<String>();
+    progressMonitorsList.forEach((element) {
+      if (element is String) {
+        _progressMonitors.add(element);
+      }
+    });
   }
 
   ///

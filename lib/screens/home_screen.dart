@@ -5,6 +5,7 @@ import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/graph/progress_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_avatar.dart';
+import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
 import 'package:frederic/widgets/progresschart/progress_chart.dart';
 import '../backend/backend.dart';
 
@@ -51,26 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Outsources the Stats-Text section
-  ///
-  /// Currently builds [subText] above [boldText] in a Column
-  Widget buildStatisticText(
-      BuildContext context, String boldText, String subText) {
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            subText,
-            style: TextStyle(fontSize: 20),
-          ),
-          Text(
-            boldText,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          )
-        ],
-      ),
-    );
-  }
 
   /// On pressed show ModalBottomSheet
   ///
@@ -159,14 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(width: 16)
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                buildStatisticText(context, 'Push Ups', '40'),
-                                buildStatisticText(context, 'Pull Ups', '10'),
-                                buildStatisticText(context, 'Dips', '20'),
-                              ],
-                            ),
+                            SmallProgressViewPage(),
+
                             SizedBox(height: 12),
                             Divider(
                               height: 0,

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:provider/provider.dart';
 
 class ActivityCard extends StatefulWidget {
-  final ActivityItem activity;
+  final FredericActivity activity;
 
   ActivityCard(this.activity);
   @override
@@ -24,10 +25,10 @@ class _ActivityCardState extends State<ActivityCard> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xCC000000),
+              const Color(0x0C000000),
               const Color(0x00000000),
               const Color(0x00000000),
-              const Color(0xCC000000),
+              const Color(0x0C000000),
             ],
           ),
         ),
@@ -231,15 +232,35 @@ class _ActivityCardState extends State<ActivityCard> {
     return Column(
       children: [
         Slidable(
-          actionPane: SlidableScrollActionPane(),
+          actionPane: SlidableDrawerActionPane(),
           actionExtentRatio: 0.25,
           closeOnScroll: true,
           actions: [
             IconSlideAction(
-              caption: 'Add',
-              color: Colors.green,
-              icon: Icons.add,
-              closeOnTap: false,
+              iconWidget: Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(left: 4, top: 4, bottom: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.green,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      "Add progress",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                ),
+              ),
+              color: Colors.transparent,
+              closeOnTap: true,
               onTap: () {},
             ),
           ],
@@ -278,10 +299,11 @@ class _ActivityCardState extends State<ActivityCard> {
             ),
           ),
         ),
+        /*
         if (_expanded)
           ...subActivites.map(
             (activity) => ActivityCard(activity),
-          ),
+          ), */
       ],
     );
   }

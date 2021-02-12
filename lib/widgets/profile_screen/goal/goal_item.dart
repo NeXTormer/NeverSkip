@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
-
 import 'package:percent_indicator/percent_indicator.dart';
 
 /// Card item which displays the corresponding [GoalItem] information.
@@ -123,6 +122,7 @@ class CardGoalItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 8),
                         Text(
                           goal.title,
                           style: TextStyle(

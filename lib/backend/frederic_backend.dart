@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_set.dart';
 import 'package:provider/provider.dart';
+
 import 'backend.dart';
 
 class FredericBackend {
