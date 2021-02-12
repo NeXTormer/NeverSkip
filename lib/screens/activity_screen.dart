@@ -37,7 +37,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     Icon(Icons.filter_alt),
                     SizedBox(width: 8),
                     Text(
-                      'Activites',
+                      'Exercises',
                       style: TextStyle(color: Colors.black),
                     ),
                   ],
@@ -82,7 +82,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   void dispose() {
-    activityStreamController.close();
+    //activityStreamController.close(); //TODO: Causes issues with hotreload but
+    //                                  //TODO: should normally be enabled
 
     super.dispose();
   }
