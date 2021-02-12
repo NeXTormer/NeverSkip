@@ -173,53 +173,35 @@ class _ActivityCardState extends State<ActivityCard> {
   }
 
   Widget buildLabelSection() {
+    List<Widget> tagList = List<Widget>();
+    for (var value in widget.activity.muscleGroups) {
+      String label = '';
+      switch (value) {
+        case FredericActivityMuscleGroup.Abs:
+          label = 'Abs';
+          break;
+        case FredericActivityMuscleGroup.Chest:
+          label = 'Chest';
+          break;
+        case FredericActivityMuscleGroup.Arms:
+          label = 'Arms';
+          break;
+        case FredericActivityMuscleGroup.Legs:
+          label = 'Legs';
+          break;
+        case FredericActivityMuscleGroup.Back:
+          label = 'Back';
+          break;
+      }
+      tagList.add(MuscleGroupTag(label));
+    }
+
     return Positioned(
       bottom: 0.0,
       right: 0.0,
       child: Container(
         margin: EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              padding: EdgeInsets.all(4.0),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(170, 255, 165, 0),
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(
-                  width: 1.0,
-                  color: Colors.orange,
-                ),
-              ),
-              child: Text(
-                'Chest',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0,
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            Container(
-              padding: EdgeInsets.all(4.0),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(170, 255, 165, 0),
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(
-                  width: 1.0,
-                  color: Colors.orange,
-                ),
-              ),
-              child: Text(
-                'Arms',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0,
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: tagList),
       ),
     );
   }
@@ -305,6 +287,35 @@ class _ActivityCardState extends State<ActivityCard> {
             (activity) => ActivityCard(activity),
           ), */
       ],
+    );
+  }
+}
+
+class MuscleGroupTag extends StatelessWidget {
+  const MuscleGroupTag(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(4),
+      margin: EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(170, 255, 165, 0),
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          width: 1.0,
+          color: Colors.orange,
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 14.0,
+        ),
+      ),
     );
   }
 }
