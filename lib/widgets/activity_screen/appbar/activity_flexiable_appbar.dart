@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-class ActivityFlexiableAppbar extends StatefulWidget {
+class ActivityFlexibleAppbar extends StatefulWidget {
   @override
-  _ActivityFlexiableAppbarState createState() =>
-      _ActivityFlexiableAppbarState();
+  _ActivityFlexibleAppbarState createState() => _ActivityFlexibleAppbarState();
 }
 
-class _ActivityFlexiableAppbarState extends State<ActivityFlexiableAppbar> {
+class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
   final double appbarHeight = 20;
   bool _arms = false;
   bool _chest = false;
