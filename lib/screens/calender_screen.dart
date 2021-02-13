@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/widget/second_design/activity/activity_in_workout.dart';
+import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:frederic/widget/second_design/calendar/calendar_and_events_view.dart';
 import 'package:reorderables/reorderables.dart';
 
 class CalenderScreen extends StatelessWidget {
+  static const routeName = '/calendar';
   bool test = true;
   @override
   Widget build(BuildContext context) {
@@ -71,6 +73,7 @@ class CalenderScreen extends StatelessWidget {
         onPressed: () {},
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomNavDesign(1),
     );
   }
 }

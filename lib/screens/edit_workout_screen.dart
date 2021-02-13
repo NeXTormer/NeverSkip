@@ -4,11 +4,13 @@ import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/workout_edit.dart';
 import 'package:frederic/widget/second_design/activity/activity_card.dart';
 import 'package:frederic/widget/second_design/appbar/activity_flexiable_appbar.dart';
+import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:frederic/widget/second_design/calendar/week_days_slider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
+  static const routeName = '/workout';
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
 }
@@ -111,87 +113,105 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
+        preferredSize: Size.fromHeight(70.0),
         child: AppBar(
           centerTitle: false,
           elevation: 0.0,
-          title: Expanded(
-            child: TextField(
-              cursorColor: Theme.of(context).cursorColor,
-              style: TextStyle(fontSize: 24),
-              decoration: InputDecoration(
-                hintText: 'Title',
-                suffixIcon: Icon(
-                  Icons.edit,
-                  color: Colors.black54,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black54),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red),
+          title: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _titleTextController,
+                  autofocus: false,
+                  style: TextStyle(fontSize: 24.0, color: Colors.black),
+                  decoration: InputDecoration(
+                    hintText: 'Title',
+                    suffixIcon: Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                    filled: true,
+                    fillColor: Colors.black12,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black12,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blueAccent,
+                        width: 0.5,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
                 ),
               ),
-              controller: _titleTextController,
-            ),
+            ],
           ),
           actions: [
             FlatButton.icon(
               onPressed: () => _showModalBottomSheet(context, activities),
-              icon: Icon(Icons.add, size: 40),
-              label: Text('Add'),
+              icon: Icon(Icons.add, size: 30),
+              label: Text(
+                'Add',
+                style: TextStyle(fontSize: 20.0),
+              ),
             )
           ],
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              color: Colors.white,
-              height: 140,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 0.0,
-                    child: Icon(
-                      Icons.arrow_left,
-                      size: 36,
-                      color: Colors.black26,
-                    ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            color: Colors.white,
+            height: 140,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 0.0,
+                  child: Icon(
+                    Icons.arrow_left,
+                    size: 36,
+                    color: Colors.black26,
                   ),
-                  Positioned(
-                    right: 0.0,
-                    child: Icon(
-                      Icons.arrow_right,
-                      size: 36,
-                      color: Colors.black26,
-                    ),
+                ),
+                Positioned(
+                  right: 0.0,
+                  child: Icon(
+                    Icons.arrow_right,
+                    size: 36,
+                    color: Colors.black26,
                   ),
-                  PageView(
-                    controller: _controller,
-                    children: List.generate(
-                      5,
-                      (index) => WeekDaysSlide(
-                          index, _updateSelectedDay, _selectedDay),
-                    ),
+                ),
+                PageView(
+                  controller: _controller,
+                  children: List.generate(
+                    5,
+                    (index) =>
+                        WeekDaysSlide(index, _updateSelectedDay, _selectedDay),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            if (workoutDayList != null)
-              Container(
-                height: 400,
-                child: ListView.builder(
-                    itemCount: workoutDayList.length,
-                    itemBuilder: (ctx, index) {
-                      return ActivityCard(workoutDayList[index], null, null);
-                    }),
-              )
-          ],
-        ),
+          ),
+          if (workoutDayList != null)
+            Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: workoutDayList.length,
+                  itemBuilder: (ctx, index) {
+                    return ActivityCard(workoutDayList[index], null, null);
+                  },
+                ),
+              ],
+            ),
+        ],
       ),
+      bottomNavigationBar: BottomNavDesign(2),
     );
   }
 }

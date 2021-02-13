@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widget/second_design/achievement_page.dart';
+import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:frederic/widget/second_design/goal/edit_goal_slidesheet.dart';
 import 'package:frederic/widget/second_design/goal/goal_page.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,8 @@ enum AddOptions {
 }
 
 class ProfileScreen2 extends StatefulWidget {
+  static const routeName = '/profile';
+
   @override
   _ProfileScreen2State createState() => _ProfileScreen2State();
 }
@@ -185,6 +188,7 @@ class _ProfileScreen2State extends State<ProfileScreen2> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavDesign(0),
     );
   }
 }

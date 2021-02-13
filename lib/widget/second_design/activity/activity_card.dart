@@ -238,23 +238,24 @@ class _ActivityCardState extends State<ActivityCard> {
           closeOnScroll: true,
           actions: [
             IconSlideAction(
-                caption: 'Add',
-                color: Colors.green,
-                icon: Icons.add,
-                closeOnTap: false,
-                onTap: () {
-                  final snackBar = SnackBar(
-                    content: Text('Activity Added'),
-                    action: SnackBarAction(
-                      label: 'Undo',
-                      onPressed: () {
-                        // Some code to undo the change.
-                      },
-                    ),
-                  );
-                  //Scaffold.of(context).showSnackBar(snackBar);
-                  widget.addToWorkout(widget.selectedDay, widget.activity);
-                }),
+              caption: 'Add',
+              color: Colors.green,
+              icon: Icons.add,
+              closeOnTap: true,
+              onTap: () {
+                final snackBar = SnackBar(
+                  content: Text('Activity Added'),
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    onPressed: () {
+                      // Some code to undo the change.
+                    },
+                  ),
+                );
+                //Scaffold.of(context).showSnackBar(snackBar);
+                widget.addToWorkout(widget.selectedDay, widget.activity);
+              },
+            ),
           ],
           child: Card(
             elevation: 5.0,

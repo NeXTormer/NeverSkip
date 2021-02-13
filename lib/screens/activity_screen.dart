@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:frederic/widget/second_design/activity/activity_card.dart';
 import 'package:frederic/widget/second_design/appbar/activity_flexiable_appbar.dart';
+import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -47,6 +48,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavDesign(3),
     );
   }
 }
