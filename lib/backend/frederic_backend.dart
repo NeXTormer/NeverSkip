@@ -207,7 +207,7 @@ class FredericBackend {
       goal.sets.clear();
       for (int j = 0; j < snapshot.docs.length; j++) {
         var data = snapshot.docs[j].data();
-        goal.sets.add(FredericSet(snapshot.docs[i].id, data['reps'],
+        goal.sets.add(FredericSet(snapshot.docs[j].id, data['reps'],
             data['weight'], data['timestamp'].toDate()));
         goal.calculateCurrentProgress();
       }

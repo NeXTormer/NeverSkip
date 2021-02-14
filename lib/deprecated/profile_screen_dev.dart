@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/graph/progress_page.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -56,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ProfileHeader(),
+            //ProfileHeader(),
             buildProfileText(context, 'Sascha Huberdd',
                 'Weijdnksdjnsdfkdjfnksnfdkfsdkfnsdfnkjnsdkfnsß net', 130.0),
             SizedBox(height: 16.0),

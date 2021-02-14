@@ -5,7 +5,7 @@ import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
-import 'package:frederic/widgets/profile_screen/profile_avatar.dart';
+import 'package:frederic/widgets/profile_screen/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
 import 'package:frederic/widgets/progress_chart/progress_chart.dart';
 
@@ -25,34 +25,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   FredericUser user;
-
-  /// Outsource the Profile-Text section
-  ///
-  /// Currently build a static [profile name] and [subtext].
-  Widget buildProfileText() {
-    return Container(
-      width: 200,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            user.name,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 6),
-          Text(
-            user.description,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 15, color: Colors.black54),
-          )
-        ],
-      ),
-    );
-  }
 
   /// On pressed show ModalBottomSheet
   ///
@@ -94,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(50.0),
                 child: AppBar(
-                  title: Text(user.name),
+                  title: Text('Frederic'),
                   leading: InkWell(
                       child: Icon(Icons.person),
                       onTap: () => FirebaseAuth.instance.signOut()),
@@ -134,18 +106,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                ProfileAvatar(imageUrl: user.image),
-                                Expanded(child: buildProfileText()),
-                                SizedBox(width: 16)
-                              ],
-                            ),
+                            ProfileHeader(snapshot.data),
+                            Divider(height: 0),
+                            SizedBox(height: 8),
                             SmallProgressViewPage(),
-                            SizedBox(height: 12),
-                            Divider(
-                              height: 0,
-                            ),
+                            SizedBox(height: 8),
+                            Divider(height: 0),
                           ],
                         ),
                       ),

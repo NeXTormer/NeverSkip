@@ -126,10 +126,11 @@ class FredericUser {
     if (uid == null) {
       return null;
     }
+
     CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('users');
-    DocumentSnapshot userEntry = await usersCollection.doc(_uid).get();
-
+    DocumentSnapshot userEntry = await usersCollection.doc(uid).get();
+    print(usersCollection.doc(_uid).toString());
     if (userEntry.data() == null) {
       //TODO: implement proper sign up process
       return null;
