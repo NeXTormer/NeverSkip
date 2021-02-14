@@ -111,7 +111,7 @@ class FredericUser {
     _currentWorkoutID = snapshot.data()['currentworkout'];
     List<dynamic> progressMonitorsList = snapshot.data()['progressmonitors'];
     _progressMonitors = List<String>();
-    progressMonitorsList.forEach((element) {
+    progressMonitorsList?.forEach((element) {
       if (element is String) {
         _progressMonitors.add(element);
       }
