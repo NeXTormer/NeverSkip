@@ -177,10 +177,8 @@ class __WeightCounterState extends State<_WeightCounter> {
               color: Colors.white,
             ),
             child: Center(
-              child: Text(
-                '${widget.controller.value}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
+              child: Text('${widget.controller.value}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             ),
           ),
           InkWell(

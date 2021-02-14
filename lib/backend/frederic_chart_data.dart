@@ -3,9 +3,14 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
+import 'package:intl/intl.dart';
 
-/// Highest set per day
+///
+/// Contains the data for an activity which is displayed in a chart
+/// Each day in the chart uses the highest weight or rep-count achieved on that day
+///
 class FredericChartData {
   FredericChartData(this.activityID, this.goalType) {
     if (goalType == FredericGoalType.Reps)
@@ -13,6 +18,7 @@ class FredericChartData {
     else if (goalType == FredericGoalType.Weight) _importantElement = 'weight';
   }
   final String activityID;
+  FredericActivity activity;
   final FredericGoalType goalType;
 
   String _importantElement;
@@ -23,19 +29,28 @@ class FredericChartData {
   HashMap<FredericSimpleDate, num> _data;
   List<FredericChartDataPoint> _list;
 
-  StreamController<List<FredericChartDataPoint>> _streamController;
+  StreamController<FredericChartData> _streamController;
 
   CollectionReference _setsCollection =
       FirebaseFirestore.instance.collection('sets');
 
-  Stream<List<FredericChartDataPoint>> asStream(FredericChartType type,
+  List<FredericChartDataPoint> get data => _list;
+  FredericChartType get type => _type;
+  int get typeArgument => _typeArgument;
+
+  Stream<FredericChartData> asStream(FredericChartType type,
       [int typeArgument = 7]) {
     if (_streamController != null) _streamController.close();
 
-    _streamController = StreamController<List<FredericChartDataPoint>>();
+    _streamController = StreamController<FredericChartData>();
     _data = new HashMap<FredericSimpleDate, num>();
     _type = type;
     _typeArgument = typeArgument;
+
+    activity = FredericActivity(activityID);
+    activity.loadData().then((value) {
+      _streamController.add(this);
+    });
 
     int daysToLoad = 0;
     if (type == FredericChartType.PreviousNDays)
@@ -61,20 +76,20 @@ class FredericChartData {
   }
 
   void _handleStream(QuerySnapshot snapshot) {
-    for (int i = 0; i < snapshot.docs.length; i++) {
+    for (int i = 0; i < snapshot.docChanges.length; i++) {
       var newData = snapshot.docChanges[i].doc.data();
       num value = newData[_importantElement];
       DateTime time = newData['timestamp'].toDate();
       FredericSimpleDate date =
           FredericSimpleDate(time.day, time.month, time.year);
-      if (value > _data[date] ?? 0) _data[date] = value;
+      if ((value ?? 0) > (_data[date] ?? 0)) _data[date] = value;
     }
 
     _list = List<FredericChartDataPoint>();
     _data
         .forEach((key, value) => _list.add(FredericChartDataPoint(value, key)));
     _list.sort();
-    _streamController.add(_list);
+    _streamController.add(this);
   }
 }
 
@@ -86,9 +101,9 @@ class FredericChartDataPoint extends Comparable {
 
   @override
   int compareTo(other) {
-    int yeardiff = date.year - other.year;
-    int monthdiff = date.month - other.month;
-    int daydiff = date.day - other.day;
+    int yeardiff = date.year - other.date.year;
+    int monthdiff = date.month - other.date.month;
+    int daydiff = date.day - other.date.day;
     return yeardiff * 365 + monthdiff * 30 + daydiff;
   }
 }
@@ -99,6 +114,13 @@ class FredericSimpleDate {
   final int day;
   final int month;
   final int year;
+
+  static final NumberFormat format = NumberFormat('00');
+
+  @override
+  String toString() {
+    return '${format.format(day)}.${format.format(month)}';
+  }
 }
 
 enum FredericChartType {

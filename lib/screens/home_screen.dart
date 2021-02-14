@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_chart_data.dart';
+import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
-import 'package:frederic/widgets/profile_screen/graph/progress_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_avatar.dart';
 import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
-import 'package:frederic/widgets/progresschart/progress_chart.dart';
+import 'package:frederic/widgets/progress_chart/progress_chart.dart';
+
 import '../backend/backend.dart';
 
 enum AddOptions {
@@ -51,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   /// On pressed show ModalBottomSheet
   ///
@@ -141,7 +142,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             SmallProgressViewPage(),
-
                             SizedBox(height: 12),
                             Divider(
                               height: 0,
@@ -185,7 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      ProgressChart(),
+                      ProgressChart(
+                        chartData: FredericChartData(
+                            'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
+                      ),
                       SizedBox(height: 50),
                     ],
                   ),

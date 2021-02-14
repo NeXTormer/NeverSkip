@@ -3,6 +3,10 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_progress_snapshot.dart';
 
+///
+/// The progress monitors below the profile picture, shows the hightest of the
+/// latest sets
+///
 class SmallProgressViewPage extends StatelessWidget {
   List<String> activities;
 
