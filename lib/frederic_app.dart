@@ -14,6 +14,8 @@ import 'package:frederic/screens/calendar_screen.dart';
 import 'package:frederic/screens/calender_screen.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/screens/new_calendar_screen.dart';
+import 'package:frederic/screens/new_new_calendar_screen.dart';
+import 'package:frederic/screens/new_new_new_calendar_screen.dart';
 import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/screens/workout_overview_screen.dart';
 import 'package:frederic/test_screens/all_activities_screen.dart';
@@ -63,7 +65,7 @@ class FredericApp extends StatelessWidget {
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: NewCalendarScreen(),
+          homePage: NewNewNewCalendarScreen(),
           loginPage: LoginScreen(),
         ),
         localizationsDelegates: const <

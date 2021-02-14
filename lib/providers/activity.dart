@@ -15,6 +15,7 @@ class ActivityItem {
   // final int recomendedSets;
   // final List<FredericSet> sets
   // final int weekday;
+  final String date;
 
   ActivityItem({
     @required this.activityID,
@@ -22,6 +23,7 @@ class ActivityItem {
     @required this.name,
     @required this.description,
     @required this.image,
+    this.date,
     // this.hasProgress,
     // this.isGlobalyActivity,
     // this.isSingleActivity,

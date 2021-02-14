@@ -85,7 +85,7 @@ class _NewCalendarScreenState extends State<NewCalendarScreen> {
                   child: CalendarWidget(
                     initialDate: nowTime,
                     beginningRangeDate: nowTime.subtract(Duration(days: 31)),
-                    endingRangeDate: nowTime.add(Duration(days: 31)),
+                    endingRangeDate: nowTime.add(Duration(days: 30)),
                     location: _location,
                     buildItem: _buildItem,
                     getEvents: _getEvents,
