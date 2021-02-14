@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/providers/activity.dart';
+import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 import 'package:provider/provider.dart';
 
 class ActivityCard extends StatefulWidget {
@@ -243,7 +244,14 @@ class _ActivityCardState extends State<ActivityCard> {
               ),
               color: Colors.transparent,
               closeOnTap: true,
-              onTap: () {},
+              onTap: () {
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return AddProgressCard(widget.activity, _countReps);
+                    });
+              },
             ),
           ],
           child: Card(
@@ -281,6 +289,7 @@ class _ActivityCardState extends State<ActivityCard> {
             ),
           ),
         ),
+
         /*
         if (_expanded)
           ...subActivites.map(

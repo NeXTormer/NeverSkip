@@ -66,17 +66,17 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                         ),
                         SizedBox(width: 12),
                         ActivityTypeButton(
-                            isActive: widget.filterController.weighted,
-                            onPressed: () => setState(() => widget
-                                .filterController
-                                .weighted = !widget.filterController.weighted),
-                            iconData: Icons.person),
-                        SizedBox(width: 8),
-                        ActivityTypeButton(
                             isActive: widget.filterController.calisthenics,
                             onPressed: () => setState(() =>
                                 widget.filterController.calisthenics =
                                     !widget.filterController.calisthenics),
+                            iconData: Icons.person),
+                        SizedBox(width: 8),
+                        ActivityTypeButton(
+                            isActive: widget.filterController.weighted,
+                            onPressed: () => setState(() => widget
+                                .filterController
+                                .weighted = !widget.filterController.weighted),
                             iconData: Icons.fitness_center),
                         SizedBox(width: 8),
                         ActivityTypeButton(

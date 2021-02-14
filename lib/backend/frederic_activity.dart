@@ -54,8 +54,8 @@ class FredericActivity {
   List<FredericActivityMuscleGroup> _muscleGroups;
   StreamController<FredericActivity> _streamController;
 
-  String get name => _name ?? 'emptyname';
-  String get description => _description ?? 'emptydescription';
+  String get name => _name ?? 'Empty activity';
+  String get description => _description ?? '';
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
   String get owner => _owner ?? 'emptyowner';
@@ -224,7 +224,7 @@ class FredericActivity {
     _processDocumentSnapshot(snapshot);
 
     if (loadSets) {
-      _loadSetsOnce();
+      loadSetsOnce();
       _areSetsLoaded = true;
     }
 
@@ -272,7 +272,7 @@ class FredericActivity {
       _loadSetsStream();
       return null;
     } else {
-      await _loadSetsOnce();
+      await loadSetsOnce();
       return this;
     }
   }
@@ -360,9 +360,33 @@ class FredericActivity {
   }
 
   //============================================================================
+  /// Loads the sets in a self-contained stream, whether it is a stream or a future
+  ///
+  StreamController<FredericActivity> loadSetsStreamOnce([int limit = 5]) {
+    String userid = FirebaseAuth.instance.currentUser.uid;
+    CollectionReference activitiyProgressCollection =
+        FirebaseFirestore.instance.collection('sets');
+
+    StreamController<FredericActivity> controller =
+        StreamController<FredericActivity>();
+
+    Stream<QuerySnapshot> setStream = activitiyProgressCollection
+        .where('owner', isEqualTo: userid)
+        .where('activity', isEqualTo: activityID)
+        .orderBy('timestamp', descending: true)
+        .limit(limit)
+        .snapshots();
+    setStream.listen((snapshot) {
+      _processSetQuerySnapshot(snapshot);
+      controller.add(this);
+    });
+    return controller;
+  }
+
+  //============================================================================
   /// loads or updates the sets
   ///
-  Future<void> _loadSetsOnce() async {
+  Future<FredericActivity> loadSetsOnce([int limit = 5]) async {
     String userid = FirebaseAuth.instance.currentUser.uid;
     CollectionReference activitiyProgressCollection =
         FirebaseFirestore.instance.collection('sets');
@@ -370,9 +394,10 @@ class FredericActivity {
         .where('owner', isEqualTo: userid)
         .where('activity', isEqualTo: activityID)
         .orderBy('timestamp', descending: true)
+        .limit(limit)
         .get();
     _processSetQuerySnapshot(progressSnapshot);
-    return;
+    return this;
   }
 
   //============================================================================
@@ -439,6 +464,25 @@ class FredericActivity {
   void removeProgress(FredericSet fset) {
     _sets.remove(fset);
     FirebaseFirestore.instance.collection('sets').doc(fset.setID).delete();
+  }
+
+  //============================================================================
+  /// Calculates the maximum value (either weight for weighted activities, or
+  /// number of reps for calisthenics activities) in the loaded sets.
+  /// If no sets are loaded, the returned value is 0.
+  ///
+  num getCurrentBestProgress() {
+    num max = 0;
+    if (_type == FredericActivityType.Weighted) {
+      sets.forEach((element) {
+        max = element.weight > max ? element.weight : max;
+      });
+    } else if (_type == FredericActivityType.Calisthenics) {
+      sets.forEach((element) {
+        max = element.reps > max ? element.reps : max;
+      });
+    }
+    return max;
   }
 
   //============================================================================
