@@ -2,11 +2,12 @@ import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:frederic/widget/second_design/activity/activity_calendar_card_screen.dart';
-import 'package:frederic/widget/second_design/activity/activity_card.dart';
 import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:intl/intl.dart';
 
 class NewNewNewCalendarScreen extends StatefulWidget {
+  static String routeName = '/newCalendar';
+
   @override
   _NewNewNewCalendarScreenState createState() =>
       _NewNewNewCalendarScreenState();
@@ -63,42 +64,6 @@ class _NewNewNewCalendarScreenState extends State<NewNewNewCalendarScreen> {
       _january.add(DateFormat('dd/MM/yyy').format(indexDay));
     }
     super.initState();
-  }
-
-  Widget _buildRowEntry(String date, Widget content) {
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(width: 1.0),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 50,
-            child: date.isEmpty
-                ? Text('')
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Mon'),
-                      Text('01'),
-                    ],
-                  ),
-          ),
-          Expanded(
-            child: date.isEmpty
-                ? Text('no Event')
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      content,
-                    ],
-                  ),
-          )
-        ],
-      ),
-    );
   }
 
   Widget _buildMonthHeader(String imageUrl, String month) {
@@ -173,7 +138,7 @@ class _NewNewNewCalendarScreenState extends State<NewNewNewCalendarScreen> {
   }
 
   List<Widget> _buildMonthCalendarItem(
-      int month, List<ActivityItem> events, String monthHeaderImageUrl) {
+      int month, List<ActivityItem> events, List<String> monthHeaderImageUrl) {
     String monthTitle = _getMonthTitleAsString(month);
     int daysInMonth = DateUtil().daysInMonth(month, 2021);
     return List.generate(
@@ -244,15 +209,17 @@ class _NewNewNewCalendarScreenState extends State<NewNewNewCalendarScreen> {
           children: [
             if (index == 0)
               _buildMonthHeader(
-                  'https://www.fitforfun.de/files/images/201712/1/istock-628092286,276242_m_n.jpg',
+                  'https://mobil.woman.at/_storage/asset/10566591/storage/womanat:content-large/file/140877089/Erwiesen:%20HIIT-Workout%20ist%20am%20effektivsten!.jpg',
                   'January'),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
                   SizedBox(width: 50),
-                  Text(
-                      'January ${(index * 7) + 1} - ${_displayWeeksIndex * 7}'),
+                  _displayWeeksIndex * 7 >= daysInMonth
+                      ? Text('January ${(index * 7) + 1} - ${daysInMonth}')
+                      : Text(
+                          'January ${(index * 7) + 1} - ${_displayWeeksIndex * 7}'),
                 ],
               ),
             ),
@@ -285,8 +252,19 @@ class _NewNewNewCalendarScreenState extends State<NewNewNewCalendarScreen> {
           )
         ],
       ),
-      body: Column(children: [] //_buildMonthCalendarItem(),
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ..._buildMonthCalendarItem(1, _dummy, null),
+            _buildMonthHeader(
+                'https://www.emotion.de/sites/www.emotion.de/files/styles/article_lead/public/home-workout.jpg?itok=51YSMTu7',
+                'February'),
+          ],
+
+          //_buildMonthCalendarItem(),
+        ),
+      ),
+      bottomNavigationBar: BottomNavDesign(1),
     );
   }
 }

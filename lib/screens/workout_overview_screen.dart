@@ -39,6 +39,16 @@ class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavDesign(2),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, EditWorkoutScreen.routeName);
+        },
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 }

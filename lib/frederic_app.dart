@@ -83,6 +83,7 @@ class FredericApp extends StatelessWidget {
           EditWorkoutScreen.routeName: (ctx) => EditWorkoutScreen(),
           ActivityScreen.routeName: (ctx) => ActivityScreen(),
           WorkoutOverviewScreen.routeName: (ctx) => WorkoutOverviewScreen(),
+          NewNewNewCalendarScreen.routeName: (ctx) => NewNewNewCalendarScreen(),
         },
       ),
     );
