@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:frederic/widgets/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:frederic/widgets/second_design/workout/workout_card.dart';
 
 class WorkoutOverviewScreen extends StatefulWidget {
@@ -37,7 +36,6 @@ class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
           Divider(),
         ],
       ),
-      bottomNavigationBar: BottomNavDesign(2),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, EditWorkoutScreen.routeName);

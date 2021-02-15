@@ -10,7 +10,7 @@ class BottomNavigationScreen extends StatefulWidget {
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
-  int currentIndex = 0;
+  int currentIndex;
   List<BottomNavigationBarItem> items;
   List<Widget> screens;
   PageController pageController;
@@ -18,7 +18,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   @override
   void initState() {
     super.initState();
-
+    currentIndex = 0;
     items = List<BottomNavigationBarItem>();
     screens = List<Widget>();
     pageController = PageController();
@@ -48,6 +48,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: items,
         selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.black87,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         onTap: (index) {
           setState(() {

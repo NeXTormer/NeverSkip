@@ -3,7 +3,6 @@ import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/workout_edit.dart';
 import 'package:frederic/widgets/activity_screen/appbar/activity_flexiable_appbar.dart';
 import 'package:frederic/widgets/second_design/activity/activity_card.dart';
-import 'package:frederic/widgets/second_design/bottonNavBar/bottom_nav_design.dart';
 import 'package:frederic/widgets/second_design/calendar/week_days_slider.dart';
 import 'package:provider/provider.dart';
 
@@ -209,7 +208,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: BottomNavDesign(2),
     );
   }
 }

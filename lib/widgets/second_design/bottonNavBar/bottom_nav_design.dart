@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/screens/calendar_screen.dart';
-import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/screens/workout_overview_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'file:///C:/Dev/Projects/frederic/lib/deprecated/profile_screen_2.dart';
 
 class BottomNavDesign extends StatefulWidget {
   final screenIndex;
