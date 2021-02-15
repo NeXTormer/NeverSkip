@@ -21,7 +21,7 @@ class _EditGoalSlidesheetState extends State<EditGoalSlidesheet> {
           color: const Color(0xFF167F67),
         )),
     const Item(
-        'Reputations',
+        'Repetitions',
         Icon(
           Icons.flag,
           color: const Color(0xFF167F67),
@@ -34,7 +34,7 @@ class _EditGoalSlidesheetState extends State<EditGoalSlidesheet> {
     current: 0.0,
     target: 0.0,
     interval: 0,
-    type: GoalType.Reputations,
+    type: GoalType.Repetitions,
     imageUrl:
         'https://www.holdstrong.de/magazin/wp-content/uploads/2019/06/butterfly-kipping-pull-up-750x500.jpg',
   );
@@ -116,7 +116,7 @@ class _EditGoalSlidesheetState extends State<EditGoalSlidesheet> {
                   interval: _editedGoalItem.interval,
                   type: dropdownValue == 'Weighted'
                       ? GoalType.Weighted
-                      : GoalType.Reputations,
+                      : GoalType.Repetitions,
                   imageUrl: _editedGoalItem.imageUrl,
                 );
               },

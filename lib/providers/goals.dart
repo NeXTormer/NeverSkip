@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum GoalType {
   Weighted,
-  Reputations,
+  Repetitions,
 }
 
 class GoalItem with ChangeNotifier {
@@ -60,7 +60,7 @@ class Goals with ChangeNotifier {
       current: 10,
       target: 15,
       interval: 2,
-      type: GoalType.Reputations,
+      type: GoalType.Repetitions,
       imageUrl:
           'https://www.holdstrong.de/magazin/wp-content/uploads/2019/06/butterfly-kipping-pull-up-750x500.jpg',
     ),
@@ -70,7 +70,7 @@ class Goals with ChangeNotifier {
       current: 10,
       target: 15,
       interval: 2,
-      type: GoalType.Reputations,
+      type: GoalType.Repetitions,
       finished: true,
       imageUrl:
           'https://www.holdstrong.de/magazin/wp-content/uploads/2019/06/butterfly-kipping-pull-up-750x500.jpg',
@@ -81,7 +81,7 @@ class Goals with ChangeNotifier {
       current: 10,
       target: 15,
       interval: 2,
-      type: GoalType.Reputations,
+      type: GoalType.Repetitions,
       finished: true,
       imageUrl:
           'https://www.holdstrong.de/magazin/wp-content/uploads/2019/06/butterfly-kipping-pull-up-750x500.jpg',

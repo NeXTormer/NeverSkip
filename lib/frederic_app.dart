@@ -20,8 +20,6 @@ import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/screens/workout_overview_screen.dart';
 import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
-import 'package:frederic/test_screens/show_workout_screen.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';

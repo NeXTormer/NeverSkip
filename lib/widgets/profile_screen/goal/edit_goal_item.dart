@@ -19,7 +19,7 @@ class _EditGoalItemState extends State<EditGoalItem> {
     current: 0.0,
     target: 0.0,
     interval: 0,
-    type: GoalType.Reputations,
+    type: GoalType.Repetitions,
     imageUrl:
         'https://www.muscleandfitness.com/wp-content/uploads/2019/02/man-bench-press.jpg?quality=86&strip=all',
   );
@@ -29,7 +29,7 @@ class _EditGoalItemState extends State<EditGoalItem> {
     'current': 0.0,
     'target': 0.0,
     'interval': 0,
-    'type': GoalType.Reputations,
+    'type': GoalType.Repetitions,
     'imageUrl': ''
   };
 
