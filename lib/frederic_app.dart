@@ -66,7 +66,7 @@ class FredericApp extends StatelessWidget {
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
           homePage: NewNewNewCalendarScreen(),
-          loginPage: LoginScreen(),
+          loginPage: ProfileScreen2(),
         ),
         localizationsDelegates: const <
             LocalizationsDelegate<MaterialLocalizations>>[
