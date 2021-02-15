@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
-import 'package:frederic/widget/second_design/achievement_page.dart';
-import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
-import 'package:frederic/widget/second_design/goal/edit_goal_slidesheet.dart';
-import 'package:frederic/widget/second_design/goal/goal_page.dart';
-import 'package:provider/provider.dart';
-
-import '../widget/second_design/graph/progress_page.dart';
-import '../widget/second_design/profile_avatar.dart';
+import 'package:frederic/widgets/profile_screen/goal/edit_goal_slidesheet.dart';
+import 'package:frederic/widgets/second_design/bottonNavBar/bottom_nav_design.dart';
 
 enum AddOptions {
   Goal,
@@ -134,7 +127,7 @@ class _ProfileScreen2State extends State<ProfileScreen2> {
             children: [
               Row(
                 children: [
-                  ProfileAvatar(),
+                  //ProfileAvatar(),
                   buildProfileText(),
                 ],
               ),
@@ -161,10 +154,10 @@ class _ProfileScreen2State extends State<ProfileScreen2> {
                       ),
                     ),
                   ),
-                  AchievementPage(),
+                  //AchievementPage(),
                 ],
               ),
-              GoalPage(_onButtonPressed),
+              //GoalPage(_onButtonPressed),
               SizedBox(height: 10.0),
               Divider(),
               SizedBox(height: 10.0),
@@ -182,7 +175,7 @@ class _ProfileScreen2State extends State<ProfileScreen2> {
                   ),
                 ],
               ),
-              ProgressPage(),
+              //ProgressPage(),
               SizedBox(height: 50),
             ],
           ),

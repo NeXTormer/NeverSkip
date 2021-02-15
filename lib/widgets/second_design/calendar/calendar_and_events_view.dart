@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_activity.dart';
 import 'package:frederic/backend/frederic_user.dart';
 import 'package:frederic/backend/frederic_workout.dart';
-import 'package:frederic/widget/second_design/activity/activity_in_workout.dart';
-import 'package:frederic/widgets/calendar_screen/calendar_workout_widget.dart';
+import 'package:frederic/widgets/second_design/activity/activity_in_workout.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarAndEventsView extends StatefulWidget {

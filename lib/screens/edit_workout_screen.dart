@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/frederic_activity.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/workout_edit.dart';
-import 'package:frederic/widget/second_design/activity/activity_card.dart';
-import 'package:frederic/widget/second_design/appbar/activity_flexiable_appbar.dart';
-import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
-import 'package:frederic/widget/second_design/calendar/week_days_slider.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:frederic/widgets/activity_screen/appbar/activity_flexiable_appbar.dart';
+import 'package:frederic/widgets/second_design/activity/activity_card.dart';
+import 'package:frederic/widgets/second_design/bottonNavBar/bottom_nav_design.dart';
+import 'package:frederic/widgets/second_design/calendar/week_days_slider.dart';
 import 'package:provider/provider.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
@@ -85,7 +83,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     expandedHeight: 150.0,
                     flexibleSpace: FlexibleSpaceBar(
                       collapseMode: CollapseMode.pin,
-                      background: ActivityFlexiableAppbar(),
+                      background: ActivityFlexibleAppbar(),
                     ),
                   ),
                   SliverList(

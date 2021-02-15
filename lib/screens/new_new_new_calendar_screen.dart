@@ -1,8 +1,7 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/activity.dart';
-import 'package:frederic/widget/second_design/activity/activity_calendar_card_screen.dart';
-import 'package:frederic/widget/second_design/bottonNavBar/bottom_nav_design.dart';
+import 'package:frederic/widgets/second_design/activity/activity_calendar_card_screen.dart';
 import 'package:intl/intl.dart';
 
 class NewNewNewCalendarScreen extends StatefulWidget {
@@ -264,7 +263,7 @@ class _NewNewNewCalendarScreenState extends State<NewNewNewCalendarScreen> {
           //_buildMonthCalendarItem(),
         ),
       ),
-      bottomNavigationBar: BottomNavDesign(1),
+      //bottomNavigationBar: BottomNavDesign(1),
     );
   }
 }

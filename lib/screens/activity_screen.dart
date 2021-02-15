@@ -77,7 +77,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavDesign(3),
+      //bottomNavigationBar: BottomNavDesign(3),
     );
   }
 
