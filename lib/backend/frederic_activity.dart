@@ -193,10 +193,21 @@ class FredericActivity {
   /// returns true if the activity matches the provided Filter Controller
   ///
   bool matchFilterController(ActivityFilterController controller) {
+    bool match = false;
     if (!controller.types[_type]) return false;
     for (var value in controller.muscleGroups.entries) {
       if (value.value) {
-        if (_muscleGroups.contains(value.key)) return true;
+        if (_muscleGroups.contains(value.key)) match = true;
+      }
+    }
+    if (match) {
+      if (controller.searchText == '') {
+        return true;
+      } else {
+        if (_name.toLowerCase().contains(controller.searchText.toLowerCase())) {
+          return true;
+        } else
+          return false;
       }
     }
     return false;

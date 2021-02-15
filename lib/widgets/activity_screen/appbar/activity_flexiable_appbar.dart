@@ -7,6 +7,7 @@ class ActivityFlexibleAppbar extends StatefulWidget {
   ActivityFlexibleAppbar({@required this.filterController});
 
   ActivityFilterController filterController;
+  TextEditingController textController;
 
   @override
   _ActivityFlexibleAppbarState createState() => _ActivityFlexibleAppbarState();
@@ -18,6 +19,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
   @override
   Widget build(BuildContext context) {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
+    widget.textController = TextEditingController();
     return Container(
       child: Card(
         elevation: 5.0,
@@ -35,15 +37,29 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                         Expanded(
                           child: Container(
                             width: 245,
-                            height: 30,
+                            height: 35,
                             child: TextField(
+                              controller: widget.textController,
                               autofocus: false,
+                              textInputAction: TextInputAction.search,
+                              onSubmitted: (s) {
+                                widget.filterController.searchText = s;
+                              },
+                              //cursorHeight: 50,
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.black),
                               decoration: InputDecoration(
+                                hintText: widget.filterController.searchText,
                                 prefixIcon: Icon(
                                   Icons.search,
                                   color: Colors.black,
+                                ),
+                                suffixIcon: GestureDetector(
+                                  child: Icon(Icons.close, color: Colors.black),
+                                  onTap: () {
+                                    widget.textController.clear();
+                                    widget.filterController.searchText = '';
+                                  },
                                 ),
                                 filled: true,
                                 fillColor: Colors.black12,

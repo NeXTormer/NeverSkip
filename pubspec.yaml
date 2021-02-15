@@ -45,7 +45,6 @@ dependencies:
   smooth_page_indicator: ^0.2.0
   sorted_list: ^0.1.0
   syncfusion_flutter_charts: ^18.4.41
-  button_picker: ^0.1.0
 
 
 dev_dependencies:

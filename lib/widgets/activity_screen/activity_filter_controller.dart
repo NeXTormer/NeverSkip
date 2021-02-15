@@ -17,10 +17,13 @@ class ActivityFilterController with ChangeNotifier {
     _muscleGroups[FredericActivityMuscleGroup.Back] = true;
     _muscleGroups[FredericActivityMuscleGroup.Abs] = true;
     _muscleGroups[FredericActivityMuscleGroup.Legs] = true;
+
+    _searchText = '';
   }
 
   HashMap<FredericActivityMuscleGroup, bool> _muscleGroups;
   HashMap<FredericActivityType, bool> _types;
+  String _searchText;
 
   bool get weighted => _types[FredericActivityType.Weighted];
   bool get calisthenics => _types[FredericActivityType.Calisthenics];
@@ -33,6 +36,8 @@ class ActivityFilterController with ChangeNotifier {
 
   bool get allTypes => (weighted == calisthenics) == stretch;
   bool get allMuscles => ((arms == chest) == (back == abs)) == legs;
+
+  String get searchText => _searchText;
 
   HashMap<FredericActivityMuscleGroup, bool> get muscleGroups => _muscleGroups;
   HashMap<FredericActivityType, bool> get types => _types;
@@ -74,6 +79,11 @@ class ActivityFilterController with ChangeNotifier {
 
   set back(bool value) {
     _muscleGroups[FredericActivityMuscleGroup.Back] = value;
+    notifyListeners();
+  }
+
+  set searchText(String value) {
+    _searchText = value;
     notifyListeners();
   }
 }
