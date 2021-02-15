@@ -7,6 +7,8 @@ import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/providers/workout_edit.dart';
+import 'package:frederic/providers/activity.dart';
+import 'package:frederic/providers/progress_graph.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
@@ -20,8 +22,6 @@ import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/screens/workout_overview_screen.dart';
 import 'package:frederic/test_screens/all_activities_screen.dart';
 import 'package:frederic/screens/screens.dart';
-import 'package:frederic/test_screens/show_workout_screen.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -60,13 +60,13 @@ class FredericApp extends StatelessWidget {
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.white, // Colors.red[400],
+          primaryColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: NewNewNewCalendarScreen(),
-          loginPage: ProfileScreen2(),
+          homePage: ActivityScreen(),
+          loginPage: LoginScreen(),
         ),
         localizationsDelegates: const <
             LocalizationsDelegate<MaterialLocalizations>>[

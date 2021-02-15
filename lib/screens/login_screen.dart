@@ -33,7 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Container(
                 child: Column(children: [
-                  SizedBox(height: 80),
+                  // SizedBox(height: 80),
+                  Expanded(child: Container()),
                   Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(top: 50),
@@ -71,9 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                     iconData: Icons.vpn_key_outlined,
                   ),
-                  SizedBox(height: 55),
+                  SizedBox(height: 24),
                   LoginButton(text: 'Log in', onPressed: loginButtonHandler),
-                  Expanded(child: Container()),
+                  Expanded(flex: 6,child: Container()),
                   Container(
                       margin: EdgeInsets.only(bottom: 120),
                       child: Center(
@@ -91,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       )),
+                  Expanded(child: Container())
                 ]),
               ),
             ],

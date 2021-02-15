@@ -26,7 +26,6 @@ class Frederic extends StatelessWidget {
   }
 
   Widget _loadingScreen() {
-    print("Loading screen....");
     return MaterialApp(
         home: Scaffold(
             body: Center(
