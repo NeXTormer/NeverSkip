@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/bottom_navigation_screen.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/providers/progress_graph.dart';
@@ -11,8 +12,8 @@ import 'package:frederic/providers/workout_edit.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
+import 'package:frederic/screens/calendar_screen.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:frederic/screens/new_new_new_calendar_screen.dart';
 import 'package:frederic/screens/profile_screen_2.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/workout_overview_screen.dart';
@@ -57,7 +58,18 @@ class FredericApp extends StatelessWidget {
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: ActivityScreen(),
+          homePage: BottomNavigationScreen([
+            FredericScreen(
+                screen: HomeScreen(), icon: Icons.home_outlined, label: 'Home'),
+            FredericScreen(
+                screen: ActivityScreen(),
+                icon: Icons.fireplace_outlined,
+                label: 'Activities'),
+            FredericScreen(
+                screen: CalendarScreen(),
+                icon: Icons.calendar_today_outlined,
+                label: 'Calendar')
+          ]),
           loginPage: LoginScreen(),
         ),
         localizationsDelegates: const <
@@ -74,7 +86,7 @@ class FredericApp extends StatelessWidget {
           EditWorkoutScreen.routeName: (ctx) => EditWorkoutScreen(),
           ActivityScreen.routeName: (ctx) => ActivityScreen(),
           WorkoutOverviewScreen.routeName: (ctx) => WorkoutOverviewScreen(),
-          NewNewNewCalendarScreen.routeName: (ctx) => NewNewNewCalendarScreen(),
+          CalendarScreen.routeName: (ctx) => CalendarScreen(),
         },
       ),
     );

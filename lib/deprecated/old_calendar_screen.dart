@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/widgets/second_design/calendar/calendar_and_events_view.dart';
 import 'package:reorderables/reorderables.dart';
 
-class CalenderScreen extends StatelessWidget {
+class CalendarScreen extends StatelessWidget {
   static const routeName = '/calendar';
   bool test = true;
   @override

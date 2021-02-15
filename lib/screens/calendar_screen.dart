@@ -4,15 +4,14 @@ import 'package:frederic/providers/activity.dart';
 import 'package:frederic/widgets/second_design/activity/activity_calendar_card_screen.dart';
 import 'package:intl/intl.dart';
 
-class NewNewNewCalendarScreen extends StatefulWidget {
+class CalendarScreen extends StatefulWidget {
   static String routeName = '/newCalendar';
 
   @override
-  _NewNewNewCalendarScreenState createState() =>
-      _NewNewNewCalendarScreenState();
+  _CalendarScreenState createState() => _CalendarScreenState();
 }
 
-class _NewNewNewCalendarScreenState extends State<NewNewNewCalendarScreen> {
+class _CalendarScreenState extends State<CalendarScreen> {
   List<String> _january = [];
   int _displayWeeksIndex = 0;
 
