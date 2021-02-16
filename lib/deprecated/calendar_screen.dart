@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
-import 'package:frederic/widgets/calendar_screen/calendar_activity_widget.dart';
-import 'package:frederic/widgets/calendar_screen/calendar_workout_widget.dart';
+import 'package:frederic/deprecated/calendar_screen_felix/calendar_activity_widget.dart';
+import 'package:frederic/deprecated/calendar_screen_felix/calendar_workout_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarScreen extends StatefulWidget {

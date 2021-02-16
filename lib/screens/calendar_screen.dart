@@ -1,8 +1,9 @@
 import 'package:date_util/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/providers/activity.dart';
-import 'package:frederic/widgets/second_design/activity/activity_calendar_card_screen.dart';
 import 'package:intl/intl.dart';
+
+import 'file:///C:/Dev/Projects/frederic/lib/widgets/calendar_screen/activity_calendar_card_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   static String routeName = '/newCalendar';
@@ -236,19 +237,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Icons.list),
-        title: Text('Month'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.calendar_today),
-          ),
-          IconButton(
-            icon: Icon(Icons.done),
-            onPressed: () {},
-          )
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: AppBar(
+          leading: Icon(Icons.list),
+          title: Text('Month'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.calendar_today),
+            ),
+            IconButton(
+              icon: Icon(Icons.done),
+              onPressed: () {},
+            )
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(

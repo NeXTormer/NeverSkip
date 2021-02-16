@@ -5,11 +5,16 @@ import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 
 class ActivityCard extends StatefulWidget {
   ActivityCard(this.activity,
-      {this.selectable = false, this.onAddActivity, this.dismissable});
+      {this.selectable = false,
+      this.onAddActivity,
+      this.dismissable = false,
+      this.onDismiss});
+
   final bool selectable;
-  final bool dismissable; //TODO: implement dismissable
+  final bool dismissable;
   final FredericActivity activity;
   final Function(FredericActivity) onAddActivity;
+  final Function(FredericActivity) onDismiss;
 
   @override
   _ActivityCardState createState() => _ActivityCardState();
@@ -18,6 +23,53 @@ class ActivityCard extends StatefulWidget {
 class _ActivityCardState extends State<ActivityCard> {
   int _countReps = 0;
   bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 4, left: 6, right: 6),
+      child: Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        actionExtentRatio: 0.3,
+        closeOnScroll: true,
+        actions: widget.dismissable ? [] : [buildAddButton()],
+        secondaryActions: widget.dismissable ? [buildDeleteButton()] : [],
+        child: Card(
+          elevation: 5.0,
+          child: Container(
+            height: 100,
+            //margin: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              border: Border.all(color: Colors.black, width: 0.5),
+            ),
+            child: Stack(
+              children: [
+                buildBackgroundImage(widget.activity.image),
+                ...buildShadow(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buildTitleSection(widget.activity.name, 0),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          buildAddSection(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                buildLabelSection(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   List<Container> buildShadow() {
     List<Container> output = [
@@ -213,56 +265,6 @@ class _ActivityCardState extends State<ActivityCard> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 4, left: 6, right: 6),
-      child: Column(
-        children: [
-          Slidable(
-            actionPane: SlidableDrawerActionPane(),
-            actionExtentRatio: 0.3,
-            closeOnScroll: true,
-            actions: [buildAddButton()],
-            child: Card(
-              elevation: 5.0,
-              child: Container(
-                height: 100,
-                //margin: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  border: Border.all(color: Colors.black, width: 0.5),
-                ),
-                child: Stack(
-                  children: [
-                    buildBackgroundImage(widget.activity.image),
-                    ...buildShadow(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          buildTitleSection(widget.activity.name, 0),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              buildAddSection(),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    buildLabelSection(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget buildAddButton() {
     return IconSlideAction(
       iconWidget: Container(
@@ -271,6 +273,58 @@ class _ActivityCardState extends State<ActivityCard> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.green,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            if (!widget.selectable)
+              Text(
+                "Add progress",
+                style: TextStyle(color: Colors.white),
+              ),
+            if (widget.selectable)
+              Text(
+                "Add to",
+                style: TextStyle(color: Colors.white),
+              ),
+            if (widget.selectable)
+              Text(
+                "workout",
+                style: TextStyle(color: Colors.white),
+              )
+          ],
+        ),
+      ),
+      color: Colors.transparent,
+      closeOnTap: true,
+      onTap: () {
+        if (widget.selectable) {
+          widget.onAddActivity(widget.activity);
+        } else {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return AddProgressCard(widget.activity, _countReps);
+              });
+        }
+      },
+    );
+  }
+
+  Widget buildDeleteButton() {
+    return IconSlideAction(
+      iconWidget: Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(left: 4, top: 4, bottom: 4, right: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          color: Colors.red,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

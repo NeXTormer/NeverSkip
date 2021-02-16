@@ -26,32 +26,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   FredericUser user;
 
-  /// On pressed show ModalBottomSheet
-  ///
-  /// The bottom sheet contains the [EditSlideSheet] Widget
-  /// so the user can interact with the goal.
-  void _handleButtonPress(String id) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
-      ),
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            Container(
-              child: Text(id),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     user = FredericBackend.of(context).currentUser;
@@ -64,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Scaffold(
               backgroundColor: Colors.white,
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(50.0),
+                preferredSize: Size.fromHeight(60),
                 child: AppBar(
                   title: Text('Frederic'),
                   leading: InkWell(
@@ -168,6 +142,32 @@ class _HomeScreenState extends State<HomeScreen> {
             )),
           );
         }
+      },
+    );
+  }
+
+  /// On pressed show ModalBottomSheet
+  ///
+  /// The bottom sheet contains the [EditSlideSheet] Widget
+  /// so the user can interact with the goal.
+  void _handleButtonPress(String id) {
+    showModalBottomSheet<dynamic>(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            Container(
+              child: Text(id),
+            ),
+          ],
+        );
       },
     );
   }

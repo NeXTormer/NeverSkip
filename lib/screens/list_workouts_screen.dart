@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:frederic/widgets/second_design/workout/workout_card.dart';
+import 'package:frederic/widgets/workout/workout_card.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
   static String routeName = '/workouts';
@@ -17,7 +17,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
+        preferredSize: Size.fromHeight(60),
         child: AppBar(
           title: Text('Your workouts'),
         ),

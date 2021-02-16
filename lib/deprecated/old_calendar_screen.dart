@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/widgets/second_design/calendar/calendar_and_events_view.dart';
 import 'package:reorderables/reorderables.dart';
+
+import 'file:///C:/Dev/Projects/frederic/lib/widgets/calendar_screen/calendar_and_events_view.dart';
 
 class CalendarScreen extends StatelessWidget {
   static const routeName = '/calendar';

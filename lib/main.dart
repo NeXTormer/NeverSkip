@@ -6,7 +6,6 @@ import 'package:frederic/frederic_app.dart';
 
 class Frederic extends StatelessWidget {
   Frederic({Key key}) : super(key: key);
-  final Future<FirebaseApp> app = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +45,8 @@ class Frederic extends StatelessWidget {
     )));
   }
 }
+
+final Future<FirebaseApp> app = Firebase.initializeApp();
 
 void main() async {
   runApp(Frederic());

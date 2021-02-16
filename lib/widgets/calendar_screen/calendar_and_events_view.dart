@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_activity.dart';
 import 'package:frederic/backend/frederic_user.dart';
 import 'package:frederic/backend/frederic_workout.dart';
-import 'package:frederic/widgets/second_design/activity/activity_in_workout.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import 'file:///C:/Dev/Projects/frederic/lib/deprecated/activity_in_workout.dart';
 
 class CalendarAndEventsView extends StatefulWidget {
   @override

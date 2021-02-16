@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/activity_screen.dart';
-import 'package:frederic/widgets/second_design/calendar/week_days_slider.dart';
+
+import 'file:///C:/Dev/Projects/frederic/lib/widgets/calendar_screen/week_days_slider.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workout);
@@ -31,7 +32,16 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       appBar: AppBar(
         centerTitle: false,
         elevation: 0.0,
-        title: Text(widget.workout.name),
+        title: Hero(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Text(
+              widget.workout.name,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),
+          tag: widget.workout.name,
+        ),
         actions: [
           IconButton(
               icon: Icon(Icons.edit_outlined, size: 30),
@@ -128,6 +138,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             child: ActivityScreen(
               isSelector: true,
               onAddActivity: handleAddActivity,
+              itemsDismissable: false,
             ));
       },
     );

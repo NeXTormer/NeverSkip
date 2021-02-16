@@ -8,12 +8,18 @@ import 'package:frederic/widgets/activity_screen/appbar/activity_flexible_appbar
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {
-  ActivityScreen({this.isSelector = false, this.onAddActivity});
+  ActivityScreen(
+      {this.isSelector = false,
+      this.onAddActivity,
+      this.itemsDismissable = false,
+      this.onItemDismissed});
 
   static var routeName = 'activity-list';
 
   final bool isSelector;
   final Function(FredericActivity) onAddActivity;
+  final bool itemsDismissable;
+  final Function(FredericActivity) onItemDismissed;
 
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
@@ -71,6 +77,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               snapshot.data[index],
                               selectable: widget.isSelector,
                               onAddActivity: widget.onAddActivity,
+                              dismissable: widget.itemsDismissable,
+                              onDismiss: widget.onItemDismissed,
                             );
                           }
                           return Container();
@@ -89,9 +97,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   void dispose() {
-    //activityStreamController.close(); //TODO: Causes issues with hotreload but
-    //                                  //TODO: should normally be enabled
-
+    activityStreamController.close();
     super.dispose();
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_slidesheet.dart';
-import 'package:frederic/widgets/second_design/bottonNavBar/bottom_nav_design.dart';
 
 enum AddOptions {
   Goal,

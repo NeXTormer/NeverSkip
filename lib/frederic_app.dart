@@ -38,7 +38,7 @@ class FredericApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
-        home: true
+        home: false
             ? FutureBuilder<FredericWorkout>(
                 future: demoWorkout.loadData(),
                 builder: (context, snapshot) {
@@ -55,7 +55,7 @@ class FredericApp extends StatelessWidget {
                     FredericScreen(
                         screen: ActivityScreen(),
                         icon: Icons.accessible_forward_outlined,
-                        label: 'Activities'),
+                        label: 'Exercises'),
                     FredericScreen(
                         screen: CalendarScreen(),
                         icon: Icons.calendar_today_outlined,
