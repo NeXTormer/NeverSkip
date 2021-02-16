@@ -3,25 +3,23 @@ import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/second_design/workout/workout_card.dart';
 
-class WorkoutOverviewScreen extends StatefulWidget {
-  WorkoutOverviewScreen(this.workout);
-
+class ListWorkoutsScreen extends StatefulWidget {
   static String routeName = '/workouts';
 
-  final FredericWorkout workout;
-
   @override
-  _WorkoutOverviewScreenState createState() => _WorkoutOverviewScreenState();
+  _ListWorkoutsScreenState createState() => _ListWorkoutsScreenState();
 }
 
-class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
+class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
   @override
   Widget build(BuildContext context) {
+    FredericWorkout demoWorkout = FredericWorkout('kKOnczVnBbBHvmx96cjG');
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
         child: AppBar(
-          title: Text('Your Workouts'),
+          title: Text('Your workouts'),
         ),
       ),
       body: Column(
@@ -31,14 +29,19 @@ class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
           Container(
             padding: EdgeInsets.all(8.0),
             child: Text(
-              'Active Workout',
+              'Active workout',
               style: TextStyle(
                 fontSize: 28,
               ),
             ),
           ),
-          WorkoutCard(),
-          Divider(),
+          FutureBuilder<FredericWorkout>(
+              future: demoWorkout.loadData(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) return WorkoutCard(snapshot.data);
+                return Container();
+              }),
+          Divider(height: 0),
         ],
       ),
       floatingActionButton: FloatingActionButton(

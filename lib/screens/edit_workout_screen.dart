@@ -28,59 +28,31 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
-        child: AppBar(
-          centerTitle: false,
-          elevation: 0.0,
-          title: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: titleTextController,
-                  autofocus: false,
-                  style: TextStyle(fontSize: 24.0, color: Colors.black),
-                  decoration: InputDecoration(
-                    hintText: 'Title',
-                    suffixIcon: Icon(
-                      Icons.edit,
-                      color: Colors.black,
-                    ),
-                    filled: true,
-                    fillColor: Colors.black12,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.black12,
-                      ),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blueAccent,
-                        width: 0.5,
-                      ),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            FlatButton.icon(
-              onPressed: () => showActivityList(context),
-              icon: Icon(Icons.add, size: 30),
-              label: Text(
-                'Add',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            )
-          ],
-        ),
+      appBar: AppBar(
+        centerTitle: false,
+        elevation: 0.0,
+        title: Text(widget.workout.name),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.edit_outlined, size: 30),
+              onPressed: () {
+                print('edit workout details');
+              }),
+        ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showActivityList(context),
+        backgroundColor: Colors.orange,
+        splashColor: Colors.orangeAccent,
+        child: Icon(Icons.add, size: 36),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Divider(
+            height: 1,
+          ),
           Container(
             color: Colors.white,
             height: 140,

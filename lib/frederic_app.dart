@@ -61,7 +61,7 @@ class FredericApp extends StatelessWidget {
                         icon: Icons.calendar_today_outlined,
                         label: 'Calendar'),
                     FredericScreen(
-                        screen: WorkoutOverviewScreen(),
+                        screen: ListWorkoutsScreen(),
                         icon: Icons.work_outline,
                         label: 'WO overview'),
                   ],

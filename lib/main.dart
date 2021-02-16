@@ -1,17 +1,15 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/frederic_app.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'dart:typed_data';
-import 'dart:async';
 
 class Frederic extends StatelessWidget {
-  const Frederic({Key key}) : super(key: key);
+  Frederic({Key key}) : super(key: key);
+  final Future<FirebaseApp> app = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    final Future<FirebaseApp> app = Firebase.initializeApp();
-
     return FutureBuilder(
         future: app,
         builder: (context, snapshot) {

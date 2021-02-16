@@ -48,7 +48,7 @@ class _WeekDaysSlideState extends State<WeekDaysSlide> {
                                 child: Container(
                                   height: 3,
                                   decoration: BoxDecoration(
-                                    color: Colors.red[400],
+                                    color: Colors.orangeAccent[400],
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(8.0),
                                     ),

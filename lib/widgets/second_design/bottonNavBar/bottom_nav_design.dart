@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/screens/calendar_screen.dart';
-import 'package:frederic/screens/workout_overview_screen.dart';
+import 'package:frederic/screens/list_workouts_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'file:///C:/Dev/Projects/frederic/lib/deprecated/profile_screen_2.dart';
@@ -20,7 +20,7 @@ class _BottomNavDesignState extends State<BottomNavDesign> {
   final List<String> _children = [
     ProfileScreen2.routeName,
     CalendarScreen.routeName,
-    WorkoutOverviewScreen.routeName,
+    ListWorkoutsScreen.routeName,
     ActivityScreen.routeName,
   ];
   @override

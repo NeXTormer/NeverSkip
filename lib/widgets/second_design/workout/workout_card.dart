@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:intl/intl.dart';
 
 class WorkoutCard extends StatefulWidget {
+  WorkoutCard(this.workout);
+
+  final FredericWorkout workout;
+
   @override
   _WorkoutCardState createState() => _WorkoutCardState();
 }
@@ -10,69 +14,36 @@ class WorkoutCard extends StatefulWidget {
 class _WorkoutCardState extends State<WorkoutCard> {
   bool _isActive = false;
 
-  Widget _buildActiveStatusButton() {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _isActive = !_isActive;
-        });
-      },
-      child: Container(
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0),
-          border: Border.all(width: 1.0),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Active: '),
-            _isActive == true
-                ? Icon(
-                    Icons.done_all,
-                    color: Colors.greenAccent[400],
-                  )
-                : Icon(
-                    Icons.clear,
-                    color: Colors.red,
-                  )
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(EditWorkoutScreen.routeName);
-      },
-      child: Container(
-        width: 400,
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 0.1,
-          ),
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(5.0), topRight: Radius.circular(5.0)),
+    return Container(
+      margin: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 0.1,
         ),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(5.0), topRight: Radius.circular(5.0)),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => EditWorkoutScreen(widget.workout)));
+        },
         child: Stack(
           children: [
             Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 400,
-                  height: 200,
+                  width: double.infinity,
+                  height: 160,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(5.0),
                         topRight: Radius.circular(5.0)),
                     child: Image.network(
-                      'https://www.fitforfun.de/files/images/201712/1/istock-628092286,276242_m_n.jpg',
+                      widget.workout.image,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -80,14 +51,16 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 Container(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Summer Body',
+                    widget.workout.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 26),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    'This here is the description',
+                    widget.workout.description,
                     style: TextStyle(color: Colors.black54),
                   ),
                 ),
@@ -99,13 +72,11 @@ class _WorkoutCardState extends State<WorkoutCard> {
                       child: Row(
                         children: [
                           Text(
-                            'Created on: ',
+                            'Created by: ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            DateFormat('dd.MM.yyyy').format(
-                              DateTime.now(),
-                            ),
+                            widget.workout.ownerName,
                           )
                         ],
                       ),
@@ -116,7 +87,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
               ],
             ),
             Positioned(
-              left: 10.0,
+              left: 10,
               top: 10,
               child: InkWell(
                 onTap: () => print('Share...'),
@@ -132,7 +103,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
               ),
             ),
             Positioned(
-              right: 10.0,
+              right: 10,
               top: 10,
               child: InkWell(
                 onTap: () => print('Settings...'),
@@ -147,6 +118,39 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActiveStatusButton() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _isActive = !_isActive;
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.all(8),
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Active: '),
+            _isActive == true
+                ? Icon(
+                    Icons.done_all,
+                    color: Colors.greenAccent[400],
+                  )
+                : const Icon(
+                    Icons.clear,
+                    color: Colors.red,
+                  )
           ],
         ),
       ),
