@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/second_design/workout/workout_card.dart';
 
 class WorkoutOverviewScreen extends StatefulWidget {
+  WorkoutOverviewScreen(this.workout);
+
   static String routeName = '/workouts';
+
+  final FredericWorkout workout;
 
   @override
   _WorkoutOverviewScreenState createState() => _WorkoutOverviewScreenState();
