@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
-import 'package:frederic/widgets/activity_screen/appbar/activity_flexiable_appbar.dart';
+import 'package:frederic/widgets/activity_screen/appbar/activity_flexible_appbar.dart';
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {
-  ActivityScreen({this.isSelector = false});
+  ActivityScreen({this.isSelector = false, this.onAddActivity});
 
   static var routeName = 'activity-list';
 
   final bool isSelector;
+  final Function(FredericActivity) onAddActivity;
 
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
@@ -66,7 +67,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         (context, index) {
                           if (snapshot.data[index]
                               .matchFilterController(filter)) {
-                            return ActivityCard(snapshot.data[index]);
+                            return ActivityCard(
+                              snapshot.data[index],
+                              selectable: widget.isSelector,
+                              onAddActivity: widget.onAddActivity,
+                            );
                           }
                           return Container();
                         },

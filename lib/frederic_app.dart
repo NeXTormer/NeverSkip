@@ -4,11 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:frederic/backend/authentication_wrapper.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/bottom_navigation_screen.dart';
-import 'package:frederic/providers/activity.dart';
-import 'package:frederic/providers/goals.dart';
-import 'package:frederic/providers/progress_graph.dart';
-import 'package:frederic/providers/workout_edit.dart';
 import 'package:frederic/routing/route_generator.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +17,8 @@ class FredericApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+    FredericWorkout demoWorkout = FredericWorkout('kKOnczVnBbBHvmx96cjG');
+
     return MultiProvider(
       providers: [
         Provider<FredericBackend>(
@@ -29,18 +28,6 @@ class FredericApp extends StatelessWidget {
           create: (context) =>
               context.read<FredericBackend>().authService.authStateChanges,
         ),
-        ChangeNotifierProvider(
-          create: (context) => Goals(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ProgressGraph(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => Activity(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => WorkoutEdit(),
-        )
       ],
       child: MaterialApp(
         showPerformanceOverlay: false,
@@ -51,30 +38,37 @@ class FredericApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
-        home: AuthenticationWrapper(
-          homePage: BottomNavigationScreen(
-            [
-              FredericScreen(
-                  screen: HomeScreen(),
-                  icon: Icons.home_outlined,
-                  label: 'Home'),
-              FredericScreen(
-                  screen: ActivityScreen(),
-                  icon: Icons.accessible_forward_outlined,
-                  label: 'Activities'),
-              FredericScreen(
-                  screen: CalendarScreen(),
-                  icon: Icons.calendar_today_outlined,
-                  label: 'Calendar'),
-              FredericScreen(
-                  screen: WorkoutOverviewScreen(),
-                  icon: Icons.work_outline,
-                  label: 'WO overview'),
-            ],
-            //fixedScreen: 1,
-          ),
-          loginPage: LoginScreen(),
-        ),
+        home: true
+            ? FutureBuilder<FredericWorkout>(
+                future: demoWorkout.loadData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) return EditWorkoutScreen(snapshot.data);
+                  return Container();
+                })
+            : AuthenticationWrapper(
+                homePage: BottomNavigationScreen(
+                  [
+                    FredericScreen(
+                        screen: HomeScreen(),
+                        icon: Icons.home_outlined,
+                        label: 'Home'),
+                    FredericScreen(
+                        screen: ActivityScreen(),
+                        icon: Icons.accessible_forward_outlined,
+                        label: 'Activities'),
+                    FredericScreen(
+                        screen: CalendarScreen(),
+                        icon: Icons.calendar_today_outlined,
+                        label: 'Calendar'),
+                    FredericScreen(
+                        screen: WorkoutOverviewScreen(),
+                        icon: Icons.work_outline,
+                        label: 'WO overview'),
+                  ],
+                  //fixedScreen: 1,
+                ),
+                loginPage: LoginScreen(),
+              ),
         localizationsDelegates: const <
             LocalizationsDelegate<MaterialLocalizations>>[
           GlobalMaterialLocalizations.delegate
@@ -83,13 +77,6 @@ class FredericApp extends StatelessWidget {
           const Locale('en', ''),
           const Locale('de', ''),
         ],
-        routes: {
-          AddGraphScreen.routeName: (ctx) => AddGraphScreen(),
-          EditWorkoutScreen.routeName: (ctx) => EditWorkoutScreen(),
-          ActivityScreen.routeName: (ctx) => ActivityScreen(),
-          WorkoutOverviewScreen.routeName: (ctx) => WorkoutOverviewScreen(),
-          CalendarScreen.routeName: (ctx) => CalendarScreen(),
-        },
       ),
     );
   }

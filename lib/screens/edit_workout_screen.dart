@@ -1,75 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/providers/activity.dart';
-import 'package:frederic/providers/workout_edit.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/activity_screen.dart';
-import 'package:frederic/widgets/second_design/activity/activity_card.dart';
 import 'package:frederic/widgets/second_design/calendar/week_days_slider.dart';
-import 'package:provider/provider.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
+  EditWorkoutScreen(this.workout);
+
   static const routeName = '/workout';
+  final FredericWorkout workout;
+
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  final _controller = PageController(viewportFraction: 1.0);
-  var _selectedDay = 1;
-  final _titleTextController = TextEditingController();
+  final controller = PageController(viewportFraction: 1.0);
+  final titleTextController = TextEditingController();
+  int selectedDay = 1;
 
   @override
   void initState() {
-    _titleTextController.addListener(_printTitleText);
+    //_titleTextController.addListener(_printTitleText);
     super.initState();
   }
 
   @override
-  void dispose() {
-    _titleTextController.dispose();
-    super.dispose();
-  }
-
-  _printTitleText() {
-    print(_titleTextController.text);
-  }
-
-  void _updateSelectedDay(int newDay) {
-    setState(() {
-      _selectedDay = newDay;
-    });
-  }
-
-  void _addActivityToDay(int day, ActivityItem activityItem) {
-    print('-----' + activityItem.name);
-    setState(() {
-      final workoutEdit = Provider.of<WorkoutEdit>(context, listen: false)
-          .addActivityToDay(day, activityItem);
-    });
-  }
-
-  void showActivityList(BuildContext context) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
-      ),
-      context: context,
-      builder: (context) {
-        return ActivityScreen(isSelector: true);
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final workoutDayList =
-        Provider.of<WorkoutEdit>(context).getListPerDay(_selectedDay);
-    final List<ActivityItem> activities =
-        Provider.of<Activity>(context, listen: false).independentActivities;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
@@ -80,7 +37,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             children: [
               Expanded(
                 child: TextField(
-                  controller: _titleTextController,
+                  controller: titleTextController,
                   autofocus: false,
                   style: TextStyle(fontSize: 24.0, color: Colors.black),
                   decoration: InputDecoration(
@@ -146,17 +103,17 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   ),
                 ),
                 PageView(
-                  controller: _controller,
+                  controller: controller,
                   children: List.generate(
-                    5,
+                    1,
                     (index) =>
-                        WeekDaysSlide(index, _updateSelectedDay, _selectedDay),
+                        WeekDaysSlide(index, _updateSelectedDay, selectedDay),
                   ),
                 ),
               ],
             ),
           ),
-          if (workoutDayList != null)
+          /*if (false || workoutDayList != null)
             Column(
               children: [
                 ListView.builder(
@@ -167,9 +124,46 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   },
                 ),
               ],
-            ),
+            ), */
         ],
       ),
     );
+  }
+
+  void _updateSelectedDay(int newDay) {
+    setState(() {
+      selectedDay = newDay;
+    });
+  }
+
+  void handleAddActivity(FredericActivity activity) {
+    print('add activity ${activity.name}');
+  }
+
+  void showActivityList(BuildContext context) {
+    showModalBottomSheet<dynamic>(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+            height: MediaQuery.of(context).size.height * 0.65,
+            child: ActivityScreen(
+              isSelector: true,
+              onAddActivity: handleAddActivity,
+            ));
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    titleTextController.dispose();
+    super.dispose();
   }
 }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/providers/workout_edit.dart';
-import 'package:provider/provider.dart';
 
 class WeekDaysSlide extends StatefulWidget {
   final int weekCount;
@@ -16,7 +14,6 @@ class _WeekDaysSlideState extends State<WeekDaysSlide> {
   @override
   Widget build(BuildContext context) {
     final int _scaledDay = 1 + widget.weekCount * 7;
-    final _activityInWorkoutData = Provider.of<WorkoutEdit>(context);
     return Container(
       child: Column(
         children: [
