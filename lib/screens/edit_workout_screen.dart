@@ -2,120 +2,93 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/activity_screen.dart';
-
-import 'file:///C:/Dev/Projects/frederic/lib/widgets/calendar_screen/week_days_slider.dart';
+import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workout);
 
   static const routeName = '/workout';
   final FredericWorkout workout;
-
+  final int numberOfWeeks = 2;
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  final controller = PageController(viewportFraction: 1.0);
   final titleTextController = TextEditingController();
   int selectedDay = 1;
 
+  WeekdaySliderController sliderController;
+
   @override
   void initState() {
-    //_titleTextController.addListener(_printTitleText);
+    sliderController = WeekdaySliderController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        elevation: 0.0,
-        title: Hero(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Text(
-              widget.workout.name,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          centerTitle: false,
+          elevation: 0.0,
+          title: Hero(
+            child: Material(
+              type: MaterialType.transparency,
+              child: Text(
+                widget.workout.name,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
             ),
+            tag: widget.workout.name,
           ),
-          tag: widget.workout.name,
+          actions: [
+            IconButton(
+                icon: Icon(Icons.edit_outlined, size: 30),
+                onPressed: () {
+                  print('edit workout details');
+                }),
+          ],
         ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.edit_outlined, size: 30),
-              onPressed: () {
-                print('edit workout details');
-              }),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showActivityList(context),
-        backgroundColor: Colors.orange,
-        splashColor: Colors.orangeAccent,
-        child: Icon(Icons.add, size: 36),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Divider(
-            height: 1,
-          ),
-          Container(
-            color: Colors.white,
-            height: 140,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0.0,
-                  child: Icon(
-                    Icons.arrow_left,
-                    size: 36,
-                    color: Colors.black26,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => showActivityList(context),
+          backgroundColor: Colors.orange,
+          splashColor: Colors.orangeAccent,
+          child: Icon(Icons.add, size: 36),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: Column(
+          children: [
+            Container(
+              height: 100,
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 0.0,
+                    child: Icon(
+                      Icons.arrow_left,
+                      size: 36,
+                      color: Colors.black26,
+                    ),
                   ),
-                ),
-                Positioned(
-                  right: 0.0,
-                  child: Icon(
-                    Icons.arrow_right,
-                    size: 36,
-                    color: Colors.black26,
+                  Positioned(
+                    right: 0.0,
+                    child: Icon(
+                      Icons.arrow_right,
+                      size: 36,
+                      color: Colors.black26,
+                    ),
                   ),
-                ),
-                PageView(
-                  controller: controller,
-                  children: List.generate(
-                    1,
-                    (index) =>
-                        WeekDaysSlide(index, _updateSelectedDay, selectedDay),
-                  ),
-                ),
-              ],
+                  WeekdaysSlider(
+                    controller: null,
+                    onSelectDay: null,
+                    weekCount: 2,
+                  )
+                ],
+              ),
             ),
-          ),
-          /*if (false || workoutDayList != null)
-            Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: workoutDayList.length,
-                  itemBuilder: (ctx, index) {
-                    return ActivityCard(workoutDayList[index], null, null);
-                  },
-                ),
-              ],
-            ), */
-        ],
-      ),
-    );
-  }
-
-  void _updateSelectedDay(int newDay) {
-    setState(() {
-      selectedDay = newDay;
-    });
+          ],
+        ));
   }
 
   void handleAddActivity(FredericActivity activity) {

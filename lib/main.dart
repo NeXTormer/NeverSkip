@@ -55,13 +55,13 @@ class Frederic extends StatelessWidget {
                   icon: Icons.home_outlined,
                   label: 'Home'),
               FredericScreen(
-                  screen: ActivityScreen(),
-                  icon: Icons.accessible_forward_outlined,
-                  label: 'Exercises'),
-              FredericScreen(
                   screen: CalendarScreen(),
                   icon: Icons.calendar_today_outlined,
                   label: 'Calendar'),
+              FredericScreen(
+                  screen: ActivityScreen(),
+                  icon: Icons.accessible_forward_outlined,
+                  label: 'Exercises'),
               FredericScreen(
                   screen: ListWorkoutsScreen(),
                   icon: Icons.work_outline,
@@ -78,13 +78,11 @@ class Frederic extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
             body: Center(
-      child: Text("Loading...",
-          style: TextStyle(fontSize: 28, color: Colors.black38)),
+      child: CircularProgressIndicator(),
     )));
   }
 
   Widget _errorScreen(Object error) {
-    print("ERROR");
     return MaterialApp(
         home: Scaffold(
             body: Center(
