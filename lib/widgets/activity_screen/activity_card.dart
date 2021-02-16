@@ -201,7 +201,7 @@ class _ActivityCardState extends State<ActivityCard> {
       bottom: 0.0,
       right: 0.0,
       child: Container(
-        margin: EdgeInsets.all(16.0),
+        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: tagList),
       ),
     );
@@ -212,90 +212,93 @@ class _ActivityCardState extends State<ActivityCard> {
     final subActivites = Provider.of<Activity>(context, listen: false)
         .getActivitiesOfOwner(widget.activity.activityID);
 
-    return Column(
-      children: [
-        Slidable(
-          actionPane: SlidableDrawerActionPane(),
-          actionExtentRatio: 0.25,
-          closeOnScroll: true,
-          actions: [
-            IconSlideAction(
-              iconWidget: Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(left: 4, top: 4, bottom: 4),
+    return Container(
+      margin: EdgeInsets.only(bottom: 4, left: 6, right: 6),
+      child: Column(
+        children: [
+          Slidable(
+            actionPane: SlidableDrawerActionPane(),
+            actionExtentRatio: 0.25,
+            closeOnScroll: true,
+            actions: [
+              IconSlideAction(
+                iconWidget: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(left: 4, top: 4, bottom: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Colors.green,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Add progress",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                ),
+                color: Colors.transparent,
+                closeOnTap: true,
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return AddProgressCard(widget.activity, _countReps);
+                      });
+                },
+              ),
+            ],
+            child: Card(
+              elevation: 5.0,
+              child: Container(
+                height: 100,
+                //margin: EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
-                  color: Colors.green,
+                  border: Border.all(color: Colors.black, width: 0.5),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Stack(
                   children: [
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
+                    buildBackgroundImage(widget.activity.image),
+                    ...buildShadow(),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          buildTitleSection(
+                              widget.activity.name, subActivites.length),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              buildAddSection(),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      "Add progress",
-                      style: TextStyle(color: Colors.white),
-                    )
+                    buildLabelSection(),
                   ],
                 ),
               ),
-              color: Colors.transparent,
-              closeOnTap: true,
-              onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) {
-                      return AddProgressCard(widget.activity, _countReps);
-                    });
-              },
-            ),
-          ],
-          child: Card(
-            elevation: 5.0,
-            child: Container(
-              height: 100,
-              //margin: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                border: Border.all(color: Colors.black, width: 0.5),
-              ),
-              child: Stack(
-                children: [
-                  buildBackgroundImage(widget.activity.image),
-                  ...buildShadow(),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildTitleSection(
-                            widget.activity.name, subActivites.length),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            buildAddSection(),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  buildLabelSection(),
-                ],
-              ),
             ),
           ),
-        ),
 
-        /*
-        if (_expanded)
-          ...subActivites.map(
-            (activity) => ActivityCard(activity),
-          ), */
-      ],
+          /*
+          if (_expanded)
+            ...subActivites.map(
+              (activity) => ActivityCard(activity),
+            ), */
+        ],
+      ),
     );
   }
 }

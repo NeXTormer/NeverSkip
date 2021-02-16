@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
-  BottomNavigationScreen(this.screens);
+  BottomNavigationScreen(this.screens, {this.fixedScreen = 10000});
 
   final List<FredericScreen> screens;
+  final int fixedScreen;
 
   @override
   _BottomNavigationScreenState createState() => _BottomNavigationScreenState();
@@ -36,15 +37,17 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        children: screens,
-        controller: pageController,
-        onPageChanged: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-      ),
+      body: widget.fixedScreen < 100
+          ? widget.screens[widget.fixedScreen].screen
+          : PageView(
+              children: screens,
+              controller: pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  currentIndex = index;
+                });
+              },
+            ),
       bottomNavigationBar: BottomNavigationBar(
         items: items,
         selectedItemColor: Colors.orange,

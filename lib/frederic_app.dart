@@ -30,16 +30,16 @@ class FredericApp extends StatelessWidget {
               context.read<FredericBackend>().authService.authStateChanges,
         ),
         ChangeNotifierProvider(
-          create: (ctx) => Goals(),
+          create: (context) => Goals(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => ProgressGraph(),
+          create: (context) => ProgressGraph(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => Activity(),
+          create: (context) => Activity(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => WorkoutEdit(),
+          create: (context) => WorkoutEdit(),
         )
       ],
       child: MaterialApp(
@@ -52,22 +52,27 @@ class FredericApp extends StatelessWidget {
         ),
         onGenerateRoute: RouteGenerator.generateRoute,
         home: AuthenticationWrapper(
-          homePage: BottomNavigationScreen([
-            FredericScreen(
-                screen: HomeScreen(), icon: Icons.home_outlined, label: 'Home'),
-            FredericScreen(
-                screen: ActivityScreen(),
-                icon: Icons.accessible_forward_outlined,
-                label: 'Activities'),
-            FredericScreen(
-                screen: CalendarScreen(),
-                icon: Icons.calendar_today_outlined,
-                label: 'Calendar'),
-            FredericScreen(
-                screen: WorkoutOverviewScreen(),
-                icon: Icons.work_outline,
-                label: 'WO overview'),
-          ]),
+          homePage: BottomNavigationScreen(
+            [
+              FredericScreen(
+                  screen: HomeScreen(),
+                  icon: Icons.home_outlined,
+                  label: 'Home'),
+              FredericScreen(
+                  screen: ActivityScreen(),
+                  icon: Icons.accessible_forward_outlined,
+                  label: 'Activities'),
+              FredericScreen(
+                  screen: CalendarScreen(),
+                  icon: Icons.calendar_today_outlined,
+                  label: 'Calendar'),
+              FredericScreen(
+                  screen: WorkoutOverviewScreen(),
+                  icon: Icons.work_outline,
+                  label: 'WO overview'),
+            ],
+            //fixedScreen: 1,
+          ),
           loginPage: LoginScreen(),
         ),
         localizationsDelegates: const <

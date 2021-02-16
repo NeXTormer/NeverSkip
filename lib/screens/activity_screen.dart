@@ -8,7 +8,11 @@ import 'package:frederic/widgets/activity_screen/appbar/activity_flexiable_appba
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {
+  ActivityScreen({this.isSelector = false});
+
   static var routeName = 'activity-list';
+
+  final bool isSelector;
 
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
