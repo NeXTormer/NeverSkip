@@ -18,7 +18,7 @@ class _WeekDaysSlideState extends State<WeekDaysSlide> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Text(
               'Week ${widget.weekCount + 1}',
               style: TextStyle(

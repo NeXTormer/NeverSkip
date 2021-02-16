@@ -1,14 +1,20 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/frederic_app.dart';
+import 'package:flutter/services.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/screens/screens.dart';
+import 'package:provider/provider.dart';
 
 class Frederic extends StatelessWidget {
   Frederic({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return FutureBuilder(
         future: app,
         builder: (context, snapshot) {
@@ -16,10 +22,56 @@ class Frederic extends StatelessWidget {
             return _errorScreen(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return FredericApp();
+            return _loadApp();
           }
           return _loadingScreen();
         });
+  }
+
+  Widget _loadApp() {
+    return MultiProvider(
+      providers: [
+        Provider<FredericBackend>(
+          create: (_) => FredericBackend(FirebaseAuth.instance),
+        ),
+        StreamProvider(
+          create: (context) =>
+              context.read<FredericBackend>().authService.authStateChanges,
+        ),
+      ],
+      child: MaterialApp(
+        showPerformanceOverlay: false,
+        title: 'Frederic',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Colors.white,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: AuthenticationWrapper(
+          homePage: BottomNavigationScreen(
+            [
+              FredericScreen(
+                  screen: HomeScreen(),
+                  icon: Icons.home_outlined,
+                  label: 'Home'),
+              FredericScreen(
+                  screen: ActivityScreen(),
+                  icon: Icons.accessible_forward_outlined,
+                  label: 'Exercises'),
+              FredericScreen(
+                  screen: CalendarScreen(),
+                  icon: Icons.calendar_today_outlined,
+                  label: 'Calendar'),
+              FredericScreen(
+                  screen: ListWorkoutsScreen(),
+                  icon: Icons.work_outline,
+                  label: 'WO overview'),
+            ],
+          ),
+          loginPage: LoginScreen(),
+        ),
+      ),
+    );
   }
 
   Widget _loadingScreen() {
