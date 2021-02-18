@@ -17,7 +17,7 @@ import 'package:frederic/backend/frederic_activity.dart';
 ///
 class FredericWorkout {
   FredericWorkout(this.workoutID,
-      [bool shouldLoadActivities = false, bool shouldLoadSets = false]) {
+      {bool shouldLoadActivities = false, bool shouldLoadSets = false}) {
     _loadActivities = shouldLoadActivities;
     _loadSets = shouldLoadSets;
     if (_loadSets && !_loadActivities) _loadSets = false;
@@ -27,6 +27,9 @@ class FredericWorkout {
 
   FredericWorkoutActivities _activities;
   StreamController<FredericWorkout> _streamController;
+  Stream<FredericWorkout> _broadcastStream;
+
+  DateTime _startDate;
   String _name;
   String _description;
   String _image;
@@ -48,26 +51,29 @@ class FredericWorkout {
     return null;
   }
 
-  String get name => _name ?? 'emptyname';
-  String get description => _description ?? 'emptydescription';
+  String get name => _name ?? 'Empty';
+  String get description => _description ?? 'Empty...';
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
-  String get owner => _owner ?? 'emptyowner';
-  String get ownerName => _ownerName ?? 'emptyownername';
+  String get owner => _owner ?? 'UNKNOWN';
+  String get ownerName => _ownerName ?? 'None';
   bool get isStream => _isStream;
   bool get isNotStream => !_isStream;
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
   bool get hasSetsLoaded => _hasSetsLoaded;
+  bool get repeating => _activities.repeating;
+  int get period => _activities.period;
+  DateTime get startDate => _startDate;
 
   /// Also updates the name on the Database
   ///
   set name(String value) {
-    if (value.isNotEmpty) {
+    if (value.isNotEmpty && value != _name) {
       FirebaseFirestore.instance
           .collection('workouts')
           .doc(workoutID)
           .update({'name': value});
-      _name = value;
+      if (_isFuture) _name = value;
     }
   }
 
@@ -75,12 +81,12 @@ class FredericWorkout {
   /// Also updates the description on the Database
   ///
   set description(String value) {
-    if (value.isNotEmpty) {
+    if (value.isNotEmpty && value != _description) {
       FirebaseFirestore.instance
           .collection('workouts')
           .doc(workoutID)
           .update({'description': value});
-      _description = value;
+      if (_isFuture) _description = value;
     }
   }
 
@@ -88,12 +94,51 @@ class FredericWorkout {
   /// Also updates the image on the Database
   ///
   set image(String value) {
-    if (value.isNotEmpty) {
+    if (value.isNotEmpty && value != _image) {
       FirebaseFirestore.instance
           .collection('workouts')
           .doc(workoutID)
           .update({'image': value});
-      _image = value;
+      if (_isFuture) _image = value;
+    }
+  }
+
+  ///
+  /// Also updates the period on the Database
+  ///
+  set period(int value) {
+    if (value > 0 && value != _activities.period) {
+      FirebaseFirestore.instance
+          .collection('workouts')
+          .doc(workoutID)
+          .update({'period': value});
+    }
+    if (_isFuture) _activities.period = value;
+  }
+
+  ///
+  /// Also updates the start date on the Database
+  ///
+  set startDate(DateTime value) {
+    if (value != null && value != _startDate) {
+      FirebaseFirestore.instance
+          .collection('workouts')
+          .doc(workoutID)
+          .update({'startdate': Timestamp.fromDate(value)});
+      if (_isFuture) _startDate = value;
+    }
+  }
+
+  ///
+  /// Also updates the start date on the Database
+  ///
+  set repeating(bool value) {
+    if (value != null && value != _activities.repeating) {
+      FirebaseFirestore.instance
+          .collection('workouts')
+          .doc(workoutID)
+          .update({'repeating': value});
+      if (_isFuture) _activities.repeating = value;
     }
   }
 
@@ -142,7 +187,24 @@ class FredericWorkout {
       _loadActivitiesStream();
     }
 
-    return _streamController.stream;
+    _broadcastStream = _streamController.stream.asBroadcastStream();
+    return _broadcastStream;
+  }
+
+  //============================================================================
+  /// Returns the broadcaststream of the workout
+  /// If the workout has not been loaded, it loads the workout first
+  ///
+  Stream<FredericWorkout> asBroadcastStream() {
+    if (_isStream) {
+      Future.delayed(Duration(milliseconds: 50), () {
+        _streamController.add(this);
+      });
+      return _broadcastStream;
+    } else {
+      asStream();
+      return asBroadcastStream();
+    }
   }
 
   //============================================================================
@@ -174,7 +236,7 @@ class FredericWorkout {
     QuerySnapshot activitiesSnapshot =
         await workoutsDocument.collection('activities').get();
 
-    await _processQuerySnapshot(activitiesSnapshot);
+    await _processActivityQuerySnapshot(activitiesSnapshot);
   }
 
   void _loadActivitiesStream() {
@@ -186,15 +248,14 @@ class FredericWorkout {
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     Stream<QuerySnapshot> queryStream =
         workoutDocument.collection('activities').snapshots();
-    queryStream.listen(_processQuerySnapshot);
+    queryStream.listen(_processActivityQuerySnapshot);
     _hasActivitiesLoaded = true;
   }
 
-  Future<void> _processQuerySnapshot(QuerySnapshot snapshot) async {
-    _activities = FredericWorkoutActivities();
+  Future<void> _processActivityQuerySnapshot(QuerySnapshot snapshot) async {
+    _activities.clear();
     for (int i = 0; i < snapshot.docs.length; i++) {
       int weekday = snapshot.docs[i]['weekday'];
-      if (weekday > 8) return;
       FredericActivity a = FredericActivity(snapshot.docs[i]['activity']);
       a.weekday = weekday;
       _activities.activities[weekday].add(a);
@@ -224,8 +285,10 @@ class FredericWorkout {
   void _updateOutgoingStream() {
     bool isFinishedLoading = true;
     if (_activities != null) {
-      _activities.all.forEach((element) {
-        if (element.isNull) isFinishedLoading = false;
+      _activities.activities.forEach((list) {
+        list.forEach((element) {
+          if (element.isNull) isFinishedLoading = false;
+        });
       });
     }
     if (isFinishedLoading) _streamController?.add(this);
@@ -240,11 +303,19 @@ class FredericWorkout {
       _name = 'error loading, snapshot does not exist';
       return;
     }
+
     _name = snapshot.data()['name'];
     _description = snapshot.data()['description'];
     _image = snapshot.data()['image'];
     _owner = snapshot.data()['owner'];
     _ownerName = snapshot.data()['ownername'];
+
+    int period = snapshot.data()['period'];
+    _activities = FredericWorkoutActivities(period);
+
+    _activities.repeating = snapshot.data()['repeating'];
+    _startDate = snapshot.data()['startdate'].toDate();
+
     if (_isStream) {
       _updateOutgoingStream();
     }
@@ -255,8 +326,8 @@ class FredericWorkout {
   /// Use this to add an activity instead of using activities.add() because
   /// this also adds it to the DB
   ///
-  String addActivity(FredericActivity activity, Weekday day) {
-    List<FredericActivity> list = _activities.activities[day.index];
+  String addActivity(FredericActivity activity, int weekday) {
+    List<FredericActivity> list = _activities.activities[weekday];
     if (list.contains(activity)) {
       return 'activity-already-in-list';
     }
@@ -265,7 +336,7 @@ class FredericWorkout {
     }
     list.add(activity);
 
-    _addActivityDB(activity, day);
+    _addActivityDB(activity, weekday);
     return 'success';
   }
 
@@ -274,18 +345,17 @@ class FredericWorkout {
   /// Use this to remove an activity instead of using activities.remove() because
   /// this also removes it on the DB
   ///
-  void removeActivity(FredericActivity activity, Weekday day) {
-    List<FredericActivity> list = _activities.activities[day.index];
+  void removeActivity(FredericActivity activity, int weekday) {
+    List<FredericActivity> list = _activities.activities[weekday];
     list.remove(activity);
-    _removeActivityDB(activity, day);
+    _removeActivityDB(activity, weekday);
   }
 
   //============================================================================
   /// Moves the activity to another day in the workout plan
   ///
-  void moveActivityToOtherDay(FredericActivity activity, Weekday to) async {
+  void moveActivityToOtherDay(FredericActivity activity, int to) async {
     int fromWeekday = activity.weekday;
-    int toWeekday = to.index;
 
     CollectionReference collectionReference = FirebaseFirestore.instance
         .collection('workouts')
@@ -300,19 +370,19 @@ class FredericWorkout {
     if (snapshot.docs.length != 1) return;
 
     String docID = snapshot.docs[0].id;
-    collectionReference.doc(docID).update({'weekday': toWeekday});
+    collectionReference.doc(docID).update({'weekday': to});
   }
 
-  void _addActivityDB(FredericActivity activity, Weekday day) {
+  void _addActivityDB(FredericActivity activity, int day) {
     DocumentReference workoutReference =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
     workoutReference
         .collection('activities')
-        .add({'activity': activity.activityID, 'weekday': day.index});
+        .add({'activity': activity.activityID, 'weekday': day});
   }
 
-  Future<void> _removeActivityDB(FredericActivity activity, Weekday day) async {
+  Future<void> _removeActivityDB(FredericActivity activity, int day) async {
     CollectionReference collectionReference = FirebaseFirestore.instance
         .collection('workouts')
         .doc(workoutID)
@@ -320,7 +390,7 @@ class FredericWorkout {
 
     QuerySnapshot snapshot = await collectionReference
         .where('activity', isEqualTo: activity.activityID)
-        .where('weekday', isEqualTo: day.index)
+        .where('weekday', isEqualTo: day)
         .get();
 
     if (snapshot.docs.length != 1) return;
@@ -334,9 +404,9 @@ class FredericWorkout {
     String s =
         'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownername: $_ownerName]';
     if (_activities == null) return s;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < period; i++) {
       if (_activities.activities[i].isNotEmpty) {
-        s += '\n╚> ${Weekday.values[i]}\n';
+        s += '\n╚> ($i)\n';
       }
       _activities.activities[i].forEach((element) {
         s += '╚=> ' + element.toString() + '\n';
@@ -347,64 +417,24 @@ class FredericWorkout {
 }
 
 class FredericWorkoutActivities {
-  FredericWorkoutActivities() {
-    for (int i = 0; i < 8; i++) {
+  FredericWorkoutActivities(this.period) {
+    _activities = List<List<FredericActivity>>(period + 1);
+    for (int i = 0; i < period + 1; i++) {
       activities[i] = List<FredericActivity>();
     }
   }
 
-  List<List<FredericActivity>> activities = List<List<FredericActivity>>(8);
+  int period;
+  bool repeating;
 
+  List<List<FredericActivity>> _activities;
+
+  List<List<FredericActivity>> get activities => _activities;
   List<FredericActivity> get everyday => activities[0];
-  List<FredericActivity> get monday => activities[1];
-  List<FredericActivity> get tuesday => activities[2];
-  List<FredericActivity> get wednesday => activities[3];
-  List<FredericActivity> get thursday => activities[4];
-  List<FredericActivity> get friday => activities[5];
-  List<FredericActivity> get saturday => activities[6];
-  List<FredericActivity> get sunday => activities[7];
 
-  ///
-  /// List of activities either due today or everyday
-  ///
-  List<FredericActivity> get today =>
-      activities[DateTime.now().weekday] + everyday;
-
-  ///
-  /// List of all activities
-  ///
-  List<FredericActivity> get all =>
-      everyday +
-      monday +
-      tuesday +
-      wednesday +
-      thursday +
-      friday +
-      saturday +
-      sunday;
-
-  ///
-  /// the count of all activities in this workout
-  ///
-  int get count {
-    return monday.length +
-        tuesday.length +
-        wednesday.length +
-        thursday.length +
-        friday.length +
-        saturday.length +
-        sunday.length +
-        everyday.length;
+  void clear() {
+    for (int i = 0; i < period + 1; i++) {
+      activities[i] = List<FredericActivity>();
+    }
   }
-}
-
-enum Weekday {
-  Everyday,
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday
 }

@@ -167,37 +167,15 @@ class _CalendarAndEventsViewState extends State<CalendarAndEventsView> {
           future: user.loadData(),
           builder: (ctx, snapshot) {
             if (snapshot.hasData) {
-              FredericWorkout workout =
-                  FredericWorkout('kKOnczVnBbBHvmx96cjG', true, true);
+              FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG',
+                  shouldLoadActivities: true, shouldLoadSets: true);
               Stream<FredericWorkout> stream = workout.asStream();
               var broadcast = stream.asBroadcastStream();
               return StreamBuilder<FredericWorkout>(
                 builder: (ctx, snapshot) {
                   if (snapshot.hasData) {
-                    switch (_selectedDate) {
-                      case 1:
-                        _selectedEvents = snapshot.data.activities.monday;
-                        break;
-                      case 2:
-                        _selectedEvents = snapshot.data.activities.tuesday;
-                        break;
-                      case 3:
-                        _selectedEvents = snapshot.data.activities.wednesday;
-                        break;
-                      case 4:
-                        _selectedEvents = snapshot.data.activities.thursday;
-                        break;
-                      case 5:
-                        _selectedEvents = snapshot.data.activities.friday;
-                        break;
-                      case 6:
-                        _selectedEvents = snapshot.data.activities.saturday;
-                        break;
-                      case 7:
-                        _selectedEvents = snapshot.data.activities.sunday;
-                        break;
-                      default:
-                    }
+                    _selectedEvents =
+                        snapshot.data.activities.activities[_selectedDate];
                     return _selectedEvents.length <= 0
                         ? Text('Feiertag!')
                         : Container(
@@ -205,8 +183,8 @@ class _CalendarAndEventsViewState extends State<CalendarAndEventsView> {
                             child: ListView.builder(
                                 itemCount: _selectedEvents.length,
                                 itemBuilder: (ctx, index) {
-                                  return ActivityInWorkout(
-                                      snapshot.data.activities.tuesday[index]);
+                                  return ActivityInWorkout(snapshot
+                                      .data.activities.activities[2][index]);
                                 }),
                           );
                   } else {

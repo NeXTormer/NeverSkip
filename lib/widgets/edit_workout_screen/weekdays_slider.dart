@@ -16,12 +16,20 @@ class WeekdaysSlider extends StatefulWidget {
 
 class _WeekdaysSliderState extends State<WeekdaysSlider> {
   PageController pageController;
-  int currentDay = 1;
+  int _currentDay = 1;
+
+  int get currentDay => _currentDay;
+
+  set currentDay(int value) {
+    _currentDay = value;
+    if (widget.controller != null) widget.controller.currentDay = value;
+  }
 
   @override
   void initState() {
     pageController = PageController();
     widget.controller?._setDayCallback = handleChangeDay;
+    widget.controller?._setDayCallbackOnlyVisual = handleChangeDayVisual;
 
     super.initState();
   }
@@ -45,6 +53,17 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
   void handleChangeDay(int day) {
     setState(() {
       currentDay = day;
+      widget.controller.onDayChange(day);
+    });
+  }
+
+  void handleChangeDayVisual(int day) {
+    setState(() {
+      currentDay = day;
+      int newpage = day ~/ 8;
+      if (newpage != pageController.page)
+        pageController.animateToPage(newpage,
+            duration: Duration(milliseconds: 350), curve: Curves.easeInOutExpo);
     });
   }
 }
@@ -166,9 +185,19 @@ class WeekdaySliderDayButton extends StatelessWidget {
 }
 
 class WeekdaySliderController {
+  WeekdaySliderController({@required this.onDayChange});
+
   Function(int) _setDayCallback;
+  Function(int) _setDayCallbackOnlyVisual;
+  final Function(int) onDayChange;
+
+  int currentDay = 1;
 
   void setDay(int day) {
     _setDayCallback(day);
+  }
+
+  void setDayOnlyVisual(int day) {
+    _setDayCallbackOnlyVisual(day);
   }
 }

@@ -32,8 +32,9 @@ class _ActivityCardState extends State<ActivityCard> {
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.3,
         closeOnScroll: true,
-        actions: widget.dismissable ? [] : [buildAddButton()],
-        secondaryActions: widget.dismissable ? [buildDeleteButton()] : [],
+        //actions: widget.dismissable ? [] : [buildAddButton()],
+        secondaryActions:
+            widget.dismissable ? [buildDeleteButton()] : [buildAddButton()],
         child: Card(
           elevation: 5.0,
           child: Container(
@@ -165,7 +166,7 @@ class _ActivityCardState extends State<ActivityCard> {
   }
 
   Widget buildAddSection() {
-    return widget.selectable
+    return widget.selectable || widget.dismissable
         ? Container()
         : Container(
             width: 100,
@@ -319,54 +320,35 @@ class _ActivityCardState extends State<ActivityCard> {
 
   Widget buildDeleteButton() {
     return IconSlideAction(
-      iconWidget: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(left: 4, top: 4, bottom: 4, right: 6),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.red,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            if (!widget.selectable)
+        iconWidget: Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(left: 4, top: 4, bottom: 4, right: 6),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: Colors.red,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.delete_outlined,
+                color: Colors.white,
+              ),
               Text(
-                "Add progress",
+                "Delete from",
                 style: TextStyle(color: Colors.white),
               ),
-            if (widget.selectable)
-              Text(
-                "Add to",
-                style: TextStyle(color: Colors.white),
-              ),
-            if (widget.selectable)
               Text(
                 "workout",
                 style: TextStyle(color: Colors.white),
-              )
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
-      color: Colors.transparent,
-      closeOnTap: true,
-      onTap: () {
-        if (widget.selectable) {
-          widget.onAddActivity(widget.activity);
-        } else {
-          showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return AddProgressCard(widget.activity, _countReps);
-              });
-        }
-      },
-    );
+        color: Colors.transparent,
+        closeOnTap: true,
+        onTap: () => widget.onDismiss(widget.activity));
   }
 }
 

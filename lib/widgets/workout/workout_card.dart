@@ -27,8 +27,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
       ),
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => EditWorkoutScreen(widget.workout)));
+          widget.workout.loadActivities().then((value) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditWorkoutScreen(widget.workout)));
+          });
         },
         child: Stack(
           children: [

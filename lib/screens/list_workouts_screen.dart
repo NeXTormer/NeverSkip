@@ -13,7 +13,8 @@ class ListWorkoutsScreen extends StatefulWidget {
 class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
   @override
   Widget build(BuildContext context) {
-    FredericWorkout demoWorkout = FredericWorkout('kKOnczVnBbBHvmx96cjG');
+    FredericWorkout demoWorkout =
+        FredericWorkout('kKOnczVnBbBHvmx96cjG', shouldLoadActivities: true);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -35,8 +36,8 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
               ),
             ),
           ),
-          FutureBuilder<FredericWorkout>(
-              future: demoWorkout.loadData(),
+          StreamBuilder<FredericWorkout>(
+              stream: demoWorkout.asStream(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) return WorkoutCard(snapshot.data);
                 return Container();

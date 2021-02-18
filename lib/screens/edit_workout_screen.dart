@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/activity_screen.dart';
+import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
@@ -9,20 +10,25 @@ class EditWorkoutScreen extends StatefulWidget {
 
   static const routeName = '/workout';
   final FredericWorkout workout;
-  final int numberOfWeeks = 2;
+
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  final titleTextController = TextEditingController();
-  int selectedDay = 1;
-
+  TextEditingController titleTextController;
+  PageController activityPageController;
   WeekdaySliderController sliderController;
+
+  int selectedDay = 1;
 
   @override
   void initState() {
-    sliderController = WeekdaySliderController();
+    sliderController =
+        WeekdaySliderController(onDayChange: handleDayChangeByButton);
+    activityPageController = PageController();
+    titleTextController = TextEditingController();
+
     super.initState();
   }
 
@@ -37,6 +43,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
               type: MaterialType.transparency,
               child: Text(
                 widget.workout.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
@@ -80,19 +88,62 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     ),
                   ),
                   WeekdaysSlider(
-                    controller: null,
+                    controller: sliderController,
                     onSelectDay: null,
                     weekCount: 2,
                   )
                 ],
               ),
             ),
+            StreamBuilder<FredericWorkout>(
+                stream: widget.workout.asBroadcastStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData)
+                    return Expanded(
+                      child: PageView(
+                          onPageChanged: handleDayChangeBySwiping,
+                          controller: activityPageController,
+                          children: List.generate(
+                              snapshot.data.activities.period, (weekday) {
+                            return ListView.builder(
+                              itemBuilder: (context, index) {
+                                return ActivityCard(
+                                  snapshot.data.activities
+                                      .activities[weekday + 1][index],
+                                  dismissable: true,
+                                  onDismiss: handleDeleteActivity,
+                                );
+                              },
+                              itemCount: snapshot.data.activities
+                                  .activities[weekday + 1].length,
+                            );
+                          })),
+                    );
+                  return CircularProgressIndicator();
+                }),
           ],
         ));
   }
 
   void handleAddActivity(FredericActivity activity) {
-    print('add activity ${activity.name}');
+    widget.workout.addActivity(activity, sliderController.currentDay);
+    print('currentday: ${sliderController.currentDay}');
+  }
+
+  void handleDeleteActivity(FredericActivity activity) {
+    widget.workout.removeActivity(activity, sliderController.currentDay);
+  }
+
+  void handleDayChangeByButton(int day) {
+    if ((day - 1 - activityPageController.page).abs() <= 2)
+      activityPageController.animateToPage(day - 1,
+          duration: Duration(milliseconds: 350), curve: Curves.easeInOutExpo);
+    else
+      activityPageController.jumpToPage(day - 1);
+  }
+
+  void handleDayChangeBySwiping(int day) {
+    sliderController.setDayOnlyVisual(day + 1);
   }
 
   void showActivityList(BuildContext context) {
