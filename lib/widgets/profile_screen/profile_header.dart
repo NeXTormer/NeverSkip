@@ -5,38 +5,6 @@ class ProfileHeader extends StatelessWidget {
   const ProfileHeader(this.user);
   final FredericUser user;
 
-  /// Outsource the Profile-Text section
-  ///
-  /// Currently build a static [profile name] and [subtext].
-  Widget buildProfileText() {
-    return Container(
-      child: Row(
-        children: [
-          SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                user.name,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 6),
-              Text(
-                user.description,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15, color: Colors.black54),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -102,6 +70,38 @@ class ProfileHeader extends StatelessWidget {
             ),
           )
       ],
+    );
+  }
+
+  /// Outsource the Profile-Text section
+  ///
+  /// Currently build a static [profile name] and [subtext].
+  Widget buildProfileText() {
+    return Container(
+      child: Row(
+        children: [
+          SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                user.name,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 6),
+              Text(
+                user.description,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 15, color: Colors.black54),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

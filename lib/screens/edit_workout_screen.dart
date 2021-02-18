@@ -38,17 +38,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         appBar: AppBar(
           centerTitle: false,
           elevation: 0.0,
-          title: Hero(
-            child: Material(
-              type: MaterialType.transparency,
-              child: Text(
-                widget.workout.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+          title: Material(
+            type: MaterialType.transparency,
+            child: Text(
+              widget.workout.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            tag: widget.workout.name,
           ),
           actions: [
             IconButton(

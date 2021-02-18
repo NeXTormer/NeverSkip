@@ -52,17 +52,14 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 ),
                 Container(
                   padding: EdgeInsets.all(8.0),
-                  child: Hero(
-                    tag: widget.workout.name,
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: Text(
-                        widget.workout.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: Text(
+                      widget.workout.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

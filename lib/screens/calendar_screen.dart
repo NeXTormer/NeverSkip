@@ -16,6 +16,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
   List<String> _january = [];
   int _displayWeeksIndex = 0;
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: AppBar(
+          leading: Icon(Icons.list),
+          title: Text('Month'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.calendar_today),
+            ),
+            IconButton(
+              icon: Icon(Icons.done),
+              onPressed: () {},
+            )
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ..._buildMonthCalendarItem(1, _dummy, null),
+            _buildMonthHeader(
+                'https://www.emotion.de/sites/www.emotion.de/files/styles/article_lead/public/home-workout.jpg?itok=51YSMTu7',
+                'February'),
+          ],
+
+          //_buildMonthCalendarItem(),
+        ),
+      ),
+      //bottomNavigationBar: BottomNavDesign(1),
+    );
+  }
+
   List<ActivityItem> _dummy = [
     ActivityItem(
       activityID: 'a1',
@@ -231,42 +267,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ],
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          leading: Icon(Icons.list),
-          title: Text('Month'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.calendar_today),
-            ),
-            IconButton(
-              icon: Icon(Icons.done),
-              onPressed: () {},
-            )
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ..._buildMonthCalendarItem(1, _dummy, null),
-            _buildMonthHeader(
-                'https://www.emotion.de/sites/www.emotion.de/files/styles/article_lead/public/home-workout.jpg?itok=51YSMTu7',
-                'February'),
-          ],
-
-          //_buildMonthCalendarItem(),
-        ),
-      ),
-      //bottomNavigationBar: BottomNavDesign(1),
     );
   }
 }

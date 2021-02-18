@@ -37,6 +37,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: widget.fixedScreen < 100
           ? widget.screens[widget.fixedScreen].screen
           : PageView(
