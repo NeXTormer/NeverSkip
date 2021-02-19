@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_activity.dart';
 import 'package:frederic/providers/activity.dart';
 
 class ActivityCalendarCard extends StatelessWidget {
-  final ActivityItem activityItem;
+  final FredericActivity activityItem;
   final Key key;
 
   ActivityCalendarCard(this.activityItem, this.key);
@@ -26,10 +28,13 @@ class ActivityCalendarCard extends StatelessWidget {
                   activityItem.name,
                   style: TextStyle(fontSize: 22),
                 ),
-                Text(
-                  activityItem.description,
-                  style: TextStyle(
-                    color: Colors.black54,
+                SizedBox(
+                  width: 200,
+                  //height: 50,
+                  child: AutoSizeText(
+                    activityItem.description,
+                    maxLines: 3,
+                    style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ),
               ],
