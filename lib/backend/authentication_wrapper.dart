@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_activity_manager.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
   const AuthenticationWrapper(
@@ -23,6 +24,7 @@ class AuthenticationWrapper extends StatelessWidget {
               future: FredericBackend.of(context).loadCurrentUser(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  FredericActivityManager.of(context).loadData();
                   return homePage;
                 } else {
                   return Scaffold(

@@ -443,6 +443,7 @@ class FredericActivity {
     _type = parseType(snapshot.data()['type']);
 
     List<dynamic> musclegroups = snapshot.data()['musclegroup'];
+    _muscleGroups.clear();
     musclegroups.forEach((element) {
       if (element is String) _muscleGroups.add(parseSingleMuscleGroup(element));
     });
@@ -665,6 +666,9 @@ class FredericActivity {
     }
     return s;
   }
+
+  @override
+  int get hashCode => activityID.hashCode;
 }
 
 enum FredericActivityType { Weighted, Calisthenics, Stretch }

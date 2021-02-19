@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,7 @@ class Frederic extends StatelessWidget {
         Provider<FredericBackend>(
           create: (_) => FredericBackend(FirebaseAuth.instance),
         ),
+        ChangeNotifierProvider(create: (_) => FredericActivityManager()),
         StreamProvider(
           create: (context) =>
               context.read<FredericBackend>().authService.authStateChanges,
