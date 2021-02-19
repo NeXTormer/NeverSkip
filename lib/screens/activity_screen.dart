@@ -77,7 +77,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               snapshot.data[index],
                               selectable: widget.isSelector,
                               onAddActivity: widget.onAddActivity,
-                              dismissable: widget.itemsDismissable,
+                              dismissible: widget.itemsDismissable,
                               onDismiss: widget.onItemDismissed,
                             );
                           }

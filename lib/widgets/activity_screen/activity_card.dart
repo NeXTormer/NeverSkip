@@ -7,11 +7,11 @@ class ActivityCard extends StatefulWidget {
   ActivityCard(this.activity,
       {this.selectable = false,
       this.onAddActivity,
-      this.dismissable = false,
+      this.dismissible = false,
       this.onDismiss});
 
   final bool selectable;
-  final bool dismissable;
+  final bool dismissible;
   final FredericActivity activity;
   final Function(FredericActivity) onAddActivity;
   final Function(FredericActivity) onDismiss;
@@ -34,7 +34,7 @@ class _ActivityCardState extends State<ActivityCard> {
         closeOnScroll: true,
         //actions: widget.dismissable ? [] : [buildAddButton()],
         secondaryActions:
-            widget.dismissable ? [buildDeleteButton()] : [buildAddButton()],
+            widget.dismissible ? [buildDeleteButton()] : [buildAddButton()],
         child: Card(
           elevation: 5.0,
           child: Container(
@@ -166,7 +166,7 @@ class _ActivityCardState extends State<ActivityCard> {
   }
 
   Widget buildAddSection() {
-    return widget.selectable || widget.dismissable
+    return widget.selectable || widget.dismissible
         ? Container()
         : Container(
             width: 100,

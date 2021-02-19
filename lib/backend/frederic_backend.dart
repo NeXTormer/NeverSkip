@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,6 +26,7 @@ class FredericBackend {
   FredericUser currentUser;
   List<FredericGoal> goals;
   List<FredericGoal> achievements;
+  HashMap<String, FredericActivity> _activities;
 
   // Streams and StreamControllers
   Stream<FredericUser> _currentUserStream;

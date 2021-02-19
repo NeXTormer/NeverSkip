@@ -107,7 +107,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                 return ActivityCard(
                                   snapshot.data.activities
                                       .activities[weekday + 1][index],
-                                  dismissable: true,
+                                  dismissible: true,
                                   onDismiss: handleDeleteActivity,
                                 );
                               },

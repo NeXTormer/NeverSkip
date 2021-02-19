@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,13 @@ import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:provider/provider.dart';
+
+FirebaseAnalytics analytics = FirebaseAnalytics();
+final Future<FirebaseApp> app = Firebase.initializeApp();
+
+void main() async {
+  runApp(Frederic());
+}
 
 class Frederic extends StatelessWidget {
   Frederic({Key key}) : super(key: key);
@@ -40,6 +49,9 @@ class Frederic extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: analytics),
+        ],
         showPerformanceOverlay: false,
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
@@ -94,10 +106,4 @@ class Frederic extends StatelessWidget {
       ),
     )));
   }
-}
-
-final Future<FirebaseApp> app = Firebase.initializeApp();
-
-void main() async {
-  runApp(Frederic());
 }

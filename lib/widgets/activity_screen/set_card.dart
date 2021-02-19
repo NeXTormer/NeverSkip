@@ -3,9 +3,10 @@ import 'package:frederic/backend/frederic_set.dart';
 import 'package:intl/intl.dart';
 
 class SetCard extends StatelessWidget {
-  SetCard(this.set);
+  SetCard(this.set, [this.isCali = false]);
 
   final FredericSet set;
+  final bool isCali;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +17,13 @@ class SetCard extends StatelessWidget {
         Row(
           children: [
             Icon(Icons.arrow_forward_ios_outlined, size: 16),
-            Text('${set.reps} reps with ${set.weight}'),
+            Text('${set.reps} reps${isCali ? '' : ' with ${set.weight}'}'),
             SizedBox(width: 4),
-            Icon(
-              Icons.fitness_center,
-              size: 14,
-            ),
+            if (!isCali)
+              Icon(
+                Icons.fitness_center,
+                size: 14,
+              ),
             SizedBox(width: 4),
             Expanded(
               child: Container(),

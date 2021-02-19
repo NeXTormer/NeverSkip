@@ -71,7 +71,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                         SizedBox(height: 6),
                         OutlineButton(
                           onPressed: () {
-                            if (weightCounterController.value == 0 ||
+                            if ((!isCali &&
+                                    weightCounterController.value == 0) ||
                                 widget.reps == 0) {
                               showDialog<void>(
                                 context: context,
@@ -79,8 +80,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Center(child: Text('Error')),
-                                    content:
-                                        Text('Please enter reps and weight'),
+                                    content: Text(
+                                        'Please enter reps${isCali ? '' : ' and weight'}'),
                                   );
                                 },
                               );
@@ -101,7 +102,7 @@ class _AddProgressCardState extends State<AddProgressCard> {
                               if (snapshot.hasData) {
                                 List<Widget> setList = List<Widget>();
                                 for (var value in snapshot.data.sets) {
-                                  setList.add(SetCard(value));
+                                  setList.add(SetCard(value, isCali));
                                 }
                                 return Column(
                                   children: setList,
