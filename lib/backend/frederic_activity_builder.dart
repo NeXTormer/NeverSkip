@@ -48,6 +48,7 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
     if (widget.type == FredericActivityBuilderType.WorkoutActivities) {
       _workoutManager = FredericBackend.instance().workoutManager;
       _workoutManager[widget.id].loadActivities();
+      _workoutManager[widget.id].addListener(updateData);
     }
 
     updateData();
@@ -86,7 +87,10 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
 
   @override
   void dispose() {
-    _workoutManager?.removeListener(updateData);
+    if (_workoutManager != null) {
+      _workoutManager.removeListener(updateData);
+      _workoutManager[widget.id].removeListener(updateData);
+    }
     _activityManager.removeListener(updateData);
     super.dispose();
   }

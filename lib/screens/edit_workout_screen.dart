@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_activity_builder.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
@@ -92,32 +93,57 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 ],
               ),
             ),
-            StreamBuilder<FredericWorkout>(
-                //stream: widget.workout.asBroadcastStream(),
-                builder: (context, snapshot) {
-              if (snapshot.hasData)
-                return Expanded(
-                  child: PageView(
-                      onPageChanged: handleDayChangeBySwiping,
-                      controller: activityPageController,
-                      children: List.generate(snapshot.data.activities.period,
-                          (weekday) {
-                        return ListView.builder(
-                          itemBuilder: (context, index) {
-                            return ActivityCard(
-                              snapshot.data.activities.activities[weekday + 1]
-                                  [index],
-                              dismissible: true,
-                              onDismiss: handleDeleteActivity,
-                            );
-                          },
-                          itemCount: snapshot
-                              .data.activities.activities[weekday + 1].length,
-                        );
-                      })),
-                );
-              return CircularProgressIndicator();
-            }),
+            Expanded(
+              child: FredericActivityBuilder(
+                  type: FredericActivityBuilderType.WorkoutActivities,
+                  id: widget.workout.workoutID,
+                  builder: (context, list) {
+                    FredericWorkoutActivities activities = list;
+                    return PageView(
+                        onPageChanged: handleDayChangeBySwiping,
+                        controller: activityPageController,
+                        children: List.generate(activities.period, (weekday) {
+                          return ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ActivityCard(
+                                activities.activities[weekday + 1][index],
+                                dismissible: true,
+                                onDismiss: handleDeleteActivity,
+                              );
+                            },
+                            itemCount:
+                                activities.activities[weekday + 1].length,
+                          );
+                        }));
+                  }),
+            ),
+            if (false)
+              StreamBuilder<FredericWorkout>(
+                  //stream: widget.workout.asBroadcastStream(),
+                  builder: (context, snapshot) {
+                if (snapshot.hasData)
+                  return Expanded(
+                    child: PageView(
+                        onPageChanged: handleDayChangeBySwiping,
+                        controller: activityPageController,
+                        children: List.generate(snapshot.data.activities.period,
+                            (weekday) {
+                          return ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ActivityCard(
+                                snapshot.data.activities.activities[weekday + 1]
+                                    [index],
+                                dismissible: true,
+                                onDismiss: handleDeleteActivity,
+                              );
+                            },
+                            itemCount: snapshot
+                                .data.activities.activities[weekday + 1].length,
+                          );
+                        })),
+                  );
+                return CircularProgressIndicator();
+              }),
           ],
         ));
   }
