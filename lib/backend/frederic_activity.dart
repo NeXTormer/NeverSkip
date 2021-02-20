@@ -222,6 +222,7 @@ class FredericActivity {
   ///
   /// Either use this or [asStream()], not both
   ///
+  @Deprecated('not needed anymore because of [FredericActivityController]')
   Future<FredericActivity> loadData([bool loadSets = false]) async {
     if (activityID == null) return null;
     if (_isStream) return null;
@@ -250,6 +251,7 @@ class FredericActivity {
   /// If [loadSets] is set to true, the user progress on this activity
   /// is loaded as well
   ///
+  @Deprecated('not needed anymore because of [FredericActivityController]')
   Stream<FredericActivity> asStream([loadSets = false]) {
     if (_isFuture) return null;
     if (activityID == null) return null;

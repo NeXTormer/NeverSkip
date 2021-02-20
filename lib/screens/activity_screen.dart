@@ -88,34 +88,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ),
             );
           }),
-          if (false)
-            StreamBuilder<List<FredericActivity>>(
-                stream: stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Consumer<ActivityFilterController>(
-                      builder: (context, filter, child) => SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            if (snapshot.data[index]
-                                .matchFilterController(filter)) {
-                              return ActivityCard(
-                                snapshot.data[index],
-                                selectable: widget.isSelector,
-                                onAddActivity: widget.onAddActivity,
-                                dismissible: widget.itemsDismissable,
-                                onDismiss: widget.onItemDismissed,
-                              );
-                            }
-                            return Container();
-                          },
-                          childCount: snapshot.data.length,
-                        ),
-                      ),
-                    );
-                  }
-                  return SliverToBoxAdapter(child: Container());
-                }),
         ],
       ),
     );

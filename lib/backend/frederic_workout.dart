@@ -160,7 +160,7 @@ class FredericWorkout {
     DocumentReference workoutsDocument =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     DocumentSnapshot documentSnapshot = await workoutsDocument.get();
-    insertDocumentSnapshot(documentSnapshot);
+    insertSnapshot(documentSnapshot);
 
     if (_loadActivities) {
       await _loadActivitiesOnce();
@@ -181,7 +181,7 @@ class FredericWorkout {
     DocumentReference workoutDocument =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
     Stream<DocumentSnapshot> documentStream = workoutDocument.snapshots();
-    documentStream.listen(insertDocumentSnapshot);
+    documentStream.listen(insertSnapshot);
 
     if (_loadActivities) {
       _loadActivitiesStream();
@@ -298,7 +298,7 @@ class FredericWorkout {
   /// Takes a DocumentSnapshot and inserts its data into the workout. If the workout
   /// is already loaded as a Stream, the stream is updated after inserting the data
   ///
-  void insertDocumentSnapshot(DocumentSnapshot snapshot) {
+  void insertSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) {
       _name = 'error loading, snapshot does not exist';
       return;
