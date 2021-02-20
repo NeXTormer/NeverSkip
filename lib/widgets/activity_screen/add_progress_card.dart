@@ -20,7 +20,7 @@ class _AddProgressCardState extends State<AddProgressCard> {
 
   @override
   Widget build(BuildContext context) {
-    streamController = widget.activity.loadSetsStreamOnce(5);
+    //streamController = widget.activity.loadSetsStreamOnce(5);
     weightCounterController = _WeightCounterController();
 
     return Wrap(children: [
@@ -96,21 +96,22 @@ class _AddProgressCardState extends State<AddProgressCard> {
                             child: Text('Add progress'),
                           ),
                         ),
-                        FutureBuilder<FredericActivity>(
-                            future: widget.activity.loadSetsOnce(5),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                List<Widget> setList = List<Widget>();
-                                for (var value in snapshot.data.sets) {
-                                  setList.add(SetCard(value, isCali));
-                                }
-                                return Column(
-                                  children: setList,
-                                );
-                              } else {
-                                return Container();
+                        if (false)
+                          FutureBuilder<FredericActivity>(
+                              //future: widget.activity.loadSetsOnce(5),
+                              builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<Widget> setList = List<Widget>();
+                              for (var value in snapshot.data.sets) {
+                                setList.add(SetCard(value, isCali));
                               }
-                            }),
+                              return Column(
+                                children: setList,
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
                       ],
                     );
                   }),

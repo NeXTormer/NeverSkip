@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class FredericActivityManager with ChangeNotifier {
@@ -29,6 +30,9 @@ class FredericActivityManager with ChangeNotifier {
   static FredericActivityManager of(BuildContext context) =>
       Provider.of<FredericActivityManager>(context);
 
+  static FredericActivityManager instance() =>
+      GetIt.instance<FredericActivityManager>();
+
   void loadData() {
     if (_dataLoaded) return;
     _dataLoaded = true;
@@ -49,7 +53,9 @@ class FredericActivityManager with ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       var docSnapshot = snapshot.docChanges[i].doc;
       if (_activities.containsKey(docSnapshot.id)) {
-        _activities[docSnapshot.id].insertSnapshot(snapshot.docChanges[i].doc);
+        _activities[docSnapshot.id]
+            .insertSnapshot(snapshot.docChanges[i].doc)
+            .notifyListeners();
         changed = true;
       } else {
         _activities[docSnapshot.id] = FredericActivity(docSnapshot.id)

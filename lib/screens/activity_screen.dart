@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_activity_consumer.dart';
 import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
@@ -31,9 +32,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    activityStreamController = FredericBackend.getAllActivitiesStream();
-    Stream<List<FredericActivity>> stream = activityStreamController.stream;
-
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
       child: CustomScrollView(
@@ -64,30 +62,55 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ),
             ),
           ),
-          Consumer<FredericActivityManager>(
-              builder: (context, activityManager, child) {
-            return Consumer<ActivityFilterController>(
-              builder: (context, filter, child) => SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    FredericActivity a =
-                        activityManager.activities.elementAt(index);
-                    if (a.matchFilterController(filter)) {
-                      return ActivityCard(
-                        a,
-                        selectable: widget.isSelector,
-                        onAddActivity: widget.onAddActivity,
-                        dismissible: widget.itemsDismissable,
-                        onDismiss: widget.onItemDismissed,
-                      );
-                    }
-                    return Container();
-                  },
-                  childCount: activityManager.activities.length,
+          FredericActivityBuilder(
+            builder: (context, list) {
+              return Consumer<ActivityFilterController>(
+                builder: (context, filter, child) => SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      FredericActivity a = list[index];
+                      if (a.matchFilterController(filter)) {
+                        return ActivityCard(
+                          a,
+                          selectable: widget.isSelector,
+                          onAddActivity: widget.onAddActivity,
+                          dismissible: widget.itemsDismissable,
+                          onDismiss: widget.onItemDismissed,
+                        );
+                      }
+                      return Container();
+                    },
+                    childCount: list.length,
+                  ),
                 ),
-              ),
-            );
-          }),
+              );
+            },
+          ),
+          if (false)
+            Consumer<FredericActivityManager>(
+                builder: (context, activityManager, child) {
+              return Consumer<ActivityFilterController>(
+                builder: (context, filter, child) => SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      FredericActivity a =
+                          activityManager.activities.elementAt(index);
+                      if (a.matchFilterController(filter)) {
+                        return ActivityCard(
+                          a,
+                          selectable: widget.isSelector,
+                          onAddActivity: widget.onAddActivity,
+                          dismissible: widget.itemsDismissable,
+                          onDismiss: widget.onItemDismissed,
+                        );
+                      }
+                      return Container();
+                    },
+                    childCount: activityManager.activities.length,
+                  ),
+                ),
+              );
+            }),
         ],
       ),
     );

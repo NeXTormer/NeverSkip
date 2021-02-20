@@ -47,11 +47,6 @@ class FredericChartData {
     _type = type;
     _typeArgument = typeArgument;
 
-    activity = FredericActivity(activityID);
-    activity.loadData().then((value) {
-      _streamController.add(this);
-    });
-
     int daysToLoad = 0;
     if (type == FredericChartType.PreviousNDays)
       daysToLoad = typeArgument;

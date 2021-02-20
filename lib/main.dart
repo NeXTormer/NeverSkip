@@ -9,10 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/screens/screens.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 final Future<FirebaseApp> app = Firebase.initializeApp();
+final getIt = GetIt.instance;
 
 void main() async {
   runApp(Frederic());

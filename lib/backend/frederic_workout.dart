@@ -260,11 +260,11 @@ class FredericWorkout {
       a.weekday = weekday;
       _activities.activities[weekday].add(a);
       if (_isStream) {
-        a.asStream(_loadSets).listen((event) {
-          _updateOutgoingStream();
-        });
+        //a.asStream(_loadSets).listen((event) {
+        //  _updateOutgoingStream();
+        //});
       } else {
-        await a.loadData(_loadSets);
+        //await a.loadData(_loadSets);
       }
     }
     if (_isStream) {
