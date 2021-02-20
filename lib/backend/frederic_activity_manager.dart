@@ -6,8 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 class FredericActivityManager with ChangeNotifier {
   FredericActivityManager() {
@@ -21,17 +19,11 @@ class FredericActivityManager with ChangeNotifier {
   final CollectionReference _activitiesCollection =
       FirebaseFirestore.instance.collection('activities');
 
-  operator [](String value) {
+  FredericActivity operator [](String value) {
     return _activities[value];
   }
 
   Iterable<FredericActivity> get activities => _activities.values;
-
-  static FredericActivityManager of(BuildContext context) =>
-      Provider.of<FredericActivityManager>(context);
-
-  static FredericActivityManager instance() =>
-      GetIt.instance<FredericActivityManager>();
 
   void loadData() {
     if (_dataLoaded) return;

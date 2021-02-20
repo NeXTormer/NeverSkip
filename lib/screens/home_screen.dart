@@ -28,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    user = FredericBackend.of(context).currentUser;
+    user = FredericBackend.instance().currentUser;
 
     return StreamBuilder<FredericUser>(
-      stream: FredericBackend.of(context).currentUserStream,
+      stream: FredericBackend.instance().currentUserStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           user = snapshot.data;

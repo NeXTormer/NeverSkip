@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity_consumer.dart';
-import 'package:frederic/backend/frederic_activity_manager.dart';
+import 'package:frederic/backend/frederic_activity_builder.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 import 'package:frederic/widgets/activity_screen/appbar/activity_flexible_appbar.dart';
@@ -28,8 +25,6 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
-  StreamController<List<FredericActivity>> activityStreamController;
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActivityFilterController>(
@@ -63,6 +58,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             ),
           ),
           FredericActivityBuilder(
+            type: FredericActivityBuilderType.AllActivities,
             builder: (context, list) {
               return Consumer<ActivityFilterController>(
                 builder: (context, filter, child) => SliverList(
@@ -86,31 +82,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
               );
             },
           ),
-          if (false)
-            Consumer<FredericActivityManager>(
-                builder: (context, activityManager, child) {
-              return Consumer<ActivityFilterController>(
-                builder: (context, filter, child) => SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      FredericActivity a =
-                          activityManager.activities.elementAt(index);
-                      if (a.matchFilterController(filter)) {
-                        return ActivityCard(
-                          a,
-                          selectable: widget.isSelector,
-                          onAddActivity: widget.onAddActivity,
-                          dismissible: widget.itemsDismissable,
-                          onDismiss: widget.onItemDismissed,
-                        );
-                      }
-                      return Container();
-                    },
-                    childCount: activityManager.activities.length,
-                  ),
-                ),
-              );
-            }),
         ],
       ),
     );
@@ -118,7 +89,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   void dispose() {
-    activityStreamController.close();
     super.dispose();
   }
 }

@@ -12,7 +12,7 @@ class GoalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Stream<List<FredericGoal>> stream =
-        FredericBackend.of(context).loadGoalStream();
+        FredericBackend.instance().loadGoalStream();
 
     return StreamBuilder<List<FredericGoal>>(
         stream: stream,

@@ -93,31 +93,31 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
               ),
             ),
             StreamBuilder<FredericWorkout>(
-                stream: widget.workout.asBroadcastStream(),
+                //stream: widget.workout.asBroadcastStream(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData)
-                    return Expanded(
-                      child: PageView(
-                          onPageChanged: handleDayChangeBySwiping,
-                          controller: activityPageController,
-                          children: List.generate(
-                              snapshot.data.activities.period, (weekday) {
-                            return ListView.builder(
-                              itemBuilder: (context, index) {
-                                return ActivityCard(
-                                  snapshot.data.activities
-                                      .activities[weekday + 1][index],
-                                  dismissible: true,
-                                  onDismiss: handleDeleteActivity,
-                                );
-                              },
-                              itemCount: snapshot.data.activities
-                                  .activities[weekday + 1].length,
+              if (snapshot.hasData)
+                return Expanded(
+                  child: PageView(
+                      onPageChanged: handleDayChangeBySwiping,
+                      controller: activityPageController,
+                      children: List.generate(snapshot.data.activities.period,
+                          (weekday) {
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            return ActivityCard(
+                              snapshot.data.activities.activities[weekday + 1]
+                                  [index],
+                              dismissible: true,
+                              onDismiss: handleDeleteActivity,
                             );
-                          })),
-                    );
-                  return CircularProgressIndicator();
-                }),
+                          },
+                          itemCount: snapshot
+                              .data.activities.activities[weekday + 1].length,
+                        );
+                      })),
+                );
+              return CircularProgressIndicator();
+            }),
           ],
         ));
   }

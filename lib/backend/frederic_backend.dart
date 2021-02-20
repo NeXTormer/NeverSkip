@@ -2,26 +2,30 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_set.dart';
-import 'package:provider/provider.dart';
+import 'package:frederic/backend/frederic_workout_manager.dart';
+import 'package:frederic/main.dart';
 
 import 'backend.dart';
 
 class FredericBackend {
-  FredericBackend(this._firebaseAuth)
-      : _authenticationService = AuthenticationService(_firebaseAuth);
-
-  static FredericBackend of(BuildContext context) {
-    return context.read<FredericBackend>();
+  FredericBackend() {
+    _authenticationService = AuthenticationService(FirebaseAuth.instance);
   }
 
-  final FirebaseAuth _firebaseAuth;
-  final AuthenticationService _authenticationService;
+  AuthenticationService _authenticationService;
+
+  FredericActivityManager _activityManager;
+  FredericActivityManager get activityManager => _activityManager;
+
+  FredericWorkoutManager _workoutManager;
+  FredericWorkoutManager get workoutManager => _workoutManager;
 
   // Streamed objects
-  FredericUser currentUser;
+  FredericUser _currentUser;
+  FredericUser get currentUser => _currentUser;
   List<FredericGoal> goals;
   List<FredericGoal> achievements;
 
@@ -47,6 +51,20 @@ class FredericBackend {
     _loadCurrentUserStream();
     return currentUser;
   }
+
+  void loadData() {
+    _activityManager = FredericActivityManager();
+    _activityManager.loadData();
+
+    _workoutManager = FredericWorkoutManager();
+    _workoutManager.loadData();
+  }
+
+  void logIn(String uid) {
+    _currentUser = FredericUser(uid);
+  }
+
+  static FredericBackend instance() => getIt<FredericBackend>();
 
   void _loadCurrentUserStream() {
     if (currentUser?.uid == null) {

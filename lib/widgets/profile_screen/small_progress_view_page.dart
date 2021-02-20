@@ -12,7 +12,7 @@ class SmallProgressViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    activities = FredericBackend.of(context).currentUser.progressMonitors;
+    activities = FredericBackend.instance().currentUser.progressMonitors;
 
     return Container(
       child: Row(

@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity.dart';
+import 'package:frederic/backend/frederic_activity_manager.dart';
 
 ///
 /// Contains all the data for a workout
@@ -15,19 +18,15 @@ import 'package:frederic/backend/frederic_activity.dart';
 /// TODO: add possibility to only load the workout without the activities, to improve
 /// performance when viewing a lot of workouts in a list
 ///
-class FredericWorkout {
-  FredericWorkout(this.workoutID,
-      {bool shouldLoadActivities = false, bool shouldLoadSets = false}) {
-    _loadActivities = shouldLoadActivities;
-    _loadSets = shouldLoadSets;
-    if (_loadSets && !_loadActivities) _loadSets = false;
+class FredericWorkout with ChangeNotifier {
+  FredericWorkout(this.workoutID) {
+    _activityManager = FredericBackend.instance().activityManager;
   }
 
   final String workoutID;
+  FredericActivityManager _activityManager;
 
   FredericWorkoutActivities _activities;
-  StreamController<FredericWorkout> _streamController;
-  Stream<FredericWorkout> _broadcastStream;
 
   DateTime _startDate;
   String _name;
@@ -35,35 +34,25 @@ class FredericWorkout {
   String _image;
   String _owner;
   String _ownerName;
-  bool _isStream = false;
-  bool _isFuture = false;
   bool _hasActivitiesLoaded = false;
-  bool _hasSetsLoaded = false;
-  bool _loadActivities = false;
-  bool _loadSets = false;
 
-  FredericWorkoutActivities get activities {
-    if (_loadActivities) {
-      return _activities;
-    }
-    print(
-        'Error: Attempted to access the activities of a FredericWorkout which has not loaded the activities yet');
-    return null;
-  }
-
+  DateTime get startDate => _startDate;
   String get name => _name ?? 'Empty';
   String get description => _description ?? 'Empty...';
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
   String get owner => _owner ?? 'UNKNOWN';
   String get ownerName => _ownerName ?? 'None';
-  bool get isStream => _isStream;
-  bool get isNotStream => !_isStream;
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
-  bool get hasSetsLoaded => _hasSetsLoaded;
   bool get repeating => _activities.repeating;
   int get period => _activities.period;
-  DateTime get startDate => _startDate;
+  FredericWorkoutActivities get activities {
+    if (_hasActivitiesLoaded) {
+      return _activities;
+    }
+    print('Error: activities of workout [$name] not loaded yet');
+    return null;
+  }
 
   /// Also updates the name on the Database
   ///
@@ -73,7 +62,6 @@ class FredericWorkout {
           .collection('workouts')
           .doc(workoutID)
           .update({'name': value});
-      if (_isFuture) _name = value;
     }
   }
 
@@ -86,7 +74,6 @@ class FredericWorkout {
           .collection('workouts')
           .doc(workoutID)
           .update({'description': value});
-      if (_isFuture) _description = value;
     }
   }
 
@@ -99,7 +86,6 @@ class FredericWorkout {
           .collection('workouts')
           .doc(workoutID)
           .update({'image': value});
-      if (_isFuture) _image = value;
     }
   }
 
@@ -113,7 +99,6 @@ class FredericWorkout {
           .doc(workoutID)
           .update({'period': value});
     }
-    if (_isFuture) _activities.period = value;
   }
 
   ///
@@ -125,7 +110,6 @@ class FredericWorkout {
           .collection('workouts')
           .doc(workoutID)
           .update({'startdate': Timestamp.fromDate(value)});
-      if (_isFuture) _startDate = value;
     }
   }
 
@@ -138,172 +122,37 @@ class FredericWorkout {
           .collection('workouts')
           .doc(workoutID)
           .update({'repeating': value});
-      if (_isFuture) _activities.repeating = value;
     }
   }
 
-  //============================================================================
-  /// Loads data from the DB corresponding to the [workoutID]
-  /// returns a future string when done
-  ///
-  Future<FredericWorkout> loadData() async {
-    if (this.workoutID == null) {
-      print('[FredericWorkout] Error: workoutID is null');
-      return null;
-    }
-    if (_isStream) {
-      print('[FredericWorkout] Error: loadData: already a stream');
-      return null;
-    }
-    _isFuture = true;
-
-    DocumentReference workoutsDocument =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-    DocumentSnapshot documentSnapshot = await workoutsDocument.get();
-    insertSnapshot(documentSnapshot);
-
-    if (_loadActivities) {
-      await _loadActivitiesOnce();
-    }
-    return this;
-  }
-
-  //============================================================================
-  /// Loads data from the DB corresponding to the [workoutID]
-  /// returns a [Stream] of [FredericWorkout]
-  ///
-  Stream<FredericWorkout> asStream() {
-    if (this.workoutID == null) return null;
-    if (_isFuture) return null;
-    _isStream = true;
-    _streamController = StreamController<FredericWorkout>();
-
-    DocumentReference workoutDocument =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-    Stream<DocumentSnapshot> documentStream = workoutDocument.snapshots();
-    documentStream.listen(insertSnapshot);
-
-    if (_loadActivities) {
-      _loadActivitiesStream();
-    }
-
-    _broadcastStream = _streamController.stream.asBroadcastStream();
-    return _broadcastStream;
-  }
-
-  //============================================================================
-  /// Returns the broadcaststream of the workout
-  /// If the workout has not been loaded, it loads the workout first
-  ///
-  Stream<FredericWorkout> asBroadcastStream() {
-    if (_isStream) {
-      Future.delayed(Duration(milliseconds: 50), () {
-        _streamController.add(this);
-      });
-      return _broadcastStream;
-    } else {
-      asStream();
-      return asBroadcastStream();
-    }
-  }
-
-  //============================================================================
-  /// If the workout is loaded as a Future, this either reloads or loads the activities,
-  /// with sets, or without, based on [loadSets] which is false by default can
-  /// be omitted.
-  ///
-  /// If the workout is loaded as a stream, this adds the activities to the stream,
-  /// eihter with sets or without, based on [loadSets]
-  ///
-  /// To additionally load the sets after this method has been called, use the [loadSets()]
-  /// method from [FredericActiivty]
-  ///
-  Future<void> loadActivities([bool loadSets = false]) async {
-    _loadSets |= loadSets;
-    if (_isFuture) {
-      await _loadActivitiesOnce();
-    } else if (_isStream) {
-      _loadActivitiesStream();
-    } else {
-      print(
-          '[FredericWorkout] Error: tried loading activities before loading the workout');
-    }
-  }
-
-  Future<void> _loadActivitiesOnce() async {
-    DocumentReference workoutsDocument =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-    QuerySnapshot activitiesSnapshot =
-        await workoutsDocument.collection('activities').get();
-
-    await _processActivityQuerySnapshot(activitiesSnapshot);
-  }
-
-  void _loadActivitiesStream() {
-    if (_hasActivitiesLoaded) {
-      print('[FredericWorkout] Error: tried loading activities twice');
-      return;
-    }
-    DocumentReference workoutDocument =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-    Stream<QuerySnapshot> queryStream =
-        workoutDocument.collection('activities').snapshots();
-    queryStream.listen(_processActivityQuerySnapshot);
+  void loadActivities() {
+    if (_hasActivitiesLoaded ?? false) return;
     _hasActivitiesLoaded = true;
+
+    CollectionReference activitiesCollection = FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(workoutID)
+        .collection('activities');
+    Stream<QuerySnapshot> queryStream = activitiesCollection.snapshots();
+    queryStream.listen(_processActivityQuerySnapshot);
   }
 
   Future<void> _processActivityQuerySnapshot(QuerySnapshot snapshot) async {
     _activities.clear();
     for (int i = 0; i < snapshot.docs.length; i++) {
-      int weekday = snapshot.docs[i]['weekday'];
-      FredericActivity a = FredericActivity(snapshot.docs[i]['activity']);
-      a.weekday = weekday;
-      _activities.activities[weekday].add(a);
-      if (_isStream) {
-        //a.asStream(_loadSets).listen((event) {
-        //  _updateOutgoingStream();
-        //});
-      } else {
-        //await a.loadData(_loadSets);
-      }
+      int weekday = snapshot.docs[i].data()['weekday'];
+      String activityID = snapshot.docs[i].data()['activity'];
+      if (weekday >= _activities.activities.length) continue;
+      _activities.activities[weekday].add(_activityManager[activityID]);
     }
-    if (_isStream) {
-      _updateOutgoingStream();
-    }
-    _hasSetsLoaded = _loadSets;
-  }
-
-  //============================================================================
-  /// TODO: when the workout has a lot of activities with a lot of sets this is
-  /// called really often when loading the workout for the first time, maybe bad
-  /// for performance.
-  /// Maybe stop pause for a few miliseconds after loading?
-  ///
-  /// 1st fix: dont update stream if one activity is still null (or the name of
-  /// the activity is null)
-  ///
-  void _updateOutgoingStream() {
-    bool isFinishedLoading = true;
-    if (_activities != null) {
-      _activities.activities.forEach((list) {
-        list.forEach((element) {
-          if (element.isNull) isFinishedLoading = false;
-        });
-      });
-    }
-    if (isFinishedLoading) _streamController?.add(this);
+    notifyListeners();
   }
 
   //============================================================================
   /// Takes a DocumentSnapshot and inserts its data into the workout. If the workout
   /// is already loaded as a Stream, the stream is updated after inserting the data
   ///
-  void insertSnapshot(DocumentSnapshot snapshot) {
-    if (!snapshot.exists) {
-      _name = 'error loading, snapshot does not exist';
-      return;
-    }
-
+  FredericWorkout insertSnapshot(DocumentSnapshot snapshot) {
     _name = snapshot.data()['name'];
     _description = snapshot.data()['description'];
     _image = snapshot.data()['image'];
@@ -316,9 +165,7 @@ class FredericWorkout {
     _activities.repeating = snapshot.data()['repeating'];
     _startDate = snapshot.data()['startdate'].toDate();
 
-    if (_isStream) {
-      _updateOutgoingStream();
-    }
+    return this;
   }
 
   //============================================================================

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/main.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
@@ -19,16 +18,12 @@ class AuthenticationWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.uid != null) {
           // if the user logged in load the userdata from firestore:
-          FredericBackend.of(context).currentUser =
-              FredericUser(snapshot.data.uid);
+          FredericBackend.instance().logIn(snapshot.data.uid);
           return FutureBuilder(
-              future: FredericBackend.of(context).loadCurrentUser(),
+              future: FredericBackend.instance().loadCurrentUser(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  FredericActivityManager.of(context).loadData();
-                  if (!getIt.isRegistered<FredericActivityManager>())
-                    getIt.registerSingleton<FredericActivityManager>(
-                        FredericActivityManager()..loadData());
+                  getIt<FredericBackend>().loadData();
                   return homePage;
                 } else {
                   return Scaffold(

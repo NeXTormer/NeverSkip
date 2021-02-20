@@ -21,6 +21,12 @@ class FredericWorkoutManager with ChangeNotifier {
   static FredericWorkoutManager of(BuildContext context) =>
       Provider.of<FredericWorkoutManager>(context);
 
+  FredericWorkout operator [](String value) {
+    return _workouts[value];
+  }
+
+  HashMap<String, FredericWorkout> get workouts => _workouts;
+
   void loadData() {
     if (_dataLoaded) return;
     _dataLoaded = true;
@@ -41,7 +47,9 @@ class FredericWorkoutManager with ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       var docSnapshot = snapshot.docChanges[i].doc;
       if (_workouts.containsKey(docSnapshot.id)) {
-        _workouts[docSnapshot.id].insertSnapshot(snapshot.docChanges[i].doc);
+        _workouts[docSnapshot.id]
+            .insertSnapshot(snapshot.docChanges[i].doc)
+            .notifyListeners();
         changed = true;
       } else {
         _workouts[docSnapshot.id] = FredericWorkout(docSnapshot.id)
