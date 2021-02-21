@@ -12,6 +12,7 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  String appBarTileText = '';
   List<String> monthInYearImageUrls = [
     'https://mobil.woman.at/_storage/asset/10566591/storage/womanat:content-large/file/140877089/Erwiesen:%20HIIT-Workout%20ist%20am%20effektivsten!.jpg',
     'https://www.emotion.de/sites/www.emotion.de/files/styles/article_lead/public/home-workout.jpg?itok=51YSMTu7',
@@ -27,35 +28,51 @@ class _CalendarScreenState extends State<CalendarScreen> {
     'https://cdn.pullup-dip.com/media/image/26/eb/3f/calisthenics-title_600x600.jpg',
   ];
 
+  Future getWorkoutTitle() async {
+    var workout = await FredericWorkout('kKOnczVnBbBHvmx96cjG',
+            shouldLoadActivities: true)
+        .loadData();
+
+    if (workout != null) {
+      print(workout.name);
+      setState(() {
+        appBarTileText = workout.name;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    getWorkoutTitle();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     FredericWorkout demoWorkout =
         FredericWorkout('kKOnczVnBbBHvmx96cjG', shouldLoadActivities: true);
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          leading: Icon(Icons.list),
-          title: Text('2021'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.calendar_today),
-            ),
-            IconButton(
-              icon: Icon(Icons.done),
-              onPressed: () {},
-            )
-          ],
-        ),
+      appBar: AppBar(
+        leading: Icon(Icons.list),
+        title: Text(appBarTileText),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.calendar_today),
+          ),
+          IconButton(
+            icon: Icon(Icons.done),
+            onPressed: () {},
+          )
+        ],
       ),
-      body: StreamBuilder<Object>(
+      body: StreamBuilder<FredericWorkout>(
           stream: demoWorkout.asStream(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return BuildCalendarView(
-                startDate: DateTime(2021, 4, 20),
+                startDate: DateTime(2021, 1, 20),
                 endDate: DateTime(2021, 12),
                 events: null,
                 monthImgHeaderUrl: monthInYearImageUrls,
@@ -63,7 +80,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 workoutToLoad: snapshot.data,
               );
             }
-            return Text('Loading');
+            return Center(child: Text('Loading'));
           }),
     );
   }

@@ -57,6 +57,7 @@ dependencies:
   smooth_page_indicator: ^0.2.0
   sorted_list: ^0.1.0
   syncfusion_flutter_charts: ^18.4.41
+  parallax_image: ^0.3.1+1
 
 
 dev_dependencies:

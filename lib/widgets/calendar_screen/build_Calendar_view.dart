@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/providers/activity.dart';
 import 'package:intl/intl.dart';
+import 'package:parallax_image/parallax_image.dart';
 
 import 'activity_calendar_card_screen.dart';
 
@@ -31,13 +32,26 @@ class BuildCalendarView extends StatefulWidget {
 }
 
 class _BuildCalendarViewState extends State<BuildCalendarView> {
+  final _scrollController = new ScrollController();
+
   List<CalendarMonth> _months = [];
+
   int _displayWeeksIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     int _monthsToGenrate = widget.endDate.month;
-
+    if (widget.workoutToLoad == null) {
+      return ListView.builder(
+        controller: _scrollController,
+        itemCount: _monthsToGenrate,
+        itemBuilder: (ctx, index) {
+          return Column(
+            children: _buildMonthCalendarItem(_months[index], []),
+          );
+        },
+      );
+    }
     return StreamBuilder<FredericWorkout>(
         stream: widget.workoutToLoad.asBroadcastStream(),
         builder: (context, snapshot) {
@@ -47,11 +61,11 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
                 snapshot.data.activities.activities, DateTime(2021, 1, 1));
 
             return ListView.builder(
+              controller: _scrollController,
               itemCount: _monthsToGenrate,
               itemBuilder: (ctx, index) {
                 return Column(
                   children: _buildMonthCalendarItem(
-                    _dummy,
                     _months[index],
                     activitiesWithDate,
                   ),
@@ -62,45 +76,6 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
           return Text('loading');
         });
   }
-
-  List<ActivityItem> _dummy = [
-    ActivityItem(
-      activityID: 'a1',
-      owner: null,
-      name: 'Push Up',
-      description: 'Beschreibung Platzhalter',
-      image:
-          'https://www.runtastic.com/blog/wp-content/uploads/2018/02/10-push-up-variations-thumbnail_blog_1200x800-4-1024x683.jpg',
-      date: '1.01.2021',
-    ),
-    ActivityItem(
-      activityID: 'a2',
-      owner: 'a1',
-      name: 'Diamond',
-      description: 'Diamond Push Up',
-      image:
-          'https://www.medisyskart.com/blog/wp-content/uploads/2015/07/Diamond-Press-Exercises-to-Build-Body-Muscles-1.jpg',
-      date: '1.01.2021',
-    ),
-    ActivityItem(
-      activityID: 'a3',
-      owner: null,
-      name: 'Push Up',
-      description: 'Beschreibung Platzhalter',
-      image:
-          'https://www.runtastic.com/blog/wp-content/uploads/2018/02/10-push-up-variations-thumbnail_blog_1200x800-4-1024x683.jpg',
-      date: '1.01.2021',
-    ),
-    ActivityItem(
-      activityID: 'a4',
-      owner: null,
-      name: 'Push Up',
-      description: 'Beschreibung Platzhalter',
-      image:
-          'https://www.runtastic.com/blog/wp-content/uploads/2018/02/10-push-up-variations-thumbnail_blog_1200x800-4-1024x683.jpg',
-      date: '28.02.2021',
-    ),
-  ];
 
   @override
   void initState() {
@@ -123,10 +98,11 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
       children: [
         Container(
           width: double.infinity,
-          height: 120,
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.fitWidth,
+          height: 150,
+          child: ParallaxImage(
+            image: NetworkImage(imageUrl),
+            extent: 200,
+            controller: _scrollController,
           ),
         ),
         Positioned(
@@ -148,47 +124,21 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
     );
   }
 
-  String _getMonthTitleAsString(int month) {
-    switch (month) {
-      case 1:
-        return 'January';
-        break;
-      case 2:
-        return 'Feburary';
-        break;
-      case 3:
-        return 'March';
-        break;
-      case 4:
-        return 'April';
-        break;
-      case 5:
-        return 'May';
-        break;
-      case 6:
-        return 'June';
-        break;
-      case 7:
-        return 'July';
-        break;
-      case 8:
-        return 'August';
-        break;
-      case 9:
-        return 'September';
-        break;
-      case 10:
-        return 'Oktober';
-        break;
-      case 11:
-        return 'November';
-        break;
-      case 12:
-        return 'December';
-        break;
-      default:
-        return '';
-    }
+  Widget _buildWeekText(int daysInMonth, int month) {
+    return Row(
+      children: [
+        SizedBox(width: widget.sideColumnWidth),
+        _displayWeeksIndex * 7 >= daysInMonth
+            ? Text(
+                'January ${(month * 7) + 1} - $daysInMonth',
+                style: widget.weekTextStyle,
+              )
+            : Text(
+                'January ${(month * 7) + 1} - ${_displayWeeksIndex * 7}',
+                style: widget.weekTextStyle,
+              ),
+      ],
+    );
   }
 
   List<FredericActivityWithDate> _splitEventIntoWeekDate(
@@ -201,26 +151,11 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
         .toList();
   }
 
-  List<FredericActivityWithDate> _convertDayEntryToDateOfFredericActivity(
-      List<List<FredericActivity>> activities, DateTime startDate) {
-    List<FredericActivityWithDate> activitiesWithDate = [];
-    for (int week = 0; week < activities.length; week++) {
-      for (int day = 0; day < activities[week].length; day++) {
-        if (!activities[week][day].isNull) {
-          FredericActivityWithDate withDate = FredericActivityWithDate(
-              activities[week][day],
-              startDate.add(Duration(days: ((week + 1) * (day + 1)))));
-          activitiesWithDate.add(withDate);
-        }
-      }
-    }
-    return activitiesWithDate;
-  }
-
-  List<Widget> _buildMonthCalendarItem(List<ActivityItem> events,
+  List<Widget> _buildMonthCalendarItem(
       CalendarMonth month, List<FredericActivityWithDate> activities) {
     int daysInMonth = month.days;
     int generateWeeksLoop = daysInMonth < 30 ? 4 : 5;
+    _displayWeeksIndex = 0;
 
     return List.generate(
       generateWeeksLoop,
@@ -301,21 +236,62 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
     );
   }
 
-  Widget _buildWeekText(int daysInMonth, int month) {
-    return Row(
-      children: [
-        SizedBox(width: widget.sideColumnWidth),
-        _displayWeeksIndex * 7 >= daysInMonth
-            ? Text(
-                'January ${(month * 7) + 1} - $daysInMonth',
-                style: widget.weekTextStyle,
-              )
-            : Text(
-                'January ${(month * 7) + 1} - ${_displayWeeksIndex * 7}',
-                style: widget.weekTextStyle,
-              ),
-      ],
-    );
+  List<FredericActivityWithDate> _convertDayEntryToDateOfFredericActivity(
+      List<List<FredericActivity>> activities, DateTime startDate) {
+    List<FredericActivityWithDate> activitiesWithDate = [];
+    for (int week = 0; week < activities.length; week++) {
+      for (int day = 0; day < activities[week].length; day++) {
+        if (!activities[week][day].isNull) {
+          FredericActivityWithDate withDate = FredericActivityWithDate(
+              activities[week][day], startDate.add(Duration(days: (week - 1))));
+          activitiesWithDate.add(withDate);
+        }
+      }
+    }
+    return activitiesWithDate;
+  }
+
+  String _getMonthTitleAsString(int month) {
+    switch (month) {
+      case 1:
+        return 'January';
+        break;
+      case 2:
+        return 'Feburary';
+        break;
+      case 3:
+        return 'March';
+        break;
+      case 4:
+        return 'April';
+        break;
+      case 5:
+        return 'May';
+        break;
+      case 6:
+        return 'June';
+        break;
+      case 7:
+        return 'July';
+        break;
+      case 8:
+        return 'August';
+        break;
+      case 9:
+        return 'September';
+        break;
+      case 10:
+        return 'Oktober';
+        break;
+      case 11:
+        return 'November';
+        break;
+      case 12:
+        return 'December';
+        break;
+      default:
+        return '';
+    }
   }
 }
 
