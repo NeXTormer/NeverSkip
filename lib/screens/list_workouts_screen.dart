@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_workout.dart';
-import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:frederic/widgets/workout/workout_prompt.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
@@ -11,6 +11,10 @@ class ListWorkoutsScreen extends StatefulWidget {
 }
 
 class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
+  double _durationWeeks = 1;
+  double test = 1;
+  double _weeks = 1;
+
   @override
   Widget build(BuildContext context) {
     FredericWorkout demoWorkout =
@@ -46,9 +50,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, EditWorkoutScreen.routeName);
-        },
+        onPressed: _createWorkoutPrompt,
         backgroundColor: Colors.white,
         child: Icon(
           Icons.add,
@@ -56,5 +58,18 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
         ),
       ),
     );
+  }
+
+  void _createWorkoutPrompt() async {
+    final selectedDurationWeeks = await showDialog<double>(
+      context: context,
+      builder: (context) => WorkoutPrompt(_durationWeeks),
+    );
+
+    if (_durationWeeks != null) {
+      setState(() {
+        _durationWeeks = selectedDurationWeeks;
+      });
+    }
   }
 }
