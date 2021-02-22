@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 class WorkoutPrompt extends StatefulWidget {
-  WorkoutPrompt(this.initialWeek);
-
-  final double initialWeek;
-
   @override
   _WorkoutPromptState createState() => _WorkoutPromptState();
 }
@@ -16,35 +12,72 @@ class _WorkoutPromptState extends State<WorkoutPrompt> {
   final _descriptionController = TextEditingController();
 
   @override
-  void initState() {
-    _weeks = widget.initialWeek;
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    _weeks = 1;
     return AlertDialog(
       title: Text('Create New Workout'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Weeks: ${_weeks.round()}'),
-          Container(
-            child: Slider.adaptive(
-              value: _weeks,
-              min: 1,
-              max: 28,
-              divisions: 27,
-              onChanged: (value) {
-                setState(() {
-                  _weeks = value;
-                });
-              },
+      content: Container(
+        width: 500,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Theme(
+              data: ThemeData(
+                primaryColor: Colors.orangeAccent,
+              ),
+              child: TextFormField(
+                initialValue: 'Title',
+                maxLength: 30,
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.fitness_center,
+                  ),
+                  labelText: 'Title',
+                  suffixIcon: Icon(
+                    Icons.check_circle,
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orangeAccent[100]),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
+            Card(
+              elevation: 0,
+              color: Colors.grey[100],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  maxLines: 8,
+                  decoration:
+                      InputDecoration.collapsed(hintText: 'Description'),
+                ),
+              ),
+            ),
+            Divider(),
+            Container(
+              child: Slider.adaptive(
+                value: _weeks,
+                min: 1,
+                max: 28,
+                divisions: 27,
+                onChanged: (value) {
+                  setState(() {
+                    _weeks = value;
+                  });
+                },
+              ),
+            ),
+            Row(
+              children: [
+                Text('Weeks: '),
+                Text(
+                  '${_weeks.round()}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       actions: [
         FlatButton(

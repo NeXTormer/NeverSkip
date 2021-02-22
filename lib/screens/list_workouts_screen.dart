@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
+import 'package:frederic/widgets/workout/add_workout_card.dart';
 import 'package:frederic/widgets/workout/workout_prompt.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
@@ -50,7 +52,11 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _createWorkoutPrompt,
+        onPressed: () => showModalBottomSheet(
+          context: context,
+          builder: (context) => AddWorkoutCard(),
+        ),
+        //_createWorkoutPrompt,
         backgroundColor: Colors.white,
         child: Icon(
           Icons.add,
@@ -60,16 +66,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
     );
   }
 
-  void _createWorkoutPrompt() async {
-    final selectedDurationWeeks = await showDialog<double>(
-      context: context,
-      builder: (context) => WorkoutPrompt(_durationWeeks),
-    );
-
-    if (_durationWeeks != null) {
-      setState(() {
-        _durationWeeks = selectedDurationWeeks;
-      });
-    }
+  void _createWorkoutPrompt() {
+    showDialog<double>(context: context, builder: (context) => WorkoutPrompt());
   }
 }
