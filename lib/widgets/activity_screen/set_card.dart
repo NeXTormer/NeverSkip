@@ -17,7 +17,8 @@ class SetCard extends StatelessWidget {
         Row(
           children: [
             Icon(Icons.arrow_forward_ios_outlined, size: 16),
-            Text('${set.reps} reps${isCali ? '' : ' with ${set.weight}'}'),
+            Text(
+                '${set.reps} repetition${set.reps == 1 ? '' : 's'}${isCali ? '' : ' with ${set.weight}'}'),
             SizedBox(width: 4),
             if (!isCali)
               Icon(

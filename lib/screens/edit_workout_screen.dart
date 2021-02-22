@@ -150,7 +150,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   void handleAddActivity(FredericActivity activity) {
     widget.workout.addActivity(activity, sliderController.currentDay);
-    print('currentday: ${sliderController.currentDay}');
   }
 
   void handleDeleteActivity(FredericActivity activity) {

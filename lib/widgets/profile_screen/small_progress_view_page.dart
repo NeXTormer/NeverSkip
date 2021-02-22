@@ -8,12 +8,12 @@ import 'package:frederic/backend/frederic_progress_snapshot.dart';
 /// latest sets
 ///
 class SmallProgressViewPage extends StatelessWidget {
-  List<String> activities;
+  SmallProgressViewPage(this.progressMonitors);
+
+  final List<String> progressMonitors;
 
   @override
   Widget build(BuildContext context) {
-    activities = FredericBackend.instance().currentUser.progressMonitors;
-
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -24,9 +24,11 @@ class SmallProgressViewPage extends StatelessWidget {
 
   List<Widget> buildRow() {
     List<Widget> row = List<Widget>();
-    for (int i = 0; i < activities.length; i++) {
-      FredericProgressSnapshot ps = FredericProgressSnapshot(activities[i],
-          FredericGoalType.Weight, FredericProgressSnapshotType.Maximum);
+    for (int i = 0; i < progressMonitors.length; i++) {
+      FredericProgressSnapshot ps = FredericProgressSnapshot(
+          progressMonitors[i],
+          FredericGoalType.Weight,
+          FredericProgressSnapshotType.Maximum);
       Widget sb = StreamBuilder(
         builder: (context, snapshot) {
           if (snapshot.hasData) {

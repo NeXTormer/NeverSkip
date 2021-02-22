@@ -19,6 +19,8 @@ class FredericProgressSnapshot {
       this.limit = setsLimit;
     else
       this.limit = 1;
+
+    activity = FredericBackend.instance().activityManager[activityID];
   }
 
   FredericGoalType goalType;
@@ -61,7 +63,6 @@ class FredericProgressSnapshot {
   }
 
   Stream<num> asStream() {
-    FredericActivity a = FredericActivity(activityID);
     Stream<QuerySnapshot> snapshots = FirebaseFirestore.instance
         .collection('sets')
         .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
@@ -71,11 +72,6 @@ class FredericProgressSnapshot {
         .snapshots();
     _streamController = StreamController<num>();
     snapshots.listen(_processSnapshot);
-
-    //a.loadData(false).then((value) {
-    //  this.activity = value;
-    //  _streamController.add(this.value);
-    //});
 
     return _streamController.stream;
   }

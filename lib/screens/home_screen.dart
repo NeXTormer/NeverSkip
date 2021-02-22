@@ -83,7 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ProfileHeader(snapshot.data),
                             Divider(height: 0),
                             SizedBox(height: 8),
-                            SmallProgressViewPage(),
+                            SmallProgressViewPage(
+                                snapshot.data.progressMonitors),
                             SizedBox(height: 8),
                             Divider(height: 0),
                           ],
@@ -125,10 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      ProgressChart(
-                        chartData: FredericChartData(
-                            'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
-                      ),
+                      if (false)
+                        ProgressChart(
+                          chartData: FredericChartData(
+                              'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
+                        ),
                       SizedBox(height: 50),
                     ],
                   ),

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
@@ -16,11 +14,9 @@ class AddProgressCard extends StatefulWidget {
 
 class _AddProgressCardState extends State<AddProgressCard> {
   _WeightCounterController weightCounterController;
-  StreamController<FredericActivity> streamController;
 
   @override
   Widget build(BuildContext context) {
-    //streamController = widget.activity.loadSetsStreamOnce(5);
     weightCounterController = _WeightCounterController();
 
     return Wrap(children: [
@@ -35,8 +31,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                 fit: BoxFit.cover),
             Container(
               padding: EdgeInsets.all(12),
-              child: StreamBuilder<FredericActivity>(
-                  stream: streamController.stream,
+              child: FutureBuilder<FredericActivity>(
+                  future: widget.activity.loadSets(10),
                   builder: (context, snapshot) {
                     String importantValue = "weight";
                     bool isCali = false;
@@ -89,29 +85,24 @@ class _AddProgressCardState extends State<AddProgressCard> {
                               widget.activity.addProgress(
                                   widget.reps, weightCounterController.value);
                               Navigator.pop(context);
-                              streamController.close();
                             }
                           },
                           child: Container(
                             child: Text('Add progress'),
                           ),
                         ),
-                        if (false)
-                          FutureBuilder<FredericActivity>(
-                              //future: widget.activity.loadSetsOnce(5),
-                              builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              List<Widget> setList = List<Widget>();
-                              for (var value in snapshot.data.sets) {
-                                setList.add(SetCard(value, isCali));
-                              }
-                              return Column(
-                                children: setList,
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }),
+                        Builder(
+                            //future: widget.activity.loadSetsOnce(5),
+                            builder: (context) {
+                          if (widget.activity.sets == null) return Container();
+                          List<Widget> setList = List<Widget>();
+                          for (var value in widget.activity.sets) {
+                            setList.add(SetCard(value, isCali));
+                          }
+                          return Column(
+                            children: setList,
+                          );
+                        }),
                       ],
                     );
                   }),
@@ -124,7 +115,6 @@ class _AddProgressCardState extends State<AddProgressCard> {
 
   @override
   void dispose() {
-    streamController.close();
     super.dispose();
   }
 }

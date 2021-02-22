@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_set.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 
@@ -61,14 +62,7 @@ class FredericActivity with ChangeNotifier {
   bool get areSetsLoaded => _areSetsLoaded;
   bool get isNull => _name == null;
 
-  List<FredericSet> get sets {
-    if (_areSetsLoaded || _sets != null) {
-      return _sets;
-    }
-    print(
-        '[FredericActivity] Error: tried accessing sets when they are not loaded');
-    return null;
-  }
+  List<FredericSet> get sets => _sets;
 
   bool get hasProgress {
     if (_sets == null) return false;
@@ -227,6 +221,24 @@ class FredericActivity with ChangeNotifier {
   ///
   FredericActivity insertSnapshot(DocumentSnapshot snapshot) {
     _processDocumentSnapshot(snapshot);
+    return this;
+  }
+
+  //============================================================================
+  /// Loads the last [limit] sets. By default the [limit] is 5
+  ///
+  /// Loads the sets once. if a set is added or removed it is done on the db as
+  /// well as on the local storage
+  ///
+  Future<FredericActivity> loadSets([int limit = 5]) async {
+    if (_areSetsLoaded) return this;
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('sets')
+        .where('owner', isEqualTo: FredericBackend.instance().currentUser.uid)
+        .where('activity', isEqualTo: activityID)
+        .limit(limit)
+        .get();
+    _processSetQuerySnapshot(snapshot);
     return this;
   }
 

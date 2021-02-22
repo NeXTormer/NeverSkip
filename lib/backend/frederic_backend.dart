@@ -136,7 +136,6 @@ class FredericBackend {
     }
 
     reloadGoalProgress();
-    //_goalsStreamController.add(goals); // already done in [reloadGoalProgress()]
   }
 
   void reloadGoalProgress([int limit = 5]) async {
