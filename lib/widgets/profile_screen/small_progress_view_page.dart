@@ -15,33 +15,42 @@ class SmallProgressViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: buildRow(),
-      ),
+      child: FutureBuilder(
+          future: FredericBackend.instance().activityManager.hasData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done)
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: buildRow(),
+              );
+            return CircularProgressIndicator();
+          }),
     );
   }
 
   List<Widget> buildRow() {
     List<Widget> row = List<Widget>();
     for (int i = 0; i < progressMonitors.length; i++) {
-      FredericProgressSnapshot ps = FredericProgressSnapshot(
-          progressMonitors[i],
-          FredericGoalType.Weight,
-          FredericProgressSnapshotType.Maximum);
-      Widget sb = StreamBuilder(
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildStatisticText('${snapshot.data}', '${ps.activityName}');
-          }
-
-          return Container();
-        },
-        stream: ps.asStream(),
-      );
-      row.add(sb);
+      row.add(buildElement(progressMonitors[i]));
     }
     return row;
+  }
+
+  Widget buildElement(String activityID) {
+    FredericActivity activity =
+        FredericBackend.instance().activityManager[activityID];
+    FredericProgressSnapshot ps = FredericProgressSnapshot(activityID,
+        FredericGoalType.Weight, FredericProgressSnapshotType.Maximum);
+    return StreamBuilder(
+      stream: ps.asStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return buildStatisticText(
+              '${snapshot.data}', '${activity?.name ?? 'loading...'}');
+        }
+        return Container();
+      },
+    );
   }
 
   /// Outsources the Stats-Text section

@@ -10,11 +10,13 @@ import 'package:frederic/backend/backend.dart';
 class FredericActivityManager with ChangeNotifier {
   FredericActivityManager() {
     _activities = HashMap<String, FredericActivity>();
+    _hasDataCompleter = Completer<void>();
   }
 
   bool _dataLoaded = false;
 
   HashMap<String, FredericActivity> _activities;
+  Completer<void> _hasDataCompleter;
 
   final CollectionReference _activitiesCollection =
       FirebaseFirestore.instance.collection('activities');
@@ -24,6 +26,15 @@ class FredericActivityManager with ChangeNotifier {
   }
 
   Iterable<FredericActivity> get activities => _activities.values;
+
+  ///
+  /// The futures gets completed if the activities have been loaded
+  ///
+  /// TODO: not sure if it works multiple times
+  ///
+  Future<void> hasData() {
+    return _hasDataCompleter.future;
+  }
 
   void loadData() {
     if (_dataLoaded) return;
@@ -54,6 +65,9 @@ class FredericActivityManager with ChangeNotifier {
           ..insertSnapshot(docSnapshot);
       }
     }
-    if (changed) notifyListeners();
+    if (changed) {
+      notifyListeners();
+    }
+    if (!_hasDataCompleter.isCompleted) _hasDataCompleter.complete();
   }
 }
