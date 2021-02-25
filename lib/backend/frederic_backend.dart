@@ -13,6 +13,8 @@ import 'backend.dart';
 class FredericBackend {
   FredericBackend() {
     _authenticationService = AuthenticationService(FirebaseAuth.instance);
+    _activityManager = FredericActivityManager();
+    _workoutManager = FredericWorkoutManager();
   }
 
   AuthenticationService _authenticationService;
@@ -45,18 +47,14 @@ class FredericBackend {
   ///
   Future<FredericUser> loadCurrentUser() async {
     await currentUser.loadData();
-    _currentUserStreamController = StreamController<FredericUser>();
-    _currentUserStream =
-        _currentUserStreamController.stream.asBroadcastStream();
+    _currentUserStreamController = StreamController<FredericUser>.broadcast();
+    _currentUserStream = _currentUserStreamController.stream;
     _loadCurrentUserStream();
     return currentUser;
   }
 
   void loadData() {
-    _activityManager = FredericActivityManager();
     _activityManager.loadData();
-
-    _workoutManager = FredericWorkoutManager();
     _workoutManager.loadData();
   }
 

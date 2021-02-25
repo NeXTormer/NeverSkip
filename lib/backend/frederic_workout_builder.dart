@@ -3,6 +3,13 @@ import 'package:frederic/backend/frederic_workout_manager.dart';
 
 import 'backend.dart';
 
+///
+/// Similar to a StreamBuilder, meaning that it provides the latest data for one
+/// or many [FredericWorkout]s.
+/// If an [id] is provided, the builder returns a single
+/// [FredericWorkout].
+/// If no [id] is provided, the builder returns a [List<FredericWorkout>]
+///
 class FredericWorkoutBuilder extends StatefulWidget {
   FredericWorkoutBuilder({this.id, @required this.builder});
 
