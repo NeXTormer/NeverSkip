@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           AchievementPage(),
                         ],
                       ),
-                      GoalPage(_handleButtonPress),
+                      GoalPage(),
                       SizedBox(height: 10.0),
                       Divider(),
                       SizedBox(height: 10.0),

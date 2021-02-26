@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -8,19 +9,19 @@ import 'package:percent_indicator/percent_indicator.dart';
 /// Uses the passed [Function showSlidesheet] to assign to
 /// the [onTap] of the ['Edit Goal'] string in order to edit the [GoalItem] data.
 class CardGoalItem extends StatelessWidget {
-  CardGoalItem(this.goal, this.showSlidesheet);
+  CardGoalItem(this.goal);
   final FredericGoal goal;
-  final Function showSlidesheet;
 
   /// Checks if the enum [GoalType type] is [GoalType.Weighted]
   ///
   /// Returns a unit if the case is give.
-  String goalType(String type) {
-    if (type == 'weight') {
+  String goalType(FredericActivityType type) {
+    if (type == FredericActivityType.Weighted) {
       return 'kg';
-    } else {
+    } else if (type == FredericActivityType.Stretch) {
+      return 'seconds';
+    } else
       return '';
-    }
   }
 
   @override
@@ -135,7 +136,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.startState} ${goalType(goal.type)}',
+                                  '${goal.startState} ${goalType(goal.activity.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -146,7 +147,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.currentState} ${goalType(goal.type)}',
+                                  '${goal.currentState} ${goalType(goal.activity.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -157,7 +158,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.endState} ${goalType(goal.type)}',
+                                  '${goal.endState} ${goalType(goal.activity.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -177,7 +178,9 @@ class CardGoalItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () => showSlidesheet(goal.uid),
+                          onTap: () {
+                            print('ontapgoal');
+                          },
                           child: Text(
                             'Edit Goal',
                             style: TextStyle(

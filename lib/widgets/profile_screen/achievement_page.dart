@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/widgets/profile_screen/achievement_item.dart';
 
@@ -11,31 +9,16 @@ import 'package:frederic/widgets/profile_screen/achievement_item.dart';
 class AchievementPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Stream<List<FredericGoal>> stream =
-        FredericBackend.instance().loadAchievementsStream();
-
-    return StreamBuilder<List<FredericGoal>>(
-      stream: stream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data == null || snapshot.data.length == 0) {
-            return Container();
-          } else {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              height: 65,
-              child: ListView.builder(
-                //TODO: maybe swap with GridView
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) =>
-                    AchievementItem(snapshot.data[index]),
-              ),
-            );
-          }
-        }
-        return Container();
-      },
+    return Container();
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      height: 65,
+      child: ListView.builder(
+        //TODO: maybe swap with GridView
+        scrollDirection: Axis.horizontal,
+        //itemCount: snapshot.data.length,
+        //itemBuilder: (context, index) => AchievementItem(snapshot.data[index]),
+      ),
     );
   }
 }
