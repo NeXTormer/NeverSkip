@@ -12,7 +12,6 @@ class FredericActivityManager with ChangeNotifier {
     _activities = HashMap<String, FredericActivity>();
     _hasDataCompleter = Completer<void>();
     _dataLoaded = false;
-    loadData();
   }
 
   bool _dataLoaded;

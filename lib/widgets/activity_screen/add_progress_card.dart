@@ -32,17 +32,21 @@ class _AddProgressCardState extends State<AddProgressCard> {
             Container(
               padding: EdgeInsets.all(12),
               child: FutureBuilder<FredericActivity>(
-                  future: widget.activity.loadSets(10),
+                  future: widget.activity.loadSets(
+                      10), //TODO: find a way to do this without loading sets again because they should already be loaded
                   builder: (context, snapshot) {
                     String importantValue = "weight";
                     bool isCali = false;
+                    bool isStretch = false;
                     num defaultValue = 0;
                     if (snapshot.hasData) {
                       isCali = snapshot.data.type ==
                           FredericActivityType.Calisthenics;
-                      if (snapshot.data.type == FredericActivityType.Stretch)
+                      if (snapshot.data.type == FredericActivityType.Stretch) {
                         importantValue = 'seconds';
-                      defaultValue = snapshot.data.getCurrentBestProgress();
+                        isStretch = true;
+                      }
+                      defaultValue = snapshot.data.bestProgress;
                     }
 
                     return Column(
@@ -97,7 +101,7 @@ class _AddProgressCardState extends State<AddProgressCard> {
                           if (widget.activity.sets == null) return Container();
                           List<Widget> setList = List<Widget>();
                           for (var value in widget.activity.sets) {
-                            setList.add(SetCard(value, isCali));
+                            setList.add(SetCard(value, isCali, isStretch));
                           }
                           return Column(
                             children: setList,

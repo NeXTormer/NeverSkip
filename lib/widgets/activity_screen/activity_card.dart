@@ -25,6 +25,12 @@ class _ActivityCardState extends State<ActivityCard> {
   bool _expanded = false;
 
   @override
+  void initState() {
+    _countReps = widget.activity.recommendedReps;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 4, left: 6, right: 6),

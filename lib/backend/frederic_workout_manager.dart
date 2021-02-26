@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:provider/provider.dart';
 
 class FredericWorkoutManager with ChangeNotifier {
   FredericWorkoutManager() {
@@ -17,9 +16,6 @@ class FredericWorkoutManager with ChangeNotifier {
 
   HashMap<String, FredericWorkout> _workouts;
   bool _dataLoaded = false;
-
-  static FredericWorkoutManager of(BuildContext context) =>
-      Provider.of<FredericWorkoutManager>(context);
 
   FredericWorkout operator [](String value) {
     return _workouts[value];

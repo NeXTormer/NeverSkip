@@ -34,6 +34,12 @@ import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart
 class FredericActivity with ChangeNotifier {
   FredericActivity(this.activityID) {
     _muscleGroups = List<FredericActivityMuscleGroup>();
+    _setsCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection('sets');
+
+    loadSets();
   }
 
   final String activityID;
@@ -50,19 +56,25 @@ class FredericActivity with ChangeNotifier {
   FredericActivityType _type;
   List<FredericSet> _sets;
   List<FredericActivityMuscleGroup> _muscleGroups;
+  CollectionReference _setsCollection;
 
   String get name => _name ?? 'Empty activity';
   String get description => _description ?? '';
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
-  String get owner => _owner ?? 'emptyowner';
-  int get recommendedReps => _recommendedReps;
-  int get recommendedSets => _recommendedSets;
+  String get owner => _owner ?? 'No owner';
+  int get recommendedReps => _recommendedReps ?? 1;
+  int get recommendedSets => _recommendedSets ?? 1;
   int get weekday => _weekday;
   bool get areSetsLoaded => _areSetsLoaded;
   bool get isNull => _name == null;
 
-  List<FredericSet> get sets => _sets;
+  List<FredericSet> get sets {
+    if (_sets == null) {
+      _sets = List<FredericSet>();
+    }
+    return _sets;
+  }
 
   bool get hasProgress {
     if (_sets == null) return false;
@@ -75,14 +87,35 @@ class FredericActivity with ChangeNotifier {
   }
 
   int get bestWeight {
-    if (hasProgress) {
-      int max = 0;
-      _sets.forEach((element) {
-        if (element.weight > max) max = element.weight;
-      });
-      return max;
-    }
-    return 0;
+    int max = 0;
+    sets.forEach((element) {
+      if (element.weight > max) max = element.weight;
+    });
+    return max;
+  }
+
+  int get bestReps {
+    int max = 0;
+    sets.forEach((element) {
+      max = element.reps > max ? element.reps : max;
+    });
+    return max;
+  }
+
+  int get averageReps {
+    if (!hasProgress) return _recommendedReps;
+    int sum = 0;
+    sets.forEach((element) {
+      sum += element.reps;
+    });
+    return sum ~/ _sets.length;
+  }
+
+  int get bestProgress {
+    if (_type == FredericActivityType.Calisthenics) {
+      return bestReps;
+    } else
+      return bestWeight;
   }
 
   List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
@@ -225,15 +258,21 @@ class FredericActivity with ChangeNotifier {
   }
 
   //============================================================================
+  /// Used add sets to the Activity using a QuerySnapshot. If a set is a duplicate,
+  /// it is not added twice.
+  ///
+  void insertSetQuerySnapshot(QuerySnapshot snapshot) {
+    _processSetQuerySnapshot(snapshot);
+  }
+
+  //============================================================================
   /// Loads the last [limit] sets. By default the [limit] is 5
   ///
   /// Loads the sets once. if a set is added or removed it is done on the db as
   /// well as on the local storage
   ///
   Future<FredericActivity> loadSets([int limit = 5]) async {
-    if (_areSetsLoaded) return this;
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('sets')
+    QuerySnapshot snapshot = await _setsCollection
         .where('owner', isEqualTo: FredericBackend.instance().currentUser.uid)
         .where('activity', isEqualTo: activityID)
         .limit(limit)
@@ -248,14 +287,19 @@ class FredericActivity with ChangeNotifier {
   ///
   void _processSetQuerySnapshot(QuerySnapshot snapshot) {
     if (_sets == null) _sets = List<FredericSet>();
-    _sets.clear();
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      var map = snapshot.docs[i];
-      Timestamp ts = map.data()['timestamp'];
 
-      _sets.add(FredericSet(
-          map.id, map.data()['reps'], map.data()['weight'], ts.toDate()));
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      var element = snapshot.docs[i];
+      Timestamp ts = element.data()['timestamp'];
+      FredericSet set = FredericSet(element.id, element.data()['reps'],
+          element.data()['weight'], ts.toDate());
+
+      if (_sets.contains(set)) {
+        _sets.remove(set);
+      }
+      _sets.add(set);
     }
+    notifyListeners();
   }
 
   //============================================================================
@@ -277,6 +321,7 @@ class FredericActivity with ChangeNotifier {
     musclegroups.forEach((element) {
       if (element is String) _muscleGroups.add(parseSingleMuscleGroup(element));
     });
+    notifyListeners();
   }
 
   //============================================================================
@@ -285,10 +330,7 @@ class FredericActivity with ChangeNotifier {
   /// The set is added to the list in this Activity and to the DB
   ///
   void addProgress(int reps, int weight) async {
-    CollectionReference setsCollection =
-        FirebaseFirestore.instance.collection('sets');
-
-    DocumentReference docRef = await setsCollection.add({
+    DocumentReference docRef = await _setsCollection.add({
       'reps': reps,
       'weight': weight,
       'owner': FirebaseAuth.instance.currentUser.uid,
@@ -296,6 +338,7 @@ class FredericActivity with ChangeNotifier {
       'activity': activityID
     });
     _sets.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
+    notifyListeners();
   }
 
   //============================================================================
@@ -303,26 +346,8 @@ class FredericActivity with ChangeNotifier {
   ///
   void removeProgress(FredericSet fset) {
     _sets.remove(fset);
-    FirebaseFirestore.instance.collection('sets').doc(fset.setID).delete();
-  }
-
-  //============================================================================
-  /// Calculates the maximum value (either weight for weighted activities, or
-  /// number of reps for calisthenics activities) in the loaded sets.
-  /// If no sets are loaded, the returned value is 0.
-  ///
-  num getCurrentBestProgress() {
-    num max = 0;
-    if (_type == FredericActivityType.Weighted) {
-      sets.forEach((element) {
-        max = element.weight > max ? element.weight : max;
-      });
-    } else if (_type == FredericActivityType.Calisthenics) {
-      sets.forEach((element) {
-        max = element.reps > max ? element.reps : max;
-      });
-    }
-    return max;
+    _setsCollection.doc(fset.setID).delete();
+    notifyListeners();
   }
 
   //============================================================================

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_goal.dart';
-import 'package:frederic/backend/frederic_progress_snapshot.dart';
 
 ///
 /// The progress monitors below the profile picture, shows the hightest of the
@@ -37,18 +35,13 @@ class SmallProgressViewPage extends StatelessWidget {
   }
 
   Widget buildElement(String activityID) {
-    FredericActivity activity =
-        FredericBackend.instance().activityManager[activityID];
-    FredericProgressSnapshot ps = FredericProgressSnapshot(activityID,
-        FredericGoalType.Weight, FredericProgressSnapshotType.Maximum);
-    return StreamBuilder(
-      stream: ps.asStream(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return buildStatisticText(
-              '${snapshot.data}', '${activity?.name ?? 'loading...'}');
-        }
-        return Container();
+    return FredericActivityBuilder(
+      type: FredericActivityBuilderType.SingleActivity,
+      id: activityID,
+      builder: (context, data) {
+        FredericActivity activity = data;
+        return buildStatisticText(
+            '${activity.bestProgress}', '${activity?.name ?? 'loading...'}');
       },
     );
   }

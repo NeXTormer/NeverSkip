@@ -50,6 +50,7 @@ class FredericBackend {
     _currentUserStreamController = StreamController<FredericUser>.broadcast();
     _currentUserStream = _currentUserStreamController.stream;
     _loadCurrentUserStream();
+
     return currentUser;
   }
 
