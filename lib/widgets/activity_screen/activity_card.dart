@@ -4,18 +4,15 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 
 class ActivityCard extends StatefulWidget {
-  ActivityCard(
-    this.activity, {
-    this.selectable = false,
-    this.onAddActivity,
-    this.dismissable = false,
-    this.onDismiss,
-    this.key,
-  });
 
-  final Key key;
+  ActivityCard(this.activity,
+      {this.selectable = false,
+      this.onAddActivity,
+      this.dismissible = false,
+      this.onDismiss});
+
   final bool selectable;
-  final bool dismissable;
+  final bool dismissible;
   final FredericActivity activity;
   final Function(FredericActivity) onAddActivity;
   final Function(FredericActivity) onDismiss;
@@ -29,6 +26,12 @@ class _ActivityCardState extends State<ActivityCard> {
   bool _expanded = false;
 
   @override
+  void initState() {
+    _countReps = widget.activity.recommendedReps;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 4, left: 6, right: 6),
@@ -38,7 +41,7 @@ class _ActivityCardState extends State<ActivityCard> {
         closeOnScroll: true,
         //actions: widget.dismissable ? [] : [buildAddButton()],
         secondaryActions:
-            widget.dismissable ? [buildDeleteButton()] : [buildAddButton()],
+            widget.dismissible ? [buildDeleteButton()] : [buildAddButton()],
         child: Card(
           elevation: 5.0,
           child: Container(
@@ -170,7 +173,7 @@ class _ActivityCardState extends State<ActivityCard> {
   }
 
   Widget buildAddSection() {
-    return widget.selectable || widget.dismissable
+    return widget.selectable || widget.dismissible
         ? Container()
         : Container(
             width: 100,

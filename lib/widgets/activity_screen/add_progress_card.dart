@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
@@ -16,11 +14,9 @@ class AddProgressCard extends StatefulWidget {
 
 class _AddProgressCardState extends State<AddProgressCard> {
   _WeightCounterController weightCounterController;
-  StreamController<FredericActivity> streamController;
 
   @override
   Widget build(BuildContext context) {
-    streamController = widget.activity.loadSetsStreamOnce(5);
     weightCounterController = _WeightCounterController();
 
     return Wrap(children: [
@@ -35,18 +31,22 @@ class _AddProgressCardState extends State<AddProgressCard> {
                 fit: BoxFit.cover),
             Container(
               padding: EdgeInsets.all(12),
-              child: StreamBuilder<FredericActivity>(
-                  stream: streamController.stream,
+              child: FutureBuilder<FredericActivity>(
+                  future: widget.activity.loadSets(
+                      10), //TODO: find a way to do this without loading sets again because they should already be loaded
                   builder: (context, snapshot) {
                     String importantValue = "weight";
                     bool isCali = false;
+                    bool isStretch = false;
                     num defaultValue = 0;
                     if (snapshot.hasData) {
                       isCali = snapshot.data.type ==
                           FredericActivityType.Calisthenics;
-                      if (snapshot.data.type == FredericActivityType.Stretch)
+                      if (snapshot.data.type == FredericActivityType.Stretch) {
                         importantValue = 'seconds';
-                      defaultValue = snapshot.data.getCurrentBestProgress();
+                        isStretch = true;
+                      }
+                      defaultValue = snapshot.data.bestProgress;
                     }
 
                     return Column(
@@ -71,7 +71,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                         SizedBox(height: 6),
                         OutlineButton(
                           onPressed: () {
-                            if (weightCounterController.value == 0 ||
+                            if ((!isCali &&
+                                    weightCounterController.value == 0) ||
                                 widget.reps == 0) {
                               showDialog<void>(
                                 context: context,
@@ -79,8 +80,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Center(child: Text('Error')),
-                                    content:
-                                        Text('Please enter reps and weight'),
+                                    content: Text(
+                                        'Please enter reps${isCali ? '' : ' and weight'}'),
                                   );
                                 },
                               );
@@ -88,28 +89,24 @@ class _AddProgressCardState extends State<AddProgressCard> {
                               widget.activity.addProgress(
                                   widget.reps, weightCounterController.value);
                               Navigator.pop(context);
-                              streamController.close();
                             }
                           },
                           child: Container(
                             child: Text('Add progress'),
                           ),
                         ),
-                        FutureBuilder<FredericActivity>(
-                            future: widget.activity.loadSetsOnce(5),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                List<Widget> setList = List<Widget>();
-                                for (var value in snapshot.data.sets) {
-                                  setList.add(SetCard(value));
-                                }
-                                return Column(
-                                  children: setList,
-                                );
-                              } else {
-                                return Container();
-                              }
-                            }),
+                        Builder(
+                            //future: widget.activity.loadSetsOnce(5),
+                            builder: (context) {
+                          if (widget.activity.sets == null) return Container();
+                          List<Widget> setList = List<Widget>();
+                          for (var value in widget.activity.sets) {
+                            setList.add(SetCard(value, isCali, isStretch));
+                          }
+                          return Column(
+                            children: setList,
+                          );
+                        }),
                       ],
                     );
                   }),
@@ -122,7 +119,6 @@ class _AddProgressCardState extends State<AddProgressCard> {
 
   @override
   void dispose() {
-    streamController.close();
     super.dispose();
   }
 }

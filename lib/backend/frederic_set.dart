@@ -16,10 +16,13 @@ class FredericSet implements Comparable {
   final String setID;
   int _reps;
   int _weight;
+  bool _isFinal = false;
   DateTime _timestamp;
 
   int get reps => _reps ?? -1;
   int get weight => _weight ?? -1;
+  bool get isFinal => _isFinal;
+  bool get isNotFinal => !_isFinal;
   DateTime get timestamp => _timestamp ?? DateTime.now();
 
   set reps(int value) {
@@ -42,6 +45,8 @@ class FredericSet implements Comparable {
     }
   }
 
+  bool operator ==(other) => setID == other.setID;
+
   @override
   String toString() {
     return 'FredericSet[$reps reps with $weight weight on $timestamp]';
@@ -50,8 +55,12 @@ class FredericSet implements Comparable {
   @override
   int compareTo(other) {
     if (other is FredericSet) {
-      return _timestamp.compareTo(other._timestamp);
+      return setID.compareTo(other.setID);
     }
     return 0;
   }
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => super.hashCode;
 }

@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_set.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 
@@ -30,9 +31,15 @@ import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart
 /// All setters perform basic value checks, e.g. if an empty string is passed in,
 /// it is ignored
 ///
-class FredericActivity {
+class FredericActivity with ChangeNotifier {
   FredericActivity(this.activityID) {
     _muscleGroups = List<FredericActivityMuscleGroup>();
+    _setsCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection('sets');
+
+    loadSets();
   }
 
   final String activityID;
@@ -46,38 +53,27 @@ class FredericActivity {
   int _weekday;
   int _order;
   bool _areSetsLoaded = false;
-  bool _isStream = false;
-  bool _setStreamExists = false;
-  bool _isFuture = false;
   FredericActivityType _type;
   List<FredericSet> _sets;
   List<FredericActivityMuscleGroup> _muscleGroups;
-  StreamController<FredericActivity> _streamController;
+  CollectionReference _setsCollection;
 
   String get name => _name ?? 'Empty activity';
   String get description => _description ?? '';
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
-  String get owner => _owner ?? 'emptyowner';
-  int get recommendedReps => _recommendedReps;
-  int get recommendedSets => _recommendedSets;
+  String get owner => _owner ?? 'No owner';
+  int get recommendedReps => _recommendedReps ?? 1;
+  int get recommendedSets => _recommendedSets ?? 1;
   int get weekday => _weekday;
-  bool get isStream => _isStream;
-  bool get isNotStream => !_isStream;
   bool get areSetsLoaded => _areSetsLoaded;
   bool get isNull => _name == null;
 
   List<FredericSet> get sets {
-    if (_areSetsLoaded || _sets != null) {
-      return _sets;
+    if (_sets == null) {
+      _sets = List<FredericSet>();
     }
-    print(
-        '[FredericActivity] Error: tried accessing sets when they are not loaded');
-    return null;
-  }
-
-  bool get isSingleActivity {
-    return _weekday == null ? true : false;
+    return _sets;
   }
 
   bool get hasProgress {
@@ -91,14 +87,35 @@ class FredericActivity {
   }
 
   int get bestWeight {
-    if (hasProgress) {
-      int max = 0;
-      _sets.forEach((element) {
-        if (element.weight > max) max = element.weight;
-      });
-      return max;
-    }
-    return 0;
+    int max = 0;
+    sets.forEach((element) {
+      if (element.weight > max) max = element.weight;
+    });
+    return max;
+  }
+
+  int get bestReps {
+    int max = 0;
+    sets.forEach((element) {
+      max = element.reps > max ? element.reps : max;
+    });
+    return max;
+  }
+
+  int get averageReps {
+    if (!hasProgress) return _recommendedReps;
+    int sum = 0;
+    sets.forEach((element) {
+      sum += element.reps;
+    });
+    return sum ~/ _sets.length;
+  }
+
+  int get bestProgress {
+    if (_type == FredericActivityType.Calisthenics) {
+      return bestReps;
+    } else
+      return bestWeight;
   }
 
   List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
@@ -114,7 +131,6 @@ class FredericActivity {
           .collection('activities')
           .doc(activityID)
           .update({'name': value});
-      if (_isFuture) _name = value;
     }
   }
 
@@ -127,7 +143,6 @@ class FredericActivity {
           .collection('activities')
           .doc(activityID)
           .update({'description': value});
-      if (_isFuture) _description = value;
     }
   }
 
@@ -140,7 +155,6 @@ class FredericActivity {
           .collection('activities')
           .doc(activityID)
           .update({'image': value});
-      if (_isFuture) _image = value;
     }
   }
 
@@ -153,7 +167,6 @@ class FredericActivity {
           .collection('activities')
           .doc(activityID)
           .update({'recommendedreps': value});
-      if (_isFuture) _recommendedReps = value;
     }
   }
 
@@ -166,7 +179,6 @@ class FredericActivity {
           .collection('activities')
           .doc(activityID)
           .update({'recommendedsets': value});
-      if (_isFuture) _recommendedSets = value;
     }
   }
 
@@ -214,81 +226,6 @@ class FredericActivity {
   }
 
   //============================================================================
-  /// Loads data from the DB corresponding to the [activityID]
-  /// returns a future when done
-  /// Optional parameter [loadSets] is false by default
-  /// If [loadSets] is set to true, the user progress on this activity
-  /// is loaded as well
-  ///
-  /// Either use this or [asStream()], not both
-  ///
-  Future<FredericActivity> loadData([bool loadSets = false]) async {
-    if (activityID == null) return null;
-    if (_isStream) return null;
-    _isFuture = true;
-    _sets = List<FredericSet>();
-
-    DocumentReference activityDocument =
-        FirebaseFirestore.instance.collection('activities').doc(activityID);
-
-    DocumentSnapshot snapshot = await activityDocument.get();
-    _processDocumentSnapshot(snapshot);
-
-    if (loadSets) {
-      loadSetsOnce();
-      _areSetsLoaded = true;
-    }
-
-    return this;
-  }
-
-  //============================================================================
-  /// Returns a stream of [FredericActivity], which supports real time updates
-  ///
-  /// Either use this or [loadData()], but not both
-  ///
-  /// If [loadSets] is set to true, the user progress on this activity
-  /// is loaded as well
-  ///
-  Stream<FredericActivity> asStream([loadSets = false]) {
-    if (_isFuture) return null;
-    if (activityID == null) return null;
-    _isStream = true;
-    _sets = List<FredericSet>();
-    _streamController = StreamController<FredericActivity>();
-
-    Stream<DocumentSnapshot> documentStream = FirebaseFirestore.instance
-        .collection('activities')
-        .doc(activityID)
-        .snapshots();
-    documentStream.listen(_processDocumentSnapshot);
-
-    if (loadSets) {
-      _loadSetsStream();
-      _areSetsLoaded = true;
-    }
-
-    return _streamController.stream;
-  }
-
-  //============================================================================
-  /// Use this method to either:
-  ///   - Load or update the sets if using normal loading
-  ///   - Load the sets and add them to the Stream if using stream loading
-  ///
-  /// only really async when not using streams
-  ///
-  Future<FredericActivity> loadSets() async {
-    if (_isStream) {
-      _loadSetsStream();
-      return null;
-    } else {
-      await loadSetsOnce();
-      return this;
-    }
-  }
-
-  //============================================================================
   /// Used to populate the data from outside using literal data
   /// Currently only for futures, does not update the database
   ///
@@ -301,7 +238,6 @@ class FredericActivity {
       int recommendedReps,
       List<FredericActivityMuscleGroup> muscleGroups,
       FredericActivityType type) {
-    _isFuture = true;
     _name = name;
     _description = description;
     _image = image;
@@ -316,98 +252,32 @@ class FredericActivity {
   /// Used to populate the data from outside using a documentsnapshot
   /// Currently only for futures
   ///
-  void insertSnapshot(DocumentSnapshot snapshot) {
-    _isFuture = true;
-    _isStream = false;
+  FredericActivity insertSnapshot(DocumentSnapshot snapshot) {
     _processDocumentSnapshot(snapshot);
+    return this;
   }
 
   //============================================================================
-  /// Used by FredericBackend when bulk loading a lot of activities using an
-  /// outside stream
+  /// Used add sets to the Activity using a QuerySnapshot. If a set is a duplicate,
+  /// it is not added twice.
   ///
-  void loadSetsUsingOutsideStream(StreamController<FredericActivity> stream) {
-    if (!_isStream) {
-      stderr.writeln('[FredericActivity] Error: is not a stream');
-      return;
-    }
-    if (_setStreamExists) {
-      stderr.writeln('[FredericActivity] Error: Set Stream already exists');
-      return;
-    }
-    _setStreamExists = true;
-    String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection =
-        FirebaseFirestore.instance.collection('sets');
-
-    Stream<QuerySnapshot> setStream = activitiyProgressCollection
-        .where('owner', isEqualTo: userid)
-        .where('activity', isEqualTo: activityID)
-        .orderBy('timestamp', descending: true)
-        .snapshots();
-
-    setStream.listen((event) {
-      _processSetQuerySnapshot(event);
-      stream.add(this);
-    });
+  void insertSetQuerySnapshot(QuerySnapshot snapshot) {
+    _processSetQuerySnapshot(snapshot);
   }
 
   //============================================================================
-  /// Loads the sets and adds it to the stream if it has not been added yet
+  /// Loads the last [limit] sets. By default the [limit] is 5
   ///
-  void _loadSetsStream() {
-    if (_setStreamExists) return;
-    _setStreamExists = true;
-    String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection =
-        FirebaseFirestore.instance.collection('sets');
-
-    Stream<QuerySnapshot> setStream = activitiyProgressCollection
-        .where('owner', isEqualTo: userid)
-        .where('activity', isEqualTo: activityID)
-        .orderBy('timestamp', descending: true)
-        .snapshots();
-    setStream.listen(_processSetQuerySnapshot);
-  }
-
-  //============================================================================
-  /// Loads the sets in a self-contained stream, whether it is a stream or a future
+  /// Loads the sets once. if a set is added or removed it is done on the db as
+  /// well as on the local storage
   ///
-  StreamController<FredericActivity> loadSetsStreamOnce([int limit = 5]) {
-    String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection =
-        FirebaseFirestore.instance.collection('sets');
-
-    StreamController<FredericActivity> controller =
-        StreamController<FredericActivity>();
-
-    Stream<QuerySnapshot> setStream = activitiyProgressCollection
-        .where('owner', isEqualTo: userid)
+  Future<FredericActivity> loadSets([int limit = 5]) async {
+    QuerySnapshot snapshot = await _setsCollection
+        .where('owner', isEqualTo: FredericBackend.instance().currentUser.uid)
         .where('activity', isEqualTo: activityID)
-        .orderBy('timestamp', descending: true)
-        .limit(limit)
-        .snapshots();
-    setStream.listen((snapshot) {
-      _processSetQuerySnapshot(snapshot);
-      controller.add(this);
-    });
-    return controller;
-  }
-
-  //============================================================================
-  /// loads or updates the sets
-  ///
-  Future<FredericActivity> loadSetsOnce([int limit = 5]) async {
-    String userid = FirebaseAuth.instance.currentUser.uid;
-    CollectionReference activitiyProgressCollection =
-        FirebaseFirestore.instance.collection('sets');
-    QuerySnapshot progressSnapshot = await activitiyProgressCollection
-        .where('owner', isEqualTo: userid)
-        .where('activity', isEqualTo: activityID)
-        .orderBy('timestamp', descending: true)
         .limit(limit)
         .get();
-    _processSetQuerySnapshot(progressSnapshot);
+    _processSetQuerySnapshot(snapshot);
     return this;
   }
 
@@ -417,15 +287,19 @@ class FredericActivity {
   ///
   void _processSetQuerySnapshot(QuerySnapshot snapshot) {
     if (_sets == null) _sets = List<FredericSet>();
-    _sets.clear();
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      var map = snapshot.docs[i];
-      Timestamp ts = map.data()['timestamp'];
 
-      _sets.add(FredericSet(
-          map.id, map.data()['reps'], map.data()['weight'], ts.toDate()));
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      var element = snapshot.docs[i];
+      Timestamp ts = element.data()['timestamp'];
+      FredericSet set = FredericSet(element.id, element.data()['reps'],
+          element.data()['weight'], ts.toDate());
+
+      if (_sets.contains(set)) {
+        _sets.remove(set);
+      }
+      _sets.add(set);
     }
-    if (_isStream && _name != null) _streamController.add(this);
+    notifyListeners();
   }
 
   //============================================================================
@@ -443,11 +317,11 @@ class FredericActivity {
     _type = parseType(snapshot.data()['type']);
 
     List<dynamic> musclegroups = snapshot.data()['musclegroup'];
+    _muscleGroups.clear();
     musclegroups.forEach((element) {
       if (element is String) _muscleGroups.add(parseSingleMuscleGroup(element));
     });
-
-    if (_isStream && _name != null) _streamController?.add(this);
+    notifyListeners();
   }
 
   //============================================================================
@@ -456,10 +330,7 @@ class FredericActivity {
   /// The set is added to the list in this Activity and to the DB
   ///
   void addProgress(int reps, int weight) async {
-    CollectionReference setsCollection =
-        FirebaseFirestore.instance.collection('sets');
-
-    DocumentReference docRef = await setsCollection.add({
+    DocumentReference docRef = await _setsCollection.add({
       'reps': reps,
       'weight': weight,
       'owner': FirebaseAuth.instance.currentUser.uid,
@@ -467,6 +338,7 @@ class FredericActivity {
       'activity': activityID
     });
     _sets.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
+    notifyListeners();
   }
 
   //============================================================================
@@ -474,26 +346,8 @@ class FredericActivity {
   ///
   void removeProgress(FredericSet fset) {
     _sets.remove(fset);
-    FirebaseFirestore.instance.collection('sets').doc(fset.setID).delete();
-  }
-
-  //============================================================================
-  /// Calculates the maximum value (either weight for weighted activities, or
-  /// number of reps for calisthenics activities) in the loaded sets.
-  /// If no sets are loaded, the returned value is 0.
-  ///
-  num getCurrentBestProgress() {
-    num max = 0;
-    if (_type == FredericActivityType.Weighted) {
-      sets.forEach((element) {
-        max = element.weight > max ? element.weight : max;
-      });
-    } else if (_type == FredericActivityType.Calisthenics) {
-      sets.forEach((element) {
-        max = element.reps > max ? element.reps : max;
-      });
-    }
-    return max;
+    _setsCollection.doc(fset.setID).delete();
+    notifyListeners();
   }
 
   //============================================================================
@@ -650,10 +504,6 @@ class FredericActivity {
     return false;
   }
 
-  void dispose() {
-    _streamController.close();
-  }
-
   @override
   String toString() {
     String s =
@@ -665,6 +515,9 @@ class FredericActivity {
     }
     return s;
   }
+
+  @override
+  int get hashCode => activityID.hashCode;
 }
 
 enum FredericActivityType { Weighted, Calisthenics, Stretch }

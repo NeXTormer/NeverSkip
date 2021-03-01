@@ -29,7 +29,7 @@ class _ActivityPage extends StatelessWidget {
         children: activities
             .map((activity) => ActivityCard(
                   activity,
-                  dismissable: true,
+                  dismissible: true,
                   selectable: false,
                   onDismiss: handleDismissedActivity,
                 ))

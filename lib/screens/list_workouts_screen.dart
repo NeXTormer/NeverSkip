@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/widgets/workout/add_workout_card.dart';
+import 'package:frederic/backend/frederic_workout_builder.dart';
+import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
@@ -15,9 +17,6 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FredericWorkout demoWorkout =
-        FredericWorkout('kKOnczVnBbBHvmx96cjG', shouldLoadActivities: true);
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -29,20 +28,20 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Active workout',
-              style: TextStyle(
-                fontSize: 28,
+          if (false)
+            Container(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Active workout',
+                style: TextStyle(
+                  fontSize: 28,
+                ),
               ),
             ),
-          ),
-          StreamBuilder<FredericWorkout>(
-              stream: demoWorkout.asStream(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) return WorkoutCard(snapshot.data);
-                return Container();
+          FredericWorkoutBuilder(
+              id: 'kKOnczVnBbBHvmx96cjG',
+              builder: (context, list) {
+                return WorkoutCard(list);
               }),
           Divider(height: 0),
         ],

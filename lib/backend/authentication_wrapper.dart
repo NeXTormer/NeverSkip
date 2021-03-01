@@ -17,11 +17,11 @@ class AuthenticationWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data.uid != null) {
           // if the user logged in load the userdata from firestore:
-          FredericBackend.of(context).currentUser =
-              FredericUser(snapshot.data.uid);
+          FredericBackend.instance().logIn(snapshot.data.uid);
           return FutureBuilder(
-              future: FredericBackend.of(context).loadCurrentUser(),
+              future: FredericBackend.instance().loadCurrentUser(),
               builder: (context, snapshot) {
+                FredericBackend.instance().loadData();
                 if (snapshot.hasData) {
                   return homePage;
                 } else {

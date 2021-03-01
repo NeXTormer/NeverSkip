@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frederic/backend/frederic_set.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_goal_manager.dart';
 
 ///
 /// A Goal and a achievement are the same object. Achieved goals are
@@ -12,25 +13,29 @@ import 'package:frederic/backend/frederic_set.dart';
 /// As always, changing the properties of this class also updates the DB values
 ///
 class FredericGoal {
-  FredericGoal(String uid) {
-    _uid = uid;
+  FredericGoal(String uid, FredericGoalManager goalManager) {
+    goalID = uid;
+    _goalManager = goalManager;
     _documentReference = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection('goals')
         .doc(uid);
-    sets = List<FredericSet>();
+    _activityManager = FredericBackend.instance().activityManager;
   }
 
-  String _uid;
+  String goalID;
   String _activityID;
 
+  FredericActivity _activity;
+
+  FredericGoalManager _goalManager;
+  FredericActivityManager _activityManager;
+
   DocumentReference _documentReference;
-  List<FredericSet> sets;
 
   String _title;
   String _image;
-  String _type;
 
   num _start;
   num _end;
@@ -40,20 +45,20 @@ class FredericGoal {
   bool _isCompleted;
   bool _isDeleted;
 
-  String get uid => _uid;
+  String get uid => goalID;
   String get title => _title ?? 'Goal';
   String get image => _image ?? 'https://via.placeholder.com/500x400?text=Goal';
   String get activityID => _activityID;
-  String get type => _type;
   num get startState => _start ?? 0;
   num get endState => _end ?? 0;
-  num get currentState => _current ?? -69;
+  num get currentState => _current ?? -42;
   DateTime get startDate => _startDate.toDate() ?? DateTime.now();
   DateTime get endDate => _endDate.toDate() ?? DateTime.now();
   bool get isCompleted => _isCompleted ?? false;
-  bool get isNotCompleted => !_isCompleted;
+  bool get isNotCompleted => !isCompleted;
   bool get isDeleted => _isDeleted ?? false;
   bool get isLoss => startState > endState;
+  FredericActivity get activity => _activity;
 
   int get progressPercentage {
     num diff = endState - startState;
@@ -84,12 +89,6 @@ class FredericGoal {
     }
   }
 
-  set type(String value) {
-    if (value.isNotEmpty) {
-      _documentReference.update({'type': value});
-    }
-  }
-
   set startState(num value) {
     if (value >= 0) {
       _documentReference.update({'startstate': value});
@@ -108,6 +107,11 @@ class FredericGoal {
     }
   }
 
+  void updateData() {
+    _current = _activity.bestProgress;
+    _goalManager.updateData();
+  }
+
   void insertData(DocumentSnapshot snapshot) {
     _activityID = snapshot.data()['activity'];
     _title = snapshot.data()['title'];
@@ -117,21 +121,22 @@ class FredericGoal {
     _startDate = snapshot.data()['startdate'];
     _endDate = snapshot.data()['enddate'];
     _isCompleted = snapshot.data()['iscompleted'];
-    _type = snapshot.data()['type'];
+    _goalManager.updateData();
+
+    if (_activity == null) {
+      _activity = _activityManager[_activityID];
+      //_activity.addListener(updateData);
+      _activityManager.addListener(updateData);
+    }
   }
 
-  void calculateCurrentProgress() {
-    num max = 0;
-    if (_type == 'weight') {
-      sets.forEach((element) {
-        max = element.weight > max ? element.weight : max;
-      });
-    } else if (_type == 'reps') {
-      sets.forEach((element) {
-        max = element.reps > max ? element.reps : max;
-      });
-    }
-    _current = max;
+  bool operator ==(other) {
+    return goalID == other.goalID;
+  }
+
+  void discard() {
+    _activity?.removeListener(updateData);
+    _activityManager?.removeListener(updateData);
   }
 }
 
