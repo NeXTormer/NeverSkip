@@ -167,10 +167,10 @@ class _CalendarAndEventsViewState extends State<CalendarAndEventsView> {
           future: user.loadData(),
           builder: (ctx, snapshot) {
             if (snapshot.hasData) {
-              FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG',
-                  shouldLoadActivities: true, shouldLoadSets: true);
-              Stream<FredericWorkout> stream = workout.asStream();
-              var broadcast = stream.asBroadcastStream();
+              //FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG',
+              //shouldLoadActivities: true, shouldLoadSets: true);
+              //Stream<FredericWorkout> stream = workout.asStream();
+              //var broadcast = stream.asBroadcastStream();
               return StreamBuilder<FredericWorkout>(
                 builder: (ctx, snapshot) {
                   if (snapshot.hasData) {
@@ -191,7 +191,7 @@ class _CalendarAndEventsViewState extends State<CalendarAndEventsView> {
                     return Text('loading data');
                   }
                 },
-                stream: broadcast,
+                //stream: broadcast,
               );
             } else {
               return Center(

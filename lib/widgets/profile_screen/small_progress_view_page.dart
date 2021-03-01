@@ -1,45 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_goal.dart';
-import 'package:frederic/backend/frederic_progress_snapshot.dart';
 
 ///
 /// The progress monitors below the profile picture, shows the hightest of the
 /// latest sets
 ///
 class SmallProgressViewPage extends StatelessWidget {
-  List<String> activities;
+  SmallProgressViewPage(this.progressMonitors);
+
+  final List<String> progressMonitors;
 
   @override
   Widget build(BuildContext context) {
-    activities = FredericBackend.of(context).currentUser.progressMonitors;
-
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: buildRow(),
-      ),
+      child: FutureBuilder(
+          future: FredericBackend.instance().activityManager.hasData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done)
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: buildRow(),
+              );
+            return CircularProgressIndicator();
+          }),
     );
   }
 
   List<Widget> buildRow() {
     List<Widget> row = List<Widget>();
-    for (int i = 0; i < activities.length; i++) {
-      FredericProgressSnapshot ps = FredericProgressSnapshot(activities[i],
-          FredericGoalType.Weight, FredericProgressSnapshotType.Maximum);
-      Widget sb = StreamBuilder(
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildStatisticText('${snapshot.data}', '${ps.activityName}');
-          }
-
-          return Container();
-        },
-        stream: ps.asStream(),
-      );
-      row.add(sb);
+    for (int i = 0; i < progressMonitors.length; i++) {
+      row.add(buildElement(progressMonitors[i]));
     }
     return row;
+  }
+
+  Widget buildElement(String activityID) {
+    return FredericActivityBuilder(
+      type: FredericActivityBuilderType.SingleActivity,
+      id: activityID,
+      builder: (context, data) {
+        FredericActivity activity = data;
+        return buildStatisticText(
+            '${activity.bestProgress}', '${activity?.name ?? 'loading...'}');
+      },
+    );
   }
 
   /// Outsources the Stats-Text section

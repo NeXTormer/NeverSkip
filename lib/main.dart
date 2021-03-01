@@ -2,18 +2,19 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/screens.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 final Future<FirebaseApp> app = Firebase.initializeApp();
+final getIt = GetIt.instance;
 
-void main() async {
+void main() {
   runApp(Frederic());
 }
 
@@ -38,11 +39,12 @@ class Frederic extends StatelessWidget {
   }
 
   Widget _loadApp() {
+    if (getIt.isRegistered<FredericBackend>())
+      getIt.unregister<FredericBackend>();
+    getIt.registerSingleton<FredericBackend>(FredericBackend());
+
     return MultiProvider(
       providers: [
-        Provider<FredericBackend>(
-          create: (_) => FredericBackend(FirebaseAuth.instance),
-        ),
         StreamProvider(
           create: (context) =>
               context.read<FredericBackend>().authService.authStateChanges,

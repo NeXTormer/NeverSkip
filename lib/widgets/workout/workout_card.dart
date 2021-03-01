@@ -16,21 +16,14 @@ class _WorkoutCardState extends State<WorkoutCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
       margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 0.1,
-        ),
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(5.0), topRight: Radius.circular(5.0)),
-      ),
+      elevation: 2,
       child: InkWell(
         onTap: () {
-          widget.workout.loadActivities().then((value) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditWorkoutScreen(widget.workout)));
-          });
+          widget.workout.loadActivities();
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => EditWorkoutScreen(widget.workout)));
         },
         child: Stack(
           children: [

@@ -28,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    user = FredericBackend.of(context).currentUser;
+    user = FredericBackend.instance().currentUser;
 
     return StreamBuilder<FredericUser>(
-      stream: FredericBackend.of(context).currentUserStream,
+      stream: FredericBackend.instance().currentUserStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           user = snapshot.data;
@@ -83,7 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ProfileHeader(snapshot.data),
                             Divider(height: 0),
                             SizedBox(height: 8),
-                            SmallProgressViewPage(),
+                            SmallProgressViewPage(
+                                snapshot.data.progressMonitors),
                             SizedBox(height: 8),
                             Divider(height: 0),
                           ],
@@ -107,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           AchievementPage(),
                         ],
                       ),
-                      GoalPage(_handleButtonPress),
+                      GoalPage(),
                       SizedBox(height: 10.0),
                       Divider(),
                       SizedBox(height: 10.0),
@@ -125,10 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      ProgressChart(
-                        chartData: FredericChartData(
-                            'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
-                      ),
+                      if (false)
+                        ProgressChart(
+                          chartData: FredericChartData(
+                              'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
+                        ),
                       SizedBox(height: 50),
                     ],
                   ),
