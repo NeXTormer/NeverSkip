@@ -136,7 +136,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.startState} ${goalType(goal.activity.type)}',
+                                  '${goal.startState} ${goalType(goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -147,7 +147,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.currentState} ${goalType(goal.activity.type)}',
+                                  '${goal.currentState} ${goalType(goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -158,7 +158,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.endState} ${goalType(goal.activity.type)}',
+                                  '${goal.endState} ${goalType(goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),

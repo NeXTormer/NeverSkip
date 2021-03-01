@@ -6,7 +6,6 @@ import 'package:frederic/widgets/profile_screen/goal/goal_item.dart';
 
 /// Displays the [List<CardGoalItem>] corresponding to the user's currently created goals.
 ///
-/// Takes a [Function] argument in the constructur, which get passed in the respectively [CardGoalItem] item.
 class GoalPage extends StatefulWidget {
   GoalPage();
 
@@ -23,6 +22,7 @@ class _GoalPageState extends State<GoalPage> {
   void initState() {
     goalManager = FredericBackend.instance().goalManager;
     goalManager.addListener(updateData);
+    goals = goalManager.goals;
     super.initState();
   }
 

@@ -125,7 +125,8 @@ class FredericGoal {
 
     if (_activity == null) {
       _activity = _activityManager[_activityID];
-      _activity.addListener(updateData);
+      //_activity.addListener(updateData);
+      _activityManager.addListener(updateData);
     }
   }
 
@@ -135,6 +136,7 @@ class FredericGoal {
 
   void discard() {
     _activity?.removeListener(updateData);
+    _activityManager?.removeListener(updateData);
   }
 }
 
