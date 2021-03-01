@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:frederic/widgets/workout/add_workout_card.dart';
+import 'package:share/share.dart';
 
 class WorkoutCard extends StatefulWidget {
   WorkoutCard(this.workout);
@@ -12,10 +15,15 @@ class WorkoutCard extends StatefulWidget {
 }
 
 class _WorkoutCardState extends State<WorkoutCard> {
-  bool _isActive = false;
+  static bool _isActive = false;
+
+  FredericUser user;
+
+  String _shareText = 'https://orf.at';
 
   @override
   Widget build(BuildContext context) {
+    user = user = FredericBackend.of(context).currentUser;
     return Container(
       margin: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -96,7 +104,13 @@ class _WorkoutCardState extends State<WorkoutCard> {
               left: 10,
               top: 10,
               child: InkWell(
-                onTap: () => print('Share...'),
+                onTap: () {
+                  final RenderBox box = context.findRenderObject();
+                  Share.share(_shareText,
+                      subject: 'share workout',
+                      sharePositionOrigin:
+                          box.localToGlobal(Offset.zero) & box.size);
+                },
                 child: CircleAvatar(
                   radius: 25,
                   backgroundColor: Colors.white,
@@ -112,7 +126,12 @@ class _WorkoutCardState extends State<WorkoutCard> {
               right: 10,
               top: 10,
               child: InkWell(
-                onTap: () => print('Settings...'),
+                onTap: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => AddWorkoutCard(widget.workout),
+                ),
                 child: CircleAvatar(
                   radius: 25,
                   backgroundColor: Colors.white,

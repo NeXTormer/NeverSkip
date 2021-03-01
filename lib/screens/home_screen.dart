@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
+import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
@@ -49,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onSelected: (addOption) {
                         // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
                         if (addOption == AddOptions.Goal) {
-                          _handleButtonPress(null);
+                          //_handleButtonPress(null);
+                          _addGoalPopUp(null);
                         } else {
                           Navigator.of(context)
                               .pushNamed(AddGraphScreen.routeName);
@@ -81,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           children: [
                             ProfileHeader(snapshot.data),
-                            Divider(height: 0),
                             SizedBox(height: 8),
                             SmallProgressViewPage(),
                             SizedBox(height: 8),
@@ -164,11 +166,57 @@ class _HomeScreenState extends State<HomeScreen> {
         return Wrap(
           children: [
             Container(
-              child: Text(id),
+              padding: const EdgeInsets.all(16),
+              child: EditGoalItem(null),
             ),
           ],
         );
       },
+    );
+  }
+
+  void _addGoalPopUp(String id) {
+    showDialog(
+        context: context, builder: (context) => _buildPopUpAddGoal(context));
+  }
+
+  Widget _buildPopUpAddGoal(BuildContext context) {
+    return AlertDialog(
+      title: Text('Add new Goal'),
+      content: Container(
+        width: 1000,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: Image.network(
+                'https://www.namepros.com/attachments/empty-png.89209/',
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: TextField(),
+                ),
+                SizedBox(width: 10),
+                Flexible(
+                  child: TextField(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Create'),
+        )
+      ],
     );
   }
 }

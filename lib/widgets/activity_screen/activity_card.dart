@@ -4,12 +4,16 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 
 class ActivityCard extends StatefulWidget {
-  ActivityCard(this.activity,
-      {this.selectable = false,
-      this.onAddActivity,
-      this.dismissable = false,
-      this.onDismiss});
+  ActivityCard(
+    this.activity, {
+    this.selectable = false,
+    this.onAddActivity,
+    this.dismissable = false,
+    this.onDismiss,
+    this.key,
+  });
 
+  final Key key;
   final bool selectable;
   final bool dismissable;
   final FredericActivity activity;

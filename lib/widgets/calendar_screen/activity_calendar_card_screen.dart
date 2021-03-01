@@ -6,9 +6,8 @@ import 'package:frederic/widgets/outlined_gradient_button.dart';
 
 class ActivityCalendarCard extends StatefulWidget {
   final FredericActivity activityItem;
-  final Key key;
 
-  ActivityCalendarCard(this.activityItem, this.key);
+  ActivityCalendarCard(this.activityItem);
 
   @override
   _ActivityCalendarCardState createState() => _ActivityCalendarCardState();

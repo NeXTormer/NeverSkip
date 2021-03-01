@@ -73,7 +73,7 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
               },
             );
           }
-          return Text('loading');
+          return Center(child: CircularProgressIndicator());
         });
   }
 
@@ -206,8 +206,7 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
                     child: Column(
                       children: [
                         ...eventsOnSpecificDate.map(
-                          (e) => ActivityCalendarCard(
-                              e.activity, Key('${e.activity.activityID}')),
+                          (e) => ActivityCalendarCard(e.activity),
                         ),
                       ],
                     ),

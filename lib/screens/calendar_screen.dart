@@ -12,6 +12,8 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  FredericUser user;
+
   String appBarTileText = '';
   List<String> monthInYearImageUrls = [
     'https://mobil.woman.at/_storage/asset/10566591/storage/womanat:content-large/file/140877089/Erwiesen:%20HIIT-Workout%20ist%20am%20effektivsten!.jpg',
@@ -49,8 +51,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    user = FredericBackend.of(context).currentUser;
     FredericWorkout demoWorkout =
         FredericWorkout('kKOnczVnBbBHvmx96cjG', shouldLoadActivities: true);
+    FredericWorkout currentlyLoadedWorkout =
+        FredericWorkout(user.currentWorkoutID, shouldLoadActivities: true);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +73,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       body: StreamBuilder<FredericWorkout>(
-          stream: demoWorkout.asStream(),
+          stream: currentlyLoadedWorkout.asStream(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return BuildCalendarView(
@@ -80,7 +85,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 workoutToLoad: snapshot.data,
               );
             }
-            return Center(child: Text('Loading'));
+            return Center(child: CircularProgressIndicator());
           }),
     );
   }
