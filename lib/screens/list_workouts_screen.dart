@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/widgets/workout/add_workout_card.dart';
 import 'package:frederic/backend/frederic_workout_builder.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
@@ -11,6 +13,8 @@ class ListWorkoutsScreen extends StatefulWidget {
 }
 
 class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
+  double test = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +47,13 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, EditWorkoutScreen.routeName);
-        },
+        onPressed: () => showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => AddWorkoutCard(null),
+        ),
+        //_createWorkoutPrompt,
         backgroundColor: Colors.white,
         child: Icon(
           Icons.add,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
@@ -17,6 +19,13 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
+  String _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+
+  Random _rnd = Random();
+
+  bool _test = false;
+
   TextEditingController titleTextController;
   PageController activityPageController;
   WeekdaySliderController sliderController;
@@ -35,24 +44,39 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String _tempTitle = widget.workout.name;
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
           elevation: 0.0,
           title: Material(
             type: MaterialType.transparency,
-            child: Text(
-              widget.workout.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+            child: _test
+                ? TextFormField(
+                    controller: titleTextController..text = _tempTitle,
+                    onFieldSubmitted: (value) {
+                      setState(() {
+                        _test = false;
+                        widget.workout.name = value;
+                        _tempTitle = value;
+                      });
+                    },
+                  )
+                : Text(
+                    _tempTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
           ),
           actions: [
             IconButton(
                 icon: Icon(Icons.edit_outlined, size: 30),
                 onPressed: () {
                   print('edit workout details');
+                  setState(() {
+                    _test = !_test;
+                  });
                 }),
           ],
         ),
@@ -117,36 +141,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                         }));
                   }),
             ),
-            if (false)
-              StreamBuilder<FredericWorkout>(
-                  //stream: widget.workout.asBroadcastStream(),
-                  builder: (context, snapshot) {
-                if (snapshot.hasData)
-                  return Expanded(
-                    child: PageView(
-                        onPageChanged: handleDayChangeBySwiping,
-                        controller: activityPageController,
-                        children: List.generate(snapshot.data.activities.period,
-                            (weekday) {
-                          return ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ActivityCard(
-                                snapshot.data.activities.activities[weekday + 1]
-                                    [index],
-                                dismissible: true,
-                                onDismiss: handleDeleteActivity,
-                              );
-                            },
-                            itemCount: snapshot
-                                .data.activities.activities[weekday + 1].length,
-                          );
-                        })),
-                  );
-                return CircularProgressIndicator();
-              }),
           ],
         ));
   }
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   void handleAddActivity(FredericActivity activity) {
     widget.workout.addActivity(activity, sliderController.currentDay);

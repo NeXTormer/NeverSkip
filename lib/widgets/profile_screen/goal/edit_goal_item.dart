@@ -69,7 +69,7 @@ class _EditGoalItemState extends State<EditGoalItem> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Container(
       child: Form(
         key: _formKey,
         child: Column(
