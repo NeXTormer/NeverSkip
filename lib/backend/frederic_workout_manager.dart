@@ -6,6 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 
+///
+/// Manages all Workouts. Only one instance of this should exist. Instantiated in
+/// [FredericBackend].
+///
+/// Get a workout using the [] operator, e.g.
+/// ```
+/// FredericWorkout workout = workoutManager['workoutID'];
+/// ```
+///
 class FredericWorkoutManager with ChangeNotifier {
   FredericWorkoutManager() {
     _workouts = HashMap<String, FredericWorkout>();
@@ -23,6 +32,9 @@ class FredericWorkoutManager with ChangeNotifier {
 
   HashMap<String, FredericWorkout> get workouts => _workouts;
 
+  ///
+  /// Called once in [FredericBackend]
+  ///
   void loadData() {
     if (_dataLoaded) return;
     _dataLoaded = true;

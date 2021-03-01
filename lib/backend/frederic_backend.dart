@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/frederic_activity_manager.dart';
-import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
 import 'package:frederic/backend/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
 import 'backend.dart';
 
+///
+/// Main class of the Backend. Manages everything related to storing and loading
+/// data form the DB or the device, and handles sign in / sign up.
+///
 class FredericBackend {
   FredericBackend() {
     _authenticationService = AuthenticationService(FirebaseAuth.instance);
@@ -19,6 +22,7 @@ class FredericBackend {
   }
 
   AuthenticationService _authenticationService;
+  AuthenticationService get authService => _authenticationService;
 
   FredericActivityManager _activityManager;
   FredericActivityManager get activityManager => _activityManager;
@@ -29,23 +33,21 @@ class FredericBackend {
   FredericGoalManager _goalManager;
   FredericGoalManager get goalManager => _goalManager;
 
-  // Streamed objects
   FredericUser _currentUser;
   FredericUser get currentUser => _currentUser;
-  List<FredericGoal> goals;
-  List<FredericGoal> achievements;
 
-  // Streams and StreamControllers
   Stream<FredericUser> _currentUserStream;
+  Stream<FredericUser> get currentUserStream => _currentUserStream;
 
   StreamController<FredericUser> _currentUserStreamController;
 
-  Stream<FredericUser> get currentUserStream => _currentUserStream;
-  AuthenticationService get authService => _authenticationService;
+  static FredericBackend instance() => getIt<FredericBackend>();
 
   ///
   /// Use this to load the data for the currentUser, instead of using
   /// currentUser.loadData().
+  ///
+  /// Normally called in AuthenticationWrapper
   ///
   Future<FredericUser> loadCurrentUser() async {
     await currentUser.loadData();
@@ -66,12 +68,8 @@ class FredericBackend {
     _currentUser = FredericUser(uid);
   }
 
-  static FredericBackend instance() => getIt<FredericBackend>();
-
   void _loadCurrentUserStream() {
-    if (currentUser?.uid == null) {
-      return null;
-    }
+    if (currentUser?.uid == null) return null;
 
     CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('users');
@@ -85,8 +83,10 @@ class FredericBackend {
     });
   }
 
+  //TODO: Call this on app close
   void dispose() {
     _activityManager.dispose();
     _workoutManager.dispose();
+    _goalManager.dispose();
   }
 }

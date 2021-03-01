@@ -240,7 +240,7 @@ class FredericWorkout with ChangeNotifier {
         .where('weekday', isEqualTo: day)
         .get();
 
-    if (snapshot.docs.length != 1) return;
+    if (snapshot.docs.length == 0) return;
 
     String docID = snapshot.docs[0].id;
     collectionReference.doc(docID).delete();

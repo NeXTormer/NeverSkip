@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'backend.dart';
 
+///
+/// Manages all goals. Only one instance of this should exist. Instantiated in
+/// [FredericBackend].
+///
 class FredericGoalManager with ChangeNotifier {
   FredericGoalManager() {
     _allGoals = List<FredericGoal>();
@@ -19,6 +23,9 @@ class FredericGoalManager with ChangeNotifier {
   List<FredericGoal> get goals =>
       _allGoals.where((element) => element.isNotCompleted).toList();
 
+  ///
+  /// Called once in [FredericBackend]
+  ///
   void loadData() {
     if (_snapshots != null) return;
     CollectionReference goalsCollection = FirebaseFirestore.instance

@@ -7,6 +7,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 
+///
+/// Manages all Activities. Only one instance of this should exist. Instantiated in
+/// [FredericBackend].
+///
+/// Get an activity using the [] operator, e.g.
+/// ```
+/// FredericActivity activity = activityManager['activityID'];
+/// ```
+///
 class FredericActivityManager with ChangeNotifier {
   FredericActivityManager() {
     _activities = HashMap<String, FredericActivity>();
@@ -37,6 +46,9 @@ class FredericActivityManager with ChangeNotifier {
     return _hasDataCompleter.future;
   }
 
+  ///
+  /// Called once in [FredericBackend]
+  ///
   void loadData() {
     if (_dataLoaded) return;
     _dataLoaded = true;
