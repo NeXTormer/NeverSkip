@@ -5,6 +5,7 @@ import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
+import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_header.dart';
@@ -176,47 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _addGoalPopUp(String id) {
-    showDialog(
-        context: context, builder: (context) => _buildPopUpAddGoal(context));
-  }
-
-  Widget _buildPopUpAddGoal(BuildContext context) {
-    return AlertDialog(
-      title: Text('Add new Goal'),
-      content: Container(
-        width: 1000,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              child: Image.network(
-                'https://www.namepros.com/attachments/empty-png.89209/',
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: TextField(),
-                ),
-                SizedBox(width: 10),
-                Flexible(
-                  child: TextField(),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Create'),
-        )
-      ],
-    );
+    showDialog(context: context, builder: (context) => AddGoalItem());
   }
 }
