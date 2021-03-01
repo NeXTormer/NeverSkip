@@ -23,7 +23,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
 
   @override
   Widget build(BuildContext context) {
-    user = FredericBackend.of(context).currentUser;
+    user = FredericBackend.instance().currentUser;
     return Card(
       margin: EdgeInsets.all(8),
       elevation: 2,

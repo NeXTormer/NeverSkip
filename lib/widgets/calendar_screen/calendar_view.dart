@@ -7,8 +7,8 @@ import 'package:parallax_image/parallax_image.dart';
 
 import 'activity_calendar_card_screen.dart';
 
-class BuildCalendarView extends StatefulWidget {
-  BuildCalendarView({
+class CalendarView extends StatefulWidget {
+  CalendarView({
     @required this.startDate,
     @required this.events,
     @required this.endDate,
@@ -28,54 +28,15 @@ class BuildCalendarView extends StatefulWidget {
   final TextStyle weekTextStyle;
 
   @override
-  _BuildCalendarViewState createState() => _BuildCalendarViewState();
+  _CalendarViewState createState() => _CalendarViewState();
 }
 
-class _BuildCalendarViewState extends State<BuildCalendarView> {
+class _CalendarViewState extends State<CalendarView> {
   final _scrollController = new ScrollController();
 
   List<CalendarMonth> _months = [];
 
   int _displayWeeksIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    int _monthsToGenrate = widget.endDate.month;
-    if (widget.workoutToLoad == null) {
-      return ListView.builder(
-        controller: _scrollController,
-        itemCount: _monthsToGenrate,
-        itemBuilder: (ctx, index) {
-          return Column(
-            children: _buildMonthCalendarItem(_months[index], []),
-          );
-        },
-      );
-    }
-    return StreamBuilder<FredericWorkout>(
-        stream: widget.workoutToLoad.asBroadcastStream(),
-        builder: (context, snapshot) {
-          List<FredericActivityWithDate> activitiesWithDate = [];
-          if (snapshot.hasData) {
-            activitiesWithDate = _convertDayEntryToDateOfFredericActivity(
-                snapshot.data.activities.activities, DateTime(2021, 1, 1));
-
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: _monthsToGenrate,
-              itemBuilder: (ctx, index) {
-                return Column(
-                  children: _buildMonthCalendarItem(
-                    _months[index],
-                    activitiesWithDate,
-                  ),
-                );
-              },
-            );
-          }
-          return Center(child: CircularProgressIndicator());
-        });
-  }
 
   @override
   void initState() {
@@ -91,6 +52,39 @@ class _BuildCalendarViewState extends State<BuildCalendarView> {
       );
     }
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    int _monthsToGenrate = widget.endDate.month;
+    if (widget.workoutToLoad == null) {
+      return ListView.builder(
+        controller: _scrollController,
+        itemCount: _monthsToGenrate,
+        itemBuilder: (ctx, index) {
+          return Column(
+            children: _buildMonthCalendarItem(_months[index], []),
+          );
+        },
+      );
+    }
+
+    List<FredericActivityWithDate> activitiesWithDate = [];
+    activitiesWithDate = _convertDayEntryToDateOfFredericActivity(
+        widget.workoutToLoad.activities.activities, DateTime(2021, 1, 1));
+
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: _monthsToGenrate,
+      itemBuilder: (ctx, index) {
+        return Column(
+          children: _buildMonthCalendarItem(
+            _months[index],
+            activitiesWithDate,
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildMonthHeader(String imageUrl, String month) {

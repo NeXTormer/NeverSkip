@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/calendar_screen/build_Calendar_view.dart';
-
-//import 'file:///C:/Dev/Projects/frederic/lib/widgets/calendar_screen/activity_calendar_card_screen.dart';
+import 'package:frederic/widgets/calendar_screen/calendar_view.dart';
 
 class CalendarScreen extends StatefulWidget {
   static String routeName = '/newCalendar';
@@ -30,32 +28,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
     'https://cdn.pullup-dip.com/media/image/26/eb/3f/calisthenics-title_600x600.jpg',
   ];
 
-  Future getWorkoutTitle() async {
-    var workout = await FredericWorkout('kKOnczVnBbBHvmx96cjG',
-            shouldLoadActivities: true)
-        .loadData();
-
-    if (workout != null) {
-      print(workout.name);
-      setState(() {
-        appBarTileText = workout.name;
-      });
-    }
-  }
+  // Future<void> getWorkoutTitle() async {
+  //   if (workout != null) {
+  //     print(workout.name);
+  //     setState(() {
+  //       appBarTileText = workout.name;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
-    getWorkoutTitle();
+    //getWorkoutTitle();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    user = FredericBackend.of(context).currentUser;
-    FredericWorkout demoWorkout =
-        FredericWorkout('kKOnczVnBbBHvmx96cjG', shouldLoadActivities: true);
-    FredericWorkout currentlyLoadedWorkout =
-        FredericWorkout(user.currentWorkoutID, shouldLoadActivities: true);
+    user = FredericBackend.instance().currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -72,20 +62,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
           )
         ],
       ),
-      body: StreamBuilder<FredericWorkout>(
-          stream: currentlyLoadedWorkout.asStream(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return BuildCalendarView(
-                startDate: DateTime(2021, 1, 20),
-                endDate: DateTime(2021, 12),
-                events: null,
-                monthImgHeaderUrl: monthInYearImageUrls,
-                sideColumnWidth: 50,
-                workoutToLoad: snapshot.data,
-              );
-            }
-            return Center(child: CircularProgressIndicator());
+      body: FredericWorkoutBuilder(
+          id: 'kKOnczVnBbBHvmx96cjG',
+          builder: (context, data) {
+            FredericWorkout workout = data;
+            return CalendarView(
+              startDate: DateTime(2021, 1, 20),
+              endDate: DateTime(2021, 12),
+              events: null,
+              monthImgHeaderUrl: monthInYearImageUrls,
+              sideColumnWidth: 50,
+              workoutToLoad: workout,
+            );
           }),
     );
   }

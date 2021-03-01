@@ -4,7 +4,6 @@ import 'package:frederic/util/palette.dart';
 import 'package:frederic/widgets/login_signup/login_button.dart';
 import 'package:frederic/widgets/login_signup/login_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -74,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 24),
                   LoginButton(text: 'Log in', onPressed: loginButtonHandler),
-                  Expanded(flex: 6,child: Container()),
+                  Expanded(flex: 6, child: Container()),
                   Container(
                       margin: EdgeInsets.only(bottom: 120),
                       child: Center(
@@ -123,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void loginButtonHandler() {
     if (_formKey.currentState.validate()) {
-      context
-          .read<FredericBackend>()
+      FredericBackend.instance()
           .authService
           .signIn(emailController.text.trim(), passwordController.text.trim())
           .then((value) {
