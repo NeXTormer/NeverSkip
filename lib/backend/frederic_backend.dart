@@ -19,6 +19,8 @@ class FredericBackend {
     _activityManager = FredericActivityManager();
     _workoutManager = FredericWorkoutManager();
     _goalManager = FredericGoalManager();
+    _currentUserCompleter = Completer<FredericUser>();
+    _currentUser = FredericUser(FirebaseAuth.instance.currentUser?.uid);
   }
 
   AuthenticationService _authenticationService;
@@ -39,9 +41,9 @@ class FredericBackend {
   Stream<FredericUser> _currentUserStream;
   Stream<FredericUser> get currentUserStream => _currentUserStream;
 
-  StreamController<FredericUser> _currentUserStreamController;
-
   static FredericBackend instance() => getIt<FredericBackend>();
+
+  Completer<FredericUser> _currentUserCompleter;
 
   ///
   /// Use this to load the data for the currentUser, instead of using
@@ -50,12 +52,8 @@ class FredericBackend {
   /// Normally called in AuthenticationWrapper
   ///
   Future<FredericUser> loadCurrentUser() async {
-    await currentUser.loadData();
-    _currentUserStreamController = StreamController<FredericUser>.broadcast();
-    _currentUserStream = _currentUserStreamController.stream;
     _loadCurrentUserStream();
-
-    return currentUser;
+    return _currentUserCompleter.future;
   }
 
   void loadData() {
@@ -65,7 +63,7 @@ class FredericBackend {
   }
 
   void logIn(String uid) {
-    _currentUser = FredericUser(uid);
+    _currentUser.uid = uid;
   }
 
   void _loadCurrentUserStream() {
@@ -77,10 +75,13 @@ class FredericBackend {
     Stream<DocumentSnapshot> userStream =
         usersCollection.doc(currentUser.uid).snapshots();
 
-    userStream.listen((event) {
-      currentUser.insertDocumentSnapshot(event);
-      _currentUserStreamController.add(currentUser);
-    });
+    userStream.listen(_handleUserStream);
+  }
+
+  void _handleUserStream(DocumentSnapshot snapshot) {
+    currentUser.insertDocumentSnapshot(snapshot);
+    if (!_currentUserCompleter.isCompleted)
+      _currentUserCompleter.complete(currentUser);
   }
 
   //TODO: Call this on app close

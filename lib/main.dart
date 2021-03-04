@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/screens.dart';
+import 'package:frederic/screens/splash_screen.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -21,9 +22,12 @@ void main() {
 class Frederic extends StatelessWidget {
   Frederic({Key key}) : super(key: key);
 
+  final SplashScreen splashScreen = SplashScreen();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    //splashScreen = SplashScreen();
 
     return FutureBuilder(
         future: app,
@@ -34,7 +38,7 @@ class Frederic extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             return _loadApp();
           }
-          return _loadingScreen();
+          return splashScreen;
         });
   }
 
@@ -83,17 +87,10 @@ class Frederic extends StatelessWidget {
             ],
           ),
           loginPage: LoginScreen(),
+          splashScreen: splashScreen,
         ),
       ),
     );
-  }
-
-  Widget _loadingScreen() {
-    return MaterialApp(
-        home: Scaffold(
-            body: Center(
-      child: CircularProgressIndicator(),
-    )));
   }
 
   Widget _errorScreen(Object error) {

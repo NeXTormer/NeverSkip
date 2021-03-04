@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
+import 'package:frederic/backend/frederic_user_builder.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
@@ -27,127 +27,112 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FredericUser user;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    user = FredericBackend.instance().currentUser;
-
-    return StreamBuilder<FredericUser>(
-      stream: FredericBackend.instance().currentUserStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          user = snapshot.data;
-          return Scaffold(
-              backgroundColor: Colors.white,
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(60),
-                child: AppBar(
-                  title: Text('Frederic'),
-                  leading: InkWell(
-                      child: Icon(Icons.person),
-                      onTap: () => FirebaseAuth.instance.signOut()),
-                  actions: [
-                    PopupMenuButton(
-                      onSelected: (addOption) {
-                        // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
-                        if (addOption == AddOptions.Goal) {
-                          //_handleButtonPress(null);
-                          _addGoalPopUp(null);
-                        } else {
-                          Navigator.of(context)
-                              .pushNamed(AddGraphScreen.routeName);
-                        }
-                      },
-                      itemBuilder: (_) => [
-                        PopupMenuItem(
-                          child: Text('Add Goal'),
-                          value: AddOptions.Goal,
-                        ),
-                        PopupMenuItem(
-                          child: Text('Add Graph'),
-                          value: AddOptions.Graph,
-                        ),
-                      ],
-                      icon: Icon(Icons.add),
+    return FredericUserBuilder(
+      builder: (context, user) => Scaffold(
+          backgroundColor: Colors.white,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: AppBar(
+              title: Text('Frederic'),
+              leading: InkWell(
+                  child: Icon(Icons.person),
+                  onTap: () => FirebaseAuth.instance.signOut()),
+              actions: [
+                PopupMenuButton(
+                  onSelected: (addOption) {
+                    // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
+                    if (addOption == AddOptions.Goal) {
+                      //_handleButtonPress(null);
+                      _addGoalPopUp(null);
+                    } else {
+                      Navigator.of(context).pushNamed(AddGraphScreen.routeName);
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      child: Text('Add Goal'),
+                      value: AddOptions.Goal,
                     ),
-                    IconButton(icon: Icon(Icons.list), onPressed: () {}),
+                    PopupMenuItem(
+                      child: Text('Add Graph'),
+                      value: AddOptions.Graph,
+                    ),
                   ],
+                  icon: Icon(Icons.add),
                 ),
-              ),
-              body: SingleChildScrollView(
-                child: Container(
-                  child: Column(
+                IconButton(icon: Icon(Icons.list), onPressed: () {}),
+              ],
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    // contains profile header
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        ProfileHeader(user),
+                        SizedBox(height: 8),
+                        SmallProgressViewPage(user.progressMonitors),
+                        SizedBox(height: 8),
+                        Divider(height: 0),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        // contains profile header
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            ProfileHeader(snapshot.data),
-                            SizedBox(height: 8),
-                            SmallProgressViewPage(
-                                snapshot.data.progressMonitors),
-                            SizedBox(height: 8),
-                            Divider(height: 0),
-                          ],
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(left: 16.0, top: 6.0),
+                        child: Text(
+                          'Achievements and Goals',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding:
-                                const EdgeInsets.only(left: 16.0, top: 6.0),
-                            child: Text(
-                              'Achievements and Goals',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          AchievementPage(),
-                        ],
-                      ),
-                      GoalPage(),
-                      SizedBox(height: 10.0),
-                      Divider(),
-                      SizedBox(height: 10.0),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            child: Text(
-                              'Progresstracker',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (false)
-                        ProgressChart(
-                          chartData: FredericChartData(
-                              'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
-                        ),
-                      SizedBox(height: 50),
+                      AchievementPage(),
                     ],
                   ),
-                ),
-              ));
-        } else {
-          return Scaffold(
-            body: Container(
-                child: Center(
-              child: Text('loading user data...'),
-            )),
-          );
-        }
-      },
+                  GoalPage(),
+                  SizedBox(height: 10.0),
+                  Divider(),
+                  SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Text(
+                          'Progresstracker',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (false)
+                    ProgressChart(
+                      chartData: FredericChartData(
+                          'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
+                    ),
+                  SizedBox(height: 50),
+                ],
+              ),
+            ),
+          )),
     );
   }
 
@@ -180,5 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _addGoalPopUp(String id) {
     showDialog(context: context, builder: (context) => AddGoalItem());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

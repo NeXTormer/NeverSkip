@@ -164,7 +164,7 @@ class _CalendarAndEventsViewState extends State<CalendarAndEventsView> {
           ),
         ),
         FutureBuilder<FredericUser>(
-          future: user.loadData(),
+          future: null,
           builder: (ctx, snapshot) {
             if (snapshot.hasData) {
               //FredericWorkout workout = FredericWorkout('kKOnczVnBbBHvmx96cjG',

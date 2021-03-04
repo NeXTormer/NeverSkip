@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 ///
 /// Represents the user of the app
 ///
 /// Getting other users not yet supported but planned
 ///
-class FredericUser {
+class FredericUser with ChangeNotifier {
   FredericUser(String uid) {
     _uid = uid;
   }
@@ -25,7 +26,8 @@ class FredericUser {
   String get email => _email ?? 'nouser@hawkford.io';
   String get name => _name ?? 'noname';
   String get description => _description ?? '';
-  String get image => _profileImage;
+  String get image =>
+      _profileImage ?? 'https://via.placeholder.com/300x300?text=profile';
   String get banner =>
       _bannerImage ?? 'https://via.placeholder.com/1000x400?text=nobannerimage';
   String get currentWorkoutID => _currentWorkoutID ?? '';
@@ -35,6 +37,10 @@ class FredericUser {
   int get age {
     var diff = _birthday.difference(DateTime.now());
     return diff.inDays ~/ 365;
+  }
+
+  set uid(String value) {
+    if (value.isNotEmpty) _uid = uid;
   }
 
   ///
@@ -110,27 +116,7 @@ class FredericUser {
     _birthday = snapshot.data()['birthday'].toDate();
     _currentWorkoutID = snapshot.data()['currentworkout'];
     _progressMonitors = snapshot.data()['progressmonitors'].cast<String>();
-  }
-
-  ///
-  /// This should not be used outside of [FredericBackend] because only
-  /// one user can be loaded at a time
-  ///
-  Future<FredericUser> loadData() async {
-    if (uid == null) {
-      return null;
-    }
-
-    CollectionReference usersCollection =
-        FirebaseFirestore.instance.collection('users');
-    DocumentSnapshot userEntry = await usersCollection.doc(uid).get();
-
-    if (userEntry.data() == null) {
-      //TODO: implement proper sign up process
-      return null;
-    }
-    insertDocumentSnapshot(userEntry);
-    return this;
+    notifyListeners();
   }
 
   @override
