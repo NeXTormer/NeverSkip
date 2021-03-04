@@ -57,6 +57,8 @@ dependencies:
   smooth_page_indicator: ^0.2.0
   syncfusion_flutter_charts: ^18.4.41
   parallax_image: ^0.3.1+1
+  flutter_launcher_icons: ^0.8.0
+
 
 
 dev_dependencies:
@@ -64,9 +66,14 @@ dev_dependencies:
     sdk: flutter
 
 flutter_native_splash:
-  color: "#FFCB63"
+  color: "#FFFFFF"
   image: assets/splash.png
   android_disable_fullscreen: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/1024.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
