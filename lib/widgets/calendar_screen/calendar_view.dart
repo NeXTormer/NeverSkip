@@ -56,11 +56,11 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
-    int _monthsToGenrate = widget.endDate.month;
+    int _monthsToGenerate = widget.endDate.month;
     if (widget.workoutToLoad == null) {
       return ListView.builder(
         controller: _scrollController,
-        itemCount: _monthsToGenrate,
+        itemCount: _monthsToGenerate,
         itemBuilder: (ctx, index) {
           return Column(
             children: _buildMonthCalendarItem(_months[index], []),
@@ -75,7 +75,7 @@ class _CalendarViewState extends State<CalendarView> {
 
     return ListView.builder(
       controller: _scrollController,
-      itemCount: _monthsToGenrate,
+      itemCount: _monthsToGenerate,
       itemBuilder: (ctx, index) {
         return Column(
           children: _buildMonthCalendarItem(
@@ -244,6 +244,8 @@ class _CalendarViewState extends State<CalendarView> {
     return activitiesWithDate;
   }
 
+  // you don't need a break after the return, because the method ends after a
+  // return statement
   String _getMonthTitleAsString(int month) {
     switch (month) {
       case 1:

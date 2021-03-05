@@ -9,13 +9,16 @@ class FredericCircularProgressIndicator extends StatefulWidget {
       this.noImage = false,
       this.size = 112,
       this.stroke = 10,
-      this.increment = 0.02});
+      this.increment = 0.02,
+      this.onFinished});
 
   final bool alternateColor;
   final noImage;
   final double size;
   final double stroke;
   final double increment;
+
+  final Function onFinished;
 
   final List<Color> colors = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
@@ -37,7 +40,12 @@ class _FredericCircularProgressIndicatorState
     timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
       setState(() {
         progress += widget.increment;
-        if (progress >= 1) t.cancel();
+        if (progress >= 1) {
+          t.cancel();
+          if (widget.onFinished != null) {
+            widget.onFinished();
+          }
+        }
       });
     });
   }

@@ -66,6 +66,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           id: 'kKOnczVnBbBHvmx96cjG',
           builder: (context, data) {
             FredericWorkout workout = data;
+            workout.loadActivities();
             return CalendarView(
               startDate: DateTime(2021, 1, 20),
               endDate: DateTime(2021, 12),

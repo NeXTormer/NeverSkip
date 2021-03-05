@@ -22,7 +22,11 @@ void main() {
 class Frederic extends StatelessWidget {
   Frederic({Key key}) : super(key: key);
 
-  final SplashScreen splashScreen = SplashScreen();
+  final SplashScreen splashScreen = SplashScreen(
+    onComplete: () {
+      //xFinishedLoading = true;
+    },
+  );
 
   @override
   Widget build(BuildContext context) {

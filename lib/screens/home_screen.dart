@@ -106,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       AchievementPage(),
                     ],
                   ),
-                  FredericCircularProgressIndicator(),
                   GoalPage(),
                   SizedBox(height: 10.0),
                   Divider(),
