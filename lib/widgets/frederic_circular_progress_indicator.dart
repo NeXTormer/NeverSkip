@@ -8,12 +8,14 @@ class FredericCircularProgressIndicator extends StatefulWidget {
       {this.alternateColor = false,
       this.noImage = false,
       this.size = 112,
-      this.stroke = 12});
+      this.stroke = 10,
+      this.increment = 0.02});
 
   final bool alternateColor;
   final noImage;
   final double size;
   final double stroke;
+  final double increment;
 
   final List<Color> colors = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
@@ -31,10 +33,10 @@ class _FredericCircularProgressIndicatorState
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(milliseconds: 60), (Timer t) {
+
+    timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
       setState(() {
-        progress += 0.05;
-        print('update timer $progress');
+        progress += widget.increment;
         if (progress >= 1) t.cancel();
       });
     });
@@ -46,7 +48,20 @@ class _FredericCircularProgressIndicatorState
     if (progress < 0) progress = 0;
     double curveProgress = Curves.easeInOutExpo.transform(progress);
 
+    double innerRadius = widget.size - (widget.stroke * 2);
+
     return Stack(alignment: Alignment.center, children: [
+      Container(
+        width: widget.size,
+        height: widget.size,
+        decoration:
+            BoxDecoration(color: Color(0xFFD1E8F8), shape: BoxShape.circle),
+      ),
+      Container(
+        width: widget.size - (widget.stroke * 2),
+        height: widget.size - (widget.stroke * 2),
+        decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      ),
       ShaderMask(
         shaderCallback: (rect) {
           return LinearGradient(colors: widget.colors).createShader(rect);
@@ -78,11 +93,16 @@ class _FredericCircularProgressIndicatorState
         height: widget.size - (widget.stroke * 2),
         decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
       ),
+      Image(
+        width: innerRadius - 20,
+        image: AssetImage('assets/dumbbell_with_bg_blue.png'),
+      ),
     ]);
   }
 
   @override
   void dispose() {
     super.dispose();
+    timer.cancel();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/widgets/frederic_circular_progress_indicator.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,9 +12,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return MaterialApp(
       home: Scaffold(
           body: Center(
-            child: CircularProgressIndicator(),
+            child: FredericCircularProgressIndicator(
+              increment: 0.04,
+            ),
           ),
-          backgroundColor: Colors.cyan),
+          backgroundColor: Colors.white),
     );
   }
 }
