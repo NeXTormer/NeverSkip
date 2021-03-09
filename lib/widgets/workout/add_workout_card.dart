@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/widgets/workout/period_slider.dart';
 import 'package:intl/intl.dart';
 
+///
+/// To be used as a ModalBottomSheet. Can either create a new workout or edit
+/// the metadata of an existing one
+///
 class AddWorkoutCard extends StatefulWidget {
   final FredericWorkout loadedWorkout;
+  final bool editExisting;
 
-  AddWorkoutCard(this.loadedWorkout);
+  AddWorkoutCard(this.loadedWorkout) : editExisting = loadedWorkout == null;
 
   @override
   _AddWorkoutCardState createState() => _AddWorkoutCardState();
@@ -14,119 +20,101 @@ class AddWorkoutCard extends StatefulWidget {
 
 class _AddWorkoutCardState extends State<AddWorkoutCard> {
   final _titleTextController = TextEditingController();
-  final _decriptionEditingController = TextEditingController();
-  final _editedWorkout = FredericWorkout('');
+  final _descriptionEditingController = TextEditingController();
   final _form = GlobalKey<FormState>();
   final _textEditingController = TextEditingController();
 
-  bool _isInit = true;
-  bool _isLoading = false;
-
-  double _weeks = 1;
-
   DateTime _selectedDate = DateTime.now();
+
+  double _period = 0;
 
   var _initialValues = {
     'imageUrl':
-        'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg',
+        'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/young-woman-exercising-in-gym-royalty-free-image-1569876689.jpg',
     'title': '',
     'description': '',
     'weeks': 1,
   };
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      _textEditingController.text = 'No date selected';
-      if (widget.loadedWorkout != null) {
-        _initialValues = {
-          'imageUrl': widget.loadedWorkout.image,
-          'title': widget.loadedWorkout.name,
-          'description': widget.loadedWorkout.description,
-          'weeks': widget.loadedWorkout.period,
-        };
-        int temp = _initialValues['weeks'];
-        _weeks = temp.toDouble();
-      }
-    }
-    super.didChangeDependencies();
+  void initState() {
+    _textEditingController.text = 'No date selected';
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      //width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.8,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(25),
-          topRight: const Radius.circular(25),
-        ),
+        //borderRadius: BorderRadius.only(
+        //topLeft: const Radius.circular(25),
+        //topRight: const Radius.circular(25),
+        //),
       ),
       child: Form(
         key: _form,
-        child: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Column(
+        child: Column(
+          children: [
+            _buildWorkoutImageSection(),
+            _buildTitleTextField(),
+            _buildDescriptionTextBox(),
+            PeriodSlider(onChanged: (value) => setState(() => _period = value)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
-                  _buildWorkoutImageSection(),
-                  _buildTitleTextField(),
-                  _buildDescriptionTextBox(),
-                  _buildSlider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  Text('Weeks: '),
+                  Text(
+                    '${_period.toInt()}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.5),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: GestureDetector(
+                    onTap: _selectStartDate,
                     child: Row(
                       children: [
-                        Text('Weeks: '),
+                        Icon(
+                          Icons.date_range,
+                          size: 20,
+                        ),
+                        SizedBox(width: 5),
                         Text(
-                          '${_weeks.round()}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          'Starting date: ',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          _textEditingController.text,
+                          style: TextStyle(fontSize: 15),
                         ),
                       ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        margin: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.5),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: GestureDetector(
-                          onTap: _selectStartDate,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.date_range,
-                                size: 20,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Starting date: ',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                _textEditingController.text,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 1,
-                  ),
-                  _buildSubmitButton(),
-                ],
-              ),
+                ),
+              ],
+            ),
+            Divider(
+              thickness: 1,
+            ),
+            _buildSubmitButton(),
+          ],
+        ),
       ),
     );
   }
@@ -196,20 +184,12 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
     if (!isValid) return;
 
     _form.currentState.save();
-    setState(() {
-      _isLoading = true;
-    });
-    if (_editedWorkout.workoutID != null) {
-      print(_titleTextController.text);
-      widget.loadedWorkout.name = _titleTextController.text;
-      widget.loadedWorkout.description = _decriptionEditingController.text;
-      widget.loadedWorkout.period = _weeks.toInt();
-    } else {
-      print('nono noono');
-    }
-    setState(() {
-      _isLoading = false;
-    });
+
+    print(_titleTextController.text);
+    widget.loadedWorkout.name = _titleTextController.text;
+    widget.loadedWorkout.description = _descriptionEditingController.text;
+    widget.loadedWorkout.period = 1; //_weeks.toInt();
+
     Navigator.of(context).pop();
   }
 
@@ -218,12 +198,12 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
       overflow: Overflow.visible,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(25),
-            topRight: const Radius.circular(25),
-          ),
+          //borderRadius: BorderRadius.only(
+          //topLeft: const Radius.circular(25),
+          //topRight: const Radius.circular(25),
+          //),
           child: Image(
-            image: NetworkImage(_initialValues['imageUrl']),
+            image: NetworkImage(widget.loadedWorkout.image),
             height: 170,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -239,14 +219,14 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
             },
             child: CircleAvatar(
               radius: 20,
-              backgroundColor: Colors.orangeAccent,
+              backgroundColor: Colors.blueAccent,
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: 19,
                 child: Icon(
                   Icons.add,
                   size: 30,
-                  color: Colors.orangeAccent,
+                  color: Colors.blueAccent,
                 ),
               ),
             ),
@@ -260,10 +240,10 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
     return Padding(
       padding: const EdgeInsets.only(right: 16, left: 8, bottom: 8, top: 8),
       child: Theme(
-        data: ThemeData(primaryColor: Colors.orangeAccent),
+        data: ThemeData(primaryColor: Colors.blueAccent),
         child: TextFormField(
-          controller: _titleTextController..text = _initialValues['title'],
-          // initialValue: _initialValues['title'],
+          controller: _titleTextController,
+          initialValue: widget.loadedWorkout.name ?? 'werner',
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter a title';
@@ -294,11 +274,11 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
       ),
       child: Theme(
         data: ThemeData(
-          primaryColor: Colors.orangeAccent,
+          primaryColor: Colors.blueAccent,
         ),
         child: TextFormField(
-          controller: _decriptionEditingController
-            ..text = _initialValues['description'],
+          controller: _descriptionEditingController
+            ..text = widget.loadedWorkout.description,
           maxLines: 4,
           decoration: InputDecoration.collapsed(
             hintText: 'Description',
@@ -320,24 +300,6 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
     );
   }
 
-  _buildSlider() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Slider.adaptive(
-        onChanged: (value) {
-          setState(() {
-            _weeks = value;
-          });
-        },
-        activeColor: Colors.orangeAccent,
-        value: _weeks,
-        min: 1,
-        max: 28,
-        divisions: 27,
-      ),
-    );
-  }
-
   _buildSubmitButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -348,7 +310,7 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            color: Colors.orangeAccent,
+            color: Colors.blueAccent,
             textColor: Colors.white,
             padding: EdgeInsets.all(8),
             onPressed: _saveForm,
@@ -367,7 +329,7 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
   @override
   void dispose() {
     _titleTextController.dispose();
-    _decriptionEditingController.dispose();
+    _descriptionEditingController.dispose();
     super.dispose();
   }
 }

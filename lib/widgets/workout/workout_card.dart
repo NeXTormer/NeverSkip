@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:frederic/widgets/workout/add_workout_card.dart';
 import 'package:share/share.dart';
 
 class WorkoutCard extends StatefulWidget {
@@ -17,13 +16,8 @@ class WorkoutCard extends StatefulWidget {
 class _WorkoutCardState extends State<WorkoutCard> {
   static bool _isActive = false;
 
-  FredericUser user;
-
-  String _shareText = 'https://orf.at';
-
   @override
   Widget build(BuildContext context) {
-    user = FredericBackend.instance().currentUser;
     return Card(
       margin: EdgeInsets.all(8),
       elevation: 2,
@@ -99,7 +93,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
               child: InkWell(
                 onTap: () {
                   final RenderBox box = context.findRenderObject();
-                  Share.share(_shareText,
+                  Share.share(
+                      'Get the workout ${widget.workout.name} [${widget.workout.workoutID}]',
                       subject: 'share workout',
                       sharePositionOrigin:
                           box.localToGlobal(Offset.zero) & box.size);
@@ -109,27 +104,6 @@ class _WorkoutCardState extends State<WorkoutCard> {
                   backgroundColor: Colors.white,
                   child: Icon(
                     Icons.share,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              right: 10,
-              top: 10,
-              child: InkWell(
-                onTap: () => showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => AddWorkoutCard(widget.workout),
-                ),
-                child: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.edit,
                     color: Colors.black,
                     size: 30,
                   ),

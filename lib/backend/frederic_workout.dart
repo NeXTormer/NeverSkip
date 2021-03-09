@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity.dart';
@@ -35,6 +36,7 @@ class FredericWorkout with ChangeNotifier {
   String _owner;
   String _ownerName;
   bool _hasActivitiesLoaded = false;
+  bool _canEdit;
 
   DateTime get startDate => _startDate;
   String get name => _name ?? 'Empty';
@@ -45,6 +47,7 @@ class FredericWorkout with ChangeNotifier {
   String get ownerName => _ownerName ?? 'None';
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
   bool get repeating => _activities.repeating;
+  bool get canEdit => _canEdit;
 
   /// period of the workout in weeks
   int get period => _activities.period;
@@ -166,6 +169,8 @@ class FredericWorkout with ChangeNotifier {
 
     _activities.repeating = snapshot.data()['repeating'];
     _startDate = snapshot.data()['startdate'].toDate();
+
+    _canEdit = _owner == FirebaseAuth.instance.currentUser.uid;
 
     return this;
   }

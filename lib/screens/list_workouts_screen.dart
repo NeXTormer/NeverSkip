@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/frederic_workout.dart';
-import 'package:frederic/widgets/workout/add_workout_card.dart';
 import 'package:frederic/backend/frederic_workout_builder.dart';
-import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:frederic/widgets/workout/add_workout_card.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
@@ -40,8 +38,8 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
             ),
           FredericWorkoutBuilder(
               id: 'kKOnczVnBbBHvmx96cjG',
-              builder: (context, list) {
-                return WorkoutCard(list);
+              builder: (context, workout) {
+                return WorkoutCard(workout);
               }),
           Divider(height: 0),
         ],

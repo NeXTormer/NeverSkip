@@ -88,7 +88,7 @@ class Frederic extends StatelessWidget {
               FredericScreen(
                   screen: ListWorkoutsScreen(),
                   icon: Icons.work_outline,
-                  label: 'WO overview'),
+                  label: 'Workouts'),
             ],
           ),
           loginPage: LoginScreen(),

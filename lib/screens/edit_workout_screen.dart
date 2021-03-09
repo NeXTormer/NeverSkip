@@ -5,6 +5,7 @@ import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
+import 'package:frederic/widgets/workout/add_workout_card.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workout);
@@ -48,19 +49,27 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             ),
           ),
           actions: [
-            IconButton(
-                icon: Icon(Icons.edit_outlined, size: 30),
-                onPressed: () {
-                  print('edit workout details');
-                }),
+            if (widget.workout.canEdit)
+              IconButton(
+                  icon: Icon(Icons.edit_outlined, size: 30),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => AddWorkoutCard(widget.workout),
+                    );
+                  })
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => showActivityList(context),
-          backgroundColor: Colors.blue,
-          splashColor: Colors.blueAccent,
-          child: Icon(Icons.add, size: 36),
-        ),
+        floatingActionButton: widget.workout.canEdit
+            ? FloatingActionButton(
+                onPressed: () => showActivityList(context),
+                backgroundColor: Colors.blue,
+                splashColor: Colors.blueAccent,
+                child: Icon(Icons.add, size: 36),
+              )
+            : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Column(
           children: [
@@ -109,7 +118,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                             itemBuilder: (context, index) {
                               return ActivityCard(
                                 activities.activities[weekday + 1][index],
-                                dismissible: true,
+                                dismissible: widget.workout.canEdit,
                                 onDismiss: handleDeleteActivity,
                               );
                             },

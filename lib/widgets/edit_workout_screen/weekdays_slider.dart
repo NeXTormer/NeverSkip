@@ -135,7 +135,7 @@ class WeekdaySliderDayButton extends StatelessWidget {
                 child: Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    color: Colors.orangeAccent[400],
+                    color: Colors.blue[400],
                     borderRadius: BorderRadius.all(
                       Radius.circular(8.0),
                     ),
@@ -152,6 +152,7 @@ class WeekdaySliderDayButton extends StatelessWidget {
                     ),
                   ),
                   Text(
+                    //'${numToWeekday(number)}',
                     '$number',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -173,6 +174,7 @@ class WeekdaySliderDayButton extends StatelessWidget {
                   ),
                 ),
                 Text(
+                  //'${numToWeekday(number)}',
                   '$number',
                   style: TextStyle(
                     fontSize: 18.0,
@@ -181,6 +183,27 @@ class WeekdaySliderDayButton extends StatelessWidget {
               ],
             ),
           );
+  }
+
+  String numToWeekday(num number) {
+    switch (number) {
+      case 1:
+        return 'Mon';
+      case 2:
+        return 'Tue';
+      case 3:
+        return 'Wed';
+      case 4:
+        return 'Thu';
+      case 5:
+        return 'Fri';
+      case 6:
+        return 'Sat';
+      case 7:
+        return 'Sun';
+      default:
+        return number.toString();
+    }
   }
 }
 
