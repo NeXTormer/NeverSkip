@@ -18,8 +18,9 @@ class ActivityTypeButton extends StatelessWidget {
         height: 30,
         width: 30,
         decoration: BoxDecoration(
-          color:
-              isActive ? Color.fromARGB(170, 255, 165, 0) : Colors.transparent,
+          color: isActive
+              ? Colors.blue[400]
+              : Colors.transparent, //Color.fromARGB(170, 255, 165, 0)
           border: Border.all(
             width: 1.0,
             color: isActive ? Colors.orange[50] : Colors.black26,

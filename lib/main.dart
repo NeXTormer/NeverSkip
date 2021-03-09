@@ -24,6 +24,7 @@ class Frederic extends StatelessWidget {
 
   final SplashScreen splashScreen = SplashScreen(
     onComplete: () {
+      print('complete');
       //xFinishedLoading = true;
     },
   );

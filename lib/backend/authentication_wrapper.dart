@@ -36,7 +36,7 @@ class AuthenticationWrapper extends StatelessWidget {
           }
           return loginPage;
         } else {
-          return splashScreen;
+          return loginPage;
         }
       },
     );

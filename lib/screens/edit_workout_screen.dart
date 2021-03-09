@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
@@ -19,14 +17,6 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  String _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-
-  Random _rnd = Random();
-
-  bool _test = false;
-
-  TextEditingController titleTextController;
   PageController activityPageController;
   WeekdaySliderController sliderController;
 
@@ -37,7 +27,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     sliderController =
         WeekdaySliderController(onDayChange: handleDayChangeByButton);
     activityPageController = PageController();
-    titleTextController = TextEditingController();
 
     super.initState();
   }
@@ -51,39 +40,25 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           elevation: 0.0,
           title: Material(
             type: MaterialType.transparency,
-            child: _test
-                ? TextFormField(
-                    controller: titleTextController..text = _tempTitle,
-                    onFieldSubmitted: (value) {
-                      setState(() {
-                        _test = false;
-                        widget.workout.name = value;
-                        _tempTitle = value;
-                      });
-                    },
-                  )
-                : Text(
-                    _tempTitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
+            child: Text(
+              _tempTitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
           ),
           actions: [
             IconButton(
                 icon: Icon(Icons.edit_outlined, size: 30),
                 onPressed: () {
                   print('edit workout details');
-                  setState(() {
-                    _test = !_test;
-                  });
                 }),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => showActivityList(context),
-          backgroundColor: Colors.orange,
-          splashColor: Colors.orangeAccent,
+          backgroundColor: Colors.blue,
+          splashColor: Colors.blueAccent,
           child: Icon(Icons.add, size: 36),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -109,10 +84,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                       color: Colors.black26,
                     ),
                   ),
-                  WeekdaysSlider(
-                    controller: sliderController,
-                    onSelectDay: null,
-                    weekCount: 2,
+                  Container(
+                    child: WeekdaysSlider(
+                      controller: sliderController,
+                      onSelectDay: null,
+                      weekCount: 2,
+                    ),
                   )
                 ],
               ),
@@ -124,6 +101,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   builder: (context, list) {
                     FredericWorkoutActivities activities = list;
                     return PageView(
+                        physics: BouncingScrollPhysics(),
                         onPageChanged: handleDayChangeBySwiping,
                         controller: activityPageController,
                         children: List.generate(activities.period, (weekday) {
@@ -144,9 +122,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           ],
         ));
   }
-
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   void handleAddActivity(FredericActivity activity) {
     widget.workout.addActivity(activity, sliderController.currentDay);
@@ -192,7 +167,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   void dispose() {
-    titleTextController.dispose();
     super.dispose();
   }
 }

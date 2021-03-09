@@ -4,8 +4,8 @@ class Palette {
   static final LinearGradient kLoginBackgroundGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [Color(0xffF56C64), Color(0xfffc5e58)],
+    colors: [Color(0xff5eb1f6), Color(0xff3b9ae5)],
   );
 
-  static final Color kDarkRedTextColor = Color(0xFF5C0200);
+  static final Color kDarkBlueTextColor = Color(0xFF003C5C);
 }

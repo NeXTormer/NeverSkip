@@ -4,7 +4,6 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 
 class ActivityCard extends StatefulWidget {
-
   ActivityCard(this.activity,
       {this.selectable = false,
       this.onAddActivity,
@@ -370,11 +369,11 @@ class MuscleGroupTag extends StatelessWidget {
       padding: EdgeInsets.all(4),
       margin: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        color: Color.fromARGB(170, 255, 165, 0),
+        color: Colors.blueAccent, //Color.fromARGB(170, 255, 165, 0),
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           width: 1.0,
-          color: Colors.orange,
+          color: Colors.blue[400],
         ),
       ),
       child: Text(
