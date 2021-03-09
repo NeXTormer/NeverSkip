@@ -110,6 +110,10 @@ class FredericGoal {
   void updateData() {
     _current = _activity.bestProgress;
     _goalManager.updateData();
+    if (_activity == null) {
+      _activity = _activityManager[activityID];
+      _activity.addListener(updateData);
+    }
   }
 
   void insertData(DocumentSnapshot snapshot) {
@@ -124,9 +128,9 @@ class FredericGoal {
     _goalManager.updateData();
 
     if (_activity == null) {
-      _activity = _activityManager[_activityID];
-      //_activity.addListener(updateData);
       _activityManager.addListener(updateData);
+      _activity = _activityManager[activityID];
+      _activity?.addListener(updateData);
     }
   }
 

@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
       home: Scaffold(
           body: Center(
             child: FredericCircularProgressIndicator(
-              increment: 0.04,
+              increment: 0.06,
             ),
           ),
           backgroundColor: Colors.white),

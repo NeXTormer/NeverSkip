@@ -44,7 +44,11 @@ class FredericGoalManager with ChangeNotifier {
     for (var change in snapshot.docChanges) {
       FredericGoal goal = FredericGoal(change.doc.id, this);
       goal.insertData(change.doc);
-      if (_allGoals.contains(goal)) _allGoals.remove(goal);
+      if (_allGoals.contains(goal)) {
+        _allGoals.remove(goal);
+      } else {
+        //goal.activity?.loadSets();
+      }
       _allGoals.add(goal);
     }
     notifyListeners();
