@@ -45,6 +45,8 @@ class FredericWorkout with ChangeNotifier {
   String get ownerName => _ownerName ?? 'None';
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
   bool get repeating => _activities.repeating;
+
+  /// period of the workout in weeks
   int get period => _activities.period;
   FredericWorkoutActivities get activities {
     if (_hasActivitiesLoaded) {
@@ -159,8 +161,8 @@ class FredericWorkout with ChangeNotifier {
     _owner = snapshot.data()['owner'];
     _ownerName = snapshot.data()['ownername'];
 
-    int period = snapshot.data()['period'];
-    _activities = FredericWorkoutActivities(period);
+    int periodDays = snapshot.data()['period'] * 7;
+    _activities = FredericWorkoutActivities(periodDays);
 
     _activities.repeating = snapshot.data()['repeating'];
     _startDate = snapshot.data()['startdate'].toDate();
@@ -251,7 +253,7 @@ class FredericWorkout with ChangeNotifier {
     String s =
         'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownername: $_ownerName]';
     if (_activities == null) return s;
-    for (int i = 0; i < period; i++) {
+    for (int i = 0; i < period * 7; i++) {
       if (_activities.activities[i].isNotEmpty) {
         s += '\n╚> ($i)\n';
       }

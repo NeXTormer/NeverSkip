@@ -88,7 +88,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     child: WeekdaysSlider(
                       controller: sliderController,
                       onSelectDay: null,
-                      weekCount: 2,
+                      weekCount: widget.workout.period,
                     ),
                   )
                 ],
