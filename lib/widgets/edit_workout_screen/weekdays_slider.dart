@@ -31,22 +31,26 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
     pageController = PageController();
     widget.controller?._setDayCallback = handleChangeDay;
     widget.controller?._setDayCallbackOnlyVisual = handleChangeDayVisual;
-
+    widget.controller.pageController = pageController;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      child: PageView(
-        controller: pageController,
-        children: List.generate(
-            widget.weekCount,
-            (index) => WeekdaysSliderPage(
-                weekIndex: index,
-                onSelectDay: handleChangeDay,
-                currentDay: currentDay)),
+    return Material(
+      elevation: 2,
+      child: Container(
+        height: 150,
+        color: Colors.white,
+        child: PageView(
+          controller: pageController,
+          children: List.generate(
+              widget.weekCount,
+              (index) => WeekdaysSliderPage(
+                  weekIndex: index,
+                  onSelectDay: handleChangeDay,
+                  currentDay: currentDay)),
+        ),
       ),
     );
   }
@@ -61,7 +65,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
   void handleChangeDayVisual(int day) {
     setState(() {
       currentDay = day;
-      int newpage = day ~/ 8;
+      int newpage = (day / 7).ceil() - 1;
       if (newpage != pageController.page)
         pageController.animateToPage(newpage,
             duration: Duration(milliseconds: 350), curve: Curves.easeInOutExpo);
@@ -214,6 +218,8 @@ class WeekdaySliderController {
   Function(int) _setDayCallback;
   Function(int) _setDayCallbackOnlyVisual;
   final Function(int) onDayChange;
+
+  PageController pageController;
 
   int currentDay = 1;
 

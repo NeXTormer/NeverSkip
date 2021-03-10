@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_user_builder.dart';
-import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
-import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
-import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
@@ -37,46 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return FredericUserBuilder(
       builder: (context, user) => Scaffold(
         backgroundColor: Colors.white,
-        appBar: true
-            ? null
-            : PreferredSize(
-                preferredSize: Size.fromHeight(60),
-                child: AppBar(
-                  title: Text('Frederic'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(bottom: Radius.circular(12))),
-                  leading: InkWell(
-                      child: Icon(Icons.person),
-                      onTap: () => FirebaseAuth.instance.signOut()),
-                  actions: [
-                    PopupMenuButton(
-                      onSelected: (addOption) {
-                        // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
-                        if (addOption == AddOptions.Goal) {
-                          //_handleButtonPress(null);
-                          _addGoalPopUp(null);
-                        } else {
-                          Navigator.of(context)
-                              .pushNamed(AddGraphScreen.routeName);
-                        }
-                      },
-                      itemBuilder: (_) => [
-                        PopupMenuItem(
-                          child: Text('Add Goal'),
-                          value: AddOptions.Goal,
-                        ),
-                        PopupMenuItem(
-                          child: Text('Add Graph'),
-                          value: AddOptions.Graph,
-                        ),
-                      ],
-                      icon: Icon(Icons.add),
-                    ),
-                    IconButton(icon: Icon(Icons.list), onPressed: () {}),
-                  ],
-                ),
-              ),
         body: SingleChildScrollView(
           child: Container(
             child: Column(
@@ -141,37 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
-  /// On pressed show ModalBottomSheet
-  ///
-  /// The bottom sheet contains the [EditSlideSheet] Widget
-  /// so the user can interact with the goal.
-  void _handleButtonPress(String id) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
-      ),
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: EditGoalItem(null),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _addGoalPopUp(String id) {
-    showDialog(context: context, builder: (context) => AddGoalItem());
   }
 
   @override

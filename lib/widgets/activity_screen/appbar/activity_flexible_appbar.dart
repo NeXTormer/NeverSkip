@@ -19,9 +19,14 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
     widget.textController = TextEditingController();
     return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(12),
+            topRight: const Radius.circular(12),
+          )),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

@@ -22,6 +22,7 @@ import 'package:frederic/backend/frederic_activity_manager.dart';
 class FredericWorkout with ChangeNotifier {
   FredericWorkout(this.workoutID) {
     _activityManager = FredericBackend.instance().activityManager;
+    _activities = FredericWorkoutActivities();
   }
 
   final String workoutID;
@@ -37,6 +38,7 @@ class FredericWorkout with ChangeNotifier {
   String _ownerName;
   bool _hasActivitiesLoaded = false;
   bool _canEdit;
+  int _periodWeeks;
 
   DateTime get startDate => _startDate;
   String get name => _name ?? 'Empty';
@@ -50,7 +52,7 @@ class FredericWorkout with ChangeNotifier {
   bool get canEdit => _canEdit;
 
   /// period of the workout in weeks
-  int get period => _activities.period;
+  int get period => _periodWeeks;
   FredericWorkoutActivities get activities {
     if (_hasActivitiesLoaded) {
       return _activities;
@@ -164,9 +166,8 @@ class FredericWorkout with ChangeNotifier {
     _owner = snapshot.data()['owner'];
     _ownerName = snapshot.data()['ownername'];
 
-    int periodDays = snapshot.data()['period'] * 7;
-    _activities = FredericWorkoutActivities(periodDays);
-
+    _periodWeeks = snapshot.data()['period'];
+    _activities.period = (_periodWeeks * 7);
     _activities.repeating = snapshot.data()['repeating'];
     _startDate = snapshot.data()['startdate'].toDate();
 
@@ -271,14 +272,27 @@ class FredericWorkout with ChangeNotifier {
 }
 
 class FredericWorkoutActivities {
-  FredericWorkoutActivities(this.period) {
-    _activities = List<List<FredericActivity>>(period + 1);
-    for (int i = 0; i < period + 1; i++) {
-      activities[i] = List<FredericActivity>();
-    }
+  FredericWorkoutActivities() {
+    _activities = List<List<FredericActivity>>();
+    _activities.add(List<FredericActivity>());
   }
 
-  int period;
+  int _period = 0;
+
+  /// period of the workout in days
+  int get period => _period;
+
+  /// period of the workout in days
+  set period(int value) {
+    if (value > _period) {
+      int diff = value - _period;
+      for (int i = 0; i < diff; i++) {
+        _activities.add(List<FredericActivity>());
+      }
+    }
+    _period = value;
+  }
+
   bool repeating;
 
   List<List<FredericActivity>> _activities;
@@ -287,7 +301,7 @@ class FredericWorkoutActivities {
   List<FredericActivity> get everyday => activities[0];
 
   void clear() {
-    for (int i = 0; i < period + 1; i++) {
+    for (int i = 0; i < _activities.length; i++) {
       activities[i] = List<FredericActivity>();
     }
   }

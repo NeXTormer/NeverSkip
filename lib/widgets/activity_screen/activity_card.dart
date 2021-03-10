@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frederic/backend/backend.dart';
@@ -121,9 +122,7 @@ class _ActivityCardState extends State<ActivityCard> {
         borderRadius: BorderRadius.circular(5.0),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(
-            imgUrl,
-          ),
+          image: CachedNetworkImageProvider(imgUrl),
         ),
       ),
     );

@@ -52,6 +52,7 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
         _workoutManager = FredericBackend.instance().workoutManager;
         _workoutManager[widget.id].loadActivities();
         _workoutManager[widget.id].addListener(updateData);
+        _workoutManager.addListener(updateData);
       }
     }
     updateData();

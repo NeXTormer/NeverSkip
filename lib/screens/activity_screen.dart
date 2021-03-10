@@ -34,21 +34,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
           SliverAppBar(
             pinned: false,
             floating: true,
-            backgroundColor: Colors.white,
-            title: true
-                ? null
-                : Container(
-                    child: Row(
-                      children: [
-                        Icon(Icons.filter_alt),
-                        SizedBox(width: 8),
-                        Text(
-                          'Exercises',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
+            backgroundColor: Color(0x00FFFFFF),
+            shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30))),
+            leading: Container(),
             expandedHeight: 110.0,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,

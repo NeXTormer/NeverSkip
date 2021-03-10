@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
@@ -25,7 +26,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
         onTap: () {
           widget.workout.loadActivities();
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => EditWorkoutScreen(widget.workout)));
+              builder: (context) =>
+                  EditWorkoutScreen(widget.workout.workoutID)));
         },
         child: Stack(
           children: [
@@ -39,8 +41,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(5.0),
                         topRight: Radius.circular(5.0)),
-                    child: Image.network(
-                      widget.workout.image,
+                    child: Image(
+                      image: CachedNetworkImageProvider(widget.workout.image),
                       fit: BoxFit.fitWidth,
                     ),
                   ),

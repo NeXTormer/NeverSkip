@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/workout/period_slider.dart';
 import 'package:intl/intl.dart';
 
@@ -8,17 +9,17 @@ import 'package:intl/intl.dart';
 /// To be used as a ModalBottomSheet. Can either create a new workout or edit
 /// the metadata of an existing one
 ///
-class EditWorkoutCard extends StatefulWidget {
+class EditWorkoutPage extends StatefulWidget {
   final FredericWorkout loadedWorkout;
   final bool addNewWorkout;
 
-  EditWorkoutCard(this.loadedWorkout) : addNewWorkout = loadedWorkout == null;
+  EditWorkoutPage(this.loadedWorkout) : addNewWorkout = loadedWorkout == null;
 
   @override
-  _EditWorkoutCardState createState() => _EditWorkoutCardState();
+  _EditWorkoutPageState createState() => _EditWorkoutPageState();
 }
 
-class _EditWorkoutCardState extends State<EditWorkoutCard> {
+class _EditWorkoutPageState extends State<EditWorkoutPage> {
   TextEditingController _titleTextController = TextEditingController();
   TextEditingController _descriptionEditingController = TextEditingController();
   TextEditingController _textEditingController = TextEditingController();
@@ -27,22 +28,26 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
 
   DateTime _selectedDate = DateTime.now();
 
-  double _period = 0;
+  double _period = 1;
 
   @override
   void initState() {
-    _textEditingController.text = 'No date selected';
-
     super.initState();
+    _descriptionEditingController.text = widget.loadedWorkout?.description;
+    _titleTextController.text = widget.loadedWorkout?.name;
+    _period = widget.loadedWorkout.period.toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.of(context).size.height * 0.7,
       decoration: BoxDecoration(
-        color: Colors.white,
-      ),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(12),
+            topRight: const Radius.circular(12),
+          )),
       child: Form(
         key: _form,
         child: Column(
@@ -50,7 +55,9 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
             _buildWorkoutImageSection(),
             _buildTitleTextField(),
             _buildDescriptionTextBox(),
-            PeriodSlider(onChanged: (value) => setState(() => _period = value)),
+            PeriodSlider(
+                onChanged: (value) => setState(() => _period = value),
+                startValue: _period),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -64,15 +71,18 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
               ),
             ),
             SizedBox(height: 8),
+            Divider(
+              thickness: 1,
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     border: Border.all(width: 0.5),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: GestureDetector(
                     onTap: _selectStartDate,
@@ -84,7 +94,7 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          'Starting date: ',
+                          'Starting week: ',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
@@ -96,12 +106,9 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
                     ),
                   ),
                 ),
+                _buildSubmitButton(),
               ],
             ),
-            Divider(
-              thickness: 1,
-            ),
-            _buildSubmitButton(),
           ],
         ),
       ),
@@ -143,8 +150,7 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
               Expanded(
                 child: Container(
                   child: CupertinoDatePicker(
-                    maximumYear: 2021,
-                    minimumYear: 2021,
+                    maximumYear: DateTime.now().year + 1,
                     minimumDate: DateTime.now(),
                     mode: CupertinoDatePickerMode.date,
                     onDateTimeChanged: (DateTime dateTime) {
@@ -169,7 +175,7 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
   }
 
   Future<void> _saveForm() async {
-    //final isValid = _form.currentState.validate();
+    //final isValid = _form.();
     //if (!isValid) return;
 
     //_form.currentState.save();
@@ -177,8 +183,9 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
     print(_titleTextController.text);
     widget.loadedWorkout.name = _titleTextController.text;
     widget.loadedWorkout.description = _descriptionEditingController.text;
-    widget.loadedWorkout.period = 1; //_weeks.toInt();
-
+    widget.loadedWorkout.period = _period.toInt();
+    //Future.delayed(Duration(milliseconds: 300)).then(
+    //    (value) => FredericBackend.instance().activityManager.updateData());
     Navigator.of(context).pop();
   }
 
@@ -187,10 +194,10 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
       overflow: Overflow.visible,
       children: [
         ClipRRect(
-          //borderRadius: BorderRadius.only(
-          //topLeft: const Radius.circular(25),
-          //topRight: const Radius.circular(25),
-          //),
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(12),
+            topRight: const Radius.circular(12),
+          ),
           child: Image(
             image: NetworkImage(widget.loadedWorkout.image),
             height: 170,
@@ -227,27 +234,17 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
 
   _buildTitleTextField() {
     return Padding(
-      padding: const EdgeInsets.only(right: 16, left: 8, bottom: 8, top: 8),
+      padding: const EdgeInsets.only(right: 16, left: 16, bottom: 8, top: 8),
       child: Theme(
-        data: ThemeData(primaryColor: Colors.blueAccent),
+        data: ThemeData(primaryColor: kMainColor),
         child: TextFormField(
           controller: _titleTextController,
-          initialValue: widget.loadedWorkout.name ?? 'werner',
+          maxLines: 1,
           validator: (value) {
-            if (value.isEmpty) {
-              return 'Please enter a title';
-            }
+            if (value.isEmpty) return 'Please enter a title';
             return null;
           },
-          maxLength: 40,
-          decoration: InputDecoration(
-            icon: Icon(Icons.fitness_center),
-            labelText: 'Title',
-          ),
-          onSaved: (value) {
-            // TO DO
-            // Set title of workout
-          },
+          maxLength: 42,
         ),
       ),
     );
@@ -263,26 +260,19 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
       ),
       child: Theme(
         data: ThemeData(
-          primaryColor: Colors.blueAccent,
+          primaryColor: kMainColor,
         ),
         child: TextFormField(
-          controller: _descriptionEditingController
-            ..text = widget.loadedWorkout.description,
+          controller: _descriptionEditingController,
           maxLines: 4,
+          maxLength: 220,
+          maxLengthEnforced: true,
           decoration: InputDecoration.collapsed(
             hintText: 'Description',
           ),
           validator: (value) {
-            if (value.isEmpty) {
-              return 'Please enter a description';
-            } else if (value.length < 20) {
-              return 'Please enter at least 20 characters';
-            }
+            if (value.isEmpty) return 'Please enter a description';
             return null;
-          },
-          onSaved: (value) {
-            // TO DO
-            // Save description to workout
           },
         ),
       ),
@@ -297,9 +287,9 @@ class _EditWorkoutCardState extends State<EditWorkoutCard> {
         children: [
           FlatButton(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(8),
             ),
-            color: Colors.blueAccent,
+            color: kMainColor,
             textColor: Colors.white,
             padding: EdgeInsets.all(8),
             onPressed: _saveForm,

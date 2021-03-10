@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_workout_builder.dart';
-import 'package:frederic/widgets/workout/add_workout_card.dart';
+import 'package:frederic/widgets/workout/edit_workout_page.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => AddWorkoutCard(null),
+          builder: (context) => EditWorkoutPage(null),
         ),
         //_createWorkoutPrompt,
         backgroundColor: Colors.white,

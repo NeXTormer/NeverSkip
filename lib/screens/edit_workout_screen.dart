@@ -6,13 +6,13 @@ import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
-import 'package:frederic/widgets/workout/add_workout_card.dart';
+import 'package:frederic/widgets/workout/edit_workout_page.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
-  EditWorkoutScreen(this.workout);
+  EditWorkoutScreen(this.workoutID);
 
   static const routeName = '/workout';
-  final FredericWorkout workout;
+  final String workoutID;
 
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
@@ -35,110 +35,135 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String _tempTitle = widget.workout.name;
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          elevation: 0.0,
-          title: Material(
-            type: MaterialType.transparency,
-            child: Text(
-              _tempTitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
-          actions: [
-            if (widget.workout.canEdit)
-              IconButton(
-                  icon: Icon(Icons.edit_outlined, size: 30),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => AddWorkoutCard(widget.workout),
-                    );
-                  })
-          ],
-        ),
-        floatingActionButton: widget.workout.canEdit
-            ? FloatingActionButton(
-                onPressed: () => showActivityList(context),
-                backgroundColor: kMainColor,
-                splashColor: kAccentColor,
-                child: Icon(Icons.add, size: 36),
-              )
-            : null,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        body: Column(
-          children: [
-            Container(
-              height: 100,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 0.0,
-                    child: Icon(
-                      Icons.arrow_left,
-                      size: 36,
-                      color: Colors.black26,
-                    ),
+    return FredericWorkoutBuilder(
+        id: widget.workoutID,
+        builder: (context, data) {
+          FredericWorkout workout = data;
+          return Scaffold(
+              appBar: AppBar(
+                centerTitle: false,
+                elevation: 0.0,
+                title: Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    workout.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  Positioned(
-                    right: 0.0,
-                    child: Icon(
-                      Icons.arrow_right,
-                      size: 36,
-                      color: Colors.black26,
-                    ),
-                  ),
-                  Container(
-                    child: WeekdaysSlider(
-                      controller: sliderController,
-                      onSelectDay: null,
-                      weekCount: widget.workout.period,
-                    ),
-                  )
+                ),
+                actions: [
+                  if (workout.canEdit)
+                    IconButton(
+                        icon: Icon(Icons.edit_outlined, size: 30),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => EditWorkoutPage(workout),
+                          );
+                        })
                 ],
               ),
-            ),
-            Expanded(
-              child: FredericActivityBuilder(
-                  type: FredericActivityBuilderType.WorkoutActivities,
-                  id: widget.workout.workoutID,
-                  builder: (context, list) {
-                    FredericWorkoutActivities activities = list;
-                    return PageView(
-                        physics: BouncingScrollPhysics(),
-                        onPageChanged: handleDayChangeBySwiping,
-                        controller: activityPageController,
-                        children: List.generate(activities.period, (weekday) {
-                          return ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ActivityCard(
-                                activities.activities[weekday + 1][index],
-                                dismissible: widget.workout.canEdit,
-                                onDismiss: handleDeleteActivity,
-                              );
+              floatingActionButton: workout.canEdit
+                  ? FloatingActionButton(
+                      onPressed: () => showActivityList(context),
+                      backgroundColor: kMainColor,
+                      splashColor: kAccentColor,
+                      child: Icon(Icons.add, size: 36),
+                    )
+                  : null,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              body: Column(
+                children: [
+                  Container(
+                    height: 100,
+                    child: Stack(
+                      children: [
+                        Container(
+                          child: WeekdaysSlider(
+                            controller: sliderController,
+                            onSelectDay: null,
+                            weekCount: workout.period,
+                          ),
+                        ),
+                        Positioned(
+                          left: 0.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              sliderController.pageController.previousPage(
+                                  duration: Duration(milliseconds: 350),
+                                  curve: Curves.easeInOutExpo);
                             },
-                            itemCount:
-                                activities.activities[weekday + 1].length,
-                          );
-                        }));
-                  }),
-            ),
-          ],
-        ));
+                            child: Icon(
+                              Icons.arrow_left,
+                              size: 36,
+                              color: Colors.black26,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 0.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              sliderController.pageController.nextPage(
+                                  duration: Duration(milliseconds: 350),
+                                  curve: Curves.easeInOutExpo);
+                            },
+                            child: Icon(
+                              Icons.arrow_right,
+                              size: 36,
+                              color: Colors.black26,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: FredericActivityBuilder(
+                        type: FredericActivityBuilderType.WorkoutActivities,
+                        id: workout.workoutID,
+                        builder: (context, list) {
+                          FredericWorkoutActivities activities = list;
+                          return PageView(
+                              physics: BouncingScrollPhysics(),
+                              onPageChanged: handleDayChangeBySwiping,
+                              controller: activityPageController,
+                              children:
+                                  List.generate(activities.period, (weekday) {
+                                return ListView.builder(
+                                  padding: EdgeInsets.only(top: 8),
+                                  itemBuilder: (context, index) {
+                                    return ActivityCard(
+                                      activities.activities[weekday + 1][index],
+                                      dismissible: workout.canEdit,
+                                      onDismiss: handleDeleteActivity,
+                                    );
+                                  },
+                                  itemCount:
+                                      activities.activities[weekday + 1].length,
+                                );
+                              }));
+                        }),
+                  ),
+                ],
+              ));
+        });
   }
 
   void handleAddActivity(FredericActivity activity) {
-    widget.workout.addActivity(activity, sliderController.currentDay);
+    FredericBackend.instance()
+        .workoutManager[widget.workoutID]
+        ?.addActivity(activity, sliderController.currentDay);
   }
 
   void handleDeleteActivity(FredericActivity activity) {
-    widget.workout.removeActivity(activity, sliderController.currentDay);
+    FredericBackend.instance()
+        .workoutManager[widget.workoutID]
+        ?.removeActivity(activity, sliderController.currentDay);
   }
 
   void handleDayChangeByButton(int day) {
@@ -158,8 +183,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
+          topLeft: Radius.circular(12.0),
+          topRight: Radius.circular(12.0),
         ),
       ),
       context: context,

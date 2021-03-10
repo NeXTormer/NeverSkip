@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
@@ -48,8 +49,8 @@ class CardGoalItem extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0)),
-                child: Image.network(
-                  goal.image,
+                child: Image(
+                  image: CachedNetworkImageProvider(goal.image),
                   fit: BoxFit.fitWidth,
                 ),
               ),

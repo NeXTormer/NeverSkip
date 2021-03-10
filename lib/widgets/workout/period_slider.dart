@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class PeriodSlider extends StatefulWidget {
   PeriodSlider(
@@ -28,7 +29,6 @@ class _PeriodSliderState extends State<PeriodSlider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Slider.adaptive(
         onChanged: (value) {
           widget.onChanged(value);
@@ -36,7 +36,7 @@ class _PeriodSliderState extends State<PeriodSlider> {
             this.value = value;
           });
         },
-        activeColor: Colors.blueAccent,
+        activeColor: kMainColor,
         value: value,
         min: widget.min,
         max: widget.max,

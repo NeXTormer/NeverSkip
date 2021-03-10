@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
@@ -25,7 +26,7 @@ class _AddProgressCardState extends State<AddProgressCard> {
         child: Column(
           children: [
             Image(
-                image: NetworkImage(widget.activity.image),
+                image: CachedNetworkImageProvider(widget.activity.image),
                 height: 140,
                 width: double.infinity,
                 fit: BoxFit.cover),

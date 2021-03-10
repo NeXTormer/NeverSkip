@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
+import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
+import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -47,13 +49,13 @@ class Frederic extends StatelessWidget {
             return _errorScreen(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return _loadApp();
+            return _loadApp(context);
           }
           return splashScreen;
         });
   }
 
-  Widget _loadApp() {
+  Widget _loadApp(BuildContext context) {
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
@@ -89,7 +91,30 @@ class Frederic extends StatelessWidget {
                         key: ValueKey(1),
                       ),
                       actions: [
-                        IconButton(icon: Icon(Icons.list), onPressed: () {})
+                        PopupMenuButton(
+                          onSelected: (addOption) {
+                            // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
+                            if (addOption == AddOptions.Goal) {
+                              _handleButtonPress(context, null);
+                              _addGoalPopUp(context, null);
+                            } else {
+                              Navigator.of(context)
+                                  .pushNamed(AddGraphScreen.routeName);
+                            }
+                          },
+                          itemBuilder: (_) => [
+                            PopupMenuItem(
+                              child: Text('Add Goal'),
+                              value: AddOptions.Goal,
+                            ),
+                            PopupMenuItem(
+                              child: Text('Add Graph'),
+                              value: AddOptions.Graph,
+                            ),
+                          ],
+                          icon: Icon(Icons.add),
+                        ),
+                        IconButton(icon: Icon(Icons.list), onPressed: () {}),
                       ],
                       leading: InkWell(
                           child: Icon(Icons.person),
@@ -132,5 +157,36 @@ class Frederic extends StatelessWidget {
         ),
       ),
     )));
+  }
+
+  /// On pressed show ModalBottomSheet
+  ///
+  /// The bottom sheet contains the [EditSlideSheet] Widget
+  /// so the user can interact with the goal.
+  void _handleButtonPress(BuildContext context, String id) {
+    showModalBottomSheet<dynamic>(
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: EditGoalItem(null),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addGoalPopUp(BuildContext context, String id) {
+    showDialog(context: context, builder: (context) => AddGoalItem());
   }
 }
