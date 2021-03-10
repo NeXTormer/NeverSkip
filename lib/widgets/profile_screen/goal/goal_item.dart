@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/providers/goals.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 /// Card item which displays the corresponding [GoalItem] information.
 ///
@@ -98,23 +99,23 @@ class CardGoalItem extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 3.0),
                     child: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.6)),
-                      child: CircularPercentIndicator(
-                        radius: 100,
-                        lineWidth: 8,
-                        percent: goal.progressPercentage / 100,
-                        progressColor: Colors.blue[400],
-                        center: Container(
-                          child: Text(
-                            '${goal.progressPercentage}%',
-                            style: TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.w500),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.6)),
+                        child: CircularPercentIndicator(
+                          radius: 100,
+                          lineWidth: 8,
+                          percent: goal.progressPercentage / 100,
+                          //progressColor: Colors.red,
+                          linearGradient: LinearGradient(colors: kIconGradient),
+                          center: Container(
+                            child: Text(
+                              '${goal.progressPercentage}%',
+                              style: TextStyle(
+                                  fontSize: 26, fontWeight: FontWeight.w500),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                        )),
                   ),
                   Divider(),
                   Container(
@@ -184,8 +185,7 @@ class CardGoalItem extends StatelessWidget {
                           child: Text(
                             'Edit Goal',
                             style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold),
+                                color: kMainColor, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Row(

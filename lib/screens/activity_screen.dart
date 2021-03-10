@@ -47,7 +47,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 ],
               ),
             ),
-            expandedHeight: 150.0,
+            expandedHeight: 154.0,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.parallax,
               background: Consumer<ActivityFilterController>(

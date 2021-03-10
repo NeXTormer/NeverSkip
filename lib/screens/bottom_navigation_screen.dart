@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   BottomNavigationScreen(this.screens, {this.fixedScreen = 10000});
@@ -51,7 +52,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             ),
       bottomNavigationBar: BottomNavigationBar(
         items: items,
-        selectedItemColor: Colors.blueAccent,
+        selectedItemColor: kAccentColor,
         unselectedItemColor: Colors.black87,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,

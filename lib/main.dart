@@ -15,6 +15,11 @@ FirebaseAnalytics analytics = FirebaseAnalytics();
 final Future<FirebaseApp> app = Firebase.initializeApp();
 final getIt = GetIt.instance;
 
+final Color kMainColor = Colors.lightBlue;
+final Color kAccentColor = Colors.lightBlueAccent;
+final Color kDarkColor = Colors.blueAccent;
+final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
+
 void main() {
   runApp(Frederic());
 }

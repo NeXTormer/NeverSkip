@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
 import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
@@ -65,8 +66,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         floatingActionButton: widget.workout.canEdit
             ? FloatingActionButton(
                 onPressed: () => showActivityList(context),
-                backgroundColor: Colors.blue,
-                splashColor: Colors.blueAccent,
+                backgroundColor: kMainColor,
+                splashColor: kAccentColor,
                 child: Icon(Icons.add, size: 36),
               )
             : null,

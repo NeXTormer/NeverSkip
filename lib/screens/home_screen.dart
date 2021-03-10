@@ -4,7 +4,6 @@ import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_user_builder.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
-import 'package:frederic/widgets/frederic_circular_progress_indicator.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
@@ -42,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
             preferredSize: Size.fromHeight(60),
             child: AppBar(
               title: Text('Frederic'),
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(12))),
               leading: InkWell(
                   child: Icon(Icons.person),
                   onTap: () => FirebaseAuth.instance.signOut()),

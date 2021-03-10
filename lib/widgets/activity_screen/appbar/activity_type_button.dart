@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class ActivityTypeButton extends StatelessWidget {
   const ActivityTypeButton(
@@ -19,18 +20,18 @@ class ActivityTypeButton extends StatelessWidget {
         width: 30,
         decoration: BoxDecoration(
           color: isActive
-              ? Colors.blue[400]
+              ? kMainColor
               : Colors.transparent, //Color.fromARGB(170, 255, 165, 0)
           border: Border.all(
             width: 1.0,
-            color: isActive ? Colors.orange[50] : Colors.black26,
+            color: isActive ? Colors.white54 : Colors.black26,
           ),
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Icon(
           iconData,
           size: 25,
-          color: isActive ? Colors.white : Colors.black,
+          color: isActive ? Colors.white : Colors.black54,
         ),
       ),
     );

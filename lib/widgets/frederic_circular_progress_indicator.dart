@@ -2,25 +2,25 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class FredericCircularProgressIndicator extends StatefulWidget {
   FredericCircularProgressIndicator(
-      {this.alternateColor = false,
-      this.noImage = false,
+      {this.staticProgress,
+      this.image = true,
       this.size = 112,
       this.stroke = 10,
       this.increment = 0.02,
-      this.onFinished});
+      this.onFinished})
+      : isStatic = staticProgress != null;
 
-  final bool alternateColor;
-  final noImage;
+  final image;
   final double size;
   final double stroke;
   final double increment;
-
+  final double staticProgress;
   final Function onFinished;
-
-  final List<Color> colors = [Color(0xFF18BBDF), Color(0xFF175BD5)];
+  final bool isStatic;
 
   @override
   _FredericCircularProgressIndicatorState createState() =>
@@ -37,24 +37,32 @@ class _FredericCircularProgressIndicatorState
   void initState() {
     super.initState();
 
-    timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
-      setState(() {
-        progress += widget.increment;
-        if (progress >= 1) {
-          t.cancel();
-          if (widget.onFinished != null) {
-            widget.onFinished();
+    if (widget.staticProgress == null)
+      timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
+        setState(() {
+          progress += widget.increment;
+          if (progress >= 1) {
+            t.cancel();
+            if (widget.onFinished != null) {
+              widget.onFinished();
+            }
           }
-        }
+        });
       });
-    });
+    else
+      progress = widget.staticProgress;
+    print(progress);
+    print('werner');
   }
 
   @override
   Widget build(BuildContext context) {
+    print(progress);
     if (progress > 1) progress = 1;
     if (progress < 0) progress = 0;
-    double curveProgress = Curves.easeInOutExpo.transform(progress);
+    double curveProgress = widget.isStatic
+        ? Curves.easeInOutExpo.transform(progress)
+        : widget.staticProgress;
 
     double innerRadius = widget.size - (widget.stroke * 2);
 
@@ -72,7 +80,7 @@ class _FredericCircularProgressIndicatorState
       ),
       ShaderMask(
         shaderCallback: (rect) {
-          return LinearGradient(colors: widget.colors).createShader(rect);
+          return LinearGradient(colors: kIconGradient).createShader(rect);
         },
         child: RotatedBox(
           quarterTurns: 3,
@@ -96,6 +104,7 @@ class _FredericCircularProgressIndicatorState
           ),
         ),
       ),
+      //if (widget.image)
       Container(
         width: widget.size - (widget.stroke * 2),
         height: widget.size - (widget.stroke * 2),

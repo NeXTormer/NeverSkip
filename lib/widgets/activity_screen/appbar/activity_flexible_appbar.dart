@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 import 'package:frederic/widgets/activity_screen/appbar/activity_musclegroup_button.dart';
 import 'package:frederic/widgets/activity_screen/appbar/activity_type_button.dart';
@@ -69,7 +70,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Colors.blueAccent,
+                                  color: kMainColor,
                                   width: 0.5,
                                 ),
                                 borderRadius: BorderRadius.circular(20.0),
@@ -101,7 +102,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                           iconData: Icons.accessibility_new),
                     ],
                   ),
-                  Divider(),
+                  SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

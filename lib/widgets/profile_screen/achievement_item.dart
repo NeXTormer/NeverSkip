@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_goal.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/providers/goals.dart';
 
 /// Clickable circle avatar with information of the [respectivly GoalItem]
@@ -18,8 +19,9 @@ class AchievementItem extends StatelessWidget {
       child: Column(
         children: [
           OutlineButton(
-              textColor: Colors.blue[900],
-              splashColor: Colors.blue[200],
+              textColor: kMainColor,
+              splashColor: kDarkColor,
+              highlightedBorderColor: kMainColor,
               onPressed: () {
                 showDialog(
                   context: context,

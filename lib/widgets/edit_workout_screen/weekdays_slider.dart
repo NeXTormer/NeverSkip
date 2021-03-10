@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class WeekdaysSlider extends StatefulWidget {
   WeekdaysSlider(
@@ -135,7 +136,7 @@ class WeekdaySliderDayButton extends StatelessWidget {
                 child: Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    color: Colors.blue[400],
+                    color: kMainColor,
                     borderRadius: BorderRadius.all(
                       Radius.circular(8.0),
                     ),

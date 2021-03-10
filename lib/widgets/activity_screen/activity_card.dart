@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 
 class ActivityCard extends StatefulWidget {
@@ -369,11 +370,11 @@ class MuscleGroupTag extends StatelessWidget {
       padding: EdgeInsets.all(4),
       margin: EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-        color: Colors.blueAccent, //Color.fromARGB(170, 255, 165, 0),
+        color: kMainColor, //Color.fromARGB(170, 255, 165, 0),
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
           width: 1.0,
-          color: Colors.blue[400],
+          color: Colors.white54,
         ),
       ),
       child: Text(
