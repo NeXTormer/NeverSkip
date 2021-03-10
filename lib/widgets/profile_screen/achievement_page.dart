@@ -28,7 +28,7 @@ class _AchievementPageState extends State<AchievementPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      padding: EdgeInsets.symmetric(horizontal: 12.0),
       height: 65,
       child: ListView.builder(
         //TODO: maybe swap with GridView

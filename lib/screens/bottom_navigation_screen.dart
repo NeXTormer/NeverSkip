@@ -60,6 +60,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: items,
+        backgroundColor: Colors.white,
         selectedItemColor: kAccentColor,
         unselectedItemColor: Colors.black87,
         showUnselectedLabels: true,

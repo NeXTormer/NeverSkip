@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/util/palette.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/login_signup/login_button.dart';
 import 'package:frederic/widgets/login_signup/login_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,8 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Stack(
             children: [
               Container(
-                decoration:
-                    BoxDecoration(gradient: Palette.kLoginBackgroundGradient),
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomLeft,
+                  stops: [0.1, 0.9],
+                  colors: kIconGradient,
+                )),
               ),
               Container(
                 child: Column(children: [

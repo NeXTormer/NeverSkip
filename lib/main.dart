@@ -21,6 +21,7 @@ final getIt = GetIt.instance;
 final Color kMainColor = Colors.lightBlue;
 final Color kAccentColor = Colors.lightBlueAccent;
 final Color kDarkColor = Colors.blueAccent;
+final Color kTextColor = Colors.blue[800];
 final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
 void main() {

@@ -57,12 +57,11 @@ class _FredericCircularProgressIndicatorState
 
   @override
   Widget build(BuildContext context) {
-    print(progress);
     if (progress > 1) progress = 1;
     if (progress < 0) progress = 0;
     double curveProgress = widget.isStatic
-        ? Curves.easeInOutExpo.transform(progress)
-        : widget.staticProgress;
+        ? widget.staticProgress
+        : Curves.easeInOutExpo.transform(progress);
 
     double innerRadius = widget.size - (widget.stroke * 2);
 

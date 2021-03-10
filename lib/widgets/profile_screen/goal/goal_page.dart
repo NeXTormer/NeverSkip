@@ -47,13 +47,14 @@ class _GoalPageState extends State<GoalPage> {
 
     return Container(
       height: 240,
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: ListView.builder(
           shrinkWrap: false,
           scrollDirection: Axis.horizontal,
           itemCount: goals.length,
           itemBuilder: (context, index) {
             return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 6),
                 child: CardGoalItem(goals[index]));
           }),
     );

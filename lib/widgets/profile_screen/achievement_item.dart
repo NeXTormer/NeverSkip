@@ -19,7 +19,7 @@ class AchievementItem extends StatelessWidget {
       child: Column(
         children: [
           OutlineButton(
-              textColor: kMainColor,
+              textColor: kTextColor,
               splashColor: kDarkColor,
               highlightedBorderColor: kMainColor,
               onPressed: () {

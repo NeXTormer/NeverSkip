@@ -31,68 +31,65 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return FredericUserBuilder(
-      builder: (context, user) => Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                Container(
-                  // contains profile header
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      ProfileHeader(user),
-                      SizedBox(height: 8),
-                      SmallProgressViewPage(user.progressMonitors),
-                      SizedBox(height: 8),
-                      Divider(height: 0),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      builder: (context, user) => SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                // contains profile header
+                color: Colors.white,
+                child: Column(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(left: 16.0, top: 6.0),
-                      child: Text(
-                        'Achievements and Goals',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    AchievementPage(),
+                    ProfileHeader(user),
+                    SizedBox(height: 8),
+                    SmallProgressViewPage(user.progressMonitors),
+                    SizedBox(height: 8),
+                    Divider(height: 0),
                   ],
                 ),
-                GoalPage(),
-                SizedBox(height: 10.0),
-                Divider(),
-                SizedBox(height: 10.0),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Text(
-                        'Progresstracker',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(left: 16.0, top: 6.0),
+                    child: Text(
+                      'Achievements and Goals',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-                if (false)
-                  ProgressChart(
-                    chartData: FredericChartData(
-                        'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
                   ),
-                SizedBox(height: 50),
-              ],
-            ),
+                  AchievementPage(),
+                ],
+              ),
+              GoalPage(),
+              SizedBox(height: 10.0),
+              Divider(),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Progresstracker',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (false)
+                ProgressChart(
+                  chartData: FredericChartData(
+                      'ATo1D6xT5G5oi9W6s1q9', FredericGoalType.Weight),
+                ),
+              SizedBox(height: 50),
+            ],
           ),
         ),
       ),
