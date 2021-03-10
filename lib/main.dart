@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -81,19 +82,36 @@ class Frederic extends StatelessWidget {
               FredericScreen(
                   screen: HomeScreen(),
                   icon: Icons.home_outlined,
-                  label: 'Home'),
+                  label: 'Home',
+                  appbar: FredericAppBar(
+                      title: Text(
+                        'Frederic',
+                        key: ValueKey(1),
+                      ),
+                      actions: [
+                        IconButton(icon: Icon(Icons.list), onPressed: () {})
+                      ],
+                      leading: InkWell(
+                          child: Icon(Icons.person),
+                          onTap: () => FirebaseAuth.instance.signOut()))),
               FredericScreen(
                   screen: CalendarScreen(),
                   icon: Icons.calendar_today_outlined,
-                  label: 'Calendar'),
+                  label: 'Calendar',
+                  appbar: FredericAppBar(
+                      title: Text('Calendar', key: ValueKey(2)))),
               FredericScreen(
                   screen: ActivityScreen(),
                   icon: Icons.accessible_forward_outlined,
-                  label: 'Exercises'),
+                  label: 'Exercises',
+                  appbar: FredericAppBar(
+                      title: Text('Exercises', key: ValueKey(3)))),
               FredericScreen(
                   screen: ListWorkoutsScreen(),
                   icon: Icons.work_outline,
-                  label: 'Workouts'),
+                  label: 'Workouts',
+                  appbar: FredericAppBar(
+                      title: Text('Workouts', key: ValueKey(4)))),
             ],
           ),
           loginPage: LoginScreen(),

@@ -32,24 +32,26 @@ class _ActivityScreenState extends State<ActivityScreen> {
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
-            pinned: true,
+            pinned: false,
             floating: true,
             backgroundColor: Colors.white,
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.filter_alt),
-                  SizedBox(width: 8),
-                  Text(
-                    'Exercises',
-                    style: TextStyle(color: Colors.black),
+            title: true
+                ? null
+                : Container(
+                    child: Row(
+                      children: [
+                        Icon(Icons.filter_alt),
+                        SizedBox(width: 8),
+                        Text(
+                          'Exercises',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            expandedHeight: 154.0,
+            expandedHeight: 110.0,
             flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.parallax,
+              collapseMode: CollapseMode.pin,
               background: Consumer<ActivityFilterController>(
                 builder: (context, filter, child) {
                   return ActivityFlexibleAppbar(filterController: filter);

@@ -16,26 +16,11 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          title: Text('Your workouts'),
-        ),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (false)
-            Container(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Active workout',
-                style: TextStyle(
-                  fontSize: 28,
-                ),
-              ),
-            ),
+          Container(height: 108),
           FredericWorkoutBuilder(
               id: 'kKOnczVnBbBHvmx96cjG',
               builder: (context, workout) {
