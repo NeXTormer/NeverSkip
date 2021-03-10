@@ -8,33 +8,26 @@ import 'package:intl/intl.dart';
 /// To be used as a ModalBottomSheet. Can either create a new workout or edit
 /// the metadata of an existing one
 ///
-class AddWorkoutCard extends StatefulWidget {
+class EditWorkoutCard extends StatefulWidget {
   final FredericWorkout loadedWorkout;
-  final bool editExisting;
+  final bool addNewWorkout;
 
-  AddWorkoutCard(this.loadedWorkout) : editExisting = loadedWorkout == null;
+  EditWorkoutCard(this.loadedWorkout) : addNewWorkout = loadedWorkout == null;
 
   @override
-  _AddWorkoutCardState createState() => _AddWorkoutCardState();
+  _EditWorkoutCardState createState() => _EditWorkoutCardState();
 }
 
-class _AddWorkoutCardState extends State<AddWorkoutCard> {
-  final _titleTextController = TextEditingController();
-  final _descriptionEditingController = TextEditingController();
-  final _form = GlobalKey<FormState>();
-  final _textEditingController = TextEditingController();
+class _EditWorkoutCardState extends State<EditWorkoutCard> {
+  TextEditingController _titleTextController = TextEditingController();
+  TextEditingController _descriptionEditingController = TextEditingController();
+  TextEditingController _textEditingController = TextEditingController();
+
+  GlobalKey _form = GlobalKey<FormState>();
 
   DateTime _selectedDate = DateTime.now();
 
   double _period = 0;
-
-  var _initialValues = {
-    'imageUrl':
-        'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/young-woman-exercising-in-gym-royalty-free-image-1569876689.jpg',
-    'title': '',
-    'description': '',
-    'weeks': 1,
-  };
 
   @override
   void initState() {
@@ -49,10 +42,6 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: BoxDecoration(
         color: Colors.white,
-        //borderRadius: BorderRadius.only(
-        //topLeft: const Radius.circular(25),
-        //topRight: const Radius.circular(25),
-        //),
       ),
       child: Form(
         key: _form,
@@ -180,10 +169,10 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
   }
 
   Future<void> _saveForm() async {
-    final isValid = _form.currentState.validate();
-    if (!isValid) return;
+    //final isValid = _form.currentState.validate();
+    //if (!isValid) return;
 
-    _form.currentState.save();
+    //_form.currentState.save();
 
     print(_titleTextController.text);
     widget.loadedWorkout.name = _titleTextController.text;
@@ -330,6 +319,7 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
   void dispose() {
     _titleTextController.dispose();
     _descriptionEditingController.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 }
