@@ -60,6 +60,8 @@ dependencies:
   flutter_launcher_icons: ^0.8.0
   flutter_svg: ^0.18.0
   cached_network_image: ^2.5.1
+  scroll_snap_list: ^0.6.0
+  snapping_page_scroll: ^1.2.7
 
 
 dev_dependencies:

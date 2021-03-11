@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
@@ -29,53 +30,55 @@ class _ActivityScreenState extends State<ActivityScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: false,
-            floating: true,
-            backgroundColor: Color(0x00FFFFFF),
-            shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30))),
-            leading: Container(),
-            expandedHeight: 110.0,
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Consumer<ActivityFilterController>(
-                builder: (context, filter, child) {
-                  return ActivityFlexibleAppbar(filterController: filter);
-                },
+      child: CupertinoScrollbar(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              floating: true,
+              backgroundColor: Color(0x00FFFFFF),
+              shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+              leading: Container(),
+              expandedHeight: 110.0,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                background: Consumer<ActivityFilterController>(
+                  builder: (context, filter, child) {
+                    return ActivityFlexibleAppbar(filterController: filter);
+                  },
+                ),
               ),
             ),
-          ),
-          FredericActivityBuilder(
-            type: FredericActivityBuilderType.AllActivities,
-            builder: (context, list) {
-              return Consumer<ActivityFilterController>(
-                builder: (context, filter, child) => SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      FredericActivity a = list[index];
-                      if (a.matchFilterController(filter)) {
-                        return ActivityCard(
-                          a,
-                          selectable: widget.isSelector,
-                          onAddActivity: widget.onAddActivity,
-                          dismissible: widget.itemsDismissable,
-                          onDismiss: widget.onItemDismissed,
-                        );
-                      }
-                      return Container();
-                    },
-                    childCount: list.length,
+            FredericActivityBuilder(
+              type: FredericActivityBuilderType.AllActivities,
+              builder: (context, list) {
+                return Consumer<ActivityFilterController>(
+                  builder: (context, filter, child) => SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        FredericActivity a = list[index];
+                        if (a.matchFilterController(filter)) {
+                          return ActivityCard(
+                            a,
+                            selectable: widget.isSelector,
+                            onAddActivity: widget.onAddActivity,
+                            dismissible: widget.itemsDismissable,
+                            onDismiss: widget.onItemDismissed,
+                          );
+                        }
+                        return Container();
+                      },
+                      childCount: list.length,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

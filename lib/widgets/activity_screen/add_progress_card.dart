@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
+import 'package:frederic/widgets/number_slider.dart';
 
 class AddProgressCard extends StatefulWidget {
   AddProgressCard(this.activity, this.reps);
@@ -14,11 +15,11 @@ class AddProgressCard extends StatefulWidget {
 }
 
 class _AddProgressCardState extends State<AddProgressCard> {
-  _WeightCounterController weightCounterController;
+  NumberSliderController sliderController;
 
   @override
   Widget build(BuildContext context) {
-    weightCounterController = _WeightCounterController();
+    sliderController = NumberSliderController();
 
     return Wrap(children: [
       Container(
@@ -48,6 +49,7 @@ class _AddProgressCardState extends State<AddProgressCard> {
                         isStretch = true;
                       }
                       defaultValue = snapshot.data.bestProgress;
+                      print(defaultValue);
                     }
 
                     return Column(
@@ -65,15 +67,13 @@ class _AddProgressCardState extends State<AddProgressCard> {
                         if (!isCali) Text('Enter $importantValue:'),
                         if (!isCali) SizedBox(height: 4),
                         if (!isCali)
-                          _WeightCounter(
-                            controller: weightCounterController,
-                            defaultValue: defaultValue,
-                          ),
+                          NumberSlider(
+                              controller: sliderController,
+                              startingIndex: defaultValue + 1),
                         SizedBox(height: 6),
                         OutlineButton(
                           onPressed: () {
-                            if ((!isCali &&
-                                    weightCounterController.value == 0) ||
+                            if ((!isCali && sliderController.value == 0) ||
                                 widget.reps == 0) {
                               showDialog<void>(
                                 context: context,
@@ -88,7 +88,7 @@ class _AddProgressCardState extends State<AddProgressCard> {
                               );
                             } else {
                               widget.activity.addProgress(
-                                  widget.reps, weightCounterController.value);
+                                  widget.reps, sliderController.value);
                               Navigator.pop(context);
                             }
                           },
