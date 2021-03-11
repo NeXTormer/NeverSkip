@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
+import 'package:frederic/widgets/circle_loading_progress_spinner.dart';
+import 'package:frederic/widgets/stagger_achievement_finish_demo.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 /// Card item which displays the corresponding [GoalItem] information.
 ///
 /// Uses the passed [Function showSlidesheet] to assign to
 /// the [onTap] of the ['Edit Goal'] string in order to edit the [GoalItem] data.
-class CardGoalItem extends StatelessWidget {
+class CardGoalItem extends StatefulWidget {
   CardGoalItem(this.goal);
   final FredericGoal goal;
 
+  @override
+  _CardGoalItemState createState() => _CardGoalItemState();
+}
+
+class _CardGoalItemState extends State<CardGoalItem> {
   /// Checks if the enum [GoalType type] is [GoalType.Weighted]
   ///
   /// Returns a unit if the case is give.
@@ -48,7 +55,7 @@ class CardGoalItem extends StatelessWidget {
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0)),
                 child: Image.network(
-                  goal.image,
+                  widget.goal.image,
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -77,9 +84,29 @@ class CardGoalItem extends StatelessWidget {
               left: 0.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
+                child: InkWell(
                     onTap: () {
                       //TODO: add goal to achievements
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height * 0.6,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: const Radius.circular(25),
+                                  topRight: const Radius.circular(25),
+                                ),
+                              ),
+                              child: Center(
+                                child:
+                                    StaggerAchievementFinishDemo(widget.goal),
+                              ),
+                            );
+                          });
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
@@ -104,11 +131,11 @@ class CardGoalItem extends StatelessWidget {
                       child: CircularPercentIndicator(
                         radius: 100,
                         lineWidth: 8,
-                        percent: goal.progressPercentage / 100,
+                        percent: widget.goal.progressPercentage / 100,
                         progressColor: Colors.blue[400],
                         center: Container(
                           child: Text(
-                            '${goal.progressPercentage}%',
+                            '${widget.goal.progressPercentage}%',
                             style: TextStyle(
                                 fontSize: 26, fontWeight: FontWeight.w500),
                           ),
@@ -125,7 +152,7 @@ class CardGoalItem extends StatelessWidget {
                       children: [
                         SizedBox(height: 8),
                         Text(
-                          goal.title,
+                          widget.goal.title,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -136,7 +163,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.startState} ${goalType(goal.activity?.type)}',
+                                  '${widget.goal.startState} ${goalType(widget.goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -147,7 +174,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.currentState} ${goalType(goal.activity?.type)}',
+                                  '${widget.goal.currentState} ${goalType(widget.goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -158,7 +185,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.endState} ${goalType(goal.activity?.type)}',
+                                  '${widget.goal.endState} ${goalType(widget.goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -199,7 +226,7 @@ class CardGoalItem extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              goal.timeLeftFormatted,
+                              widget.goal.timeLeftFormatted,
                               style: TextStyle(color: Colors.black54),
                             ),
                           ],

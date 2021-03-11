@@ -4,6 +4,7 @@ import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_user_builder.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
+import 'package:frederic/screens/settings_screen.dart';
 import 'package:frederic/widgets/frederic_circular_progress_indicator.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
 import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
@@ -68,7 +69,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                   icon: Icon(Icons.add),
                 ),
-                IconButton(icon: Icon(Icons.list), onPressed: () {}),
+                IconButton(
+                  icon: Icon(Icons.settings_outlined),
+                  onPressed: () {
+                    //Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SettingsScreen(user)));
+                  },
+                ),
               ],
             ),
           ),
@@ -141,29 +149,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ///
   /// The bottom sheet contains the [EditSlideSheet] Widget
   /// so the user can interact with the goal.
-  void _handleButtonPress(String id) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
-      ),
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: EditGoalItem(null),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _addGoalPopUp(String id) {
     showDialog(context: context, builder: (context) => AddGoalItem());
   }
