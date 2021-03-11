@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
@@ -134,17 +135,20 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                               controller: activityPageController,
                               children:
                                   List.generate(activities.period, (weekday) {
-                                return ListView.builder(
-                                  padding: EdgeInsets.only(top: 8),
-                                  itemBuilder: (context, index) {
-                                    return ActivityCard(
-                                      activities.activities[weekday + 1][index],
-                                      dismissible: workout.canEdit,
-                                      onDismiss: handleDeleteActivity,
-                                    );
-                                  },
-                                  itemCount:
-                                      activities.activities[weekday + 1].length,
+                                return CupertinoScrollbar(
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.only(top: 8),
+                                    itemBuilder: (context, index) {
+                                      return ActivityCard(
+                                        activities.activities[weekday + 1]
+                                            [index],
+                                        dismissible: workout.canEdit,
+                                        onDismiss: handleDeleteActivity,
+                                      );
+                                    },
+                                    itemCount: activities
+                                        .activities[weekday + 1].length,
+                                  ),
                                 );
                               }));
                         }),

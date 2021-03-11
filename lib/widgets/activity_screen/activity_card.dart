@@ -5,6 +5,11 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
 
+///
+/// [selectable]: widget can be added to a workout
+/// [dismissible]: widget can be removed from a workout
+/// neither: widget can be clicked on to add progress
+///
 class ActivityCard extends StatefulWidget {
   ActivityCard(this.activity,
       {this.selectable = false,
@@ -40,9 +45,9 @@ class _ActivityCardState extends State<ActivityCard> {
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.3,
         closeOnScroll: true,
-        //actions: widget.dismissable ? [] : [buildAddButton()],
-        secondaryActions:
-            widget.dismissible ? [buildDeleteButton()] : [buildAddButton()],
+        secondaryActions: widget.dismissible
+            ? [buildDeleteButton()]
+            : (widget.selectable ? [buildAddButton()] : []),
         child: Card(
           elevation: 5.0,
           child: Container(
@@ -61,17 +66,38 @@ class _ActivityCardState extends State<ActivityCard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      buildTitleSection(widget.activity.name, 0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          buildAddSection(),
-                        ],
-                      ),
+                      buildTitleSection(widget.activity.name),
                     ],
                   ),
                 ),
                 buildLabelSection(),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    splashColor: Colors.black12,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(5.0),
+                        border:
+                            Border.all(color: Colors.transparent, width: 0.5),
+                      ),
+                    ),
+                    onTap: () {
+                      if (!widget.selectable) {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return AddProgressCard(
+                                  widget.activity, _countReps);
+                            });
+                      }
+                    },
+                  ),
+                ),
+                Positioned(top: 16, right: 16, child: buildAddSection()),
               ],
             ),
           ),
@@ -85,16 +111,22 @@ class _ActivityCardState extends State<ActivityCard> {
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              const Color(0x0C000000),
-              const Color(0x00000000),
-              const Color(0x00000000),
-              const Color(0x0C000000),
-            ],
-          ),
+          gradient: true
+              ? RadialGradient(
+                  colors: [const Color(0x0C000000), const Color(0x00000000)],
+                  radius: 10,
+                  focalRadius: 10,
+                )
+              : LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0x0C000000),
+                    const Color(0x00000000),
+                    const Color(0x00000000),
+                    const Color(0x0C000000),
+                  ],
+                ),
         ),
       ),
       Container(
@@ -128,46 +160,15 @@ class _ActivityCardState extends State<ActivityCard> {
     );
   }
 
-  Widget buildTitleSection(String title, int subActivities) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 26.0, color: Colors.white),
-        ),
-        if (subActivities != 0)
-          Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _expanded = !_expanded;
-                    });
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    child: _expanded
-                        ? Icon(
-                            Icons.expand_less,
-                            color: Colors.white,
-                            size: 26.0,
-                          )
-                        : Icon(
-                            Icons.expand_more,
-                            color: Colors.white,
-                            size: 26.0,
-                          ),
-                  )),
-              Text(
-                subActivities.toString(),
-                style: TextStyle(color: Colors.white),
-              )
-            ],
-          ),
-      ],
+  Widget buildTitleSection(String title) {
+    return Container(
+      width: 300,
+      child: Text(
+        title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 26.0, color: Colors.white),
+      ),
     );
   }
 
@@ -175,7 +176,7 @@ class _ActivityCardState extends State<ActivityCard> {
     return widget.selectable || widget.dismissible
         ? Container()
         : Container(
-            width: 100,
+            width: 110,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -188,8 +189,8 @@ class _ActivityCardState extends State<ActivityCard> {
                     }
                   },
                   child: Container(
-                    width: 25,
-                    height: 25,
+                    width: 28,
+                    height: 28,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.white),
@@ -200,8 +201,8 @@ class _ActivityCardState extends State<ActivityCard> {
                   ),
                 ),
                 Container(
-                  width: 25,
-                  height: 25,
+                  width: 26,
+                  height: 26,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     color: Colors.white,
@@ -221,8 +222,8 @@ class _ActivityCardState extends State<ActivityCard> {
                     });
                   },
                   child: Container(
-                    width: 25,
-                    height: 25,
+                    width: 28,
+                    height: 28,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: Colors.white,
@@ -276,7 +277,7 @@ class _ActivityCardState extends State<ActivityCard> {
     return IconSlideAction(
       iconWidget: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(left: 4, top: 4, bottom: 4, right: 6),
+        margin: EdgeInsets.only(left: 8, top: 4, bottom: 4, right: 4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.green,
@@ -289,11 +290,6 @@ class _ActivityCardState extends State<ActivityCard> {
               Icons.add,
               color: Colors.white,
             ),
-            if (!widget.selectable)
-              Text(
-                "Add progress",
-                style: TextStyle(color: Colors.white),
-              ),
             if (widget.selectable)
               Text(
                 "Add to",
@@ -312,13 +308,6 @@ class _ActivityCardState extends State<ActivityCard> {
       onTap: () {
         if (widget.selectable) {
           widget.onAddActivity(widget.activity);
-        } else {
-          showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return AddProgressCard(widget.activity, _countReps);
-              });
         }
       },
     );
@@ -328,7 +317,7 @@ class _ActivityCardState extends State<ActivityCard> {
     return IconSlideAction(
         iconWidget: Container(
           width: double.infinity,
-          margin: EdgeInsets.only(left: 4, top: 4, bottom: 4, right: 6),
+          margin: EdgeInsets.only(left: 8, top: 4, bottom: 4, right: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
             color: Colors.red,
