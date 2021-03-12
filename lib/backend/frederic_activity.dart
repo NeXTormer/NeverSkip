@@ -53,6 +53,10 @@ class FredericActivity with ChangeNotifier {
   int _weekday;
   int _order;
   bool _areSetsLoaded = false;
+
+  /// true if some sets have been loaded from the DB,
+  /// meaning the latest sets are definitely loaded
+  bool _latestSetsLoaded = false;
   FredericActivityType _type;
   List<FredericSet> _sets;
   List<FredericActivityMuscleGroup> _muscleGroups;
@@ -68,6 +72,7 @@ class FredericActivity with ChangeNotifier {
   int get weekday => _weekday;
   bool get areSetsLoaded => _areSetsLoaded;
   bool get isNull => _name == null;
+  bool get latestSetsLoaded => _latestSetsLoaded;
 
   List<FredericSet> get sets {
     if (_sets == null) {
@@ -272,6 +277,7 @@ class FredericActivity with ChangeNotifier {
   /// well as on the local storage
   ///
   Future<FredericActivity> loadSets([int limit = 5]) async {
+    if (limit > 5) _latestSetsLoaded = true;
     QuerySnapshot snapshot = await _setsCollection
         .where('owner', isEqualTo: FredericBackend.instance().currentUser.uid)
         .where('activity', isEqualTo: activityID)

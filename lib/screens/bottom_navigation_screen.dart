@@ -36,19 +36,23 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppBar appbar = AppBar(
+      title: AnimatedSwitcher(
+        child: widget.screens[currentIndex].appbar.title,
+        duration: Duration(milliseconds: 0),
+      ),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12))),
+      leading: widget.screens[currentIndex].appbar.leading,
+      actions: widget.screens[currentIndex].appbar.actions,
+    );
+
+    kAppBarHeight = 0;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: AnimatedSwitcher(
-          child: widget.screens[currentIndex].appbar.title,
-          duration: Duration(milliseconds: 0),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(12))),
-        leading: widget.screens[currentIndex].appbar.leading,
-        actions: widget.screens[currentIndex].appbar.actions,
-      ),
+      extendBodyBehindAppBar: false,
+      appBar: appbar,
       body: PageView(
         children: screens,
         controller: pageController,

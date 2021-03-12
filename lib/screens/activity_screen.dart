@@ -26,6 +26,7 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  //with automatickeepaliveclientmixin to keep state over pages
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActivityFilterController>(

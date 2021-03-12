@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout_builder.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/workout/edit_workout_page.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
@@ -19,7 +20,6 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
     return Scaffold(
       body: Column(
         children: [
-          Container(height: 100),
           Expanded(
             child: FredericWorkoutBuilder(builder: (context, list) {
               List<FredericWorkout> workouts = list;

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader(this.user);
@@ -10,7 +11,7 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(height: 100),
+        Container(height: kAppBarHeight),
         Container(
           height: 200,
           child: Stack(

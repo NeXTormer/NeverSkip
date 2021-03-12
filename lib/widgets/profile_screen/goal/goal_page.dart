@@ -47,7 +47,7 @@ class _GoalPageState extends State<GoalPage> {
 
     return Container(
       height: 240,
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      //padding: EdgeInsets.symmetric(horizontal: 10),
       child: ListView.builder(
           shrinkWrap: false,
           scrollDirection: Axis.horizontal,

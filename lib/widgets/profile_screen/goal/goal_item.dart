@@ -58,7 +58,7 @@ class CardGoalItem extends StatelessWidget {
             Positioned(
               right: 0.0,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: InkWell(
                   onTap: () {
                     //TODO: delete goal with confirmation
