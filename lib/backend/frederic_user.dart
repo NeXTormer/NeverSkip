@@ -40,7 +40,7 @@ class FredericUser with ChangeNotifier {
   }
 
   set uid(String value) {
-    if (value.isNotEmpty) _uid = uid;
+    if (value.isNotEmpty) _uid = value;
   }
 
   ///
@@ -115,7 +115,7 @@ class FredericUser with ChangeNotifier {
     _bannerImage = snapshot.data()['banner'];
     _birthday = snapshot.data()['birthday'].toDate();
     _currentWorkoutID = snapshot.data()['currentworkout'];
-    _progressMonitors = snapshot.data()['progressmonitors'].cast<String>();
+    _progressMonitors = snapshot.data()['progressmonitors']?.cast<String>();
     notifyListeners();
   }
 

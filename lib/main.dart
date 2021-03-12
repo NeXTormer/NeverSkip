@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +33,7 @@ class Frederic extends StatelessWidget {
 
   final SplashScreen splashScreen = SplashScreen(
     onComplete: () {
-      print('complete');
+      //print('complete');
       //xFinishedLoading = true;
     },
   );
@@ -120,7 +119,7 @@ class Frederic extends StatelessWidget {
                       ],
                       leading: InkWell(
                           child: Icon(Icons.person),
-                          onTap: () => FirebaseAuth.instance.signOut()))),
+                          onTap: () => FredericBackend.instance().logOut()))),
               FredericScreen(
                   screen: CalendarScreen(),
                   icon: Icons.calendar_today_outlined,
