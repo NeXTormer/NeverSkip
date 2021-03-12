@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout_builder.dart';
 import 'package:frederic/widgets/workout/edit_workout_page.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
@@ -17,16 +18,20 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(height: 108),
-          FredericWorkoutBuilder(
-              id: 'kKOnczVnBbBHvmx96cjG',
-              builder: (context, workout) {
-                return WorkoutCard(workout);
-              }),
-          Divider(height: 0),
+          Container(height: 100),
+          Expanded(
+            child: FredericWorkoutBuilder(builder: (context, list) {
+              List<FredericWorkout> workouts = list;
+              return ListView.builder(
+                padding: EdgeInsets.only(top: 8),
+                itemBuilder: (context, index) {
+                  return WorkoutCard(workouts[index]);
+                },
+                itemCount: workouts?.length ?? 0,
+              );
+            }),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

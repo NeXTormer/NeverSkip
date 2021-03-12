@@ -46,7 +46,7 @@ class FredericWorkout with ChangeNotifier {
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
   String get owner => _owner ?? 'UNKNOWN';
-  String get ownerName => _ownerName ?? 'None';
+  String get ownerName => _ownerName ?? ((canEdit ?? false) ? 'You' : 'Other');
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
   bool get repeating => _activities.repeating;
   bool get canEdit => _canEdit;
@@ -130,6 +130,39 @@ class FredericWorkout with ChangeNotifier {
           .doc(workoutID)
           .update({'repeating': value});
     }
+  }
+
+  //============================================================================
+  /// Creates a new activity using the passed [name], [description], and [image] in the
+  /// DB and returns it as a future when finished.
+  /// The [owner] is the current user
+  ///
+  static Future<bool> create(
+      {String title,
+      String description,
+      String image,
+      int period,
+      bool repeating,
+      DateTime startDate}) async {
+    CollectionReference workouts =
+        FirebaseFirestore.instance.collection('workouts');
+    DocumentReference newWorkout = await workouts.add({
+      'name': title,
+      'description': description,
+      'image': image,
+      'owner': FirebaseAuth.instance.currentUser.uid,
+      'period': period,
+      'repeating': repeating,
+      'startdate': Timestamp.fromDate(startDate)
+    });
+    return true;
+  }
+
+  ///
+  /// Deletes the workout from the DB
+  ///
+  void delete() {
+    FirebaseFirestore.instance.collection('workouts').doc(workoutID).delete();
   }
 
   void loadActivities() {

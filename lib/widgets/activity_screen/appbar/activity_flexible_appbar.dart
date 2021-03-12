@@ -53,6 +53,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.black),
                             decoration: InputDecoration(
+                              //TODO: Maybe collapsed input decoration
                               hintText: widget.filterController.searchText,
                               prefixIcon: Icon(
                                 Icons.search,

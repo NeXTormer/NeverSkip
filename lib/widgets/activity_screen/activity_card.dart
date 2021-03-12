@@ -83,18 +83,18 @@ class _ActivityCardState extends State<ActivityCard> {
                             Border.all(color: Colors.transparent, width: 0.5),
                       ),
                     ),
-                    onTap: () {
-                      if (!widget.selectable) {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) {
-                              return AddProgressCard(
-                                  widget.activity, _countReps);
-                            });
-                      }
-                    },
+                    onTap: widget.selectable || widget.dismissible
+                        ? null
+                        : () {
+                            showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return AddProgressCard(
+                                      widget.activity, _countReps);
+                                });
+                          },
                   ),
                 ),
                 Positioned(top: 16, right: 16, child: buildAddSection()),

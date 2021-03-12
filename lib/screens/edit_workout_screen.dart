@@ -40,6 +40,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         id: widget.workoutID,
         builder: (context, data) {
           FredericWorkout workout = data;
+          if (workout?.name == null) return Container();
           return Scaffold(
               appBar: AppBar(
                 centerTitle: false,

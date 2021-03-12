@@ -78,7 +78,7 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
     setState(() {
       switch (widget.type) {
         case FredericActivityBuilderType.WorkoutActivities:
-          _fredericWorkoutActivities = _workoutManager[widget.id].activities;
+          _fredericWorkoutActivities = _workoutManager[widget.id]?.activities;
           break;
         case FredericActivityBuilderType.SingleActivity:
           _activity = _activityManager[widget.id];
@@ -94,11 +94,11 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
   void dispose() {
     if (_workoutManager != null) {
       _workoutManager.removeListener(updateData);
-      _workoutManager[widget.id].removeListener(updateData);
+      _workoutManager[widget.id]?.removeListener(updateData);
     }
     _activityManager.removeListener(updateData);
     if (widget.type == FredericActivityBuilderType.SingleActivity)
-      _activityManager[widget.id].removeListener(updateData);
+      _activityManager[widget.id]?.removeListener(updateData);
     super.dispose();
   }
 }

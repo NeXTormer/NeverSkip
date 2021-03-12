@@ -51,19 +51,22 @@ class FredericWorkoutManager with ChangeNotifier {
   }
 
   void _handleWorkoutsStream(QuerySnapshot snapshot) {
-    bool changed = false;
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       var docSnapshot = snapshot.docChanges[i].doc;
+      if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
+        _workouts.remove(docSnapshot.id);
+        continue;
+      }
+
       if (_workouts.containsKey(docSnapshot.id)) {
         _workouts[docSnapshot.id]
             .insertSnapshot(snapshot.docChanges[i].doc)
             .notifyListeners();
-        changed = true;
       } else {
         _workouts[docSnapshot.id] = FredericWorkout(docSnapshot.id)
           ..insertSnapshot(docSnapshot);
       }
     }
-    if (changed) notifyListeners();
+    notifyListeners();
   }
 }

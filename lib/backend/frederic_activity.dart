@@ -450,7 +450,7 @@ class FredericActivity with ChangeNotifier {
   /// the users activities
   ///
   static Future<FredericActivity> copyActivity(FredericActivity activity) {
-    return newActivity(
+    return create(
         activity.name,
         activity.description,
         activity.image,
@@ -465,7 +465,7 @@ class FredericActivity with ChangeNotifier {
   /// DB and returns it as a future when finished.
   /// The [owner] is the current user
   ///
-  static Future<FredericActivity> newActivity(
+  static Future<FredericActivity> create(
       String name,
       String description,
       String image,
