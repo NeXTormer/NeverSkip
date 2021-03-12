@@ -1,11 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/profile_screen/goal/save_goal_buttons.dart';
 import 'package:intl/intl.dart';
 
+enum Mode {
+  GOAL,
+  ACHIEVEMENT,
+}
+
 class FinishGoalView extends StatelessWidget {
-  FinishGoalView(this.goal);
+  FinishGoalView(this.goal, this.mode);
+  final Mode mode;
   final FredericGoal goal;
 
   @override
@@ -14,6 +18,7 @@ class FinishGoalView extends StatelessWidget {
       // TODO Animate slide in
       // padding: EdgeInsets.only(top: x),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.only(
@@ -28,7 +33,10 @@ class FinishGoalView extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 18,
+              vertical: 10,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,104 +53,144 @@ class FinishGoalView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Divider(thickness: 1),
-                _buildStatisticsTextBox(),
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    Spacer(),
-                    SaveGoalButtons(goal),
-                  ],
+                Text(
+                  'Started: ${DateFormat('dd.MM.yyyy').format(goal.startDate)}',
+                  style: TextStyle(
+                    color: Colors.black54,
+                  ),
+                ),
+                Divider(thickness: 0.8),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildDataColText(
+                              goal.startState.toString(), 'Start'),
+                          _buildVerticalDivider(color: Colors.black26),
+                          _buildDataColText(
+                              goal.currentState.toString(), 'Current'),
+                          _buildVerticalDivider(color: Colors.black26),
+                          _buildDataColText(goal.endState.toString(), 'Target'),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'You finished your goal in 8 Weeks',
+                              style: TextStyle(
+                                color: Colors.lightBlue,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.timer,
+                              color: Colors.black54,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: mode == Mode.GOAL
+                  ? [
+                      _buildDialogButton('Discard', Colors.redAccent, () {
+                        // TODO
+                        // Discard Goal
+                        Navigator.of(context).pop();
+                      }),
+                      SizedBox(width: 10),
+                      _buildDialogButton('Save & Continue', Colors.lightBlue,
+                          () {
+                        // TODO
+                        // Save to Achievements
+                        Navigator.of(context).pop();
+                      }),
+                    ]
+                  : [
+                      _buildDialogButton('Remove', Colors.redAccent, () {
+                        // TODO
+                        // Remove goal from achievements
+                      })
+                    ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  _buildStatisticsTextBox() {
+  _buildDialogButton(String text, Color color, Function onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 5,
+          horizontal: 10,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildVerticalDivider({double width = 0.5, Color color = Colors.black45}) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      height: 40,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        // color: Colors.lightBlue[100],
-        boxShadow: [
-          const BoxShadow(
+        border: Border(
+          right: BorderSide(
+            width: width,
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildDataColText(String data, String title) {
+    return Column(
+      children: [
+        Text(
+          data,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
             color: Colors.black45,
           ),
-          const BoxShadow(
-            color: Colors.white,
-            spreadRadius: 0,
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      child: RichText(
-        text: TextSpan(
-          style: TextStyle(
-            fontSize: 15,
-            color: Colors.black,
-          ),
-          children: [
-            TextSpan(text: 'You started your jorney on the '),
-            TextSpan(
-              text: '${DateFormat('dd.MM.yyyy').format(goal.startDate)}\n',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextSpan(text: 'It took you '),
-            TextSpan(
-              text:
-                  '${DateTime.now().difference(goal.startDate).inDays} days\n',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextSpan(text: 'To go from '),
-            TextSpan(
-              text: '${goal.startState} ',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            TextSpan(text: 'to '),
-            TextSpan(
-              text: '${goal.currentState} ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextSpan(text: 'Reputations\n\n'),
-            TextSpan(text: 'Keep Going!'),
-          ],
         ),
-      ),
-    );
-  }
-
-  _buildSaveButton(String title, Function userChoice, Color color) {
-    return FlatButton(
-      //TODO Color Theme
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: color,
-          width: 2,
-        ),
-      ),
-      onPressed: () => userChoice(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        width: 100,
-        child: AutoSizeText(
-          title,
-          style: TextStyle(color: color),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-        ),
-      ),
+      ],
     );
   }
 }

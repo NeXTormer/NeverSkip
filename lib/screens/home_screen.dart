@@ -43,9 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             preferredSize: Size.fromHeight(60),
             child: AppBar(
               title: Text('Frederic'),
-              leading: InkWell(
-                  child: Icon(Icons.person),
-                  onTap: () => FirebaseAuth.instance.signOut()),
+              leading: Icon(Icons.person),
               actions: [
                 PopupMenuButton(
                   onSelected: (addOption) {

@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/profile_screen/settings_screen/keep_signed_in.dart';
+import 'package:frederic/widgets/profile_screen/settings_screen/pick_banner_image.dart';
 
 class SettingsScreen extends StatelessWidget {
   SettingsScreen(this.user);
   final FredericUser user;
 
-  final double generalTextsize = 16;
+  final double generalTextsize = 17;
   final double titleTextSize = 20;
+  final double generalPadding = 20;
 
   final bool male = true;
   final bool female = false;
@@ -35,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                _buildUserInformation(),
+                _buildUserInformation(context),
                 Divider(),
                 Text(
                   'General',
@@ -45,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 _buildGeneralInformation(),
-                SizedBox(height: 10),
+                SizedBox(height: generalPadding),
                 Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,7 +60,9 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     _buildAccountButton(
                       'Logout',
-                      () {},
+                      () {
+                        FirebaseAuth.instance.signOut();
+                      },
                       Colors.lightBlue,
                     ),
                   ],
@@ -94,8 +99,8 @@ class SettingsScreen extends StatelessWidget {
               // TODO
               // Turn off/on Notifications
             }),
-            SizedBox(height: 10),
-            KeepSignedIn('Keeo Signed In', () {
+            SizedBox(height: generalPadding),
+            KeepSignedIn('Keep Signed In', () {
               // TODO
               // Keep user signed in
             }),
@@ -116,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  _buildUserInformation() {
+  _buildUserInformation(BuildContext context) {
     return Row(
       children: [
         SizedBox(width: 50),
@@ -124,11 +129,13 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: generalPadding),
               _buildProfileImageAndText(),
-              SizedBox(height: 10),
-              _buildBannerPickerButton(),
-              SizedBox(height: 10),
+              SizedBox(height: generalPadding),
+              _buildBannerPickerButton(context),
+              SizedBox(height: generalPadding),
+              _buildInfoTextStack('kollegah.derboss@gmail.com', 'Email'),
+              SizedBox(height: generalPadding),
               Row(
                 children: [
                   Text(
@@ -140,9 +147,8 @@ class SettingsScreen extends StatelessWidget {
                   _buildGenderBox('other', other),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: generalPadding),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _buildInfoTextStack(user.age.toString(), 'Age'),
                   _buildInfoTextStack('187 cm', 'Height'),
@@ -214,7 +220,7 @@ class SettingsScreen extends StatelessWidget {
       overflow: Overflow.visible,
       children: [
         Container(
-          width: 80,
+          // width: 80,
           height: 45,
           padding: const EdgeInsets.all(8),
           child: Container(
@@ -223,10 +229,13 @@ class SettingsScreen extends StatelessWidget {
                 bottom: BorderSide(width: 0.5),
               ),
             ),
-            child: Center(
-              child: Text(
-                data,
-                style: TextStyle(fontSize: generalTextsize),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Center(
+                child: Text(
+                  data,
+                  style: TextStyle(fontSize: generalTextsize),
+                ),
               ),
             ),
           ),
@@ -311,11 +320,14 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  _buildBannerPickerButton() {
+  _buildBannerPickerButton(BuildContext context) {
     return InkWell(
       onTap: () {
-        // TODO
-        // Open Banner Image Picker (Popup)
+        showDialog(
+            context: context,
+            builder: (context) {
+              return PickBannerImage(user);
+            });
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

@@ -86,27 +86,45 @@ class _CardGoalItemState extends State<CardGoalItem> {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                     onTap: () {
-                      //TODO: add goal to achievements
-                      showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
+                      showDialog(
                           context: context,
                           builder: (context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.6,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: const Radius.circular(25),
-                                  topRight: const Radius.circular(25),
+                            return Dialog(
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              child: Container(
+                                height: 400,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.white,
                                 ),
-                              ),
-                              child: Center(
                                 child:
                                     StaggerAchievementFinishDemo(widget.goal),
                               ),
                             );
                           });
+
+                      //TODO: add goal to achievements
+                      // showModalBottomSheet(
+                      //     isScrollControlled: true,
+                      //     backgroundColor: Colors.transparent,
+                      //     context: context,
+                      //     builder: (context) {
+                      //       return Container(
+                      //         height: MediaQuery.of(context).size.height * 0.6,
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.white,
+                      //           borderRadius: BorderRadius.only(
+                      //             topLeft: const Radius.circular(25),
+                      //             topRight: const Radius.circular(25),
+                      //           ),
+                      //         ),
+                      //         child: Center(
+                      //           child:
+                      //               StaggerAchievementFinishDemo(widget.goal),
+                      //         ),
+                      //       );
+                      //     });
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.white,

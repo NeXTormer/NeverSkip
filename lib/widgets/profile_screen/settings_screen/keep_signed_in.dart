@@ -20,7 +20,7 @@ class _KeepSignedInState extends State<KeepSignedIn> {
         Text(
           widget.text,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 17,
           ),
         ),
         SizedBox(width: 10),

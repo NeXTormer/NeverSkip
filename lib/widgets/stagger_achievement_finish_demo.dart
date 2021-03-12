@@ -33,7 +33,7 @@ class _StaggerAchievementFinishDemoState
       child: Center(
         child: Container(
           child: _controller.isCompleted
-              ? FinishGoalView(widget.goal)
+              ? FinishGoalView(widget.goal, Mode.GOAL)
               : StaggerAchievementFinishAnimation(
                   controller: _controller.view,
                 ),
