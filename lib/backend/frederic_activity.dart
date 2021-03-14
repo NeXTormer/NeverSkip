@@ -279,8 +279,8 @@ class FredericActivity with ChangeNotifier {
   Future<FredericActivity> loadSets([int limit = 5]) async {
     if (limit > 5) _latestSetsLoaded = true;
     QuerySnapshot snapshot = await _setsCollection
-        .where('owner', isEqualTo: FredericBackend.instance().currentUser.uid)
         .where('activity', isEqualTo: activityID)
+        .orderBy('timestamp', descending: true)
         .limit(limit)
         .get();
     _processSetQuerySnapshot(snapshot);
@@ -339,7 +339,6 @@ class FredericActivity with ChangeNotifier {
     DocumentReference docRef = await _setsCollection.add({
       'reps': reps,
       'weight': weight,
-      'owner': FirebaseAuth.instance.currentUser.uid,
       'timestamp': Timestamp.now(),
       'activity': activityID
     });

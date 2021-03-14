@@ -127,8 +127,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                                 int counter = 0;
                                 for (var value in widget.activity.sets) {
                                   if (counter >= 6) break;
-                                  setList
-                                      .add(SetCard(value, isCali, isStretch));
+                                  setList.add(SetCard(
+                                      value, isCali, isStretch, activity));
                                   counter++;
                                 }
                                 return Column(

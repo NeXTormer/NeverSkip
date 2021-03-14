@@ -85,7 +85,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Placeholder(),
+                child: Container(
+                    child: Center(
+                        child: Column(
+                  children: [
+                    SizedBox(height: 12),
+                    Text('Coming soon...',
+                        style:
+                            TextStyle(fontSize: 18, color: Colors.grey[500])),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text('We are working hard to implement this feature',
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.grey[500])),
+                    SizedBox(height: 2)
+                  ],
+                ))),
               ),
               if (false)
                 ProgressChart(

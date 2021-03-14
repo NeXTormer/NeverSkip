@@ -39,11 +39,16 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     AppBar appbar = AppBar(
       title: AnimatedSwitcher(
         child: widget.screens[currentIndex].appbar.title,
-        duration: Duration(milliseconds: 0),
+        duration: Duration(milliseconds: 100),
       ),
+      centerTitle: true,
+      //brightness: Brightness.dark,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(12))),
-      leading: widget.screens[currentIndex].appbar.leading,
+      leading: AnimatedSwitcher(
+        child: widget.screens[currentIndex].appbar.leading,
+        duration: Duration(milliseconds: 100),
+      ),
       actions: widget.screens[currentIndex].appbar.actions,
     );
 

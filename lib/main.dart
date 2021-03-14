@@ -76,7 +76,7 @@ class Frederic extends StatelessWidget {
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.white,
+          primaryColor: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AuthenticationWrapper(
@@ -92,30 +92,38 @@ class Frederic extends StatelessWidget {
                         key: ValueKey(1),
                       ),
                       actions: [
-                        PopupMenuButton(
-                          onSelected: (addOption) {
-                            // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
-                            if (addOption == AddOptions.Goal) {
-                              _handleButtonPress(context, null);
-                              _addGoalPopUp(context, null);
-                            } else {
-                              Navigator.of(context)
-                                  .pushNamed(AddGraphScreen.routeName);
-                            }
-                          },
-                          itemBuilder: (_) => [
-                            PopupMenuItem(
-                              child: Text('Add Goal'),
-                              value: AddOptions.Goal,
+                        AnimatedSwitcher(
+                          duration: Duration(milliseconds: 100),
+                          child: PopupMenuButton(
+                            onSelected: (addOption) {
+                              // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
+                              if (addOption == AddOptions.Goal) {
+                                _handleButtonPress(context, null);
+                                _addGoalPopUp(context, null);
+                              } else {
+                                Navigator.of(context)
+                                    .pushNamed(AddGraphScreen.routeName);
+                              }
+                            },
+                            itemBuilder: (_) => [
+                              PopupMenuItem(
+                                child: Text('Add Goal'),
+                                value: AddOptions.Goal,
+                              ),
+                              PopupMenuItem(
+                                child: Text('Add Graph'),
+                                value: AddOptions.Graph,
+                              ),
+                            ],
+                            icon: Icon(
+                              Icons.add,
                             ),
-                            PopupMenuItem(
-                              child: Text('Add Graph'),
-                              value: AddOptions.Graph,
-                            ),
-                          ],
-                          icon: Icon(Icons.add),
+                          ),
                         ),
-                        IconButton(icon: Icon(Icons.list), onPressed: () {}),
+                        AnimatedSwitcher(
+                            duration: Duration(milliseconds: 100),
+                            child: IconButton(
+                                icon: Icon(Icons.list), onPressed: () {})),
                       ],
                       leading: InkWell(
                           child: Icon(Icons.person),

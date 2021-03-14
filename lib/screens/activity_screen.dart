@@ -37,13 +37,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
             SliverAppBar(
               pinned: false,
               floating: true,
-              backgroundColor: Color(0x00FFFFFF),
+              backgroundColor: Colors.transparent,
               shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30))),
               leading: Container(),
               expandedHeight: 110.0,
+              //toolbarHeight: 0,
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.pin,
                 background: Consumer<ActivityFilterController>(
