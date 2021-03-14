@@ -329,7 +329,7 @@ class _AddWorkoutCardState extends State<AddWorkoutCard> {
             _weeks = value;
           });
         },
-        activeColor: Colors.orangeAccent,
+        activeColor: Colors.lightBlue,
         value: _weeks,
         min: 1,
         max: 28,

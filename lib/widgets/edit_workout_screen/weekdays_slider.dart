@@ -135,7 +135,7 @@ class WeekdaySliderDayButton extends StatelessWidget {
                 child: Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    color: Colors.orangeAccent[400],
+                    color: Colors.lightBlue,
                     borderRadius: BorderRadius.all(
                       Radius.circular(8.0),
                     ),

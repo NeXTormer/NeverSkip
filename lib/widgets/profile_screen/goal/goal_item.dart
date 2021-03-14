@@ -3,6 +3,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/providers/goals.dart';
 import 'package:frederic/widgets/circle_loading_progress_spinner.dart';
+import 'package:frederic/widgets/profile_screen/goal/edit_goal_view.dart';
 import 'package:frederic/widgets/stagger_achievement_finish_demo.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -103,28 +104,6 @@ class _CardGoalItemState extends State<CardGoalItem> {
                               ),
                             );
                           });
-
-                      //TODO: add goal to achievements
-                      // showModalBottomSheet(
-                      //     isScrollControlled: true,
-                      //     backgroundColor: Colors.transparent,
-                      //     context: context,
-                      //     builder: (context) {
-                      //       return Container(
-                      //         height: MediaQuery.of(context).size.height * 0.6,
-                      //         decoration: BoxDecoration(
-                      //           color: Colors.white,
-                      //           borderRadius: BorderRadius.only(
-                      //             topLeft: const Radius.circular(25),
-                      //             topRight: const Radius.circular(25),
-                      //           ),
-                      //         ),
-                      //         child: Center(
-                      //           child:
-                      //               StaggerAchievementFinishDemo(widget.goal),
-                      //         ),
-                      //       );
-                      //     });
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
@@ -223,9 +202,14 @@ class _CardGoalItemState extends State<CardGoalItem> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () {
-                            print('ontapgoal');
-                          },
+                          onTap: () => showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  child: EditGoalView(goal: widget.goal),
+                                );
+                              }),
                           child: Text(
                             'Edit Goal',
                             style: TextStyle(

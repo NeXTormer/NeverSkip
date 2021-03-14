@@ -1,18 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_user_builder.dart';
 import 'package:frederic/screens/add_graph_screen.dart';
 import 'package:frederic/screens/settings_screen.dart';
-import 'package:frederic/widgets/frederic_circular_progress_indicator.dart';
 import 'package:frederic/widgets/profile_screen/achievement_page.dart';
-import 'package:frederic/widgets/profile_screen/goal/add_goal_item.dart';
-import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
+import 'package:frederic/widgets/profile_screen/goal/finish_goal_view.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
 import 'package:frederic/widgets/progress_chart/progress_chart.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 import '../backend/backend.dart';
 
@@ -98,6 +98,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      RaisedButton(
+                        onPressed: () {
+                          // TODO
+                        },
+                        child: Text('Test Toast'),
+                      ),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.only(left: 16.0, top: 6.0),
@@ -148,7 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
   /// The bottom sheet contains the [EditSlideSheet] Widget
   /// so the user can interact with the goal.
   void _addGoalPopUp(String id) {
-    showDialog(context: context, builder: (context) => AddGoalItem());
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        elevation: 10,
+        backgroundColor: Colors.transparent,
+        child: FinishGoalView(null, Mode.EDIT),
+      ),
+    );
   }
 
   @override
