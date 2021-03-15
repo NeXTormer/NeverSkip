@@ -46,6 +46,7 @@ class _StaggerAchievementFinishDemoState
     try {
       await _controller.forward().orCancel;
       setState(() {});
+
       //await _controller.reverse().orCancel;
 
     } on TickerCanceled {}

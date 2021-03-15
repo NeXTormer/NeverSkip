@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
+import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 
 class ActivityCard extends StatefulWidget {
-
   ActivityCard(this.activity,
       {this.selectable = false,
       this.onAddActivity,
@@ -38,6 +38,7 @@ class _ActivityCardState extends State<ActivityCard> {
       child: Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.3,
+
         closeOnScroll: true,
         //actions: widget.dismissable ? [] : [buildAddButton()],
         secondaryActions:
@@ -313,6 +314,7 @@ class _ActivityCardState extends State<ActivityCard> {
       onTap: () {
         if (widget.selectable) {
           widget.onAddActivity(widget.activity);
+          UserFeedbackToast().showAddedToast(context);
         } else {
           showModalBottomSheet(
               context: context,

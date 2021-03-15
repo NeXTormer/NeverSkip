@@ -67,7 +67,50 @@ class _CardGoalItemState extends State<CardGoalItem> {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () {
-                    //TODO: delete goal with confirmation
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 22,
+                        ),
+                        titlePadding: const EdgeInsets.symmetric(
+                            horizontal: 22, vertical: 16),
+                        titleTextStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 20,
+                        ),
+                        title: Text('Remove Goal'),
+                        content:
+                            Text('Are you sure you want to delete your goal?'),
+                        actions: [
+                          FlatButton(
+                            textColor: Colors.black54,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            textColor: Colors.red,
+                            onPressed: () {
+                              // TODO
+                              // Delete Goal
+                            },
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                   child: CircleAvatar(
                     backgroundColor: Colors.white,

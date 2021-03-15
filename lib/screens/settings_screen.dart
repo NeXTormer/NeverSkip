@@ -47,9 +47,9 @@ class SettingsScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                SizedBox(height: generalPadding),
                 _buildGeneralInformation(),
                 SizedBox(height: generalPadding),
-                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -67,10 +67,6 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [],
-                )
               ],
             ),
           ),

@@ -150,7 +150,7 @@ class FinishGoalView extends StatelessWidget {
 
   _buildDialogButton(String text, Color color, Function onTap) {
     return InkWell(
-      onTap: onTap(),
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(
           vertical: 5,

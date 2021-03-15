@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
+import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 
 class AddProgressCard extends StatefulWidget {
   AddProgressCard(this.activity, this.reps);
@@ -86,6 +87,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                                 },
                               );
                             } else {
+                              UserFeedbackToast()
+                                  .showProgressAddedToast(context);
                               widget.activity.addProgress(
                                   widget.reps, weightCounterController.value);
                               Navigator.pop(context);

@@ -59,8 +59,9 @@ dependencies:
   parallax_image: ^0.3.1+1
   flutter_launcher_icons: ^0.8.0
   flutter_svg: ^0.18.0
+  cached_network_image: ^2.5.1
   footer: ^0.0.3
-  flutter_styled_toast: ^1.5.2+3
+  fluttertoast: ^7.1.8
 
 
 dev_dependencies:

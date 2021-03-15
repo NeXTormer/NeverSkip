@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_chart_data.dart';
 import 'package:frederic/backend/frederic_goal.dart';
@@ -12,7 +10,8 @@ import 'package:frederic/widgets/profile_screen/goal/goal_page.dart';
 import 'package:frederic/widgets/profile_screen/profile_header.dart';
 import 'package:frederic/widgets/profile_screen/small_progress_view_page.dart';
 import 'package:frederic/widgets/progress_chart/progress_chart.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 
 import '../backend/backend.dart';
 
@@ -98,12 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RaisedButton(
-                        onPressed: () {
-                          // TODO
-                        },
-                        child: Text('Test Toast'),
-                      ),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.only(left: 16.0, top: 6.0),
