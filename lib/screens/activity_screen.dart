@@ -14,8 +14,6 @@ class ActivityScreen extends StatefulWidget {
       this.itemsDismissable = false,
       this.onItemDismissed});
 
-  static var routeName = 'activity-list';
-
   final bool isSelector;
   final Function(FredericActivity) onAddActivity;
   final bool itemsDismissable;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
 import 'package:frederic/widgets/number_slider.dart';
+import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 
 class AddProgressCard extends StatefulWidget {
   AddProgressCard(this.activity, this.reps);
@@ -110,6 +111,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                                   } else {
                                     widget.activity.addProgress(
                                         widget.reps, sliderController.value);
+                                    UserFeedbackToast()
+                                        .showProgressAddedToast(context);
                                     Navigator.pop(context);
                                   }
                                 },

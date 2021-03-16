@@ -21,6 +21,7 @@ final Color kMainColor = Colors.lightBlue;
 final Color kAccentColor = Colors.lightBlueAccent;
 final Color kDarkColor = Colors.blueAccent;
 final Color kTextColor = Colors.blue[800];
+final Color kAppBarTextColor = Colors.white;
 final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 double kAppBarHeight = 0;
 
@@ -92,38 +93,35 @@ class Frederic extends StatelessWidget {
                         key: ValueKey(1),
                       ),
                       actions: [
-                        AnimatedSwitcher(
-                          duration: Duration(milliseconds: 100),
-                          child: PopupMenuButton(
-                            onSelected: (addOption) {
-                              // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
-                              if (addOption == AddOptions.Goal) {
-                                _handleButtonPress(context, null);
-                                _addGoalPopUp(context, null);
-                              } else {
-                                Navigator.of(context)
-                                    .pushNamed(AddGraphScreen.routeName);
-                              }
-                            },
-                            itemBuilder: (_) => [
-                              PopupMenuItem(
-                                child: Text('Add Goal'),
-                                value: AddOptions.Goal,
-                              ),
-                              PopupMenuItem(
-                                child: Text('Add Graph'),
-                                value: AddOptions.Graph,
-                              ),
-                            ],
-                            icon: Icon(
-                              Icons.add,
+                        PopupMenuButton(
+                          onSelected: (addOption) {
+                            // Either show the [EditSlideSheet] bottom sheet or the [AddGraphScreen] to add a progress tracker
+                            if (addOption == AddOptions.Goal) {
+                              //_handleButtonPress(null);
+                              _addGoalPopUp(context, null);
+                            } else {
+                              Navigator.of(context)
+                                  .pushNamed(AddGraphScreen.routeName);
+                            }
+                          },
+                          itemBuilder: (_) => [
+                            PopupMenuItem(
+                              child: Text('Add Goal'),
+                              value: AddOptions.Goal,
                             ),
-                          ),
+                            PopupMenuItem(
+                              child: Text('Add Graph'),
+                              value: AddOptions.Graph,
+                            ),
+                          ],
                         ),
-                        AnimatedSwitcher(
-                            duration: Duration(milliseconds: 100),
-                            child: IconButton(
-                                icon: Icon(Icons.list), onPressed: () {})),
+                        IconButton(
+                          icon: Icon(Icons.settings_outlined),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SettingsScreen()));
+                          },
+                        ),
                       ],
                       leading: InkWell(
                           child: Icon(Icons.person),

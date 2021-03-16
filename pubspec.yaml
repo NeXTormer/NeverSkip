@@ -60,6 +60,8 @@ dependencies:
   flutter_launcher_icons: ^0.8.0
   flutter_svg: ^0.18.0
   cached_network_image: ^2.5.1
+  footer: ^0.0.3
+  fluttertoast: ^7.1.8
 
 
 dev_dependencies:
@@ -88,6 +90,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/dumbbell_with_bg_blue.png
+    - lib/assets/images/dumbbell2.png
+    
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

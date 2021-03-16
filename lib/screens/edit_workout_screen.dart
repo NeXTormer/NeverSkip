@@ -7,6 +7,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
+import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 import 'package:frederic/widgets/workout/edit_workout_page.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
@@ -42,17 +43,22 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           FredericWorkout workout = data;
           if (workout?.name == null) return Container();
           return Scaffold(
+              backgroundColor: Colors.white,
               appBar: AppBar(
-                centerTitle: false,
-                elevation: 0.0,
-                title: Material(
-                  type: MaterialType.transparency,
-                  child: Text(
-                    workout.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(12))),
+                centerTitle: true,
+                elevation: 0,
+                shadowColor: Colors.white,
+                title: Text(
+                  workout.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                      color: kAppBarTextColor),
                 ),
                 actions: [
                   if (workout.canEdit)
@@ -160,9 +166,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleAddActivity(FredericActivity activity) {
-    FredericBackend.instance()
-        .workoutManager[widget.workoutID]
-        ?.addActivity(activity, sliderController.currentDay);
+    bool success = FredericBackend.instance()
+            .workoutManager[widget.workoutID]
+            ?.addActivity(activity, sliderController.currentDay) ??
+        false;
+
+    if (success) {
+      UserFeedbackToast().showAddedToast(context);
+    }
   }
 
   void handleDeleteActivity(FredericActivity activity) {

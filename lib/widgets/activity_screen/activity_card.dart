@@ -308,6 +308,13 @@ class _ActivityCardState extends State<ActivityCard> {
       onTap: () {
         if (widget.selectable) {
           widget.onAddActivity(widget.activity);
+        } else {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return AddProgressCard(widget.activity, _countReps);
+              });
         }
       },
     );

@@ -4,16 +4,24 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/providers/goals.dart';
+import 'package:frederic/widgets/profile_screen/goal/edit_goal_view.dart';
+import 'package:frederic/widgets/stagger_achievement_finish_demo.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 /// Card item which displays the corresponding [GoalItem] information.
 ///
 /// Uses the passed [Function showSlidesheet] to assign to
 /// the [onTap] of the ['Edit Goal'] string in order to edit the [GoalItem] data.
-class CardGoalItem extends StatelessWidget {
+class CardGoalItem extends StatefulWidget {
   CardGoalItem(this.goal);
   final FredericGoal goal;
 
+  @override
+  _CardGoalItemState createState() => _CardGoalItemState();
+}
+
+class _CardGoalItemState extends State<CardGoalItem> {
   /// Checks if the enum [GoalType type] is [GoalType.Weighted]
   ///
   /// Returns a unit if the case is give.
@@ -50,7 +58,7 @@ class CardGoalItem extends StatelessWidget {
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0)),
                 child: Image(
-                  image: CachedNetworkImageProvider(goal.image),
+                  image: CachedNetworkImageProvider(widget.goal.image),
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -61,7 +69,50 @@ class CardGoalItem extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: InkWell(
                   onTap: () {
-                    //TODO: delete goal with confirmation
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 22,
+                        ),
+                        titlePadding: const EdgeInsets.symmetric(
+                            horizontal: 22, vertical: 16),
+                        titleTextStyle: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 20,
+                        ),
+                        title: Text('Remove Goal'),
+                        content:
+                            Text('Are you sure you want to delete your goal?'),
+                        actions: [
+                          FlatButton(
+                            textColor: Colors.black54,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            textColor: Colors.red,
+                            onPressed: () {
+                              // TODO
+                              // Delete Goal
+                            },
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
@@ -79,9 +130,25 @@ class CardGoalItem extends StatelessWidget {
               left: 0.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
+                child: InkWell(
                     onTap: () {
-                      //TODO: add goal to achievements
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              elevation: 0,
+                              backgroundColor: Colors.transparent,
+                              child: Container(
+                                height: 400,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.white,
+                                ),
+                                child:
+                                    StaggerAchievementFinishDemo(widget.goal),
+                              ),
+                            );
+                          });
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
@@ -106,12 +173,12 @@ class CardGoalItem extends StatelessWidget {
                         child: CircularPercentIndicator(
                           radius: 100,
                           lineWidth: 8,
-                          percent: goal.progressPercentage / 100,
+                          percent: widget.goal.progressPercentage / 100,
                           //progressColor: Colors.red,
                           linearGradient: LinearGradient(colors: kIconGradient),
                           center: Container(
                             child: Text(
-                              '${goal.progressPercentage}%',
+                              '${widget.goal.progressPercentage}%',
                               style: TextStyle(
                                   fontSize: 26, fontWeight: FontWeight.w500),
                             ),
@@ -127,7 +194,7 @@ class CardGoalItem extends StatelessWidget {
                       children: [
                         SizedBox(height: 8),
                         Text(
-                          goal.title,
+                          widget.goal.title,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -138,7 +205,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.startState} ${goalType(goal.activity?.type)}',
+                                  '${widget.goal.startState} ${goalType(widget.goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -149,7 +216,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.currentState} ${goalType(goal.activity?.type)}',
+                                  '${widget.goal.currentState} ${goalType(widget.goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -160,7 +227,7 @@ class CardGoalItem extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  '${goal.endState} ${goalType(goal.activity?.type)}',
+                                  '${widget.goal.endState} ${goalType(widget.goal.activity?.type)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -180,9 +247,14 @@ class CardGoalItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () {
-                            print('ontapgoal');
-                          },
+                          onTap: () => showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  child: EditGoalView(goal: widget.goal),
+                                );
+                              }),
                           child: Text(
                             'Edit Goal',
                             style: TextStyle(
@@ -200,7 +272,7 @@ class CardGoalItem extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              goal.timeLeftFormatted,
+                              widget.goal.timeLeftFormatted,
                               style: TextStyle(color: Colors.black54),
                             ),
                           ],

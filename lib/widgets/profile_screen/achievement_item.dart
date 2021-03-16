@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/providers/goals.dart';
+import 'package:frederic/widgets/profile_screen/goal/finish_goal_view.dart';
 
 /// Clickable circle avatar with information of the [respectivly GoalItem]
 ///
@@ -24,11 +25,21 @@ class AchievementItem extends StatelessWidget {
               highlightedBorderColor: kMainColor,
               onPressed: () {
                 showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(goal.title),
-                  ),
-                );
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                          height: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Colors.white,
+                          ),
+                          child: FinishGoalView(goal, Mode.ACHIEVEMENT),
+                        ),
+                      );
+                    });
               },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18)),
