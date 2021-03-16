@@ -51,7 +51,7 @@ class FredericGoal {
   String get activityID => _activityID;
   num get startState => _start ?? 0;
   num get endState => _end ?? 0;
-  num get currentState => _current ?? -42;
+  num get currentState => _current ?? -1;
   DateTime get startDate => _startDate.toDate() ?? DateTime.now();
   DateTime get endDate => _endDate.toDate() ?? DateTime.now();
   bool get isCompleted => _isCompleted ?? false;
@@ -110,6 +110,10 @@ class FredericGoal {
   void updateData() {
     _current = _activity.bestProgress;
     _goalManager.updateData();
+    if (_activity == null) {
+      _activity = _activityManager[activityID];
+      _activity.addListener(updateData);
+    }
   }
 
   void insertData(DocumentSnapshot snapshot) {
@@ -124,9 +128,9 @@ class FredericGoal {
     _goalManager.updateData();
 
     if (_activity == null) {
-      _activity = _activityManager[_activityID];
-      //_activity.addListener(updateData);
       _activityManager.addListener(updateData);
+      _activity = _activityManager[activityID];
+      _activity?.addListener(updateData);
     }
   }
 

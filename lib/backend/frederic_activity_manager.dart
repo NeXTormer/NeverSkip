@@ -83,4 +83,6 @@ class FredericActivityManager with ChangeNotifier {
     }
     if (!_hasDataCompleter.isCompleted) _hasDataCompleter.complete();
   }
+
+  void updateData() => notifyListeners();
 }

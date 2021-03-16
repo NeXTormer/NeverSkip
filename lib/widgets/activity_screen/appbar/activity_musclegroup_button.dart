@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class ActivityMuscleGroupButton extends StatelessWidget {
   ActivityMuscleGroupButton(String label,
@@ -18,10 +19,10 @@ class ActivityMuscleGroupButton extends StatelessWidget {
                 height: 25,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(170, 255, 165, 0),
+                  color: kMainColor, //Color.fromARGB(170, 255, 165, 0),
                   border: Border.all(
                     width: 1.0,
-                    color: Colors.orange[50],
+                    color: Colors.white54,
                   ),
                   borderRadius: BorderRadius.circular(8.0),
                 ),

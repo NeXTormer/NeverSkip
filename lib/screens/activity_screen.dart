@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
@@ -25,64 +26,61 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  //with automatickeepaliveclientmixin to keep state over pages
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            floating: true,
-            backgroundColor: Colors.white,
-            title: Container(
-              child: Row(
-                children: [
-                  Icon(Icons.filter_alt),
-                  SizedBox(width: 8),
-                  Text(
-                    'Exercises',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            expandedHeight: 150.0,
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.parallax,
-              background: Consumer<ActivityFilterController>(
-                builder: (context, filter, child) {
-                  return ActivityFlexibleAppbar(filterController: filter);
-                },
-              ),
-            ),
-          ),
-          FredericActivityBuilder(
-            type: FredericActivityBuilderType.AllActivities,
-            builder: (context, list) {
-              return Consumer<ActivityFilterController>(
-                builder: (context, filter, child) => SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      FredericActivity a = list[index];
-                      if (a.matchFilterController(filter)) {
-                        return ActivityCard(
-                          a,
-                          selectable: widget.isSelector,
-                          onAddActivity: widget.onAddActivity,
-                          dismissible: widget.itemsDismissable,
-                          onDismiss: widget.onItemDismissed,
-                        );
-                      }
-                      return Container();
-                    },
-                    childCount: list.length,
-                  ),
+      child: CupertinoScrollbar(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              floating: true,
+              backgroundColor: Colors.transparent,
+              shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+              leading: Container(),
+              expandedHeight: 110.0,
+              //toolbarHeight: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                background: Consumer<ActivityFilterController>(
+                  builder: (context, filter, child) {
+                    return ActivityFlexibleAppbar(filterController: filter);
+                  },
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+            FredericActivityBuilder(
+              type: FredericActivityBuilderType.AllActivities,
+              builder: (context, list) {
+                return Consumer<ActivityFilterController>(
+                  builder: (context, filter, child) => SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        FredericActivity a = list[index];
+                        if (a.matchFilterController(filter)) {
+                          return ActivityCard(
+                            a,
+                            selectable: widget.isSelector,
+                            onAddActivity: widget.onAddActivity,
+                            dismissible: widget.itemsDismissable,
+                            onDismiss: widget.onItemDismissed,
+                          );
+                        }
+                        return Container();
+                      },
+                      childCount: list.length,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 import 'package:frederic/widgets/activity_screen/appbar/activity_musclegroup_button.dart';
 import 'package:frederic/widgets/activity_screen/appbar/activity_type_button.dart';
@@ -18,9 +19,14 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
     widget.textController = TextEditingController();
     return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(12),
+            topRight: const Radius.circular(12),
+          )),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -47,6 +53,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.black),
                             decoration: InputDecoration(
+                              //TODO: Maybe collapsed input decoration
                               hintText: widget.filterController.searchText,
                               prefixIcon: Icon(
                                 Icons.search,
@@ -69,7 +76,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Colors.blueAccent,
+                                  color: kMainColor,
                                   width: 0.5,
                                 ),
                                 borderRadius: BorderRadius.circular(20.0),
@@ -101,7 +108,7 @@ class _ActivityFlexibleAppbarState extends State<ActivityFlexibleAppbar> {
                           iconData: Icons.accessibility_new),
                     ],
                   ),
-                  Divider(),
+                  SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

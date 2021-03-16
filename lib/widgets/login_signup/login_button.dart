@@ -22,7 +22,7 @@ class LoginButton extends StatelessWidget {
             child: Text(text,
                 style: GoogleFonts.varelaRound(
                     textStyle: TextStyle(
-                        color: Colors.red,
+                        color: Colors.blueAccent,
                         fontSize: 18,
                         letterSpacing: 1.2)))));
   }

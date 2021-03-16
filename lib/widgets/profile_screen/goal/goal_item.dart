@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/providers/goals.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:frederic/widgets/circle_loading_progress_spinner.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_view.dart';
 import 'package:frederic/widgets/stagger_achievement_finish_demo.dart';
@@ -55,8 +58,8 @@ class _CardGoalItemState extends State<CardGoalItem> {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0)),
-                child: Image.network(
-                  widget.goal.image,
+                child: Image(
+                  image: CachedNetworkImageProvider(goal.image),
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -64,7 +67,7 @@ class _CardGoalItemState extends State<CardGoalItem> {
             Positioned(
               right: 0.0,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: InkWell(
                   onTap: () {
                     showDialog(
@@ -165,23 +168,23 @@ class _CardGoalItemState extends State<CardGoalItem> {
                   Padding(
                     padding: const EdgeInsets.only(top: 3.0),
                     child: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.6)),
-                      child: CircularPercentIndicator(
-                        radius: 100,
-                        lineWidth: 8,
-                        percent: widget.goal.progressPercentage / 100,
-                        progressColor: Colors.blue[400],
-                        center: Container(
-                          child: Text(
-                            '${widget.goal.progressPercentage}%',
-                            style: TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.w500),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.6)),
+                        child: CircularPercentIndicator(
+                          radius: 100,
+                          lineWidth: 8,
+                          percent: goal.progressPercentage / 100,
+                          //progressColor: Colors.red,
+                          linearGradient: LinearGradient(colors: kIconGradient),
+                          center: Container(
+                            child: Text(
+                              '${goal.progressPercentage}%',
+                              style: TextStyle(
+                                  fontSize: 26, fontWeight: FontWeight.w500),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                        )),
                   ),
                   Divider(),
                   Container(
@@ -256,8 +259,7 @@ class _CardGoalItemState extends State<CardGoalItem> {
                           child: Text(
                             'Edit Goal',
                             style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold),
+                                color: kMainColor, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Row(

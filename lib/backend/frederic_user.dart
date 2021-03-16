@@ -40,7 +40,7 @@ class FredericUser with ChangeNotifier {
   }
 
   set uid(String value) {
-    if (value.isNotEmpty) _uid = uid;
+    if (value.isNotEmpty) _uid = value;
   }
 
   ///

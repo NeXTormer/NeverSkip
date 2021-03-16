@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/frederic_workout.dart';
-import 'package:frederic/widgets/workout/add_workout_card.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout_builder.dart';
-import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:frederic/main.dart';
+import 'package:frederic/widgets/workout/edit_workout_page.dart';
 import 'package:frederic/widgets/workout/workout_card.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
@@ -18,32 +18,20 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          title: Text('Your workouts'),
-        ),
-      ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (false)
-            Container(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Active workout',
-                style: TextStyle(
-                  fontSize: 28,
-                ),
-              ),
-            ),
-          FredericWorkoutBuilder(
-              id: 'kKOnczVnBbBHvmx96cjG',
-              builder: (context, list) {
-                return WorkoutCard(list);
-              }),
-          Divider(height: 0),
+          Expanded(
+            child: FredericWorkoutBuilder(builder: (context, list) {
+              List<FredericWorkout> workouts = list;
+              return ListView.builder(
+                padding: EdgeInsets.only(top: 8),
+                itemBuilder: (context, index) {
+                  return WorkoutCard(workouts[index]);
+                },
+                itemCount: workouts?.length ?? 0,
+              );
+            }),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -51,7 +39,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => AddWorkoutCard(null),
+          builder: (context) => EditWorkoutPage(null),
         ),
         //_createWorkoutPrompt,
         backgroundColor: Colors.white,

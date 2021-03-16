@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader(this.user);
@@ -9,6 +11,7 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Container(height: kAppBarHeight),
         Container(
           height: 200,
           child: Stack(
@@ -17,8 +20,8 @@ class ProfileHeader extends StatelessWidget {
                 height: 160,
                 width: double.infinity,
                 color: Colors.black,
-                child: Image.network(
-                  user.banner,
+                child: Image(
+                  image: CachedNetworkImageProvider(user.banner),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -33,7 +36,8 @@ class ProfileHeader extends StatelessWidget {
                       CircleAvatar(
                         child: CircleAvatar(
                           radius: 58,
-                          backgroundImage: NetworkImage(user.image),
+                          backgroundImage:
+                              CachedNetworkImageProvider(user.image),
                         ),
                         radius: 60,
                         backgroundColor: Colors.white,

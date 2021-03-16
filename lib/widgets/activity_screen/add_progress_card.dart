@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/set_card.dart';
+import 'package:frederic/widgets/number_slider.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 
 class AddProgressCard extends StatefulWidget {
@@ -14,110 +16,135 @@ class AddProgressCard extends StatefulWidget {
 }
 
 class _AddProgressCardState extends State<AddProgressCard> {
-  _WeightCounterController weightCounterController;
+  NumberSliderController sliderController;
 
   @override
   Widget build(BuildContext context) {
-    weightCounterController = _WeightCounterController();
+    sliderController = NumberSliderController();
 
-    return Wrap(children: [
-      Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            Image(
-                image: NetworkImage(widget.activity.image),
-                height: 140,
-                width: double.infinity,
-                fit: BoxFit.cover),
-            Container(
-              padding: EdgeInsets.all(12),
-              child: FutureBuilder<FredericActivity>(
-                  future: widget.activity.loadSets(
-                      10), //TODO: find a way to do this without loading sets again because they should already be loaded
-                  builder: (context, snapshot) {
-                    String importantValue = "weight";
-                    bool isCali = false;
-                    bool isStretch = false;
-                    num defaultValue = 0;
-                    if (snapshot.hasData) {
-                      isCali = snapshot.data.type ==
-                          FredericActivityType.Calisthenics;
-                      if (snapshot.data.type == FredericActivityType.Stretch) {
-                        importantValue = 'seconds';
-                        isStretch = true;
-                      }
-                      defaultValue = snapshot.data.bestProgress;
-                    }
-
-                    return Column(
-                      children: [
-                        Text(widget.activity.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500)),
-                        SizedBox(height: 10),
-                        Text(widget.activity.description),
-                        SizedBox(height: 6),
-                        Divider(),
-                        if (!isCali) SizedBox(height: 6),
-                        if (!isCali) Text('Enter $importantValue:'),
-                        if (!isCali) SizedBox(height: 4),
-                        if (!isCali)
-                          _WeightCounter(
-                            controller: weightCounterController,
-                            defaultValue: defaultValue,
-                          ),
-                        SizedBox(height: 6),
-                        OutlineButton(
-                          onPressed: () {
-                            if ((!isCali &&
-                                    weightCounterController.value == 0) ||
-                                widget.reps == 0) {
-                              showDialog<void>(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Center(child: Text('Error')),
-                                    content: Text(
-                                        'Please enter reps${isCali ? '' : ' and weight'}'),
-                                  );
-                                },
-                              );
-                            } else {
-                              UserFeedbackToast()
-                                  .showProgressAddedToast(context);
-                              widget.activity.addProgress(
-                                  widget.reps, weightCounterController.value);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Container(
-                            child: Text('Add progress'),
-                          ),
-                        ),
-                        Builder(
-                            //future: widget.activity.loadSetsOnce(5),
-                            builder: (context) {
-                          if (widget.activity.sets == null) return Container();
-                          List<Widget> setList = List<Widget>();
-                          for (var value in widget.activity.sets) {
-                            setList.add(SetCard(value, isCali, isStretch));
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(12),
+            topRight: const Radius.circular(12),
+          )),
+      child: Wrap(children: [
+        //the wrap sets the size of the bottomsheet to the minimum required size
+        Container(
+          width: double.infinity,
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(12),
+                  topRight: const Radius.circular(12),
+                ),
+                child: Image(
+                    image: CachedNetworkImageProvider(widget.activity.image),
+                    height: 140,
+                    width: double.infinity,
+                    fit: BoxFit.cover),
+              ),
+              Container(
+                  padding: EdgeInsets.all(12),
+                  child: Builder(builder: (BuildContext context) {
+                    if (!widget.activity.latestSetsLoaded)
+                      widget.activity.loadSets(6);
+                    return FredericActivityBuilder(
+                        type: FredericActivityBuilderType.SingleActivity,
+                        id: widget.activity.activityID,
+                        builder: (context, data) {
+                          FredericActivity activity = data;
+                          String importantValue = "weight";
+                          bool isCali = widget.activity.type ==
+                              FredericActivityType.Calisthenics;
+                          bool isStretch = false;
+                          if (widget.activity.type ==
+                              FredericActivityType.Stretch) {
+                            importantValue = 'seconds';
+                            isStretch = true;
                           }
+                          num defaultValue = 0;
+                          defaultValue = activity.bestProgress;
+
                           return Column(
-                            children: setList,
+                            children: [
+                              Text(widget.activity.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500)),
+                              SizedBox(height: 10),
+                              Text(widget.activity.description),
+                              SizedBox(height: 6),
+                              Divider(),
+                              if (!isCali) SizedBox(height: 6),
+                              if (!isCali)
+                                Text(
+                                  'Select $importantValue:',
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              if (!isCali) SizedBox(height: 12),
+                              if (!isCali)
+                                NumberSlider(
+                                    controller: sliderController,
+                                    startingIndex: defaultValue + 1),
+                              SizedBox(height: 10),
+                              OutlineButton(
+                                onPressed: () {
+                                  if ((!isCali &&
+                                          sliderController.value == 0) ||
+                                      widget.reps == 0) {
+                                    showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Center(child: Text('Error')),
+                                          content: Text(
+                                              'Please enter reps${isCali ? '' : ' and weight'}'),
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    widget.activity.addProgress(
+                                        widget.reps, sliderController.value);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Container(
+                                  child: Text('Add progress'),
+                                ),
+                              ),
+                              Builder(builder: (context) {
+                                if (widget.activity.sets == null)
+                                  return Container();
+                                List<Widget> setList = List<Widget>();
+                                widget.activity.sets.sort((first, second) =>
+                                    second.timestamp
+                                        .compareTo(first.timestamp));
+                                int counter = 0;
+                                for (var value in widget.activity.sets) {
+                                  if (counter >= 6) break;
+                                  setList.add(SetCard(
+                                      value, isCali, isStretch, activity));
+                                  counter++;
+                                }
+                                return Column(
+                                  children: setList,
+                                );
+                              }),
+                            ],
                           );
-                        }),
-                      ],
-                    );
-                  }),
-            )
-          ],
+                        });
+                  }))
+            ],
+          ),
         ),
-      ),
-    ]);
+      ]),
+    );
   }
 
   @override

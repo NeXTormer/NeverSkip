@@ -66,6 +66,14 @@ class FredericBackend {
     _currentUser.uid = uid;
   }
 
+  void logOut() {
+    FirebaseAuth.instance.signOut();
+    dispose();
+    if (getIt.isRegistered<FredericBackend>())
+      getIt.unregister<FredericBackend>();
+    getIt.registerSingleton<FredericBackend>(FredericBackend());
+  }
+
   void _loadCurrentUserStream() {
     if (currentUser?.uid == null) return null;
 
@@ -84,7 +92,7 @@ class FredericBackend {
       _currentUserCompleter.complete(currentUser);
   }
 
-  //TODO: Call this on app close
+  //TODO: Call this on app close/logout
   void dispose() {
     _activityManager.dispose();
     _workoutManager.dispose();

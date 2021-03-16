@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/util/palette.dart';
+import 'package:frederic/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginTextField extends StatelessWidget {
@@ -45,17 +45,17 @@ class LoginTextField extends StatelessWidget {
                   )
                 ]),
             child: TextFormField(
-              style: TextStyle(color: Palette.kDarkRedTextColor),
+              style: TextStyle(color: kTextColor),
               validator: validator,
               obscureText: obscureText,
               controller: controller,
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  prefixIcon: Icon(iconData, color: Colors.red),
+                  prefixIcon: Icon(iconData, color: Colors.blue),
                   hintText: hintText,
                   hintStyle: GoogleFonts.varelaRound(
                       textStyle:
-                          TextStyle(color: Colors.red[200], fontSize: 18))),
+                          TextStyle(color: Colors.blue[200], fontSize: 18))),
             ),
           ),
         ],
