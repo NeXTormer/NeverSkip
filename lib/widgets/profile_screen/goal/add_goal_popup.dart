@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AddGoalItem extends StatelessWidget {
+class AddGoalPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/screens/screens.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader(this.user);
@@ -43,16 +44,35 @@ class ProfileHeader extends StatelessWidget {
                         backgroundColor: Colors.white,
                       ),
                       SizedBox(width: 12),
-                      Container(
-                        width: 250,
-                        child: Text(
-                          user.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              //width: 250,
+                              child: Text(
+                                user.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              padding: EdgeInsets.only(right: 8),
+                              icon: Icon(
+                                Icons.settings,
+                                size: 32,
+                                color: Colors.black38,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SettingsScreen()));
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ],

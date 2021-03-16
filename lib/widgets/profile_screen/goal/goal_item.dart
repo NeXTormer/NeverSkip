@@ -40,14 +40,6 @@ class _CardGoalItemState extends State<CardGoalItem> {
       elevation: 1,
       child: Container(
         width: 300,
-        /* decoration: BoxDecoration(
-          border: Border.all(
-            width: 0.1,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(5),
-          ),
-        ),*/
         child: Stack(
           children: [
             Container(

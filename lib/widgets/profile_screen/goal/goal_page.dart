@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
+import 'package:frederic/main.dart';
+import 'package:frederic/widgets/profile_screen/goal/add_goal_card.dart';
+import 'package:frederic/widgets/profile_screen/goal/add_goal_popup.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_item.dart';
 
 /// Displays the [List<CardGoalItem>] corresponding to the user's currently created goals.
@@ -39,9 +42,20 @@ class _GoalPageState extends State<GoalPage> {
           SizedBox(
             height: 6,
           ),
-          Text('Set a goal using the + button.',
-              style: TextStyle(fontSize: 16, color: Colors.grey[500])),
-          SizedBox(height: 2)
+          SizedBox(height: 6),
+          InkWell(
+            customBorder: CircleBorder(),
+            onTap: () {
+              showDialog(
+                  context: context, builder: (context) => AddGoalPopup());
+            },
+            child: Icon(
+              Icons.add_circle_outlined,
+              size: 55,
+              color: kMainColor,
+            ),
+          ),
+          SizedBox(height: 2),
         ],
       )));
 
@@ -51,11 +65,13 @@ class _GoalPageState extends State<GoalPage> {
       child: ListView.builder(
           shrinkWrap: false,
           scrollDirection: Axis.horizontal,
-          itemCount: goals.length,
+          itemCount: goals.length + 1,
           itemBuilder: (context, index) {
             return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 6),
-                child: CardGoalItem(goals[index]));
+                child: index == goals.length
+                    ? AddGoalCard()
+                    : CardGoalItem(goals[index]));
           }),
     );
   }
