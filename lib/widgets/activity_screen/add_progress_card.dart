@@ -111,6 +111,8 @@ class _AddProgressCardState extends State<AddProgressCard> {
                                   } else {
                                     widget.activity.addProgress(
                                         widget.reps, sliderController.value);
+                                    UserFeedbackToast()
+                                        .showProgressAddedToast(context);
                                     Navigator.pop(context);
                                   }
                                 },

@@ -7,10 +7,12 @@ import 'package:frederic/widgets/profile_screen/settings_screen/keep_signed_in.d
 import 'package:frederic/widgets/profile_screen/settings_screen/pick_banner_image.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen(this.user);
-  final FredericUser user;
+  SettingsScreen() {
+    user = FredericBackend.instance().currentUser;
+  }
+  FredericUser user;
 
-  final double generalTextsize = 17;
+  final double generalTextSize = 17;
   final double titleTextSize = 20;
   final double generalPadding = 20;
 
@@ -136,7 +138,7 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Gender:',
-                    style: TextStyle(fontSize: generalTextsize),
+                    style: TextStyle(fontSize: generalTextSize),
                   ),
                   _buildGenderBox('Male', male),
                   _buildGenderBox('Female', female),
@@ -171,7 +173,7 @@ class SettingsScreen extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: generalTextsize,
+            fontSize: generalTextSize,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -198,7 +200,7 @@ class SettingsScreen extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                fontSize: generalTextsize,
+                fontSize: generalTextSize,
               ),
             ),
             Icon(
@@ -230,7 +232,7 @@ class SettingsScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   data,
-                  style: TextStyle(fontSize: generalTextsize),
+                  style: TextStyle(fontSize: generalTextSize),
                 ),
               ),
             ),
@@ -270,7 +272,7 @@ class SettingsScreen extends StatelessWidget {
       child: Text(
         gender,
         style: TextStyle(
-          fontSize: generalTextsize,
+          fontSize: generalTextSize,
           color: isActive ? Colors.white : Colors.black54,
         ),
       ),
@@ -336,7 +338,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         child: Text(
           'Banner Image',
-          style: TextStyle(fontSize: generalTextsize),
+          style: TextStyle(fontSize: generalTextSize),
         ),
       ),
     );

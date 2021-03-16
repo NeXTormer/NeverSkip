@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/add_progress_card.dart';
-import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 
 ///
 /// [selectable]: widget can be added to a workout
@@ -45,7 +44,6 @@ class _ActivityCardState extends State<ActivityCard> {
       child: Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.3,
-
         closeOnScroll: true,
         secondaryActions: widget.dismissible
             ? [buildDeleteButton()]
@@ -310,7 +308,6 @@ class _ActivityCardState extends State<ActivityCard> {
       onTap: () {
         if (widget.selectable) {
           widget.onAddActivity(widget.activity);
-          UserFeedbackToast().showAddedToast(context);
         } else {
           showModalBottomSheet(
               context: context,

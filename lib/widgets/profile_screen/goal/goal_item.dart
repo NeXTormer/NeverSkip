@@ -4,10 +4,9 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/providers/goals.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:frederic/widgets/circle_loading_progress_spinner.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_view.dart';
 import 'package:frederic/widgets/stagger_achievement_finish_demo.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 /// Card item which displays the corresponding [GoalItem] information.
@@ -59,7 +58,7 @@ class _CardGoalItemState extends State<CardGoalItem> {
                     topLeft: Radius.circular(5.0),
                     topRight: Radius.circular(5.0)),
                 child: Image(
-                  image: CachedNetworkImageProvider(goal.image),
+                  image: CachedNetworkImageProvider(widget.goal.image),
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -174,12 +173,12 @@ class _CardGoalItemState extends State<CardGoalItem> {
                         child: CircularPercentIndicator(
                           radius: 100,
                           lineWidth: 8,
-                          percent: goal.progressPercentage / 100,
+                          percent: widget.goal.progressPercentage / 100,
                           //progressColor: Colors.red,
                           linearGradient: LinearGradient(colors: kIconGradient),
                           center: Container(
                             child: Text(
-                              '${goal.progressPercentage}%',
+                              '${widget.goal.progressPercentage}%',
                               style: TextStyle(
                                   fontSize: 26, fontWeight: FontWeight.w500),
                             ),

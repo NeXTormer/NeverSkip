@@ -1,5 +1,6 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frederic/main.dart';
 
 class UserFeedbackToast {
   final fToast = FToast();
@@ -9,9 +10,9 @@ class UserFeedbackToast {
     color: Colors.white,
   );
   final boxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(20),
-    color: Colors.black.withAlpha(50),
-  );
+      borderRadius: BorderRadius.circular(20),
+      color: kMainColor.withAlpha(220) // Colors.black.withAlpha(50),
+      );
 
   showAddedToast(BuildContext context) {
     fToast.init(context);
@@ -23,6 +24,7 @@ class UserFeedbackToast {
         decoration: boxDecoration,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.check,

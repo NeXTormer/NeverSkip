@@ -214,18 +214,18 @@ class FredericWorkout with ChangeNotifier {
   /// Use this to add an activity instead of using activities.add() because
   /// this also adds it to the DB
   ///
-  String addActivity(FredericActivity activity, int weekday) {
+  bool addActivity(FredericActivity activity, int weekday) {
     List<FredericActivity> list = _activities.activities[weekday];
     if (list.contains(activity)) {
-      return 'activity-already-in-list';
+      return false;
     }
     if (_activities.everyday.contains(activity)) {
-      return 'activity-already-in-everyday-list';
+      return false;
     }
     list.add(activity);
 
     _addActivityDB(activity, weekday);
-    return 'success';
+    return true;
   }
 
   //============================================================================
