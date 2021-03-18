@@ -5,6 +5,8 @@ import 'package:frederic/widgets/login_signup/login_button.dart';
 import 'package:frederic/widgets/login_signup/login_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+enum AuthMode { Signup, Login }
+
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
 
@@ -15,8 +17,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmationController =
+      TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  AuthMode _authMode = AuthMode.Login;
 
   @override
   Widget build(BuildContext context) {
@@ -80,19 +86,53 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: true,
                         iconData: Icons.vpn_key_outlined,
                       ),
-                      SizedBox(height: 24),
-                      LoginButton(
-                          text: 'Log in', onPressed: loginButtonHandler),
+                      _authMode == AuthMode.Signup
+                          ? SizedBox(height: 5)
+                          : SizedBox(height: 24),
+                      if (_authMode == AuthMode.Signup)
+                        AnimatedOpacity(
+                          opacity: _authMode == AuthMode.Signup ? 1 : 0,
+                          duration: Duration(milliseconds: 100),
+                          child: LoginTextField(
+                            validator: _validateConfirmationPassword,
+                            controller: passwordConfirmationController,
+                            titleText: 'Confirm Password',
+                            hintText: ' Re-type password',
+                            obscureText: true,
+                            iconData: Icons.lock,
+                          ),
+                        ),
+                      if (_authMode == AuthMode.Signup) SizedBox(height: 25),
+                      _authMode == AuthMode.Signup
+                          ? LoginButton(
+                              // TODO
+                              // Create new DB account
+                              text: 'Sign Up',
+                              onPressed: signUpButtonHandler)
+                          : LoginButton(
+                              text: 'Log in', onPressed: loginButtonHandler),
                       Expanded(flex: 6, child: Container()),
                       Container(
                           margin: EdgeInsets.only(bottom: 12),
                           child: Center(
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                setState(() {
+                                  if (_authMode == AuthMode.Signup) {
+                                    _authMode = AuthMode.Login;
+                                  } else {
+                                    passwordConfirmationController.text = '';
+                                    _authMode = AuthMode.Signup;
+                                  }
+                                });
+                              },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 6),
-                                child: Text("Sign up",
+                                child: Text(
+                                    _authMode == AuthMode.Signup
+                                        ? 'Login'
+                                        : 'Sign up',
                                     style: GoogleFonts.varelaRound(
                                         textStyle: TextStyle(
                                             color: Colors.white,
@@ -145,6 +185,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void signUpButtonHandler() {
+    if (_formKey.currentState.validate()) {
+      // TODO
+      // Implement sign up logic
+
+    }
+  }
+
   String _validateEmail(String value) {
     if (value.isEmpty) {
       return 'Please enter your E-Mail address';
@@ -155,6 +203,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String _validatePassword(String value) {
     if (value.isEmpty) {
       return 'Please enter your password';
+    }
+    return null;
+  }
+
+  String _validateConfirmationPassword(String value) {
+    print('$value == ${passwordController.text}');
+    if (value != passwordController.text) {
+      return 'Password does not match';
     }
     return null;
   }
