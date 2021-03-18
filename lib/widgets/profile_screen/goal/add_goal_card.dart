@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/profile_screen/goal/add_goal_popup.dart';
+import 'package:frederic/widgets/profile_screen/goal/finish_goal_view.dart';
 
 ///
 /// A [GoalCard] which does not display a goal. Instead it has a button to add
@@ -24,7 +24,11 @@ class AddGoalCard extends StatelessWidget {
                   customBorder: CircleBorder(),
                   onTap: () {
                     showDialog(
-                        context: context, builder: (context) => AddGoalPopup());
+                        context: context,
+                        builder: (context) => Dialog(
+                            child: FinishGoalView(null, Mode.EDIT),
+                            elevation: 10,
+                            backgroundColor: Colors.transparent));
                   },
                   child: Icon(Icons.add_circle, color: kMainColor, size: 69))
             ],

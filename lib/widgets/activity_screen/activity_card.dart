@@ -29,7 +29,6 @@ class ActivityCard extends StatefulWidget {
 
 class _ActivityCardState extends State<ActivityCard> {
   int _countReps = 0;
-  bool _expanded = false;
 
   @override
   void initState() {
