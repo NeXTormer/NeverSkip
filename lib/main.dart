@@ -22,7 +22,7 @@ final Color kDarkColor = Colors.blueAccent;
 final Color kTextColor = Colors.blue[800];
 final Color kAppBarTextColor = Colors.white;
 final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
-double kAppBarHeight = 0;
+final double kAppBarHeight = 0;
 
 void main() {
   runApp(Frederic());

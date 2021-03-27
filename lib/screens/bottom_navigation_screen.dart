@@ -52,8 +52,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       actions: widget.screens[currentIndex].appbar.actions,
     );
 
-    kAppBarHeight = 0;
-
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,

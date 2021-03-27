@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -335,13 +336,22 @@ class FredericActivity with ChangeNotifier {
   /// as the [timestamp]
   /// The set is added to the list in this Activity and to the DB
   ///
+  /// First adds a temporary set to the set list in case the user is offline and
+  /// the 'add' call is never completed. If the 'add' call is completed, the
+  /// temporary set is removed and the real set added.
+  ///
   void addProgress(int reps, int weight) async {
+    String tempID = Random().nextInt(100000).toString();
+    FredericSet set = FredericSet(tempID, reps, weight, DateTime.now(), true);
+    _sets.add(set);
+    notifyListeners();
     DocumentReference docRef = await _setsCollection.add({
       'reps': reps,
       'weight': weight,
       'timestamp': Timestamp.now(),
       'activity': activityID
     });
+    _sets.remove(set);
     _sets.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
     notifyListeners();
   }
