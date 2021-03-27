@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:301523012050:android:4aa7b3b2bcaaf47028600b",
         "android_client_info": {
-          "package_name": "io.hawkford.frederic"
+          "package_name": "io.hawkford.fredericapp"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "301523012050-nsff5rrd86lhkmn3tmgl5gr9jib8hlr9.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "io.hawkford.frederic"
+                "bundle_id": "io.hawkford.fredericapp"
               }
             }
           ]

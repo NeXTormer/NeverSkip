@@ -1,4 +1,4 @@
-package io.hawkford.frederic
+package io.hawkford.fredericapp
 
 import io.flutter.embedding.android.FlutterActivity
 
