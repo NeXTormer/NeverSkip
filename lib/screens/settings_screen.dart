@@ -64,6 +64,7 @@ class SettingsScreen extends StatelessWidget {
                       'Logout',
                       () {
                         FirebaseAuth.instance.signOut();
+                        Navigator.of(context).pop();
                       },
                       Colors.lightBlue,
                     ),

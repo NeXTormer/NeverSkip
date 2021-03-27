@@ -35,7 +35,7 @@ class FredericUser with ChangeNotifier {
   List<String> get progressMonitors => _progressMonitors ?? [];
 
   int get age {
-    var diff = _birthday.difference(DateTime.now());
+    var diff = birthday.difference(DateTime.now());
     return diff.inDays ~/ 365;
   }
 
@@ -113,10 +113,22 @@ class FredericUser with ChangeNotifier {
     _description = snapshot.data()['description'];
     _profileImage = snapshot.data()['image'];
     _bannerImage = snapshot.data()['banner'];
-    _birthday = snapshot.data()['birthday'].toDate();
+    _birthday = snapshot.data()['birthday']?.toDate();
     _currentWorkoutID = snapshot.data()['currentworkout'];
     _progressMonitors = snapshot.data()['progressmonitors']?.cast<String>();
     notifyListeners();
+  }
+
+  static Future<void> createUserEntryInDB(String uid) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'name': 'Jane Doe',
+      'banner':
+          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-banner.jpg?alt=media&token=5441a2a6-14e8-448e-b010-d359adfac6b5',
+      'image':
+          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-profile-screen.jpg?alt=media&token=52f200e9-fac8-4295-bf7d-01b59f92a987',
+      'description': ''
+    });
+    return;
   }
 
   @override

@@ -187,9 +187,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void signUpButtonHandler() {
     if (_formKey.currentState.validate()) {
-      // TODO
-      // Implement sign up logic
-
+      if (passwordController.text.trim() ==
+          passwordConfirmationController.text.trim()) {
+        FredericBackend.instance()
+            .authService
+            .signUp(emailController.text.trim(), passwordController.text.trim())
+            .then((value) {
+          if (value != 'success' && value != null) {
+            showLoginError(value);
+          }
+        });
+      } else {
+        showLoginError('The passwords do not match');
+      }
     }
   }
 
