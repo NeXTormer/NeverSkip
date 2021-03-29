@@ -72,9 +72,9 @@ class FredericGoal {
   String get timeLeftFormatted {
     int days = endDate.difference(DateTime.now()).inDays;
     if (days > 7) {
-      return '${days ~/ 7} weeks';
+      return '${days ~/ 7} week${(days ~/ 7) != 1 ? 's' : ''}';
     }
-    return '$days days';
+    return '$days day${days != 1 ? 's' : ''}';
   }
 
   set title(String value) {
@@ -108,12 +108,12 @@ class FredericGoal {
   }
 
   void updateData() {
-    _current = _activity.bestProgress;
-    _goalManager.updateData();
     if (_activity == null) {
       _activity = _activityManager[activityID];
-      _activity.addListener(updateData);
+      _activity?.addListener(updateData);
     }
+    _current = _activity?.bestProgress;
+    _goalManager.updateData();
   }
 
   void insertData(DocumentSnapshot snapshot) {
@@ -125,23 +125,25 @@ class FredericGoal {
     _startDate = snapshot.data()['startdate'];
     _endDate = snapshot.data()['enddate'];
     _isCompleted = snapshot.data()['iscompleted'];
-    _goalManager.updateData();
 
     if (_activity == null) {
       _activityManager.addListener(updateData);
       _activity = _activityManager[activityID];
       _activity?.addListener(updateData);
     }
+
+    updateData();
   }
 
-  bool operator ==(other) {
-    return goalID == other.goalID;
-  }
+  bool operator ==(other) => goalID == other.goalID;
 
   void discard() {
     _activity?.removeListener(updateData);
     _activityManager?.removeListener(updateData);
   }
+
+  @override
+  int get hashCode => goalID.hashCode;
 }
 
 enum FredericGoalType { Weight, Reps }

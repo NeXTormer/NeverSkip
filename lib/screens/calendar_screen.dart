@@ -48,22 +48,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     user = FredericBackend.instance().currentUser;
 
     return Scaffold(
-      appBar: true
-          ? null
-          : AppBar(
-              leading: Icon(Icons.list),
-              title: Text(appBarTileText),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.calendar_today),
-                ),
-                IconButton(
-                  icon: Icon(Icons.done),
-                  onPressed: () {},
-                )
-              ],
-            ),
       body: FredericWorkoutBuilder(
           id: 'kKOnczVnBbBHvmx96cjG',
           builder: (context, data) {

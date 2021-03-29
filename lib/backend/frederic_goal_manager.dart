@@ -41,14 +41,14 @@ class FredericGoalManager with ChangeNotifier {
   }
 
   void _handleGoalSnapshot(QuerySnapshot snapshot) {
-    for (var change in snapshot.docChanges) {
-      FredericGoal goal = FredericGoal(change.doc.id, this);
-      goal.insertData(change.doc);
-      if (_allGoals.contains(goal)) {
-        _allGoals.remove(goal);
-      } else {
-        //goal.activity?.loadSets();
-      }
+    for (var goal in _allGoals) {
+      goal.discard();
+    }
+    _allGoals.clear();
+    for (var doc in snapshot.docs) {
+      FredericGoal goal = FredericGoal(doc.id, this);
+      goal.insertData(doc);
+      //goal.activity?.loadSets();
       _allGoals.add(goal);
     }
     notifyListeners();

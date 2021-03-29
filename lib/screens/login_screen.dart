@@ -45,105 +45,103 @@ class _LoginScreenState extends State<LoginScreen> {
                       colors: kIconGradient,
                     )),
                   ),
-                  Container(
-                    child: Column(children: [
-                      // SizedBox(height: 80),
-                      Expanded(child: Container()),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.only(top: 50),
-                        child: Text("Frederic",
-                            style: GoogleFonts.varelaRound(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 56,
-                                    letterSpacing: 1.4))),
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.only(bottom: 50),
-                        child: Text("Your personal fitness coach",
-                            style: GoogleFonts.varelaRound(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    letterSpacing: 1.4))),
-                      ),
-                      SizedBox(height: 12),
-                      LoginTextField(
-                        validator: _validateEmail,
-                        controller: emailController,
-                        titleText: 'E-Mail',
-                        hintText: ' Enter your E-Mail address',
-                        iconData: Icons.email_outlined,
-                      ),
-                      SizedBox(height: 25),
-                      LoginTextField(
-                        validator: _validatePassword,
-                        controller: passwordController,
-                        titleText: 'Password',
-                        hintText: ' Enter your password',
-                        obscureText: true,
-                        iconData: Icons.vpn_key_outlined,
-                      ),
-                      _authMode == AuthMode.Signup
-                          ? SizedBox(height: 5)
-                          : SizedBox(height: 24),
-                      if (_authMode == AuthMode.Signup)
-                        AnimatedOpacity(
-                          opacity: _authMode == AuthMode.Signup ? 1 : 0,
-                          duration: Duration(milliseconds: 100),
-                          child: LoginTextField(
-                            validator: _validateConfirmationPassword,
-                            controller: passwordConfirmationController,
-                            titleText: 'Confirm Password',
-                            hintText: ' Re-type password',
-                            obscureText: true,
-                            iconData: Icons.lock,
-                          ),
+                  Column(children: [
+                    // SizedBox(height: 80),
+                    Expanded(child: Container()),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(top: 50),
+                      child: Text("Frederic",
+                          style: GoogleFonts.varelaRound(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 56,
+                                  letterSpacing: 1.4))),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(bottom: 50),
+                      child: Text("Your personal fitness coach",
+                          style: GoogleFonts.varelaRound(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  letterSpacing: 1.4))),
+                    ),
+                    SizedBox(height: 12),
+                    LoginTextField(
+                      validator: _validateEmail,
+                      controller: emailController,
+                      titleText: 'E-Mail',
+                      hintText: ' Enter your E-Mail address',
+                      iconData: Icons.email_outlined,
+                    ),
+                    SizedBox(height: 25),
+                    LoginTextField(
+                      validator: _validatePassword,
+                      controller: passwordController,
+                      titleText: 'Password',
+                      hintText: ' Enter your password',
+                      obscureText: true,
+                      iconData: Icons.vpn_key_outlined,
+                    ),
+                    _authMode == AuthMode.Signup
+                        ? SizedBox(height: 5)
+                        : SizedBox(height: 24),
+                    if (_authMode == AuthMode.Signup)
+                      AnimatedOpacity(
+                        opacity: _authMode == AuthMode.Signup ? 1 : 0,
+                        duration: Duration(milliseconds: 100),
+                        child: LoginTextField(
+                          validator: _validateConfirmationPassword,
+                          controller: passwordConfirmationController,
+                          titleText: 'Confirm Password',
+                          hintText: ' Re-type password',
+                          obscureText: true,
+                          iconData: Icons.lock,
                         ),
-                      if (_authMode == AuthMode.Signup) SizedBox(height: 25),
-                      _authMode == AuthMode.Signup
-                          ? LoginButton(
-                              // TODO
-                              // Create new DB account
-                              text: 'Sign Up',
-                              onPressed: signUpButtonHandler)
-                          : LoginButton(
-                              text: 'Log in', onPressed: loginButtonHandler),
-                      Expanded(flex: 6, child: Container()),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 12),
-                          child: Center(
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (_authMode == AuthMode.Signup) {
-                                    _authMode = AuthMode.Login;
-                                  } else {
-                                    passwordConfirmationController.text = '';
-                                    _authMode = AuthMode.Signup;
-                                  }
-                                });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 6),
-                                child: Text(
-                                    _authMode == AuthMode.Signup
-                                        ? 'Login'
-                                        : 'Sign up',
-                                    style: GoogleFonts.varelaRound(
-                                        textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            letterSpacing: 1.6))),
-                              ),
+                      ),
+                    if (_authMode == AuthMode.Signup) SizedBox(height: 25),
+                    _authMode == AuthMode.Signup
+                        ? LoginButton(
+                            // TODO
+                            // Create new DB account
+                            text: 'Sign Up',
+                            onPressed: signUpButtonHandler)
+                        : LoginButton(
+                            text: 'Log in', onPressed: loginButtonHandler),
+                    Expanded(flex: 6, child: Container()),
+                    Container(
+                        margin: EdgeInsets.only(bottom: 12),
+                        child: Center(
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                if (_authMode == AuthMode.Signup) {
+                                  _authMode = AuthMode.Login;
+                                } else {
+                                  passwordConfirmationController.text = '';
+                                  _authMode = AuthMode.Signup;
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                              child: Text(
+                                  _authMode == AuthMode.Signup
+                                      ? 'Login'
+                                      : 'Sign up',
+                                  style: GoogleFonts.varelaRound(
+                                      textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          letterSpacing: 1.6))),
                             ),
-                          )),
-                      Expanded(child: Container())
-                    ]),
-                  ),
+                          ),
+                        )),
+                    Expanded(child: Container())
+                  ]),
                 ],
               ),
             ),
