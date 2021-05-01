@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/FredericButton.dart';
 import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
@@ -41,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
     double screenheight = MediaQuery.of(context).size.height;
     bool smallscreen = screenheight < 700;
     bool medscreen = screenheight < 800;
-    print(screenheight);
     return Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
         body: SingleChildScrollView(
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontSize: 18,
                                   letterSpacing: 0.4,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF3E4FD8)))),
+                                  color: kMainColor))),
                       SizedBox(height: 8),
                       Align(
                           alignment: Alignment.centerLeft,
@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   login ? 'Sign Up' : 'Log In',
                                   style: TextStyle(
-                                      color: Color(0xFF3E4FD8),
+                                      color: kMainColor,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600),
                                 ),
@@ -338,44 +338,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void signUpButtonHandler() {
-    if (false)
-      FredericBackend.instance()
-          .authService
-          .signUp(emailController.text.trim(), passwordController.text.trim())
-          .then((value) {
-        if (value != 'success' && value != null) {
-          showLoginError(value);
-        }
-      });
-  }
-
-  String _validateEmail(String value) {
-    if (value.isEmpty) {
-      return 'Please enter your E-Mail address';
-    }
-    return null;
-  }
-
-  String _validatePassword(String value) {
-    if (value.isEmpty) {
-      return 'Please enter your password';
-    }
-    return null;
-  }
-
-  String _validateConfirmationPassword(String value) {
-    print('$value == ${passwordController.text}');
-    if (value != passwordController.text) {
-      return 'Password does not match';
-    }
-    return null;
-  }
-
   @override
   void dispose() {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+    nameController.dispose();
+    passwordConfirmationController.dispose();
   }
 }

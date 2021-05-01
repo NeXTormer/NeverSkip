@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
@@ -17,11 +18,15 @@ FirebaseAnalytics analytics = FirebaseAnalytics();
 final Future<FirebaseApp> app = Firebase.initializeApp();
 final getIt = GetIt.instance;
 
-final Color kMainColor = Colors.lightBlue;
-final Color kAccentColor = Colors.lightBlueAccent;
+final Color kMainColor = const Color(0xFF3E4FD8);
+final Color kAccentColor = const Color(0xFF4791FF);
+final Color kMainColorLight = const Color(0x1A3E4FD8);
+final Color kAccentColorLight = const Color(0xFFF4F7FE);
+
 final Color kDarkColor = Colors.blueAccent;
-final Color kTextColor = Colors.blue[800];
+final Color kTextColor = const Color(0xFF272727);
 final Color kAppBarTextColor = Colors.white;
+final Color kCardBorderColor = const Color(0xFFE2E2E2);
 final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 final double kAppBarHeight = 0;
 
@@ -86,37 +91,39 @@ class Frederic extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AuthenticationWrapper(
-          homePage: BottomNavigationScreen(
-            [
-              FredericScreen(
-                  screen: HomeScreen(),
-                  icon: Icons.home_outlined,
-                  label: 'Home',
-                  appbar: FredericAppBar(
-                      title: Text(
-                    'Frederic',
-                    key: ValueKey(1),
-                  ))),
-              FredericScreen(
-                  screen: CalendarScreen(),
-                  icon: Icons.calendar_today_outlined,
-                  label: 'Calendar',
-                  appbar: FredericAppBar(
-                      title: Text('Calendar', key: ValueKey(2)))),
-              FredericScreen(
-                  screen: ActivityScreen(),
-                  icon: Icons.accessible_forward_outlined,
-                  label: 'Exercises',
-                  appbar: FredericAppBar(
-                      title: Text('Exercises', key: ValueKey(3)))),
-              FredericScreen(
-                  screen: ListWorkoutsScreen(),
-                  icon: Icons.work_outline,
-                  label: 'Workouts',
-                  appbar: FredericAppBar(
-                      title: Text('Workouts', key: ValueKey(4)))),
-            ],
-          ),
+          homePage: true
+              ? HomeScreen()
+              : BottomNavigationScreen(
+                  [
+                    FredericScreen(
+                        screen: HomeScreenOld(),
+                        icon: Icons.home_outlined,
+                        label: 'Home',
+                        appbar: FredericAppBar(
+                            title: Text(
+                          'Frederic',
+                          key: ValueKey(1),
+                        ))),
+                    FredericScreen(
+                        screen: CalendarScreen(),
+                        icon: Icons.calendar_today_outlined,
+                        label: 'Calendar',
+                        appbar: FredericAppBar(
+                            title: Text('Calendar', key: ValueKey(2)))),
+                    FredericScreen(
+                        screen: ActivityScreen(),
+                        icon: Icons.accessible_forward_outlined,
+                        label: 'Exercises',
+                        appbar: FredericAppBar(
+                            title: Text('Exercises', key: ValueKey(3)))),
+                    FredericScreen(
+                        screen: ListWorkoutsScreen(),
+                        icon: Icons.work_outline,
+                        label: 'Workouts',
+                        appbar: FredericAppBar(
+                            title: Text('Workouts', key: ValueKey(4)))),
+                  ],
+                ),
           loginPage: LoginScreen(),
           splashScreen: splashScreen,
         ),

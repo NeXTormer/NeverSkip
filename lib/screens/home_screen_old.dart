@@ -14,14 +14,14 @@ enum AddOptions {
   Graph,
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key key}) : super(key: key);
+class HomeScreenOld extends StatefulWidget {
+  const HomeScreenOld({Key key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenOldState createState() => _HomeScreenOldState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenOldState extends State<HomeScreenOld> {
   @override
   void initState() {
     super.initState();

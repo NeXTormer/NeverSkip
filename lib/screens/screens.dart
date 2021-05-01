@@ -4,7 +4,7 @@ export 'add_graph_screen.dart';
 export 'bottom_navigation_screen.dart';
 export 'calendar_screen.dart';
 export 'edit_workout_screen.dart';
-export 'home_screen.dart';
+export 'home_screen_old.dart';
 export 'list_workouts_screen.dart';
 export 'login_screen.dart';
 export 'settings_screen.dart';
