@@ -17,9 +17,9 @@ class AuthenticationService {
       if (e.code == 'user-not-found') {
         return 'User not found';
       } else if (e.code == 'wrong-password') {
-        return 'Wrong password';
+        return 'Wrong password.';
       }
-      return 'Invalid credentials';
+      return 'Invalid credentials.';
     }
   }
 
@@ -32,10 +32,10 @@ class AuthenticationService {
       return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        return 'The password is too weak';
+        return 'The password is too weak.';
       }
       if (e.code == 'email-already-in-use') {
-        return 'This email address is already used';
+        return 'This email address is already used.';
       }
       return e.message;
     } catch (e) {

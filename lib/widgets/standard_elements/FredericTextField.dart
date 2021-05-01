@@ -4,6 +4,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 class FredericTextField extends StatefulWidget {
   FredericTextField(
     this.placeholder, {
+    this.controller,
     this.onSubmit,
     this.keyboardType = TextInputType.text,
     this.icon = Icons.person,
@@ -14,6 +15,7 @@ class FredericTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final IconData icon;
   final bool isPasswordField;
+  final TextEditingController controller;
 
   final Function onSubmit;
 
@@ -33,6 +35,8 @@ class _FredericTextFieldState extends State<FredericTextField> {
     return Container(
       height: height,
       child: TextField(
+        controller: widget.controller,
+        keyboardType: widget.keyboardType,
         style: TextStyle(
           fontSize: 12,
           letterSpacing: 0.2,
