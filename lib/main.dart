@@ -10,6 +10,7 @@ import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
 import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -61,6 +62,9 @@ class Frederic extends StatelessWidget {
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
 
+    //SystemChrome.setSystemUIOverlayStyle(
+    //    SystemUiOverlayStyle(statusBarColor: Colors.blue));
+
     return MultiProvider(
       providers: [
         StreamProvider(
@@ -76,7 +80,9 @@ class Frederic extends StatelessWidget {
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.blue,
+          textTheme:
+              GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
+          primaryColor: Color(0xFF3E4FD8),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AuthenticationWrapper(

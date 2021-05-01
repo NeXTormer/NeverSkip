@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/main.dart';
-import 'package:frederic/widgets/login_signup/login_button.dart';
-import 'package:frederic/widgets/login_signup/login_text_field.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
+
+import 'file:///C:/Dev/Projects/frederic/lib/widgets/standard_elements/FredericButton.dart';
 
 enum AuthMode { Signup, Login }
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
+
+  final String title = 'Welcome Back';
+  final String titleSignup = 'Create a new account';
+  final String subtitleSignup =
+      'Sign up and create an account so that you can remain healthy by following your daily goals and plans.';
+
+  final String subtitle =
+      'Sign in and continue so that you can remain healthy by following your daily goals and plans.';
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -19,134 +27,171 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmationController =
       TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  AuthMode _authMode = AuthMode.Login;
+  bool login = false;
+  bool termsandconditions = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+        backgroundColor: Color(0xFFFFFFFF),
         body: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Form(
-              key: _formKey,
-              child: Stack(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomLeft,
-                      stops: [0.1, 0.9],
-                      colors: kIconGradient,
-                    )),
+                  Column(
+                    children: [
+                      SizedBox(height: 100),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(login ? widget.title : widget.titleSignup,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  letterSpacing: 0.4,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF3E4FD8)))),
+                      SizedBox(height: 8),
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                              login ? widget.subtitle : widget.subtitleSignup,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  height: 1.6,
+                                  letterSpacing: 0.2,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0x993A3A3A)))),
+                      SizedBox(height: 40),
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 26),
+                          child: Image(
+                              colorBlendMode: BlendMode.screen,
+                              fit: BoxFit.scaleDown,
+                              image: AssetImage(
+                                  'assets/images/login_illustration.png'))),
+                      //SizedBox(height: 80),
+                    ],
                   ),
-                  Column(children: [
-                    // SizedBox(height: 80),
-                    Expanded(child: Container()),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.only(top: 50),
-                      child: Text("Frederic",
-                          style: GoogleFonts.varelaRound(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 56,
-                                  letterSpacing: 1.4))),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.only(bottom: 50),
-                      child: Text("Your personal fitness coach",
-                          style: GoogleFonts.varelaRound(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  letterSpacing: 1.4))),
-                    ),
-                    SizedBox(height: 12),
-                    LoginTextField(
-                      validator: _validateEmail,
-                      controller: emailController,
-                      titleText: 'E-Mail',
-                      hintText: ' Enter your E-Mail address',
-                      iconData: Icons.email_outlined,
-                    ),
-                    SizedBox(height: 25),
-                    LoginTextField(
-                      validator: _validatePassword,
-                      controller: passwordController,
-                      titleText: 'Password',
-                      hintText: ' Enter your password',
-                      obscureText: true,
-                      iconData: Icons.vpn_key_outlined,
-                    ),
-                    _authMode == AuthMode.Signup
-                        ? SizedBox(height: 5)
-                        : SizedBox(height: 24),
-                    if (_authMode == AuthMode.Signup)
-                      AnimatedOpacity(
-                        opacity: _authMode == AuthMode.Signup ? 1 : 0,
-                        duration: Duration(milliseconds: 100),
-                        child: LoginTextField(
-                          validator: _validateConfirmationPassword,
-                          controller: passwordConfirmationController,
-                          titleText: 'Confirm Password',
-                          hintText: ' Re-type password',
-                          obscureText: true,
-                          iconData: Icons.lock,
-                        ),
-                      ),
-                    if (_authMode == AuthMode.Signup) SizedBox(height: 25),
-                    _authMode == AuthMode.Signup
-                        ? LoginButton(
-                            // TODO
-                            // Create new DB account
-                            text: 'Sign Up',
-                            onPressed: signUpButtonHandler)
-                        : LoginButton(
-                            text: 'Log in', onPressed: loginButtonHandler),
-                    Expanded(flex: 6, child: Container()),
-                    Container(
-                        margin: EdgeInsets.only(bottom: 12),
-                        child: Center(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (_authMode == AuthMode.Signup) {
-                                  _authMode = AuthMode.Login;
-                                } else {
-                                  passwordConfirmationController.text = '';
-                                  _authMode = AuthMode.Signup;
-                                }
-                              });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 6),
-                              child: Text(
-                                  _authMode == AuthMode.Signup
-                                      ? 'Login'
-                                      : 'Sign up',
-                                  style: GoogleFonts.varelaRound(
-                                      textStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          letterSpacing: 1.6))),
-                            ),
+                  Expanded(
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Expanded(flex: 50, child: Container()),
+                          if (!login)
+                            FredericTextField('Name', icon: ExtraIcons.person),
+                          if (!login) SizedBox(height: 10),
+                          FredericTextField('E-Mail', icon: ExtraIcons.mail),
+                          SizedBox(height: 10),
+                          FredericTextField(
+                            'Password',
+                            icon: ExtraIcons.lock,
+                            isPasswordField: true,
                           ),
-                        )),
-                    Expanded(child: Container())
-                  ]),
+                          if (!login) SizedBox(height: 10),
+                          if (!login)
+                            FredericTextField('Confirm password',
+                                isPasswordField: true, icon: ExtraIcons.lock),
+                          SizedBox(height: 16),
+                          if (login)
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Forgot password?',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF2F2E41)),
+                              ),
+                            ),
+                          if (!login)
+                            GestureDetector(
+                              onTap: () => setState(() =>
+                                  termsandconditions = !termsandconditions),
+                              onLongPress: () =>
+                                  print('Show Terms and Conditions'),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  buildCheckBox(),
+                                  SizedBox(width: 6),
+                                  Text('I agree to the ',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: const Color(0xFF2F2E41))),
+                                  Text('Terms & Conditions',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 11,
+                                          color: const Color(0xFF2F2E41))),
+                                  Text(' of this app.',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: const Color(0xFF2F2E41)))
+                                ],
+                              ),
+                            ),
+                          SizedBox(height: 40),
+                          FredericButton(login ? 'Log In' : 'Sign Up'),
+                          Expanded(flex: 50, child: Container()),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                login
+                                    ? 'Don\'t have an account? '
+                                    : 'Already have an account? ',
+                                style: TextStyle(
+                                    color: Color(0xFF2F2E41),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              GestureDetector(
+                                onTap: () => setState(() => login = !login),
+                                child: Text(
+                                  login ? 'Sign Up' : 'Log In',
+                                  style: TextStyle(
+                                      color: Color(0xFF3E4FD8),
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 8)
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ));
+  }
+
+  Widget buildCheckBox() {
+    return Container(
+      height: 16,
+      width: 16,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(3),
+          border: Border.all(color: const Color(0xFFB8B8B8)),
+          color: Colors.white),
+      child: termsandconditions
+          ? Icon(
+              Icons.check,
+              size: 12,
+              color: const Color(0xFF5C5C5C),
+            )
+          : null,
+    );
   }
 
   Future<void> showLoginError(String text) {

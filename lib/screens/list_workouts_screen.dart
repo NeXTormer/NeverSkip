@@ -42,11 +42,9 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
           builder: (context) => EditWorkoutPage(null),
         ),
         //_createWorkoutPrompt,
-        backgroundColor: Colors.white,
-        child: Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
+        backgroundColor: kMainColor,
+        splashColor: kAccentColor,
+        child: Icon(Icons.add, size: 36),
       ),
     );
   }

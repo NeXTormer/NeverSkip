@@ -4,7 +4,7 @@ import 'package:frederic/backend/frederic_goal.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/profile_screen/goal/add_goal_card.dart';
-import 'package:frederic/widgets/profile_screen/goal/add_goal_popup.dart';
+import 'package:frederic/widgets/profile_screen/goal/finish_goal_view.dart';
 import 'package:frederic/widgets/profile_screen/goal/goal_item.dart';
 
 /// Displays the [List<CardGoalItem>] corresponding to the user's currently created goals.
@@ -47,7 +47,11 @@ class _GoalPageState extends State<GoalPage> {
             customBorder: CircleBorder(),
             onTap: () {
               showDialog(
-                  context: context, builder: (context) => AddGoalPopup());
+                  context: context,
+                  builder: (context) => Dialog(
+                      child: FinishGoalView(null, Mode.EDIT),
+                      elevation: 10,
+                      backgroundColor: Colors.transparent));
             },
             child: Icon(
               Icons.add_circle_outlined,
