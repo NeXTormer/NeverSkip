@@ -4,6 +4,7 @@ import 'package:frederic/widgets/home_screen/goal_segment.dart';
 import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
 import 'package:frederic/widgets/home_screen/training_volume_chart_segment.dart';
+import 'package:frederic/widgets/sliver_divider.dart';
 
 class HomeScreen extends StatelessWidget {
   static const double SIDE_PADDING = 16;
@@ -17,8 +18,7 @@ class HomeScreen extends StatelessWidget {
             return CustomScrollView(
               slivers: [
                 HomeScreenAppbar(),
-                SliverToBoxAdapter(
-                    child: Divider(color: const Color(0xFFC9C9C9))),
+                SliverDivider(),
                 ProgressIndicatorSegment(),
                 GoalSegment(),
                 TrainingVolumeChartSegment(),
