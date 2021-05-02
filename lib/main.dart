@@ -6,10 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
-import 'package:frederic/widgets/profile_screen/goal/edit_goal_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -91,37 +91,30 @@ class Frederic extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: AuthenticationWrapper(
-          homePage: true
+          homePage: false
               ? HomeScreen()
               : BottomNavigationScreen(
                   [
                     FredericScreen(
-                        screen: HomeScreenOld(),
-                        icon: Icons.home_outlined,
-                        label: 'Home',
-                        appbar: FredericAppBar(
-                            title: Text(
-                          'Frederic',
-                          key: ValueKey(1),
-                        ))),
+                      screen: HomeScreen(),
+                      icon: ExtraIcons.person,
+                      label: 'Home',
+                    ),
                     FredericScreen(
-                        screen: CalendarScreen(),
-                        icon: Icons.calendar_today_outlined,
-                        label: 'Calendar',
-                        appbar: FredericAppBar(
-                            title: Text('Calendar', key: ValueKey(2)))),
+                      screen: CalendarScreen(),
+                      icon: ExtraIcons.calendar,
+                      label: 'Calendar',
+                    ),
                     FredericScreen(
-                        screen: ActivityScreen(),
-                        icon: Icons.accessible_forward_outlined,
-                        label: 'Exercises',
-                        appbar: FredericAppBar(
-                            title: Text('Exercises', key: ValueKey(3)))),
+                      screen: ActivityScreen(),
+                      icon: ExtraIcons.dumbbell,
+                      label: 'Exercises',
+                    ),
                     FredericScreen(
-                        screen: ListWorkoutsScreen(),
-                        icon: Icons.work_outline,
-                        label: 'Workouts',
-                        appbar: FredericAppBar(
-                            title: Text('Workouts', key: ValueKey(4)))),
+                      screen: ListWorkoutsScreen(),
+                      icon: ExtraIcons.statistics,
+                      label: 'Workouts',
+                    ),
                   ],
                 ),
           loginPage: LoginScreen(),
@@ -142,32 +135,5 @@ class Frederic extends StatelessWidget {
         ),
       ),
     )));
-  }
-
-  /// On pressed show ModalBottomSheet
-  ///
-  /// The bottom sheet contains the [EditSlideSheet] Widget
-  /// so the user can interact with the goal.
-  void _handleButtonPress(BuildContext context, String id) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
-      ),
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: EditGoalItem(null),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

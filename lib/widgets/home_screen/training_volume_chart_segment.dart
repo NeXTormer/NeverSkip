@@ -71,13 +71,12 @@ class TrainingVolumeChartSegment extends StatelessWidget {
     return Text(
       '${index.truncate()}',
       style: const TextStyle(
-          color: const Color(0x7A3A3A3A), fontSize: 10, letterSpacing: 0.3),
+          color: const Color(0x7A3A3A3A), fontSize: 11, letterSpacing: 0.3),
     );
   }
 
   Widget buildWeekBar(String day, double value, int index) {
     return Expanded(
-      //width: 40,
       child: Column(
         children: [
           ProgressBar(
@@ -93,7 +92,7 @@ class TrainingVolumeChartSegment extends StatelessWidget {
             style: const TextStyle(
                 color: const Color(0x7A3A3A3A),
                 fontSize: 10,
-                letterSpacing: 0.3),
+                letterSpacing: 0.4),
           )
         ],
       ),

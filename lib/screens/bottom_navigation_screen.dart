@@ -36,26 +36,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AppBar appbar = AppBar(
-      title: AnimatedSwitcher(
-        child: widget.screens[currentIndex].appbar.title,
-        duration: Duration(milliseconds: 100),
-      ),
-      centerTitle: true,
-      //brightness: Brightness.dark,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12))),
-      leading: AnimatedSwitcher(
-        child: widget.screens[currentIndex].appbar.leading,
-        duration: Duration(milliseconds: 100),
-      ),
-      actions: widget.screens[currentIndex].appbar.actions,
-    );
-
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: false,
-      appBar: appbar,
       body: PageView(
         children: screens,
         controller: pageController,
@@ -65,20 +48,34 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
           });
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: items,
-        backgroundColor: Colors.white,
-        selectedItemColor: kAccentColor,
-        unselectedItemColor: Colors.black87,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-            pageController.jumpToPage(index);
-          });
-        },
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+          boxShadow: [
+            BoxShadow(color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+          child: BottomNavigationBar(
+            items: items,
+            elevation: 0,
+            backgroundColor: Colors.white,
+            selectedItemColor: kAccentColor,
+            unselectedItemColor: kMainColor,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: currentIndex,
+            onTap: (index) {
+              setState(() {
+                currentIndex = index;
+                pageController.jumpToPage(index);
+              });
+            },
+          ),
+        ),
       ),
     );
   }

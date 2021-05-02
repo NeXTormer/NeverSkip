@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/ExtraIcons.dart';
 
 class FredericHeading extends StatelessWidget {
   FredericHeading(this.heading, {this.onPressed, this.subHeading});
@@ -44,7 +45,7 @@ class FredericHeading extends StatelessWidget {
               InkWell(
                 onTap: onPressed,
                 child: Icon(
-                  Icons.menu,
+                  ExtraIcons.dots,
                   color: const Color(0xFFC4C4C4),
                 ),
               )

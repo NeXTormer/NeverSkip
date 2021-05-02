@@ -55,7 +55,7 @@ class HomeScreenAppbar extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         color: kMainColor),
                     child: Icon(
-                      ExtraIcons.statistics,
+                      ExtraIcons.settings,
                       color: Colors.white,
                       size: 18,
                     ))
