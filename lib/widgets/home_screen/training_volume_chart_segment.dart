@@ -24,7 +24,7 @@ class TrainingVolumeChartSegment extends StatelessWidget {
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 22, bottom: 8),
           child: FredericHeading('This Week\'s Activity',
-              subHeading: 'training volume per day', onPressed: () {}),
+              subHeading: 'training volume', onPressed: () {}),
         ),
         Padding(
           padding: EdgeInsets.only(left: 16, right: 16),

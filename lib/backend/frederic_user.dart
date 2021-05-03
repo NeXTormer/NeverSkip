@@ -21,6 +21,7 @@ class FredericUser with ChangeNotifier {
   String _currentWorkoutID;
   DateTime _birthday;
   List<String> _progressMonitors;
+  List<String> _activeWorkouts;
 
   String get uid => _uid;
   String get email => _email ?? 'nouser@hawkford.io';
@@ -33,6 +34,7 @@ class FredericUser with ChangeNotifier {
   String get currentWorkoutID => _currentWorkoutID ?? '';
   DateTime get birthday => _birthday ?? DateTime.now();
   List<String> get progressMonitors => _progressMonitors ?? [];
+  List<String> get activeWorkouts => _activeWorkouts ?? [];
 
   int get age {
     var diff = birthday.difference(DateTime.now());
@@ -116,6 +118,7 @@ class FredericUser with ChangeNotifier {
     _birthday = snapshot.data()['birthday']?.toDate();
     _currentWorkoutID = snapshot.data()['currentworkout'];
     _progressMonitors = snapshot.data()['progressmonitors']?.cast<String>();
+    _activeWorkouts = snapshot.data()['activeworkouts']?.cast<String>();
     notifyListeners();
   }
 

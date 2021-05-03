@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
   HomeScreenAppbar(this.user);
@@ -39,18 +40,18 @@ class HomeScreenAppbar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Good morning, ${user.name.split(' ')[0]}!',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             color: const Color(0xFF272727),
                             fontWeight: FontWeight.w400,
                             letterSpacing: 0.6,
                             fontSize: 13)),
                     SizedBox(height: 8),
                     Text('Let\'s find you a workout',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             color: const Color(0xFF272727),
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.4,
-                            fontSize: 16))
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.1,
+                            fontSize: 17))
                   ],
                 ),
                 GestureDetector(

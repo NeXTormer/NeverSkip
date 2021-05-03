@@ -22,7 +22,7 @@ import 'package:frederic/backend/frederic_activity_manager.dart';
 class FredericWorkout with ChangeNotifier {
   FredericWorkout(this.workoutID) {
     _activityManager = FredericBackend.instance().activityManager;
-    _activities = FredericWorkoutActivities();
+    _activities = FredericWorkoutActivities(this);
   }
 
   final String workoutID;
@@ -305,10 +305,12 @@ class FredericWorkout with ChangeNotifier {
 }
 
 class FredericWorkoutActivities {
-  FredericWorkoutActivities() {
+  FredericWorkoutActivities(this.workout) {
     _activities = List<List<FredericActivity>>();
     _activities.add(List<FredericActivity>());
   }
+
+  FredericWorkout workout;
 
   int _period = 0;
 
@@ -324,6 +326,18 @@ class FredericWorkoutActivities {
       }
     }
     _period = value;
+  }
+
+  List<FredericActivity> getDay(DateTime day) {
+    if (workout.startDate == null) return <FredericActivity>[];
+    DateTime start = workout.startDate
+        .subtract(Duration(days: workout.startDate.weekday - 1));
+    DateTime end = workout.startDate.add(Duration(days: period));
+    if (day.isAfter(end) && workout.repeating == false)
+      return <FredericActivity>[];
+    int daysdiff = day.difference(start).inDays % period;
+    // daysdiff + 1 because activities[1] is the first day
+    return activities[daysdiff + 1] + activities[0];
   }
 
   bool repeating;
