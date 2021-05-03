@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/picture_icon.dart';
 import 'package:frederic/widgets/progress_bar.dart';
 
 class GoalCard extends StatelessWidget {
+  GoalCard(this.goal);
+
+  final FredericGoal goal;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,8 +20,7 @@ class GoalCard extends StatelessWidget {
           border: Border.all(color: kCardBorderColor)),
       child: Row(
         children: [
-          PictureIcon(
-              'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fbench%4010x.png?alt=media&token=71255870-0a50-407d-a0b1-4a8a52a11bc3'),
+          PictureIcon(goal.image),
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Column(
@@ -31,7 +35,7 @@ class GoalCard extends StatelessWidget {
                       Container(
                         width: 132,
                         child: Text(
-                          'Bench Press like a Boss',
+                          goal.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -48,7 +52,7 @@ class GoalCard extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100))),
                         child: Text(
-                          '18 days',
+                          goal.timeLeftFormatted,
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -63,7 +67,7 @@ class GoalCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        '220',
+                        '${goal.startState}',
                         style: TextStyle(
                             color: kTextColor,
                             fontWeight: FontWeight.w600,
@@ -71,7 +75,7 @@ class GoalCard extends StatelessWidget {
                             fontSize: 13),
                       ),
                       SizedBox(width: 2),
-                      Text('kg',
+                      Text('${goal.activity.bestProgressType}',
                           style: TextStyle(
                               color: kTextColor,
                               fontWeight: FontWeight.w500,
@@ -79,7 +83,7 @@ class GoalCard extends StatelessWidget {
                               fontSize: 11)),
                       Expanded(child: Container()),
                       Text(
-                        '220',
+                        '${goal.endState}',
                         style: TextStyle(
                             color: kTextColor,
                             fontWeight: FontWeight.w600,
@@ -87,7 +91,7 @@ class GoalCard extends StatelessWidget {
                             fontSize: 13),
                       ),
                       SizedBox(width: 2),
-                      Text('kg',
+                      Text('${goal.activity.bestProgressType}',
                           style: TextStyle(
                               color: kTextColor,
                               fontWeight: FontWeight.w500,
@@ -96,7 +100,7 @@ class GoalCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                ProgressBar(0.8)
+                ProgressBar((goal.progressPercentage / 100).toDouble())
               ],
             ),
           )

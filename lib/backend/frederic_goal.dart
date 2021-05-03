@@ -60,6 +60,16 @@ class FredericGoal {
   bool get isLoss => startState > endState;
   FredericActivity get activity => _activity;
 
+  double get progress {
+    double diff = endState.toDouble() - startState.toDouble();
+    double change = currentState.toDouble() - startState.toDouble();
+    double percentage = change / diff;
+    if (percentage < 0) percentage = 0;
+    if (percentage > 1) percentage = 1;
+    print('progress $percentage');
+    return percentage;
+  }
+
   int get progressPercentage {
     num diff = endState - startState;
     num change = currentState - startState;
@@ -71,6 +81,7 @@ class FredericGoal {
 
   String get timeLeftFormatted {
     int days = endDate.difference(DateTime.now()).inDays;
+    return '$days';
     if (days > 7) {
       return '${days ~/ 7} week${(days ~/ 7) != 1 ? 's' : ''}';
     }

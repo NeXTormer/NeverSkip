@@ -22,6 +22,7 @@ final Color kMainColor = const Color(0xFF3E4FD8);
 final Color kAccentColor = const Color(0xFF4791FF);
 final Color kMainColorLight = const Color(0x1A3E4FD8);
 final Color kAccentColorLight = const Color(0xFFF4F7FE);
+final Color kGreyColor = const Color(0xFFC4C4C4);
 
 final Color kDarkColor = Colors.blueAccent;
 final Color kTextColor = const Color(0xFF272727);

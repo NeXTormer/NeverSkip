@@ -1,9 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
+  HomeScreenAppbar(this.user);
+
+  final FredericUser user;
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -17,8 +23,7 @@ class HomeScreenAppbar extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: CachedNetworkImageProvider(
-                      'https://static.toiimg.com/thumb/msid-74688213,imgsize-91052,width-800,height-600,resizemode-75/74688213.jpg'),
+                  backgroundImage: CachedNetworkImageProvider(user.image),
                 ),
                 Icon(
                   ExtraIcons.bell_1,
@@ -33,7 +38,7 @@ class HomeScreenAppbar extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Good morning, Ana!',
+                    Text('Good morning, ${user.name.split(' ')[0]}!',
                         style: TextStyle(
                             color: const Color(0xFF272727),
                             fontWeight: FontWeight.w400,
@@ -48,17 +53,20 @@ class HomeScreenAppbar extends StatelessWidget {
                             fontSize: 16))
                   ],
                 ),
-                Container(
-                    height: 32,
-                    width: 32,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: kMainColor),
-                    child: Icon(
-                      ExtraIcons.settings,
-                      color: Colors.white,
-                      size: 18,
-                    ))
+                GestureDetector(
+                  onTap: () => FirebaseAuth.instance.signOut(),
+                  child: Container(
+                      height: 32,
+                      width: 32,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: kMainColor),
+                      child: Icon(
+                        ExtraIcons.settings,
+                        color: Colors.white,
+                        size: 18,
+                      )),
+                )
               ],
             ),
             SizedBox(height: 8)

@@ -45,14 +45,15 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
   void initState() {
     _activityManager = FredericBackend.instance().activityManager;
     if (widget.type == FredericActivityBuilderType.SingleActivity) {
-      _activityManager[widget.id].addListener(updateData);
+      _activityManager[widget.id]?.addListener(updateData);
     } else {
       _activityManager.addListener(updateData);
       if (widget.type == FredericActivityBuilderType.WorkoutActivities) {
         _workoutManager = FredericBackend.instance().workoutManager;
-        _workoutManager[widget.id].loadActivities();
-        _workoutManager[widget.id].addListener(updateData);
-        _workoutManager.addListener(updateData);
+        _workoutManager[widget.id]?.loadActivities();
+        _workoutManager[widget.id]
+            ?.addListener(updateData); //TODO add null safety
+        _workoutManager?.addListener(updateData);
       }
     }
     updateData();

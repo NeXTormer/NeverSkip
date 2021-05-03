@@ -17,9 +17,9 @@ class HomeScreen extends StatelessWidget {
           child: FredericUserBuilder(builder: (context, user) {
             return CustomScrollView(
               slivers: [
-                HomeScreenAppbar(),
+                HomeScreenAppbar(user),
                 SliverDivider(),
-                ProgressIndicatorSegment(),
+                ProgressIndicatorSegment(user.progressMonitors),
                 GoalSegment(),
                 TrainingVolumeChartSegment(),
                 SliverToBoxAdapter(

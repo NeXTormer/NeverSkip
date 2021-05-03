@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/picture_icon.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ActivityCard extends StatelessWidget {
   @override
@@ -18,19 +21,76 @@ class ActivityCard extends StatelessWidget {
             SizedBox(width: 12),
             Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(children: [
-                    Text('Muscle Ups'),
-                    Expanded(child: Container()),
-                    Text('220 kg')
-                  ]),
+                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      children: [
+                        Text('Bench press',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: true
+                                    ? kTextColor
+                                    : const Color(0x993A3A3A))),
+                        Expanded(child: Container()),
+                        Icon(ExtraIcons.dumbbell, color: kMainColor, size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          '220',
+                          style: TextStyle(
+                              color: kTextColor,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                              fontSize: 14),
+                        ),
+                        SizedBox(width: 2),
+                        Text('kg',
+                            style: TextStyle(
+                                color: kTextColor,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.5,
+                                fontSize: 12)),
+                      ]),
                   Row(
                     children: [
-                      Text('20 reps | 3 sets'),
+                      Text(
+                        '20',
+                        style: TextStyle(
+                            color: kTextColor,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                            fontSize: 14),
+                      ),
+                      SizedBox(width: 2),
+                      Text('reps',
+                          style: TextStyle(
+                              color: kTextColor,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.5,
+                              fontSize: 12)),
+                      SizedBox(width: 6),
+                      FredericVerticalDivider(length: 16),
+                      SizedBox(width: 6),
+                      Text(
+                        '3',
+                        style: TextStyle(
+                            color: kTextColor,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                            fontSize: 14),
+                      ),
+                      SizedBox(width: 2),
+                      Text('sets',
+                          style: TextStyle(
+                              color: kTextColor,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.5,
+                              fontSize: 12)),
                       Expanded(
                         child: Container(),
                       ),
-                      Text('...')
+                      Icon(ExtraIcons.dots, color: kGreyColor, size: 20)
                     ],
                   )
                 ],

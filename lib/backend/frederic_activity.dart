@@ -124,6 +124,13 @@ class FredericActivity with ChangeNotifier {
       return bestWeight;
   }
 
+  String get bestProgressType {
+    if (_type == FredericActivityType.Weighted) return 'kg';
+    if (_type == FredericActivityType.Calisthenics) return 'reps';
+    if (_type == FredericActivityType.Stretch) return 's';
+    return '';
+  }
+
   List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
 
   FredericActivityType get type => _type;

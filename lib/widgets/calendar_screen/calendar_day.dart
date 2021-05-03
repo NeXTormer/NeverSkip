@@ -39,7 +39,7 @@ class _CalendarActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 16, left: 8),
-      height: 100,
+      height: 90,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
