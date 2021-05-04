@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_card.dart';
+import 'package:frederic/widgets/frederic_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarDay extends StatelessWidget {
@@ -56,11 +57,7 @@ class _CalendarMonthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(color: kCardBorderColor)),
+    return FredericCard(
       padding: EdgeInsets.all(12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

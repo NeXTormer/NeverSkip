@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/frederic_card.dart';
 import 'package:frederic/widgets/picture_icon.dart';
 import 'package:frederic/widgets/progress_bar.dart';
 
@@ -11,13 +12,9 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return FredericCard(
       width: 260,
       padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(color: kCardBorderColor)),
       child: Row(
         children: [
           PictureIcon(goal.image),

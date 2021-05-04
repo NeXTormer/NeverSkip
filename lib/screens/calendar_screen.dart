@@ -47,7 +47,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Padding(
                       padding: EdgeInsets.only(top: 2),
                       child: Text(
-                        'Today\'s exercises',
+                        'Upcoming exercises',
                         style: true
                             ? GoogleFonts.montserrat(
                                 color: kTextColor,

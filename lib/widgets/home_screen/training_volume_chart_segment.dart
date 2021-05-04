@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/main.dart';
+import 'package:frederic/widgets/frederic_card.dart';
 import 'package:frederic/widgets/frederic_heading.dart';
 import 'package:frederic/widgets/progress_bar.dart';
 
@@ -28,11 +28,7 @@ class TrainingVolumeChartSegment extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.only(left: 16, right: 16),
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(color: kCardBorderColor)),
+          child: FredericCard(
             height: 216,
             padding: EdgeInsets.all(16),
             child: Container(

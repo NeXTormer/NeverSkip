@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/frederic_card.dart';
 
 import '../picture_icon.dart';
 
@@ -13,12 +14,8 @@ class ProgressIndicatorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activityID == '0') return Container();
-    return Container(
+    return FredericCard(
       padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(color: kCardBorderColor)),
       child: FredericActivityBuilder(
           type: FredericActivityBuilderType.SingleActivity,
           id: activityID,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frederic/main.dart';
 
 ///
 /// Creates a number slider with [numberOfItems] entries. Needs a
@@ -10,14 +11,13 @@ import 'package:flutter/services.dart';
 class NumberSlider extends StatefulWidget {
   NumberSlider(
       {this.controller,
-      this.width = 220,
       this.numberOfItems = 400,
       this.startingIndex = 10,
       this.itemWidth = 0.2});
+
   final int startingIndex;
   final int numberOfItems;
   final double itemWidth;
-  final double width;
   final NumberSliderController controller;
 
   @override
@@ -45,24 +45,23 @@ class _NumberSliderState extends State<NumberSlider> {
     return Container(
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black12),
-            borderRadius: BorderRadius.all(Radius.circular(4))),
-        height: 50,
-        width: widget.width,
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        height: 40,
         child: Stack(
           alignment: Alignment.center,
           children: [
             Positioned(
-              bottom: -6,
+              bottom: -8.5,
               child: Container(
                 width: 50,
                 //height: double.infinity,
                 child: Container(
                   child: RotatedBox(
-                    quarterTurns: 1,
+                    quarterTurns: 3,
                     child: Container(
                       child: Icon(
-                        Icons.keyboard_arrow_left,
-                        color: Colors.black38,
+                        Icons.play_arrow,
+                        color: kMainColor,
                       ),
                     ),
                   ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/add_progress_screen.dart';
+import 'package:frederic/widgets/frederic_card.dart';
 import 'package:frederic/widgets/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/picture_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,11 +21,7 @@ class ActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(color: kCardBorderColor)),
+        FredericCard(
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
@@ -137,6 +135,9 @@ class ActivityCard extends StatelessWidget {
     if (selectable) return onClick();
 
     showCupertinoModalBottomSheet(
-        expand: true, context: context, builder: (context) => Container());
+        expand: true,
+        enableDrag: true,
+        context: context,
+        builder: (context) => AddProgressScreen(activity));
   }
 }
