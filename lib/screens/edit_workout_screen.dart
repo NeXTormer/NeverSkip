@@ -4,11 +4,8 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_activity_builder.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/screens/activity_screen.dart';
-import 'package:frederic/widgets/activity_screen/activity_card.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
-import 'package:frederic/widgets/workout/edit_workout_page.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workoutID);
@@ -44,36 +41,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           if (workout?.name == null) return Container();
           return Scaffold(
               backgroundColor: Colors.white,
-              appBar: AppBar(
-                shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(12))),
-                centerTitle: true,
-                elevation: 0,
-                shadowColor: Colors.white,
-                title: Text(
-                  workout.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w500,
-                      color: kAppBarTextColor),
-                ),
-                actions: [
-                  if (workout.canEdit)
-                    IconButton(
-                        icon: Icon(Icons.edit_outlined, size: 30),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => EditWorkoutPage(workout),
-                          );
-                        })
-                ],
-              ),
               floatingActionButton: workout.canEdit
                   ? FloatingActionButton(
                       onPressed: () => showActivityList(context),
@@ -146,12 +113,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                   child: ListView.builder(
                                     padding: EdgeInsets.only(top: 8),
                                     itemBuilder: (context, index) {
-                                      return ActivityCard(
-                                        activities.activities[weekday + 1]
-                                            [index],
-                                        dismissible: workout.canEdit,
-                                        onDismiss: handleDeleteActivity,
-                                      );
+                                      return Container();
+
+                                      // return ActivityCard(
+                                      //   activities.activities[weekday + 1]
+                                      //       [index],
+                                      //   dismissible: workout.canEdit,
+                                      //   onDismiss: handleDeleteActivity,
+                                      // );
                                     },
                                     itemCount: activities
                                         .activities[weekday + 1].length,
@@ -207,11 +176,13 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       builder: (context) {
         return Container(
             height: MediaQuery.of(context).size.height * 0.65,
-            child: ActivityScreen(
-              isSelector: true,
-              onAddActivity: handleAddActivity,
-              itemsDismissable: false,
-            ));
+            child: Container()
+            // ActivityScreen(
+            //   isSelector: true,
+            //   onAddActivity: handleAddActivity,
+            //   itemsDismissable: false,
+            // )
+            );
       },
     );
   }

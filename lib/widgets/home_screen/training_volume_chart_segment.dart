@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/widgets/frederic_card.dart';
-import 'package:frederic/widgets/frederic_heading.dart';
-import 'package:frederic/widgets/progress_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
+import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 
 class TrainingVolumeChartSegment extends StatelessWidget {
   @override

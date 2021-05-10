@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/frederic_card.dart';
-import 'package:frederic/widgets/picture_icon.dart';
-import 'package:frederic/widgets/progress_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 
 class GoalCard extends StatelessWidget {
   GoalCard(this.goal);

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/activity_card.dart';
-import 'package:frederic/widgets/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/activity_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarDay extends StatelessWidget {

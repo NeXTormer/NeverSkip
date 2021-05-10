@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/widgets/frederic_card.dart';
-import 'package:frederic/widgets/frederic_vertical_divider.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:intl/intl.dart';
 
 class SetCard extends StatelessWidget {

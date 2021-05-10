@@ -4,7 +4,7 @@ import 'package:frederic/widgets/home_screen/goal_segment.dart';
 import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
 import 'package:frederic/widgets/home_screen/training_volume_chart_segment.dart';
-import 'package:frederic/widgets/sliver_divider.dart';
+import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
 class HomeScreen extends StatelessWidget {
   static const double SIDE_PADDING = 16;

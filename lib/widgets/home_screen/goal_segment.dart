@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
-import 'package:frederic/widgets/frederic_heading.dart';
 import 'package:frederic/widgets/home_screen/goal_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 
 class GoalSegment extends StatefulWidget {
   @override

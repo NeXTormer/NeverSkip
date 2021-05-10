@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:share/share.dart';
 
 class WorkoutCard extends StatefulWidget {
   WorkoutCard(this.workout);
@@ -95,11 +94,6 @@ class _WorkoutCardState extends State<WorkoutCard> {
               child: InkWell(
                 onTap: () {
                   final RenderBox box = context.findRenderObject();
-                  Share.share(
-                      'Get the workout ${widget.workout.name} [${widget.workout.workoutID}]',
-                      subject: 'share workout',
-                      sharePositionOrigin:
-                          box.localToGlobal(Offset.zero) & box.size);
                 },
                 child: CircleAvatar(
                   radius: 25,

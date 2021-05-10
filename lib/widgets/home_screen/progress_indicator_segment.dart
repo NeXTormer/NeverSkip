@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/frederic_heading.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 
 class ProgressIndicatorSegment extends StatelessWidget {
   ProgressIndicatorSegment(this.progressMonitors, {this.sidePadding = 16});

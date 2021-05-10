@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
-import '../picture_icon.dart';
+import '../standard_elements/picture_icon.dart';
 
 class ProgressIndicatorCard extends StatelessWidget {
   ProgressIndicatorCard(this.activityID, {this.loading = false});

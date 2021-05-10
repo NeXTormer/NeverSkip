@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/widgets/frederic_heading.dart';
-import 'package:frederic/widgets/number_slider.dart';
-import 'package:frederic/widgets/picture_icon.dart';
-import 'package:frederic/widgets/set_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
+import 'package:frederic/widgets/standard_elements/number_slider.dart';
+import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 

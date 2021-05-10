@@ -24,12 +24,9 @@ final Color kMainColorLight = const Color(0x1A3E4FD8);
 final Color kAccentColorLight = const Color(0xFFF4F7FE);
 final Color kGreyColor = const Color(0xFFC4C4C4);
 
-final Color kDarkColor = Colors.blueAccent;
 final Color kTextColor = const Color(0xFF272727);
-final Color kAppBarTextColor = Colors.white;
 final Color kCardBorderColor = const Color(0xFFE2E2E2);
 final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
-final double kAppBarHeight = 0;
 
 void main() {
   runApp(Frederic());
@@ -107,7 +104,7 @@ class Frederic extends StatelessWidget {
                       label: 'Calendar',
                     ),
                     FredericScreen(
-                      screen: ActivityScreen(),
+                      screen: Container(),
                       icon: ExtraIcons.dumbbell,
                       label: 'Exercises',
                     ),

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/workout/period_slider.dart';
+import 'package:frederic/widgets/workout_list_screen/period_slider.dart';
 import 'package:intl/intl.dart';
 
 ///
