@@ -4,7 +4,7 @@ class ExtraIcons {
   ExtraIcons._();
 
   static const _kFontFam = 'ExtraIcons';
-  static const String _kFontPkg = null;
+  static const String? _kFontPkg = null;
 
   static const IconData dots =
       IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);

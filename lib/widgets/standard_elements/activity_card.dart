@@ -14,9 +14,9 @@ class ActivityCard extends StatelessWidget {
   ActivityCard(this.activity, {this.selectable = false, this.onClick});
 
   final bool selectable;
-  final Function onClick;
+  final Function? onClick;
 
-  final FredericActivity activity;
+  final FredericActivity? activity;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ActivityCard extends StatelessWidget {
             padding: EdgeInsets.all(12),
             child: Row(
               children: [
-                PictureIcon(activity.image),
+                PictureIcon(activity!.image),
                 SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -35,7 +35,7 @@ class ActivityCard extends StatelessWidget {
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           children: [
-                            Text(activity.name,
+                            Text(activity!.name,
                                 style: GoogleFonts.montserrat(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
@@ -44,15 +44,15 @@ class ActivityCard extends StatelessWidget {
                                         : const Color(0x993A3A3A))),
                             Expanded(child: Container()),
                             if (false &&
-                                activity.type ==
+                                activity!.type ==
                                     FredericActivityType.Weighted &&
-                                activity.bestProgress != 0)
+                                activity!.bestProgress != 0)
                               Icon(ExtraIcons.dumbbell,
                                   color: kMainColor, size: 16),
                             SizedBox(width: 6),
-                            if (activity.bestProgress != 0)
+                            if (activity!.bestProgress != 0)
                               Text(
-                                '${activity.bestProgress}',
+                                '${activity!.bestProgress}',
                                 style: TextStyle(
                                     color: kTextColor,
                                     fontWeight: FontWeight.w600,
@@ -60,8 +60,8 @@ class ActivityCard extends StatelessWidget {
                                     fontSize: 14),
                               ),
                             SizedBox(width: 2),
-                            if (activity.bestProgress != 0)
-                              Text(activity.bestProgressType,
+                            if (activity!.bestProgress != 0)
+                              Text(activity!.bestProgressType,
                                   style: TextStyle(
                                       color: kTextColor,
                                       fontWeight: FontWeight.w500,
@@ -71,7 +71,7 @@ class ActivityCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '${activity.recommendedReps}',
+                            '${activity!.recommendedReps}',
                             style: TextStyle(
                                 color: kTextColor,
                                 fontWeight: FontWeight.w600,
@@ -89,7 +89,7 @@ class ActivityCard extends StatelessWidget {
                           FredericVerticalDivider(length: 16),
                           SizedBox(width: 6),
                           Text(
-                            '${activity.recommendedSets}',
+                            '${activity!.recommendedSets}',
                             style: TextStyle(
                                 color: kTextColor,
                                 fontWeight: FontWeight.w600,
@@ -133,7 +133,7 @@ class ActivityCard extends StatelessWidget {
   }
 
   void handleClick(BuildContext context) {
-    if (selectable) return onClick();
+    if (selectable) return onClick!();
 
     showCupertinoModalBottomSheet(
         //expand: true,

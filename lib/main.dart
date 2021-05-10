@@ -33,7 +33,7 @@ void main() {
 }
 
 class Frederic extends StatelessWidget {
-  Frederic({Key key}) : super(key: key);
+  Frederic({Key? key}) : super(key: key);
 
   final SplashScreen splashScreen = SplashScreen(
     onComplete: () {
@@ -72,7 +72,7 @@ class Frederic extends StatelessWidget {
       providers: [
         StreamProvider(
           create: (context) =>
-              context.read<FredericBackend>().authService.authStateChanges,
+              context.read<FredericBackend>().authService!.authStateChanges,
         ),
       ],
       child: MaterialApp(
@@ -122,7 +122,7 @@ class Frederic extends StatelessWidget {
     );
   }
 
-  Widget _errorScreen(Object error) {
+  Widget _errorScreen(Object? error) {
     return MaterialApp(
         home: Scaffold(
             body: Center(

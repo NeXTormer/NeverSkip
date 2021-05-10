@@ -4,7 +4,7 @@ import 'file:///C:/Dev/Projects/frederic/lib/widgets/standard_elements/frederic_
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({this.onComplete});
-  final Function onComplete;
+  final Function? onComplete;
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -27,6 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void handleCompletion() {
-    widget.onComplete();
+    widget.onComplete!();
   }
 }

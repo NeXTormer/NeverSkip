@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class FredericButton extends StatelessWidget {
   FredericButton(this.text,
-      {@required this.onPressed,
+      {required this.onPressed,
       this.mainColor = const Color(0xFF3E4FD8),
       this.textColor = const Color(0xFFFFFFFF)});
   final Color mainColor;
@@ -16,7 +16,7 @@ class FredericButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: onPressed as void Function()?,
       child: Container(
         width: double.infinity,
         height: height,

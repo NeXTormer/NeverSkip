@@ -18,47 +18,47 @@ class FredericGoal {
     _goalManager = goalManager;
     _documentReference = FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('goals')
         .doc(uid);
-    _activityManager = FredericBackend.instance().activityManager;
+    _activityManager = FredericBackend.instance()!.activityManager;
   }
 
-  String goalID;
-  String _activityID;
+  String? goalID;
+  String? _activityID;
 
-  FredericActivity _activity;
+  FredericActivity? _activity;
 
-  FredericGoalManager _goalManager;
-  FredericActivityManager _activityManager;
+  late FredericGoalManager _goalManager;
+  FredericActivityManager? _activityManager;
 
-  DocumentReference _documentReference;
+  late DocumentReference _documentReference;
 
-  String _title;
-  String _image;
+  String? _title;
+  String? _image;
 
-  num _start;
-  num _end;
-  num _current;
-  Timestamp _startDate;
-  Timestamp _endDate;
-  bool _isCompleted;
-  bool _isDeleted;
+  num? _start;
+  num? _end;
+  num? _current;
+  Timestamp? _startDate;
+  Timestamp? _endDate;
+  bool? _isCompleted;
+  bool? _isDeleted;
 
-  String get uid => goalID;
+  String? get uid => goalID;
   String get title => _title ?? 'Goal';
   String get image => _image ?? 'https://via.placeholder.com/500x400?text=Goal';
-  String get activityID => _activityID;
+  String? get activityID => _activityID;
   num get startState => _start ?? 0;
   num get endState => _end ?? 0;
   num get currentState => _current ?? -1;
-  DateTime get startDate => _startDate.toDate() ?? DateTime.now();
-  DateTime get endDate => _endDate.toDate() ?? DateTime.now();
+  DateTime get startDate => _startDate!.toDate() ?? DateTime.now();
+  DateTime get endDate => _endDate!.toDate() ?? DateTime.now();
   bool get isCompleted => _isCompleted ?? false;
   bool get isNotCompleted => !isCompleted;
   bool get isDeleted => _isDeleted ?? false;
   bool get isLoss => startState > endState;
-  FredericActivity get activity => _activity;
+  FredericActivity? get activity => _activity;
 
   double get progress {
     double diff = endState.toDouble() - startState.toDouble();
@@ -120,7 +120,7 @@ class FredericGoal {
 
   void updateData() {
     if (_activity == null) {
-      _activity = _activityManager[activityID];
+      _activity = _activityManager![activityID];
       _activity?.addListener(updateData);
     }
     _current = _activity?.bestProgress;
@@ -128,18 +128,18 @@ class FredericGoal {
   }
 
   void insertData(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    _activityID = snapshot.data()['activity'];
-    _title = snapshot.data()['title'];
-    _image = snapshot.data()['image'];
-    _start = snapshot.data()['startstate'];
-    _end = snapshot.data()['endstate'];
-    _startDate = snapshot.data()['startdate'];
-    _endDate = snapshot.data()['enddate'];
-    _isCompleted = snapshot.data()['iscompleted'];
+    _activityID = snapshot.data()!['activity'];
+    _title = snapshot.data()!['title'];
+    _image = snapshot.data()!['image'];
+    _start = snapshot.data()!['startstate'];
+    _end = snapshot.data()!['endstate'];
+    _startDate = snapshot.data()!['startdate'];
+    _endDate = snapshot.data()!['enddate'];
+    _isCompleted = snapshot.data()!['iscompleted'];
 
     if (_activity == null) {
-      _activityManager.addListener(updateData);
-      _activity = _activityManager[activityID];
+      _activityManager!.addListener(updateData);
+      _activity = _activityManager![activityID];
       _activity?.addListener(updateData);
     }
 

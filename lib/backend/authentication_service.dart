@@ -6,9 +6,9 @@ class AuthenticationService {
 
   final FirebaseAuth _firebaseAuth;
 
-  Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<String> signIn(String email, String password) async {
+  Future<String?> signIn(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -23,12 +23,12 @@ class AuthenticationService {
     }
   }
 
-  Future<String> signUp(String email, String password) async {
+  Future<String?> signUp(String email, String password) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      await FredericUser.createUserEntryInDB(userCredential.user.uid);
-      FredericBackend.instance().logIn(userCredential.user.uid);
+      await FredericUser.createUserEntryInDB(userCredential.user!.uid);
+      FredericBackend.instance()!.logIn(userCredential.user!.uid);
       return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

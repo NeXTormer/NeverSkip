@@ -8,7 +8,7 @@ import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
 enum AuthMode { Signup, Login }
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
   final String title = 'Welcome Back';
   final String titleSignup = 'Create a new account';
@@ -271,8 +271,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         hasError = false;
       });
-      FredericBackend.instance()
-          .authService
+      FredericBackend.instance()!
+          .authService!
           .signIn(email, password)
           .then((value) {
         if (value != 'success' && value != null) {
@@ -324,8 +324,8 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
-      FredericBackend.instance()
-          .authService
+      FredericBackend.instance()!
+          .authService!
           .signUp(emailController.text.trim(), passwordController.text.trim())
           .then((value) {
         if (value != 'success' && value != null) {

@@ -72,7 +72,7 @@ class GoalCard extends StatelessWidget {
                             fontSize: 13),
                       ),
                       SizedBox(width: 2),
-                      Text('${goal.activity.bestProgressType}',
+                      Text('${goal.activity!.bestProgressType}',
                           style: TextStyle(
                               color: kTextColor,
                               fontWeight: FontWeight.w500,
@@ -88,7 +88,7 @@ class GoalCard extends StatelessWidget {
                             fontSize: 13),
                       ),
                       SizedBox(width: 2),
-                      Text('${goal.activity.bestProgressType}',
+                      Text('${goal.activity!.bestProgressType}',
                           style: TextStyle(
                               color: kTextColor,
                               fontWeight: FontWeight.w500,

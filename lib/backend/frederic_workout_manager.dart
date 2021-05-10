@@ -17,20 +17,20 @@ import 'package:frederic/backend/backend.dart';
 ///
 class FredericWorkoutManager with ChangeNotifier {
   FredericWorkoutManager() {
-    _workouts = HashMap<String, FredericWorkout>();
+    _workouts = HashMap<String, FredericWorkout?>();
   }
 
   final CollectionReference _workoutsCollection =
       FirebaseFirestore.instance.collection('workouts');
 
-  HashMap<String, FredericWorkout> _workouts;
+  HashMap<String, FredericWorkout?>? _workouts;
   bool _dataLoaded = false;
 
-  FredericWorkout operator [](String value) {
-    return _workouts[value];
+  FredericWorkout? operator [](String? value) {
+    return _workouts![value!];
   }
 
-  HashMap<String, FredericWorkout> get workouts => _workouts;
+  HashMap<String, FredericWorkout?>? get workouts => _workouts;
 
   ///
   /// Called once in [FredericBackend]
@@ -41,7 +41,7 @@ class FredericWorkoutManager with ChangeNotifier {
     Stream<QuerySnapshot> globalStream =
         _workoutsCollection.where('owner', isEqualTo: 'global').snapshots();
     Stream<QuerySnapshot> userStream = _workoutsCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
 
     Stream<QuerySnapshot> streamGroup =
@@ -54,17 +54,17 @@ class FredericWorkoutManager with ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       var docSnapshot = snapshot.docChanges[i].doc;
       if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
-        _workouts.remove(docSnapshot.id);
+        _workouts!.remove(docSnapshot.id);
         continue;
       }
 
-      if (_workouts.containsKey(docSnapshot.id)) {
-        _workouts[docSnapshot.id]
-            .insertSnapshot(snapshot.docChanges[i].doc)
+      if (_workouts!.containsKey(docSnapshot.id)) {
+        _workouts![docSnapshot.id]!
+            .insertSnapshot(snapshot.docChanges[i].doc as DocumentSnapshot<Map<String, dynamic>>)
             .notifyListeners();
       } else {
-        _workouts[docSnapshot.id] = FredericWorkout(docSnapshot.id)
-          ..insertSnapshot(docSnapshot);
+        _workouts![docSnapshot.id] = FredericWorkout(docSnapshot.id)
+          ..insertSnapshot(docSnapshot as DocumentSnapshot<Map<String, dynamic>>);
       }
     }
     notifyListeners();

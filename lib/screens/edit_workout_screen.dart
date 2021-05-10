@@ -18,8 +18,8 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  PageController activityPageController;
-  WeekdaySliderController sliderController;
+  PageController? activityPageController;
+  WeekdaySliderController? sliderController;
 
   int selectedDay = 1;
 
@@ -41,7 +41,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           if (workout?.name == null) return Container();
           return Scaffold(
               backgroundColor: Colors.white,
-              floatingActionButton: workout.canEdit
+              floatingActionButton: workout.canEdit!
                   ? FloatingActionButton(
                       onPressed: () => showActivityList(context),
                       backgroundColor: kMainColor,
@@ -68,7 +68,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           left: 0.0,
                           child: GestureDetector(
                             onTap: () {
-                              sliderController.pageController.previousPage(
+                              sliderController!.pageController!.previousPage(
                                   duration: Duration(milliseconds: 350),
                                   curve: Curves.easeInOutExpo);
                             },
@@ -83,7 +83,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           right: 0.0,
                           child: GestureDetector(
                             onTap: () {
-                              sliderController.pageController.nextPage(
+                              sliderController!.pageController!.nextPage(
                                   duration: Duration(milliseconds: 350),
                                   curve: Curves.easeInOutExpo);
                             },
@@ -123,7 +123,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                                       // );
                                     },
                                     itemCount: activities
-                                        .activities[weekday + 1].length,
+                                        .activities![weekday + 1].length,
                                   ),
                                 );
                               }));
@@ -135,9 +135,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleAddActivity(FredericActivity activity) {
-    bool success = FredericBackend.instance()
-            .workoutManager[widget.workoutID]
-            ?.addActivity(activity, sliderController.currentDay) ??
+    bool success = FredericBackend.instance()!
+            .workoutManager![widget.workoutID]
+            ?.addActivity(activity, sliderController!.currentDay) ??
         false;
 
     if (success) {
@@ -146,21 +146,21 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleDeleteActivity(FredericActivity activity) {
-    FredericBackend.instance()
-        .workoutManager[widget.workoutID]
-        ?.removeActivity(activity, sliderController.currentDay);
+    FredericBackend.instance()!
+        .workoutManager![widget.workoutID]
+        ?.removeActivity(activity, sliderController!.currentDay);
   }
 
   void handleDayChangeByButton(int day) {
-    if ((day - 1 - activityPageController.page).abs() <= 2)
-      activityPageController.animateToPage(day - 1,
+    if ((day - 1 - activityPageController!.page!).abs() <= 2)
+      activityPageController!.animateToPage(day - 1,
           duration: Duration(milliseconds: 350), curve: Curves.easeInOutExpo);
     else
-      activityPageController.jumpToPage(day - 1);
+      activityPageController!.jumpToPage(day - 1);
   }
 
   void handleDayChangeBySwiping(int day) {
-    sliderController.setDayOnlyVisual(day + 1);
+    sliderController!.setDayOnlyVisual(day + 1);
   }
 
   void showActivityList(BuildContext context) {

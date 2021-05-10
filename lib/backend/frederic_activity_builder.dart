@@ -20,10 +20,10 @@ import 'package:frederic/backend/frederic_workout_manager.dart';
 ///
 class FredericActivityBuilder extends StatefulWidget {
   FredericActivityBuilder(
-      {Key key, @required this.type, @required this.builder, this.id})
+      {Key? key, required this.type, required this.builder, this.id})
       : super(key: key);
 
-  final String id;
+  final String? id;
   final FredericActivityBuilderType type;
 
   final Widget Function(BuildContext, dynamic) builder;
@@ -34,24 +34,24 @@ class FredericActivityBuilder extends StatefulWidget {
 }
 
 class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
-  List<FredericActivity> _activityList;
-  FredericWorkoutActivities _fredericWorkoutActivities;
-  FredericActivity _activity;
+  List<FredericActivity>? _activityList;
+  FredericWorkoutActivities? _fredericWorkoutActivities;
+  FredericActivity? _activity;
 
-  FredericActivityManager _activityManager;
-  FredericWorkoutManager _workoutManager;
+  FredericActivityManager? _activityManager;
+  FredericWorkoutManager? _workoutManager;
 
   @override
   void initState() {
-    _activityManager = FredericBackend.instance().activityManager;
+    _activityManager = FredericBackend.instance()!.activityManager;
     if (widget.type == FredericActivityBuilderType.SingleActivity) {
-      _activityManager[widget.id]?.addListener(updateData);
+      _activityManager![widget.id]?.addListener(updateData);
     } else {
-      _activityManager.addListener(updateData);
+      _activityManager!.addListener(updateData);
       if (widget.type == FredericActivityBuilderType.WorkoutActivities) {
-        _workoutManager = FredericBackend.instance().workoutManager;
-        _workoutManager[widget.id]?.loadActivities();
-        _workoutManager[widget.id]
+        _workoutManager = FredericBackend.instance()!.workoutManager;
+        _workoutManager![widget.id]?.loadActivities();
+        _workoutManager![widget.id]
             ?.addListener(updateData); //TODO add null safety
         _workoutManager?.addListener(updateData);
       }
@@ -79,13 +79,13 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
     setState(() {
       switch (widget.type) {
         case FredericActivityBuilderType.WorkoutActivities:
-          _fredericWorkoutActivities = _workoutManager[widget.id]?.activities;
+          _fredericWorkoutActivities = _workoutManager![widget.id]?.activities;
           break;
         case FredericActivityBuilderType.SingleActivity:
-          _activity = _activityManager[widget.id];
+          _activity = _activityManager![widget.id];
           break;
         case FredericActivityBuilderType.AllActivities:
-          _activityList = _activityManager.activities.toList();
+          _activityList = _activityManager!.activities.toList();
           break;
       }
     });
@@ -94,12 +94,12 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
   @override
   void dispose() {
     if (_workoutManager != null) {
-      _workoutManager.removeListener(updateData);
-      _workoutManager[widget.id]?.removeListener(updateData);
+      _workoutManager!.removeListener(updateData);
+      _workoutManager![widget.id]?.removeListener(updateData);
     }
-    _activityManager.removeListener(updateData);
+    _activityManager!.removeListener(updateData);
     if (widget.type == FredericActivityBuilderType.SingleActivity)
-      _activityManager[widget.id]?.removeListener(updateData);
+      _activityManager![widget.id]?.removeListener(updateData);
     super.dispose();
   }
 }

@@ -23,27 +23,27 @@ class FredericBackend {
     _currentUser = FredericUser(FirebaseAuth.instance.currentUser?.uid);
   }
 
-  AuthenticationService _authenticationService;
-  AuthenticationService get authService => _authenticationService;
+  AuthenticationService? _authenticationService;
+  AuthenticationService? get authService => _authenticationService;
 
-  FredericActivityManager _activityManager;
-  FredericActivityManager get activityManager => _activityManager;
+  FredericActivityManager? _activityManager;
+  FredericActivityManager? get activityManager => _activityManager;
 
-  FredericWorkoutManager _workoutManager;
-  FredericWorkoutManager get workoutManager => _workoutManager;
+  FredericWorkoutManager? _workoutManager;
+  FredericWorkoutManager? get workoutManager => _workoutManager;
 
-  FredericGoalManager _goalManager;
-  FredericGoalManager get goalManager => _goalManager;
+  FredericGoalManager? _goalManager;
+  FredericGoalManager? get goalManager => _goalManager;
 
-  FredericUser _currentUser;
-  FredericUser get currentUser => _currentUser;
+  FredericUser? _currentUser;
+  FredericUser? get currentUser => _currentUser;
 
-  Stream<FredericUser> _currentUserStream;
-  Stream<FredericUser> get currentUserStream => _currentUserStream;
+  Stream<FredericUser>? _currentUserStream;
+  Stream<FredericUser>? get currentUserStream => _currentUserStream;
 
-  static FredericBackend instance() => getIt<FredericBackend>();
+  static FredericBackend? instance() => getIt<FredericBackend>();
 
-  Completer<FredericUser> _currentUserCompleter;
+  late Completer<FredericUser> _currentUserCompleter;
 
   ///
   /// Use this to load the data for the currentUser, instead of using
@@ -57,13 +57,13 @@ class FredericBackend {
   }
 
   void loadData() {
-    _activityManager.loadData();
-    _workoutManager.loadData();
-    _goalManager.loadData();
+    _activityManager!.loadData();
+    _workoutManager!.loadData();
+    _goalManager!.loadData();
   }
 
   void logIn(String uid) {
-    _currentUser.uid = uid;
+    _currentUser!.uid = uid;
   }
 
   void logOut() {
@@ -81,21 +81,21 @@ class FredericBackend {
         FirebaseFirestore.instance.collection('users');
 
     Stream<DocumentSnapshot> userStream =
-        usersCollection.doc(currentUser.uid).snapshots();
+        usersCollection.doc(currentUser!.uid).snapshots();
 
     userStream.listen(_handleUserStream);
   }
 
   void _handleUserStream(DocumentSnapshot snapshot) {
-    currentUser.insertDocumentSnapshot(snapshot);
+    currentUser!.insertDocumentSnapshot(snapshot as DocumentSnapshot<Map<String, dynamic>>);
     if (!_currentUserCompleter.isCompleted)
       _currentUserCompleter.complete(currentUser);
   }
 
   //TODO: Call this on app close/logout
   void dispose() {
-    _activityManager.dispose();
-    _workoutManager.dispose();
-    _goalManager.dispose();
+    _activityManager!.dispose();
+    _workoutManager!.dispose();
+    _goalManager!.dispose();
   }
 }

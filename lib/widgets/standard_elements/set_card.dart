@@ -10,7 +10,7 @@ class SetCard extends StatelessWidget {
   const SetCard(this.set, this.activity);
 
   final FredericSet set;
-  final FredericActivity activity;
+  final FredericActivity? activity;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class SetCard extends StatelessWidget {
                       fontSize: 14),
                 ),
                 SizedBox(width: 3),
-                Text(activity.bestProgressType,
+                Text(activity!.bestProgressType,
                     style: TextStyle(
                         color: kTextColor,
                         fontWeight: FontWeight.w500,

@@ -5,10 +5,10 @@ import 'package:frederic/screens/splash_screen.dart';
 
 class AuthenticationWrapper extends StatelessWidget {
   AuthenticationWrapper(
-      {Key key,
-      @required this.homePage,
-      @required this.loginPage,
-      @required this.splashScreen})
+      {Key? key,
+      required this.homePage,
+      required this.loginPage,
+      required this.splashScreen})
       : super(key: key);
 
   final Widget homePage;
@@ -17,16 +17,16 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User>(
+    return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.uid != null) {
-            FredericBackend.instance().logIn(snapshot.data.uid);
+          if (snapshot.data!.uid != null) {
+            FredericBackend.instance()!.logIn(snapshot.data!.uid);
             return FutureBuilder(
-                future: FredericBackend.instance().loadCurrentUser(),
+                future: FredericBackend.instance()!.loadCurrentUser(),
                 builder: (context, snapshot) {
-                  FredericBackend.instance().loadData();
+                  FredericBackend.instance()!.loadData();
                   if (snapshot.hasData) {
                     return homePage;
                   } else {

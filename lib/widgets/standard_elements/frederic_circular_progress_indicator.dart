@@ -18,8 +18,8 @@ class FredericCircularProgressIndicator extends StatefulWidget {
   final double size;
   final double stroke;
   final double increment;
-  final double staticProgress;
-  final Function onFinished;
+  final double? staticProgress;
+  final Function? onFinished;
   final bool isStatic;
 
   @override
@@ -29,9 +29,9 @@ class FredericCircularProgressIndicator extends StatefulWidget {
 
 class _FredericCircularProgressIndicatorState
     extends State<FredericCircularProgressIndicator> {
-  double progress = 0;
+  double? progress = 0;
 
-  Timer timer;
+  late Timer timer;
 
   @override
   void initState() {
@@ -41,10 +41,10 @@ class _FredericCircularProgressIndicatorState
       timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
         setState(() {
           progress += widget.increment;
-          if (progress >= 1) {
+          if (progress! >= 1) {
             t.cancel();
             if (widget.onFinished != null) {
-              widget.onFinished();
+              widget.onFinished!();
             }
           }
         });
@@ -57,11 +57,11 @@ class _FredericCircularProgressIndicatorState
 
   @override
   Widget build(BuildContext context) {
-    if (progress > 1) progress = 1;
-    if (progress < 0) progress = 0;
-    double curveProgress = widget.isStatic
+    if (progress! > 1) progress = 1;
+    if (progress! < 0) progress = 0;
+    double? curveProgress = widget.isStatic
         ? widget.staticProgress
-        : Curves.easeInOutExpo.transform(progress);
+        : Curves.easeInOutExpo.transform(progress!);
 
     double innerRadius = widget.size - (widget.stroke * 2);
 
@@ -94,7 +94,7 @@ class _FredericCircularProgressIndicatorState
               return SweepGradient(
                       startAngle: 0,
                       endAngle: 2 * pi,
-                      stops: [curveProgress, curveProgress],
+                      stops: [curveProgress!, curveProgress],
                       // 0.0 , 0.5 , 0.5 , 1.0
                       center: Alignment.center,
                       colors: [Colors.white, Colors.transparent])

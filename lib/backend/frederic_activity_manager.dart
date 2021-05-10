@@ -23,16 +23,16 @@ class FredericActivityManager with ChangeNotifier {
     _dataLoaded = false;
   }
 
-  bool _dataLoaded;
+  late bool _dataLoaded;
 
-  HashMap<String, FredericActivity> _activities;
-  Completer<void> _hasDataCompleter;
+  late HashMap<String, FredericActivity> _activities;
+  late Completer<void> _hasDataCompleter;
 
   final CollectionReference _activitiesCollection =
       FirebaseFirestore.instance.collection('activities');
 
-  FredericActivity operator [](String value) {
-    return _activities[value];
+  FredericActivity? operator [](String? value) {
+    return _activities[value!];
   }
 
   Iterable<FredericActivity> get activities => _activities.values;
@@ -55,7 +55,7 @@ class FredericActivityManager with ChangeNotifier {
     Stream<QuerySnapshot> globalStream =
         _activitiesCollection.where('owner', isEqualTo: 'global').snapshots();
     Stream<QuerySnapshot> userStream = _activitiesCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
 
     Stream<QuerySnapshot> streamGroup =
@@ -69,7 +69,7 @@ class FredericActivityManager with ChangeNotifier {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       var docSnapshot = snapshot.docChanges[i].doc;
       if (_activities.containsKey(docSnapshot.id)) {
-        _activities[docSnapshot.id]
+        _activities[docSnapshot.id]!
             .insertSnapshot(snapshot.docChanges[i].doc)
             .notifyListeners();
         changed = true;

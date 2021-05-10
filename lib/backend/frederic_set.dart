@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// greater than zero, else nothing is changed
 ///
 class FredericSet implements Comparable {
-  FredericSet(this.setID, int reps, int weight, DateTime timestamp,
+  FredericSet(this.setID, int? reps, int? weight, DateTime timestamp,
       [this._isFinal = false]) {
     _reps = reps;
     _weight = weight;
@@ -15,10 +15,10 @@ class FredericSet implements Comparable {
   }
 
   final String setID;
-  int _reps;
-  int _weight;
+  int? _reps;
+  int? _weight;
   bool _isFinal = false;
-  DateTime _timestamp;
+  DateTime? _timestamp;
 
   int get reps => _reps ?? -1;
   int get weight => _weight ?? -1;

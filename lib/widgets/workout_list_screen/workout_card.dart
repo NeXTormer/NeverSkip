@@ -93,7 +93,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
               top: 10,
               child: InkWell(
                 onTap: () {
-                  final RenderBox box = context.findRenderObject();
+                  final RenderBox? box = context.findRenderObject() as RenderBox?;
                 },
                 child: CircleAvatar(
                   radius: 25,

@@ -15,9 +15,9 @@ class FredericTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final IconData icon;
   final bool isPasswordField;
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
-  final Function onSubmit;
+  final Function? onSubmit;
 
   @override
   _FredericTextFieldState createState() => _FredericTextFieldState();

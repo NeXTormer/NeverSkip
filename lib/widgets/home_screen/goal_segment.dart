@@ -10,14 +10,14 @@ class GoalSegment extends StatefulWidget {
 }
 
 class _GoalSegmentState extends State<GoalSegment> {
-  FredericGoalManager goalManager;
-  List<FredericGoal> goals;
+  FredericGoalManager? goalManager;
+  List<FredericGoal>? goals;
 
   @override
   void initState() {
-    goalManager = FredericBackend.instance().goalManager;
+    goalManager = FredericBackend.instance()!.goalManager;
     goalManager?.addListener(updateData);
-    goals = goalManager.goals;
+    goals = goalManager!.goals;
     super.initState();
   }
 
@@ -36,14 +36,14 @@ class _GoalSegmentState extends State<GoalSegment> {
           child: ListView.builder(
               shrinkWrap: false,
               scrollDirection: Axis.horizontal,
-              itemCount: goals == null ? 0 : goals.length,
+              itemCount: goals == null ? 0 : goals!.length,
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(
                       left: index == 0 ? 16 : 12,
-                      right: index == (goals.length - 1) ? 16 : 0),
-                  child: GoalCard(goals[index]),
+                      right: index == (goals!.length - 1) ? 16 : 0),
+                  child: GoalCard(goals![index]),
                 );
               }),
         )
@@ -53,7 +53,7 @@ class _GoalSegmentState extends State<GoalSegment> {
 
   void updateData() {
     setState(() {
-      goals = goalManager.goals;
+      goals = goalManager!.goals;
     });
   }
 }

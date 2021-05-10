@@ -14,13 +14,13 @@ import 'backend.dart';
 ///
 class FredericWorkoutBuilder extends StatefulWidget {
   FredericWorkoutBuilder(
-      {this.id, this.activeWorkouts, @required this.builder}) {
+      {this.id, this.activeWorkouts, required this.builder}) {
     assert(!(this.id != null && this.activeWorkouts != null),
         'Workout ID and activeWorkouts cant be set at the same time');
   }
 
-  final List<String> activeWorkouts;
-  final String id;
+  final List<String>? activeWorkouts;
+  final String? id;
   final Widget Function(BuildContext, dynamic) builder;
 
   @override
@@ -28,20 +28,20 @@ class FredericWorkoutBuilder extends StatefulWidget {
 }
 
 class _FredericWorkoutBuilderState extends State<FredericWorkoutBuilder> {
-  FredericWorkoutManager _workoutManager;
+  FredericWorkoutManager? _workoutManager;
 
-  List<FredericWorkout> _workoutList;
-  FredericWorkout _workout;
-  bool _singleWorkout;
-  bool _selectedWorkouts;
+  List<FredericWorkout?>? _workoutList;
+  FredericWorkout? _workout;
+  late bool _singleWorkout;
+  late bool _selectedWorkouts;
 
   @override
   void initState() {
-    _workoutManager = FredericBackend.instance().workoutManager;
+    _workoutManager = FredericBackend.instance()!.workoutManager;
     _singleWorkout = widget.id != null && widget.activeWorkouts == null;
     _selectedWorkouts = widget.activeWorkouts != null;
     super.initState();
-    _workoutManager.addListener(updateData);
+    _workoutManager!.addListener(updateData);
     updateData();
   }
 
@@ -52,28 +52,28 @@ class _FredericWorkoutBuilderState extends State<FredericWorkoutBuilder> {
 
   void updateData() {
     if (_selectedWorkouts) {
-      for (String id in widget.activeWorkouts) {
-        var workout = _workoutManager.workouts[id];
+      for (String id in widget.activeWorkouts!) {
+        var workout = _workoutManager!.workouts![id]!;
         if (!workout.hasActivitiesLoaded) workout.loadActivities();
       }
     }
     setState(() {
       if (_singleWorkout) {
-        _workout = _workoutManager[widget.id];
+        _workout = _workoutManager![widget.id];
       } else if (_selectedWorkouts) {
-        _workoutList = List<FredericWorkout>();
-        for (String id in widget.activeWorkouts) {
-          _workoutList.add(_workoutManager.workouts[id]);
+        _workoutList = List<FredericWorkout?>();
+        for (String id in widget.activeWorkouts!) {
+          _workoutList!.add(_workoutManager!.workouts![id]);
         }
       } else {
-        _workoutList = _workoutManager.workouts.values.toList();
+        _workoutList = _workoutManager!.workouts!.values.toList();
       }
     });
   }
 
   @override
   void dispose() {
-    _workoutManager.removeListener(updateData);
+    _workoutManager!.removeListener(updateData);
     super.dispose();
   }
 }

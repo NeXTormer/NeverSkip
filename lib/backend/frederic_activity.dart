@@ -34,10 +34,10 @@ import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart
 ///
 class FredericActivity with ChangeNotifier {
   FredericActivity(this.activityID) {
-    _muscleGroups = List<FredericActivityMuscleGroup>();
+    _muscleGroups = <FredericActivityMuscleGroup>[];
     _setsCollection = FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('sets');
 
     loadSets();
@@ -45,23 +45,23 @@ class FredericActivity with ChangeNotifier {
 
   final String activityID;
 
-  String _name;
-  String _description;
-  String _image;
-  String _owner;
-  int _recommendedSets;
-  int _recommendedReps;
-  int _weekday;
-  int _order;
+  String? _name;
+  String? _description;
+  String? _image;
+  String? _owner;
+  int? _recommendedSets;
+  int? _recommendedReps;
+  late int _weekday;
+  int? _order;
   bool _areSetsLoaded = false;
 
   /// true if some sets have been loaded from the DB,
   /// meaning the latest sets are definitely loaded
   bool _latestSetsLoaded = false;
-  FredericActivityType _type;
-  List<FredericSet> _sets;
-  List<FredericActivityMuscleGroup> _muscleGroups;
-  CollectionReference _setsCollection;
+  FredericActivityType? _type;
+  List<FredericSet>? _sets;
+  List<FredericActivityMuscleGroup>? _muscleGroups;
+  late CollectionReference _setsCollection;
 
   String get name => _name ?? 'Empty activity';
   String get description => _description ?? '';
@@ -75,16 +75,16 @@ class FredericActivity with ChangeNotifier {
   bool get isNull => _name == null;
   bool get latestSetsLoaded => _latestSetsLoaded;
 
-  List<FredericSet> get sets {
+  List<FredericSet>? get sets {
     if (_sets == null) {
-      _sets = List<FredericSet>();
+      _sets = <FredericSet>[];
     }
     return _sets;
   }
 
   bool get hasProgress {
     if (_sets == null) return false;
-    if (_sets.isEmpty) return false;
+    if (_sets!.isEmpty) return false;
     return true;
   }
 
@@ -94,7 +94,7 @@ class FredericActivity with ChangeNotifier {
 
   int get bestWeight {
     int max = 0;
-    sets.forEach((element) {
+    sets!.forEach((element) {
       if (element.weight > max) max = element.weight;
     });
     return max;
@@ -102,19 +102,19 @@ class FredericActivity with ChangeNotifier {
 
   int get bestReps {
     int max = 0;
-    sets.forEach((element) {
+    sets!.forEach((element) {
       max = element.reps > max ? element.reps : max;
     });
     return max;
   }
 
-  int get averageReps {
+  int? get averageReps {
     if (!hasProgress) return _recommendedReps;
     int sum = 0;
-    sets.forEach((element) {
+    sets!.forEach((element) {
       sum += element.reps;
     });
-    return sum ~/ _sets.length;
+    return sum ~/ _sets!.length;
   }
 
   int get bestProgress {
@@ -131,9 +131,9 @@ class FredericActivity with ChangeNotifier {
     return '';
   }
 
-  List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
+  List<FredericActivityMuscleGroup>? get muscleGroups => _muscleGroups;
 
-  FredericActivityType get type => _type;
+  FredericActivityType? get type => _type;
 
   ///
   /// Also updates the name on the Database
@@ -209,7 +209,7 @@ class FredericActivity with ChangeNotifier {
   ///
   bool filterMuscle(List<FredericActivityMuscleGroup> parameters) {
     for (int i = 0; i < parameters.length; i++) {
-      if (_muscleGroups.contains(parameters[i])) return true;
+      if (_muscleGroups!.contains(parameters[i])) return true;
     }
     return false;
   }
@@ -219,17 +219,19 @@ class FredericActivity with ChangeNotifier {
   ///
   bool matchFilterController(ActivityFilterController controller) {
     bool match = false;
-    if (!controller.types[_type]) return false;
-    for (var value in controller.muscleGroups.entries) {
-      if (value.value) {
-        if (_muscleGroups.contains(value.key)) match = true;
+    if (!controller.types![_type!]!) return false;
+    for (var value in controller.muscleGroups!.entries) {
+      if (value.value!) {
+        if (_muscleGroups!.contains(value.key)) match = true;
       }
     }
     if (match) {
       if (controller.searchText == '') {
         return true;
       } else {
-        if (_name.toLowerCase().contains(controller.searchText.toLowerCase())) {
+        if (_name!
+            .toLowerCase()
+            .contains(controller.searchText!.toLowerCase())) {
           return true;
         } else
           return false;
@@ -250,7 +252,7 @@ class FredericActivity with ChangeNotifier {
       int recommendedSets,
       int recommendedReps,
       List<FredericActivityMuscleGroup> muscleGroups,
-      FredericActivityType type) {
+      FredericActivityType? type) {
     _name = name;
     _description = description;
     _image = image;
@@ -266,7 +268,8 @@ class FredericActivity with ChangeNotifier {
   /// Currently only for futures
   ///
   FredericActivity insertSnapshot(DocumentSnapshot snapshot) {
-    _processDocumentSnapshot(snapshot);
+    _processDocumentSnapshot(
+        snapshot as DocumentSnapshot<Map<String, dynamic>>);
     return this;
   }
 
@@ -275,7 +278,7 @@ class FredericActivity with ChangeNotifier {
   /// it is not added twice.
   ///
   void insertSetQuerySnapshot(QuerySnapshot snapshot) {
-    _processSetQuerySnapshot(snapshot);
+    _processSetQuerySnapshot(snapshot as QuerySnapshot<Map<String, dynamic>>);
   }
 
   //============================================================================
@@ -291,7 +294,7 @@ class FredericActivity with ChangeNotifier {
         .orderBy('timestamp', descending: true)
         .limit(limit)
         .get();
-    _processSetQuerySnapshot(snapshot);
+    _processSetQuerySnapshot(snapshot as QuerySnapshot<Map<String, dynamic>>);
     return this;
   }
 
@@ -308,10 +311,10 @@ class FredericActivity with ChangeNotifier {
       FredericSet set = FredericSet(element.id, element.data()['reps'],
           element.data()['weight'], ts.toDate());
 
-      if (_sets.contains(set)) {
-        _sets.remove(set);
+      if (_sets!.contains(set)) {
+        _sets!.remove(set);
       }
-      _sets.add(set);
+      _sets!.add(set);
     }
     notifyListeners();
   }
@@ -322,19 +325,20 @@ class FredericActivity with ChangeNotifier {
   ///
   void _processDocumentSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    _name = snapshot.data()['name'];
-    _description = snapshot.data()['description'];
-    _image = snapshot.data()['image'];
-    _owner = snapshot.data()['owner'];
-    _order = snapshot.data()['order'];
-    _recommendedReps = snapshot.data()['recommendedreps'];
-    _recommendedSets = snapshot.data()['recommendedsets'];
-    _type = parseType(snapshot.data()['type']);
+    _name = snapshot.data()!['name'];
+    _description = snapshot.data()!['description'];
+    _image = snapshot.data()!['image'];
+    _owner = snapshot.data()!['owner'];
+    _order = snapshot.data()!['order'];
+    _recommendedReps = snapshot.data()!['recommendedreps'];
+    _recommendedSets = snapshot.data()!['recommendedsets'];
+    _type = parseType(snapshot.data()!['type']);
 
-    List<dynamic> musclegroups = snapshot.data()['musclegroup'];
-    _muscleGroups.clear();
+    List<dynamic> musclegroups = snapshot.data()!['musclegroup'];
+    _muscleGroups!.clear();
     musclegroups.forEach((element) {
-      if (element is String) _muscleGroups.add(parseSingleMuscleGroup(element));
+      if (element is String)
+        _muscleGroups!.add(parseSingleMuscleGroup(element));
     });
     notifyListeners();
   }
@@ -351,7 +355,7 @@ class FredericActivity with ChangeNotifier {
   void addProgress(int reps, int weight) async {
     String tempID = Random().nextInt(100000).toString();
     FredericSet set = FredericSet(tempID, reps, weight, DateTime.now(), true);
-    _sets.add(set);
+    _sets!.add(set);
     notifyListeners();
     DocumentReference docRef = await _setsCollection.add({
       'reps': reps,
@@ -359,8 +363,8 @@ class FredericActivity with ChangeNotifier {
       'timestamp': Timestamp.now(),
       'activity': activityID
     });
-    _sets.remove(set);
-    _sets.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
+    _sets!.remove(set);
+    _sets!.add(FredericSet(docRef.id, reps, weight, DateTime.now()));
     notifyListeners();
   }
 
@@ -368,7 +372,7 @@ class FredericActivity with ChangeNotifier {
   /// Removes the passed [fset] from the list in this Activity and from the DB
   ///
   void removeProgress(FredericSet fset) {
-    _sets.remove(fset);
+    _sets!.remove(fset);
     _setsCollection.doc(fset.setID).delete();
     notifyListeners();
   }
@@ -380,7 +384,7 @@ class FredericActivity with ChangeNotifier {
   ///   - cali
   ///   - stretch
   ///
-  static FredericActivityType parseType(String typeString) {
+  static FredericActivityType parseType(String? typeString) {
     if (typeString == null) return FredericActivityType.Weighted;
     if (typeString == 'weighted') return FredericActivityType.Weighted;
     if (typeString == 'cali') return FredericActivityType.Calisthenics;
@@ -400,7 +404,7 @@ class FredericActivity with ChangeNotifier {
   ///
   static List<FredericActivityMuscleGroup> parseMuscleGroups(
       List<String> muscleGroupsStrings) {
-    List<FredericActivityMuscleGroup> l = List<FredericActivityMuscleGroup>();
+    List<FredericActivityMuscleGroup> l = <FredericActivityMuscleGroup>[];
     for (int i = 0; i < muscleGroupsStrings.length; i++) {
       l.add(parseSingleMuscleGroup(muscleGroupsStrings[i]));
     }
@@ -479,7 +483,7 @@ class FredericActivity with ChangeNotifier {
         activity.image,
         activity.recommendedSets,
         activity.recommendedReps,
-        activity.muscleGroups,
+        activity.muscleGroups!,
         activity.type);
   }
 
@@ -495,7 +499,7 @@ class FredericActivity with ChangeNotifier {
       int recommendedSets,
       int recommendedReps,
       List<FredericActivityMuscleGroup> muscleGroups,
-      FredericActivityType type) async {
+      FredericActivityType? type) async {
     CollectionReference activities =
         FirebaseFirestore.instance.collection('activities');
     DocumentReference newActivity = await activities.add({
@@ -504,7 +508,7 @@ class FredericActivity with ChangeNotifier {
       'image': image,
       'recommendedsets': recommendedSets,
       'recommendedreps': recommendedReps,
-      'owner': FirebaseAuth.instance.currentUser.uid,
+      'owner': FirebaseAuth.instance.currentUser!.uid,
       'musclegroup': parseMuscleGroupListToStringList(muscleGroups)
     });
 
@@ -513,7 +517,7 @@ class FredericActivity with ChangeNotifier {
         name,
         description,
         image,
-        FirebaseAuth.instance.currentUser.uid,
+        FirebaseAuth.instance.currentUser!.uid,
         recommendedSets,
         recommendedReps,
         muscleGroups,
@@ -533,8 +537,8 @@ class FredericActivity with ChangeNotifier {
         'FredericActivity[id: $activityID, name: $name, description: $description, weekday: $_weekday, order: $_order, owner: $owner]';
     if (!hasProgress) return s;
 
-    for (int i = 0; i < _sets.length; i++) {
-      s += '\n ╚=> ${_sets[i].toString()}';
+    for (int i = 0; i < _sets!.length; i++) {
+      s += '\n ╚=> ${_sets![i].toString()}';
     }
     return s;
   }

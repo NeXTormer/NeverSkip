@@ -13,9 +13,9 @@ class FredericGoalManager with ChangeNotifier {
     _allGoals = List<FredericGoal>();
   }
 
-  Stream<QuerySnapshot> _snapshots;
+  Stream<QuerySnapshot>? _snapshots;
 
-  List<FredericGoal> _allGoals;
+  late List<FredericGoal> _allGoals;
 
   List<FredericGoal> get achievements =>
       _allGoals.where((element) => element.isCompleted).toList();
@@ -30,10 +30,10 @@ class FredericGoalManager with ChangeNotifier {
     if (_snapshots != null) return;
     CollectionReference goalsCollection = FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('goals');
     _snapshots = goalsCollection.snapshots();
-    _snapshots.listen(_handleGoalSnapshot);
+    _snapshots!.listen(_handleGoalSnapshot as void Function(QuerySnapshot<Object>)?);
   }
 
   void updateData() {

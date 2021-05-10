@@ -6,7 +6,7 @@ class PeriodSlider extends StatefulWidget {
       {this.startValue = 1,
       this.min = 1,
       this.max = 10,
-      @required this.onChanged});
+      required this.onChanged});
   final double startValue;
   final double min;
   final double max;
@@ -18,7 +18,7 @@ class PeriodSlider extends StatefulWidget {
 }
 
 class _PeriodSliderState extends State<PeriodSlider> {
-  double value;
+  late double value;
 
   @override
   void initState() {

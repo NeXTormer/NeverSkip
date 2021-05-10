@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 /// the metadata of an existing one
 ///
 class EditWorkoutPage extends StatefulWidget {
-  final FredericWorkout loadedWorkout;
+  final FredericWorkout? loadedWorkout;
   final bool addNewWorkout;
 
   EditWorkoutPage([this.loadedWorkout]) : addNewWorkout = loadedWorkout == null;
@@ -30,7 +30,7 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
 
   double _period = 1;
   bool _repeating = true;
-  String _dateText;
+  late String _dateText;
 
   @override
   void initState() {
@@ -152,10 +152,10 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
   }
 
   _selectStartDate() async {
-    DateTime pickedDate = await showModalBottomSheet<DateTime>(
+    DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
       builder: (context) {
-        DateTime tempPickedDate;
+        DateTime? tempPickedDate;
         return Container(
           height: 250,
           child: Column(
@@ -219,9 +219,9 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
           repeating: false,
           startDate: DateTime.now());
     } else {
-      widget.loadedWorkout.name = _titleTextController.text;
-      widget.loadedWorkout.description = _descriptionEditingController.text;
-      widget.loadedWorkout.period = _period.toInt();
+      widget.loadedWorkout!.name = _titleTextController.text;
+      widget.loadedWorkout!.description = _descriptionEditingController.text;
+      widget.loadedWorkout!.period = _period.toInt();
     }
     Navigator.of(context).pop();
   }
@@ -282,7 +282,7 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
             hintText: 'Title',
           ),
           validator: (value) {
-            if (value.isEmpty) return 'Please enter a title';
+            if (value!.isEmpty) return 'Please enter a title';
             return null;
           },
           maxLength: 42,
@@ -312,7 +312,7 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
             hintText: 'Description',
           ),
           validator: (value) {
-            if (value.isEmpty) return 'Please enter a description';
+            if (value!.isEmpty) return 'Please enter a description';
             return null;
           },
         ),
@@ -383,7 +383,7 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
               children: <Widget>[
                 SizedBox(height: 8),
                 Text(
-                  'Do you want to delete the workout "${widget.loadedWorkout.name}"?',
+                  'Do you want to delete the workout "${widget.loadedWorkout!.name}"?',
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8),
@@ -399,7 +399,7 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
                     TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
               ),
               onPressed: () {
-                widget.loadedWorkout.delete();
+                widget.loadedWorkout!.delete();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

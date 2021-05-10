@@ -21,26 +21,26 @@ import 'package:frederic/backend/frederic_activity_manager.dart';
 ///
 class FredericWorkout with ChangeNotifier {
   FredericWorkout(this.workoutID) {
-    _activityManager = FredericBackend.instance().activityManager;
+    _activityManager = FredericBackend.instance()!.activityManager;
     _activities = FredericWorkoutActivities(this);
   }
 
   final String workoutID;
-  FredericActivityManager _activityManager;
+  FredericActivityManager? _activityManager;
 
-  FredericWorkoutActivities _activities;
+  FredericWorkoutActivities? _activities;
 
-  DateTime _startDate;
-  String _name;
-  String _description;
-  String _image;
-  String _owner;
-  String _ownerName;
+  DateTime? _startDate;
+  String? _name;
+  String? _description;
+  String? _image;
+  String? _owner;
+  String? _ownerName;
   bool _hasActivitiesLoaded = false;
-  bool _canEdit;
-  int _periodWeeks;
+  bool? _canEdit;
+  int? _periodWeeks;
 
-  DateTime get startDate => _startDate;
+  DateTime? get startDate => _startDate;
   String get name => _name ?? 'Empty';
   String get description => _description ?? 'Empty...';
   String get image =>
@@ -48,12 +48,12 @@ class FredericWorkout with ChangeNotifier {
   String get owner => _owner ?? 'UNKNOWN';
   String get ownerName => _ownerName ?? ((canEdit ?? false) ? 'You' : 'Other');
   bool get hasActivitiesLoaded => _hasActivitiesLoaded;
-  bool get repeating => _activities.repeating;
-  bool get canEdit => _canEdit;
+  bool? get repeating => _activities!.repeating;
+  bool? get canEdit => _canEdit;
 
   /// period of the workout in weeks
-  int get period => _periodWeeks;
-  FredericWorkoutActivities get activities {
+  int get period => _periodWeeks!;
+  FredericWorkoutActivities? get activities {
     if (_hasActivitiesLoaded) {
       return _activities;
     }
@@ -100,7 +100,7 @@ class FredericWorkout with ChangeNotifier {
   /// Also updates the period on the Database
   ///
   set period(int value) {
-    if (value > 0 && value != _activities.period) {
+    if (value > 0 && value != _activities!.period) {
       FirebaseFirestore.instance
           .collection('workouts')
           .doc(workoutID)
@@ -111,7 +111,7 @@ class FredericWorkout with ChangeNotifier {
   ///
   /// Also updates the start date on the Database
   ///
-  set startDate(DateTime value) {
+  set startDate(DateTime? value) {
     if (value != null && value != _startDate) {
       FirebaseFirestore.instance
           .collection('workouts')
@@ -123,8 +123,8 @@ class FredericWorkout with ChangeNotifier {
   ///
   /// Also updates the start date on the Database
   ///
-  set repeating(bool value) {
-    if (value != null && value != _activities.repeating) {
+  set repeating(bool? value) {
+    if (value != null && value != _activities!.repeating) {
       FirebaseFirestore.instance
           .collection('workouts')
           .doc(workoutID)
@@ -138,19 +138,19 @@ class FredericWorkout with ChangeNotifier {
   /// The [owner] is the current user
   ///
   static Future<bool> create(
-      {String title,
-      String description,
-      String image,
-      int period,
-      bool repeating,
-      DateTime startDate}) async {
+      {String? title,
+      String? description,
+      String? image,
+      int? period,
+      bool? repeating,
+      required DateTime startDate}) async {
     CollectionReference workouts =
         FirebaseFirestore.instance.collection('workouts');
     DocumentReference newWorkout = await workouts.add({
       'name': title,
       'description': description,
       'image': image,
-      'owner': FirebaseAuth.instance.currentUser.uid,
+      'owner': FirebaseAuth.instance.currentUser!.uid,
       'period': period,
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate)
@@ -174,17 +174,17 @@ class FredericWorkout with ChangeNotifier {
         .doc(workoutID)
         .collection('activities');
     Stream<QuerySnapshot> queryStream = activitiesCollection.snapshots();
-    queryStream.listen(_processActivityQuerySnapshot);
+    queryStream.listen(_processActivityQuerySnapshot as void Function(QuerySnapshot<Object>)?);
   }
 
   void _processActivityQuerySnapshot(
       QuerySnapshot<Map<String, dynamic>> snapshot) {
-    _activities.clear();
+    _activities!.clear();
     for (int i = 0; i < snapshot.docs.length; i++) {
       int weekday = snapshot.docs[i].data()['weekday'];
-      String activityID = snapshot.docs[i].data()['activity'];
-      if (weekday >= _activities.activities.length) continue;
-      _activities.activities[weekday].add(_activityManager[activityID]);
+      String? activityID = snapshot.docs[i].data()['activity'];
+      if (weekday >= _activities!.activities!.length) continue;
+      _activities!.activities![weekday].add(_activityManager![activityID]);
     }
     notifyListeners();
   }
@@ -195,18 +195,18 @@ class FredericWorkout with ChangeNotifier {
   ///
   FredericWorkout insertSnapshot(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    _name = snapshot.data()['name'];
-    _description = snapshot.data()['description'];
-    _image = snapshot.data()['image'];
-    _owner = snapshot.data()['owner'];
-    _ownerName = snapshot.data()['ownername'];
+    _name = snapshot.data()!['name'];
+    _description = snapshot.data()!['description'];
+    _image = snapshot.data()!['image'];
+    _owner = snapshot.data()!['owner'];
+    _ownerName = snapshot.data()!['ownername'];
 
-    _periodWeeks = snapshot.data()['period'];
-    _activities.period = (_periodWeeks * 7);
-    _activities.repeating = snapshot.data()['repeating'];
-    _startDate = snapshot.data()['startdate'].toDate();
+    _periodWeeks = snapshot.data()!['period'];
+    _activities!.period = (_periodWeeks! * 7);
+    _activities!.repeating = snapshot.data()!['repeating'];
+    _startDate = snapshot.data()!['startdate'].toDate();
 
-    _canEdit = _owner == FirebaseAuth.instance.currentUser.uid;
+    _canEdit = _owner == FirebaseAuth.instance.currentUser!.uid;
 
     return this;
   }
@@ -217,11 +217,11 @@ class FredericWorkout with ChangeNotifier {
   /// this also adds it to the DB
   ///
   bool addActivity(FredericActivity activity, int weekday) {
-    List<FredericActivity> list = _activities.activities[weekday];
+    List<FredericActivity?> list = _activities!.activities![weekday];
     if (list.contains(activity)) {
       return false;
     }
-    if (_activities.everyday.contains(activity)) {
+    if (_activities!.everyday.contains(activity)) {
       return false;
     }
     list.add(activity);
@@ -236,7 +236,7 @@ class FredericWorkout with ChangeNotifier {
   /// this also removes it on the DB
   ///
   void removeActivity(FredericActivity activity, int weekday) {
-    List<FredericActivity> list = _activities.activities[weekday];
+    List<FredericActivity?> list = _activities!.activities![weekday];
     list.remove(activity);
     _removeActivityDB(activity, weekday);
   }
@@ -295,10 +295,10 @@ class FredericWorkout with ChangeNotifier {
         'FredericWorkout[name: $_name, description: $_description, ID: $workoutID, image: $_image, owner: $_owner, ownername: $_ownerName]';
     if (_activities == null) return s;
     for (int i = 0; i < period * 7; i++) {
-      if (_activities.activities[i].isNotEmpty) {
+      if (_activities!.activities![i].isNotEmpty) {
         s += '\n╚> ($i)\n';
       }
-      _activities.activities[i].forEach((element) {
+      _activities!.activities![i].forEach((element) {
         s += '╚=> ' + element.toString() + '\n';
       });
     }
@@ -308,8 +308,8 @@ class FredericWorkout with ChangeNotifier {
 
 class FredericWorkoutActivities {
   FredericWorkoutActivities(this.workout) {
-    _activities = List<List<FredericActivity>>();
-    _activities.add(List<FredericActivity>());
+    _activities = List<List<FredericActivity?>>();
+    _activities!.add(List<FredericActivity?>());
   }
 
   FredericWorkout workout;
@@ -324,34 +324,34 @@ class FredericWorkoutActivities {
     if (value > _period) {
       int diff = value - _period;
       for (int i = 0; i < diff; i++) {
-        _activities.add(List<FredericActivity>());
+        _activities!.add(List<FredericActivity?>());
       }
     }
     _period = value;
   }
 
-  List<FredericActivity> getDay(DateTime day) {
+  List<FredericActivity?> getDay(DateTime day) {
     if (workout.startDate == null) return <FredericActivity>[];
-    DateTime start = workout.startDate
-        .subtract(Duration(days: workout.startDate.weekday - 1));
-    DateTime end = workout.startDate.add(Duration(days: period));
+    DateTime start = workout.startDate!
+        .subtract(Duration(days: workout.startDate!.weekday - 1));
+    DateTime end = workout.startDate!.add(Duration(days: period));
     if (day.isAfter(end) && workout.repeating == false)
       return <FredericActivity>[];
     int daysdiff = day.difference(start).inDays % period;
     // daysdiff + 1 because activities[1] is the first day
-    return activities[daysdiff + 1] + activities[0];
+    return activities![daysdiff + 1] + activities![0];
   }
 
-  bool repeating;
+  bool? repeating;
 
-  List<List<FredericActivity>> _activities;
+  List<List<FredericActivity?>>? _activities;
 
-  List<List<FredericActivity>> get activities => _activities;
-  List<FredericActivity> get everyday => activities[0];
+  List<List<FredericActivity?>>? get activities => _activities;
+  List<FredericActivity?> get everyday => activities![0];
 
   void clear() {
-    for (int i = 0; i < _activities.length; i++) {
-      activities[i] = List<FredericActivity>();
+    for (int i = 0; i < _activities!.length; i++) {
+      activities![i] = List<FredericActivity?>();
     }
   }
 }

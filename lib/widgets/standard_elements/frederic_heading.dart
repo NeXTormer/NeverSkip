@@ -5,9 +5,9 @@ import 'package:frederic/misc/ExtraIcons.dart';
 class FredericHeading extends StatelessWidget {
   FredericHeading(this.heading, {this.onPressed, this.subHeading});
 
-  final Function onPressed;
+  final Function? onPressed;
   final String heading;
-  final String subHeading;
+  final String? subHeading;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class FredericHeading extends StatelessWidget {
               ),
             if (showsubheading) SizedBox(width: 8),
             if (showsubheading)
-              Text(subHeading,
+              Text(subHeading!,
                   style: const TextStyle(
                       color: const Color(0xF2A5A5A5),
                       fontWeight: FontWeight.w500,
@@ -43,7 +43,7 @@ class FredericHeading extends StatelessWidget {
             Expanded(child: Container()),
             if (onPressed != null)
               InkWell(
-                onTap: onPressed,
+                onTap: onPressed as void Function()?,
                 child: Icon(
                   ExtraIcons.dots,
                   color: const Color(0xFFC4C4C4),

@@ -11,10 +11,10 @@ class BottomNavigationScreen extends StatefulWidget {
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
-  int currentIndex;
-  List<BottomNavigationBarItem> items;
-  List<Widget> screens;
-  PageController pageController;
+  late int currentIndex;
+  late List<BottomNavigationBarItem> items;
+  late List<Widget> screens;
+  PageController? pageController;
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             onTap: (index) {
               setState(() {
                 currentIndex = index;
-                pageController.jumpToPage(index);
+                pageController!.jumpToPage(index);
               });
             },
           ),
@@ -83,10 +83,10 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
 class FredericScreen {
   FredericScreen(
-      {@required this.screen,
-      @required this.icon,
-      @required this.label,
-      @required this.appbar});
+      {required this.screen,
+      required this.icon,
+      required this.label,
+      required this.appbar});
 
   FredericAppBar appbar;
   Widget screen;
@@ -95,8 +95,8 @@ class FredericScreen {
 }
 
 class FredericAppBar {
-  FredericAppBar({@required this.title, this.leading, this.actions});
+  FredericAppBar({required this.title, this.leading, this.actions});
   Widget title;
-  Widget leading;
-  List<Widget> actions;
+  Widget? leading;
+  List<Widget>? actions;
 }

@@ -11,13 +11,13 @@ class FredericCard extends StatelessWidget {
       this.child,
       this.color});
 
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final double borderRadius;
-  final EdgeInsetsGeometry padding;
-  final EdgeInsetsGeometry margin;
-  final Widget child;
-  final Color color;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Widget? child;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {

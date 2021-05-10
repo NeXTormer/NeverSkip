@@ -8,22 +8,22 @@ import 'package:flutter/cupertino.dart';
 /// Getting other users not yet supported but planned
 ///
 class FredericUser with ChangeNotifier {
-  FredericUser(String uid) {
+  FredericUser(String? uid) {
     _uid = uid;
   }
 
-  String _uid;
-  String _email;
-  String _name;
-  String _description;
-  String _profileImage;
-  String _bannerImage;
-  String _currentWorkoutID;
-  DateTime _birthday;
-  List<String> _progressMonitors;
-  List<String> _activeWorkouts;
+  String? _uid;
+  String? _email;
+  String? _name;
+  String? _description;
+  String? _profileImage;
+  String? _bannerImage;
+  String? _currentWorkoutID;
+  DateTime? _birthday;
+  List<String>? _progressMonitors;
+  List<String>? _activeWorkouts;
 
-  String get uid => _uid;
+  String get uid => _uid!;
   String get email => _email ?? 'nouser@hawkford.io';
   String get name => _name ?? 'noname';
   String get description => _description ?? '';
@@ -110,15 +110,15 @@ class FredericUser with ChangeNotifier {
       return null;
     }
 
-    _email = FirebaseAuth.instance.currentUser.email;
-    _name = snapshot.data()['name'];
-    _description = snapshot.data()['description'];
-    _profileImage = snapshot.data()['image'];
-    _bannerImage = snapshot.data()['banner'];
-    _birthday = snapshot.data()['birthday']?.toDate();
-    _currentWorkoutID = snapshot.data()['currentworkout'];
-    _progressMonitors = snapshot.data()['progressmonitors']?.cast<String>();
-    _activeWorkouts = snapshot.data()['activeworkouts']?.cast<String>();
+    _email = FirebaseAuth.instance.currentUser!.email;
+    _name = snapshot.data()!['name'];
+    _description = snapshot.data()!['description'];
+    _profileImage = snapshot.data()!['image'];
+    _bannerImage = snapshot.data()!['banner'];
+    _birthday = snapshot.data()!['birthday']?.toDate();
+    _currentWorkoutID = snapshot.data()!['currentworkout'];
+    _progressMonitors = snapshot.data()!['progressmonitors']?.cast<String>();
+    _activeWorkouts = snapshot.data()!['activeworkouts']?.cast<String>();
     notifyListeners();
   }
 

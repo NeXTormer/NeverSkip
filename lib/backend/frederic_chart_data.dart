@@ -18,32 +18,32 @@ class FredericChartData {
     else if (goalType == FredericGoalType.Weight) _importantElement = 'weight';
   }
   final String activityID;
-  FredericActivity activity;
+  FredericActivity? activity;
   final FredericGoalType goalType;
 
-  String _importantElement;
+  String? _importantElement;
 
-  FredericChartType _type;
-  int _typeArgument;
+  FredericChartType? _type;
+  int? _typeArgument;
 
-  HashMap<FredericSimpleDate, num> _data;
-  List<FredericChartDataPoint> _list;
+  late HashMap<FredericSimpleDate, num?> _data;
+  List<FredericChartDataPoint>? _list;
 
-  StreamController<FredericChartData> _streamController;
+  StreamController<FredericChartData>? _streamController;
 
   CollectionReference _setsCollection =
       FirebaseFirestore.instance.collection('sets');
 
-  List<FredericChartDataPoint> get data => _list;
-  FredericChartType get type => _type;
-  int get typeArgument => _typeArgument;
+  List<FredericChartDataPoint>? get data => _list;
+  FredericChartType? get type => _type;
+  int? get typeArgument => _typeArgument;
 
   Stream<FredericChartData> asStream(FredericChartType type,
       [int typeArgument = 7]) {
-    if (_streamController != null) _streamController.close();
+    if (_streamController != null) _streamController!.close();
 
     _streamController = StreamController<FredericChartData>();
-    _data = new HashMap<FredericSimpleDate, num>();
+    _data = new HashMap<FredericSimpleDate, num?>();
     _type = type;
     _typeArgument = typeArgument;
 
@@ -59,21 +59,21 @@ class FredericChartData {
         Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute));
 
     Query query = _setsCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where('activity', isEqualTo: activityID)
         .where('timestamp',
             isGreaterThanOrEqualTo:
                 Timestamp.fromDate(today.subtract(Duration(days: daysToLoad))))
         .orderBy('timestamp', descending: true);
 
-    query.snapshots().listen(_handleStream);
-    return _streamController.stream;
+    query.snapshots().listen(_handleStream as void Function(QuerySnapshot<Object>)?);
+    return _streamController!.stream;
   }
 
   void _handleStream(QuerySnapshot<Map<String, dynamic>> snapshot) {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
-      var newData = snapshot.docChanges[i].doc.data();
-      num value = newData[_importantElement];
+      var newData = snapshot.docChanges[i].doc.data()!;
+      num? value = newData[_importantElement!];
       DateTime time = newData['timestamp'].toDate();
       FredericSimpleDate date =
           FredericSimpleDate(time.day, time.month, time.year);
@@ -82,23 +82,23 @@ class FredericChartData {
 
     _list = List<FredericChartDataPoint>();
     _data
-        .forEach((key, value) => _list.add(FredericChartDataPoint(value, key)));
-    _list.sort();
-    _streamController.add(this);
+        .forEach((key, value) => _list!.add(FredericChartDataPoint(value, key)));
+    _list!.sort();
+    _streamController!.add(this);
   }
 }
 
 class FredericChartDataPoint extends Comparable {
   FredericChartDataPoint(this.value, this.date);
 
-  final num value;
+  final num? value;
   final FredericSimpleDate date;
 
   @override
   int compareTo(other) {
-    int yeardiff = date.year - other.date.year;
-    int monthdiff = date.month - other.date.month;
-    int daydiff = date.day - other.date.day;
+    int yeardiff = date.year - other.date.year as int;
+    int monthdiff = date.month - other.date.month as int;
+    int daydiff = date.day - other.date.day as int;
     return yeardiff * 365 + monthdiff * 30 + daydiff;
   }
 }

@@ -4,26 +4,26 @@ import 'package:frederic/main.dart';
 class WeekdaysSlider extends StatefulWidget {
   WeekdaysSlider(
       {this.weekCount = 1,
-      @required this.controller,
-      @required this.onSelectDay});
+      required this.controller,
+      required this.onSelectDay});
 
-  final WeekdaySliderController controller;
+  final WeekdaySliderController? controller;
   final int weekCount;
-  final Function(int) onSelectDay;
+  final Function(int)? onSelectDay;
 
   @override
   _WeekdaysSliderState createState() => _WeekdaysSliderState();
 }
 
 class _WeekdaysSliderState extends State<WeekdaysSlider> {
-  PageController pageController;
+  PageController? pageController;
   int _currentDay = 1;
 
   int get currentDay => _currentDay;
 
   set currentDay(int value) {
     _currentDay = value;
-    if (widget.controller != null) widget.controller.currentDay = value;
+    if (widget.controller != null) widget.controller!.currentDay = value;
   }
 
   @override
@@ -31,7 +31,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
     pageController = PageController();
     widget.controller?._setDayCallback = handleChangeDay;
     widget.controller?._setDayCallbackOnlyVisual = handleChangeDayVisual;
-    widget.controller.pageController = pageController;
+    widget.controller!.pageController = pageController;
     super.initState();
   }
 
@@ -58,7 +58,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
   void handleChangeDay(int day) {
     setState(() {
       currentDay = day;
-      widget.controller.onDayChange(day);
+      widget.controller!.onDayChange(day);
     });
   }
 
@@ -66,8 +66,8 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
     setState(() {
       currentDay = day;
       int newpage = (day / 7).ceil() - 1;
-      if (newpage != pageController.page)
-        pageController.animateToPage(newpage,
+      if (newpage != pageController!.page)
+        pageController!.animateToPage(newpage,
             duration: Duration(milliseconds: 350), curve: Curves.easeInOutExpo);
     });
   }
@@ -75,9 +75,9 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
 
 class WeekdaysSliderPage extends StatelessWidget {
   WeekdaysSliderPage(
-      {@required this.weekIndex,
-      @required this.onSelectDay,
-      @required this.currentDay});
+      {required this.weekIndex,
+      required this.onSelectDay,
+      required this.currentDay});
 
   final int currentDay;
   final int weekIndex;
@@ -122,7 +122,7 @@ class WeekdaysSliderPage extends StatelessWidget {
 }
 
 class WeekdaySliderDayButton extends StatelessWidget {
-  WeekdaySliderDayButton(this.number, {@required this.currentDay});
+  WeekdaySliderDayButton(this.number, {required this.currentDay});
 
   final int number;
   final int currentDay;
@@ -213,13 +213,13 @@ class WeekdaySliderDayButton extends StatelessWidget {
 }
 
 class WeekdaySliderController {
-  WeekdaySliderController({@required this.onDayChange});
+  WeekdaySliderController({required this.onDayChange});
 
-  Function(int) _setDayCallback;
-  Function(int) _setDayCallbackOnlyVisual;
+  late Function(int) _setDayCallback;
+  late Function(int) _setDayCallbackOnlyVisual;
   final Function(int) onDayChange;
 
-  PageController pageController;
+  PageController? pageController;
 
   int currentDay = 1;
 
