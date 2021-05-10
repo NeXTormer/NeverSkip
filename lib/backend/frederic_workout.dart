@@ -177,7 +177,8 @@ class FredericWorkout with ChangeNotifier {
     queryStream.listen(_processActivityQuerySnapshot);
   }
 
-  Future<void> _processActivityQuerySnapshot(QuerySnapshot snapshot) async {
+  void _processActivityQuerySnapshot(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
     _activities.clear();
     for (int i = 0; i < snapshot.docs.length; i++) {
       int weekday = snapshot.docs[i].data()['weekday'];
@@ -192,7 +193,8 @@ class FredericWorkout with ChangeNotifier {
   /// Takes a DocumentSnapshot and inserts its data into the workout. If the workout
   /// is already loaded as a Stream, the stream is updated after inserting the data
   ///
-  FredericWorkout insertSnapshot(DocumentSnapshot snapshot) {
+  FredericWorkout insertSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
     _name = snapshot.data()['name'];
     _description = snapshot.data()['description'];
     _image = snapshot.data()['image'];

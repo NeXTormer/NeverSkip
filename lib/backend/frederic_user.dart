@@ -105,7 +105,7 @@ class FredericUser with ChangeNotifier {
     }
   }
 
-  void insertDocumentSnapshot(DocumentSnapshot snapshot) {
+  void insertDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     if (snapshot.data() == null) {
       return null;
     }

@@ -40,7 +40,7 @@ class FredericGoalManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void _handleGoalSnapshot(QuerySnapshot snapshot) {
+  void _handleGoalSnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
     for (var goal in _allGoals) {
       goal.discard();
     }

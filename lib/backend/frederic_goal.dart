@@ -127,7 +127,7 @@ class FredericGoal {
     _goalManager.updateData();
   }
 
-  void insertData(DocumentSnapshot snapshot) {
+  void insertData(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     _activityID = snapshot.data()['activity'];
     _title = snapshot.data()['title'];
     _image = snapshot.data()['image'];

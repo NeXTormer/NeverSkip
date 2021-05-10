@@ -299,8 +299,8 @@ class FredericActivity with ChangeNotifier {
   /// Reads the QuerySnapshot from the activityprogress and fills the FredericSet
   /// list
   ///
-  void _processSetQuerySnapshot(QuerySnapshot snapshot) {
-    if (_sets == null) _sets = List<FredericSet>();
+  void _processSetQuerySnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
+    if (_sets == null) _sets = <FredericSet>[];
 
     for (int i = 0; i < snapshot.docs.length; i++) {
       var element = snapshot.docs[i];
@@ -320,7 +320,8 @@ class FredericActivity with ChangeNotifier {
   ///
   /// Reads the DocumentSnapshot and inserts its values in the activity properties
   ///
-  void _processDocumentSnapshot(DocumentSnapshot snapshot) {
+  void _processDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
     _name = snapshot.data()['name'];
     _description = snapshot.data()['description'];
     _image = snapshot.data()['image'];

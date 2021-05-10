@@ -70,7 +70,7 @@ class FredericChartData {
     return _streamController.stream;
   }
 
-  void _handleStream(QuerySnapshot snapshot) {
+  void _handleStream(QuerySnapshot<Map<String, dynamic>> snapshot) {
     for (int i = 0; i < snapshot.docChanges.length; i++) {
       var newData = snapshot.docChanges[i].doc.data();
       num value = newData[_importantElement];
