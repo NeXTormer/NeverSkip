@@ -13,22 +13,21 @@ import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 final Future<FirebaseApp> app = Firebase.initializeApp();
 final getIt = GetIt.instance;
 
-final Color kMainColor = const Color(0xFF3E4FD8);
-final Color kAccentColor = const Color(0xFF4791FF);
-final Color kMainColorLight = const Color(0x1A3E4FD8);
-final Color kAccentColorLight = const Color(0xFFF4F7FE);
-final Color kGreyColor = const Color(0xFFC4C4C4);
+const Color kMainColor = const Color(0xFF3E4FD8);
+const Color kAccentColor = const Color(0xFF4791FF);
+const Color kMainColorLight = const Color(0x1A3E4FD8);
+const Color kAccentColorLight = const Color(0xFFF4F7FE);
+const Color kGreyColor = const Color(0xFFC4C4C4);
 
-final Color kTextColor = const Color(0xFF272727);
-final Color kCardBorderColor = const Color(0xFFE2E2E2);
-final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
+const Color kTextColor = const Color(0xFF272727);
+const Color kCardBorderColor = const Color(0xFFE2E2E2);
+const List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
 void main() {
   LicenseRegistry.addLicense(() async* {
@@ -98,16 +97,12 @@ class Frederic extends StatelessWidget {
             backgroundColor: Colors.white,
             fontFamily: 'Montserrat',
             textTheme: TextTheme(
-                headline1: TextStyle(
-                    color: const Color(0xFF272727),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.6,
-                    fontSize: 13),
-                subtitle1: TextStyle(
-                    color: const Color(0xFF272727),
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.1,
-                    fontSize: 17))),
+              headline1: TextStyle(
+                  color: const Color(0xFF272727),
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.6,
+                  fontSize: 13),
+            )),
         home: AuthenticationWrapper(
           homePage: false
               ? HomeScreen()

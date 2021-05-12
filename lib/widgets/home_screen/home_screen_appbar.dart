@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:frederic/misc/frederic_text_theme.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
   HomeScreenAppbar(this.user);
@@ -40,10 +40,10 @@ class HomeScreenAppbar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Good morning, ${user.name.split(' ')[0]}!',
-                        style: Theme.of(context).textTheme.headline1),
+                        style: FredericTextTheme.homeScreenAppBarTitle),
                     SizedBox(height: 8),
                     Text('Let\'s find you a workout',
-                        style: Theme.of(context).textTheme.subtitle1)
+                        style: FredericTextTheme.homeScreenAppBarSubTitle)
                   ],
                 ),
                 GestureDetector(

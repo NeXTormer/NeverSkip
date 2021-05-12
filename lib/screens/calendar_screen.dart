@@ -16,7 +16,7 @@ class CalendarScreen extends StatelessWidget {
         return FredericWorkoutBuilder(
             activeWorkouts: user!.activeWorkouts, //TODO NULL SAFETY
             builder: (context, data) {
-              List<FredericWorkout> workouts = data;
+              List<FredericWorkout?> workouts = data;
               return CustomScrollView(
                 physics: ClampingScrollPhysics(),
                 slivers: [

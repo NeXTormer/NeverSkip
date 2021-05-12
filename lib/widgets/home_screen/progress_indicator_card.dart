@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/main.dart';
+import 'package:frederic/misc/frederic_text_theme.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/unit_text.dart';
 
 import '../standard_elements/picture_icon.dart';
 
@@ -33,30 +34,10 @@ class ProgressIndicatorCard extends StatelessWidget {
                     children: [
                       Text(
                         activity.name,
-                        style: const TextStyle(
-                            color: const Color(0x7A3A3A3A),
-                            fontSize: 10,
-                            letterSpacing: 0.3),
+                        style: FredericTextTheme.cardTitleSmall,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            '${activity.bestProgress}',
-                            style: TextStyle(
-                                color: kTextColor,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.5,
-                                fontSize: 16),
-                          ),
-                          SizedBox(width: 2),
-                          Text(activity.bestProgressType,
-                              style: TextStyle(
-                                  color: kTextColor,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 0.5,
-                                  fontSize: 14))
-                        ],
-                      )
+                      UnitText(
+                          '${activity.bestProgress}', activity.bestProgressType)
                     ],
                   ),
                 )
