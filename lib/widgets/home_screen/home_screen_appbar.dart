@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -47,7 +46,7 @@ class HomeScreenAppbar extends StatelessWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () => FirebaseAuth.instance.signOut(),
+                  onTap: () => FredericBackend.instance.logOut(),
                   child: Container(
                       height: 32,
                       width: 32,

@@ -271,8 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         hasError = false;
       });
-      FredericBackend.instance()!
-          .authService!
+      FredericBackend.instance!.authService!
           .signIn(email, password)
           .then((value) {
         if (value != 'success' && value != null) {
@@ -324,11 +323,11 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
-      FredericBackend.instance()!
-          .authService!
-          .signUp(emailController.text.trim(), passwordController.text.trim())
+      FredericBackend.instance!.authService!
+          .signUp(emailController.text.trim(), passwordController.text.trim(),
+              nameController.text.trim())
           .then((value) {
-        if (value != 'success' && value != null) {
+        if (value != 'success') {
           errorText = value;
           setState(() {
             hasError = true;

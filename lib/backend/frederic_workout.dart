@@ -21,7 +21,7 @@ import 'package:frederic/backend/frederic_activity_manager.dart';
 ///
 class FredericWorkout with ChangeNotifier {
   FredericWorkout(this.workoutID) {
-    _activityManager = FredericBackend.instance()!.activityManager;
+    _activityManager = FredericBackend.instance!.activityManager;
     _activities = FredericWorkoutActivities(this);
   }
 

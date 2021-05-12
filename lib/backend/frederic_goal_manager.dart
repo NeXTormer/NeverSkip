@@ -13,7 +13,7 @@ class FredericGoalManager with ChangeNotifier {
     _allGoals = <FredericGoal>[];
   }
 
-  Stream<QuerySnapshot>? _snapshots;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? _snapshots;
 
   late List<FredericGoal> _allGoals;
 
@@ -28,13 +28,14 @@ class FredericGoalManager with ChangeNotifier {
   ///
   void loadData() {
     if (_snapshots != null) return;
-    CollectionReference goalsCollection = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('goals');
+    if (FirebaseAuth.instance.currentUser == null) return;
+    CollectionReference<Map<String, dynamic>> goalsCollection =
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('goals');
     _snapshots = goalsCollection.snapshots();
-    _snapshots!
-        .listen(_handleGoalSnapshot as void Function(QuerySnapshot<Object?>)?);
+    _snapshots!.listen(_handleGoalSnapshot);
   }
 
   void updateData() {
@@ -42,14 +43,10 @@ class FredericGoalManager with ChangeNotifier {
   }
 
   void _handleGoalSnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
-    for (var goal in _allGoals) {
-      goal.discard();
-    }
     _allGoals.clear();
     for (var doc in snapshot.docs) {
-      FredericGoal goal = FredericGoal(doc.id, this);
+      FredericGoal goal = FredericGoal(doc.id);
       goal.insertData(doc);
-      //goal.activity?.loadSets();
       _allGoals.add(goal);
     }
     notifyListeners();

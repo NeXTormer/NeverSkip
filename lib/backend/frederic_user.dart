@@ -122,16 +122,15 @@ class FredericUser with ChangeNotifier {
     notifyListeners();
   }
 
-  static Future<void> createUserEntryInDB(String uid) async {
-    await FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'name': 'Jane Doe',
-      'banner':
-          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-banner.jpg?alt=media&token=5441a2a6-14e8-448e-b010-d359adfac6b5',
+  static Future<void> createUserEntryInDB(String uid, String name) async {
+    return FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'name': name,
       'image':
           'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-profile-screen.jpg?alt=media&token=52f200e9-fac8-4295-bf7d-01b59f92a987',
-      'description': ''
+      'uid': uid,
+      'activeworkouts': <String>[],
+      'progressmonitors': <String>[]
     });
-    return;
   }
 
   @override

@@ -8,11 +8,11 @@ class AuthenticationService {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<String?> signIn(String email, String password) async {
+  Future<String> signIn(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      return null;
+      return 'success';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return 'User not found';
@@ -23,13 +23,17 @@ class AuthenticationService {
     }
   }
 
-  Future<String?> signUp(String email, String password) async {
+  Future<String> signUp(String email, String password, String name) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      await FredericUser.createUserEntryInDB(userCredential.user!.uid);
-      FredericBackend.instance()!.logIn(userCredential.user!.uid);
-      return null;
+      if (userCredential.user != null) {
+        await FredericUser.createUserEntryInDB(userCredential.user!.uid, name);
+        FredericBackend.instance.logIn(userCredential.user!.uid);
+        return 'success';
+      } else {
+        return 'error-user-is-null';
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return 'The password is too weak.';
@@ -37,7 +41,7 @@ class AuthenticationService {
       if (e.code == 'email-already-in-use') {
         return 'This email address is already used.';
       }
-      return e.message;
+      return e.message ?? 'other-error';
     } catch (e) {
       print(e);
       return 'other-error';

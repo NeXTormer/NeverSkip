@@ -43,13 +43,13 @@ class _FredericActivityBuilderState extends State<FredericActivityBuilder> {
 
   @override
   void initState() {
-    _activityManager = FredericBackend.instance()!.activityManager;
+    _activityManager = FredericBackend.instance!.activityManager;
     if (widget.type == FredericActivityBuilderType.SingleActivity) {
       _activityManager![widget.id]?.addListener(updateData);
     } else {
       _activityManager!.addListener(updateData);
       if (widget.type == FredericActivityBuilderType.WorkoutActivities) {
-        _workoutManager = FredericBackend.instance()!.workoutManager;
+        _workoutManager = FredericBackend.instance!.workoutManager;
         _workoutManager![widget.id]?.loadActivities();
         _workoutManager![widget.id]
             ?.addListener(updateData); //TODO add null safety

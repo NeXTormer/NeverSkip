@@ -37,7 +37,7 @@ class _FredericWorkoutBuilderState extends State<FredericWorkoutBuilder> {
 
   @override
   void initState() {
-    _workoutManager = FredericBackend.instance()!.workoutManager;
+    _workoutManager = FredericBackend.instance!.workoutManager;
     _singleWorkout = widget.id != null && widget.activeWorkouts == null;
     _selectedWorkouts = widget.activeWorkouts != null;
     super.initState();

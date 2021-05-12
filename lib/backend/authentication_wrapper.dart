@@ -22,11 +22,11 @@ class AuthenticationWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.uid != null) {
-            FredericBackend.instance()!.logIn(snapshot.data!.uid);
-            return FutureBuilder(
-                future: FredericBackend.instance()!.loadCurrentUser(),
+            FredericBackend.instance!.logIn(snapshot.data!.uid);
+            return FutureBuilder<FredericUser>(
+                future: FredericBackend.instance!.loadCurrentUser(),
                 builder: (context, snapshot) {
-                  FredericBackend.instance()!.loadData();
+                  FredericBackend.instance!.loadData();
                   if (snapshot.hasData) {
                     return homePage;
                   } else {

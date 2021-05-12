@@ -20,7 +20,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
           child: FredericHeading('Best stats', onPressed: () {}),
         ),
         FutureBuilder<void>(
-            future: FredericBackend.instance()!.activityManager!.hasData(),
+            future: FredericBackend.instance!.activityManager!.hasData(),
             builder: (context, snapshot) {
               bool finished =
                   (snapshot.connectionState == ConnectionState.done);

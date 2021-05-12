@@ -135,8 +135,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleAddActivity(FredericActivity activity) {
-    bool success = FredericBackend.instance()!
-            .workoutManager![widget.workoutID]
+    bool success = FredericBackend.instance!.workoutManager![widget.workoutID]
             ?.addActivity(activity, sliderController!.currentDay) ??
         false;
 
@@ -146,8 +145,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleDeleteActivity(FredericActivity activity) {
-    FredericBackend.instance()!
-        .workoutManager![widget.workoutID]
+    FredericBackend.instance!.workoutManager![widget.workoutID]
         ?.removeActivity(activity, sliderController!.currentDay);
   }
 

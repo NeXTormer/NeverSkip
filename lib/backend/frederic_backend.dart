@@ -14,34 +14,41 @@ import 'backend.dart';
 /// data form the DB or the device, and handles sign in / sign up.
 ///
 class FredericBackend {
-  FredericBackend() {
+  FredericBackend();
+
+  Future<void> loadData() async {
+    //TODO: wait until data loaded to complete
     _authenticationService = AuthenticationService(FirebaseAuth.instance);
     _activityManager = FredericActivityManager();
+    _activityManager.loadData();
+    await _activityManager.hasData();
     _workoutManager = FredericWorkoutManager();
+    _workoutManager.loadData();
     _goalManager = FredericGoalManager();
+    _goalManager.loadData();
     _currentUserCompleter = Completer<FredericUser>();
     _currentUser = FredericUser(FirebaseAuth.instance.currentUser?.uid);
   }
 
-  AuthenticationService? _authenticationService;
-  AuthenticationService? get authService => _authenticationService;
+  late AuthenticationService _authenticationService;
+  AuthenticationService get authService => _authenticationService;
 
-  FredericActivityManager? _activityManager;
-  FredericActivityManager? get activityManager => _activityManager;
+  late final FredericActivityManager _activityManager;
+  FredericActivityManager get activityManager => _activityManager;
 
-  FredericWorkoutManager? _workoutManager;
-  FredericWorkoutManager? get workoutManager => _workoutManager;
+  late final FredericWorkoutManager _workoutManager;
+  FredericWorkoutManager get workoutManager => _workoutManager;
 
-  FredericGoalManager? _goalManager;
-  FredericGoalManager? get goalManager => _goalManager;
+  late final FredericGoalManager _goalManager;
+  FredericGoalManager get goalManager => _goalManager;
 
-  FredericUser? _currentUser;
-  FredericUser? get currentUser => _currentUser;
+  late FredericUser _currentUser;
+  FredericUser get currentUser => _currentUser;
 
   Stream<FredericUser>? _currentUserStream;
   Stream<FredericUser>? get currentUserStream => _currentUserStream;
 
-  static FredericBackend? instance() => getIt<FredericBackend>();
+  static FredericBackend get instance => getIt<FredericBackend>();
 
   late Completer<FredericUser> _currentUserCompleter;
 
@@ -54,12 +61,6 @@ class FredericBackend {
   Future<FredericUser> loadCurrentUser() async {
     _loadCurrentUserStream();
     return _currentUserCompleter.future;
-  }
-
-  void loadData() {
-    _activityManager!.loadData();
-    _workoutManager!.loadData();
-    _goalManager!.loadData();
   }
 
   void logIn(String uid) {
@@ -87,15 +88,15 @@ class FredericBackend {
   }
 
   void _handleUserStream(DocumentSnapshot snapshot) {
-    currentUser!.insertDocumentSnapshot(snapshot as DocumentSnapshot<Map<String, dynamic>>);
+    currentUser!.insertDocumentSnapshot(
+        snapshot as DocumentSnapshot<Map<String, dynamic>>);
     if (!_currentUserCompleter.isCompleted)
       _currentUserCompleter.complete(currentUser);
   }
 
-  //TODO: Call this on app close/logout
   void dispose() {
-    _activityManager!.dispose();
-    _workoutManager!.dispose();
-    _goalManager!.dispose();
+    _activityManager.dispose();
+    _workoutManager.dispose();
+    _goalManager.dispose();
   }
 }
