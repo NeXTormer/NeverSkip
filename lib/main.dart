@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,7 +71,8 @@ class Frederic extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        StreamProvider(
+        StreamProvider<User?>(
+          initialData: FirebaseAuth.instance.currentUser,
           create: (context) =>
               context.read<FredericBackend>().authService!.authStateChanges,
         ),

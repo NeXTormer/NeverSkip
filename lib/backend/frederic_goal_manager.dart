@@ -10,7 +10,7 @@ import 'backend.dart';
 ///
 class FredericGoalManager with ChangeNotifier {
   FredericGoalManager() {
-    _allGoals = List<FredericGoal>();
+    _allGoals = <FredericGoal>[];
   }
 
   Stream<QuerySnapshot>? _snapshots;
@@ -33,7 +33,8 @@ class FredericGoalManager with ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('goals');
     _snapshots = goalsCollection.snapshots();
-    _snapshots!.listen(_handleGoalSnapshot as void Function(QuerySnapshot<Object>)?);
+    _snapshots!
+        .listen(_handleGoalSnapshot as void Function(QuerySnapshot<Object?>)?);
   }
 
   void updateData() {

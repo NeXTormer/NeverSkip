@@ -46,7 +46,10 @@ class FredericSet implements Comparable {
     }
   }
 
-  bool operator ==(other) => setID == other.setID;
+  bool operator ==(other) {
+    if (other is FredericSet) return setID == other.setID;
+    return false;
+  }
 
   @override
   String toString() {

@@ -20,8 +20,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   void initState() {
     super.initState();
     currentIndex = 0;
-    screens = List<Widget>();
-    items = List<BottomNavigationBarItem>();
+    screens = <Widget>[];
+    items = <BottomNavigationBarItem>[];
     pageController = PageController();
 
     for (var screen in widget.screens) {
@@ -86,9 +86,9 @@ class FredericScreen {
       {required this.screen,
       required this.icon,
       required this.label,
-      required this.appbar});
+      this.appbar});
 
-  FredericAppBar appbar;
+  FredericAppBar? appbar;
   Widget screen;
   IconData icon;
   String label;

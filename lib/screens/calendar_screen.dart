@@ -14,7 +14,7 @@ class CalendarScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: FredericUserBuilder(builder: (context, user) {
         return FredericWorkoutBuilder(
-            activeWorkouts: user.activeWorkouts,
+            activeWorkouts: user!.activeWorkouts, //TODO NULL SAFETY
             builder: (context, data) {
               List<FredericWorkout> workouts = data;
               return CustomScrollView(

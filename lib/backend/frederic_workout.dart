@@ -174,7 +174,8 @@ class FredericWorkout with ChangeNotifier {
         .doc(workoutID)
         .collection('activities');
     Stream<QuerySnapshot> queryStream = activitiesCollection.snapshots();
-    queryStream.listen(_processActivityQuerySnapshot as void Function(QuerySnapshot<Object>)?);
+    queryStream.listen(
+        _processActivityQuerySnapshot as void Function(QuerySnapshot<Object?>));
   }
 
   void _processActivityQuerySnapshot(
@@ -308,8 +309,8 @@ class FredericWorkout with ChangeNotifier {
 
 class FredericWorkoutActivities {
   FredericWorkoutActivities(this.workout) {
-    _activities = List<List<FredericActivity?>>();
-    _activities!.add(List<FredericActivity?>());
+    _activities = <List<FredericActivity?>>[];
+    _activities!.add(<FredericActivity?>[]);
   }
 
   FredericWorkout workout;
@@ -324,7 +325,7 @@ class FredericWorkoutActivities {
     if (value > _period) {
       int diff = value - _period;
       for (int i = 0; i < diff; i++) {
-        _activities!.add(List<FredericActivity?>());
+        _activities!.add(<FredericActivity?>[]);
       }
     }
     _period = value;
@@ -351,7 +352,7 @@ class FredericWorkoutActivities {
 
   void clear() {
     for (int i = 0; i < _activities!.length; i++) {
-      activities![i] = List<FredericActivity?>();
+      activities![i] = <FredericActivity?>[];
     }
   }
 }

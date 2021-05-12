@@ -6,7 +6,7 @@ import 'package:frederic/main.dart';
 
 class FredericCircularProgressIndicator extends StatefulWidget {
   FredericCircularProgressIndicator(
-      {this.staticProgress,
+      {this.staticProgress = -1,
       this.image = true,
       this.size = 112,
       this.stroke = 10,
@@ -18,7 +18,7 @@ class FredericCircularProgressIndicator extends StatefulWidget {
   final double size;
   final double stroke;
   final double increment;
-  final double? staticProgress;
+  final double staticProgress;
   final Function? onFinished;
   final bool isStatic;
 
@@ -29,7 +29,7 @@ class FredericCircularProgressIndicator extends StatefulWidget {
 
 class _FredericCircularProgressIndicatorState
     extends State<FredericCircularProgressIndicator> {
-  double? progress = 0;
+  double progress = 0;
 
   late Timer timer;
 
@@ -37,7 +37,7 @@ class _FredericCircularProgressIndicatorState
   void initState() {
     super.initState();
 
-    if (widget.staticProgress == null)
+    if (widget.staticProgress == -1)
       timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
         setState(() {
           progress += widget.increment;
@@ -51,8 +51,6 @@ class _FredericCircularProgressIndicatorState
       });
     else
       progress = widget.staticProgress;
-    print(progress);
-    print('werner');
   }
 
   @override

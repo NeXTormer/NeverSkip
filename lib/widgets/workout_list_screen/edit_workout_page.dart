@@ -35,8 +35,9 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
   @override
   void initState() {
     super.initState();
-    _descriptionEditingController.text = widget.loadedWorkout?.description;
-    _titleTextController.text = widget.loadedWorkout?.name;
+    _descriptionEditingController.text =
+        widget.loadedWorkout?.description ?? '';
+    _titleTextController.text = widget.loadedWorkout?.name ?? '';
     _period = widget.loadedWorkout?.period?.toDouble() ?? 1;
     _repeating = widget.loadedWorkout?.repeating ?? true;
     _dateText = DateFormat('dd.MM.yyyy').format(_selectedDate);

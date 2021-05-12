@@ -66,7 +66,9 @@ class FredericChartData {
                 Timestamp.fromDate(today.subtract(Duration(days: daysToLoad))))
         .orderBy('timestamp', descending: true);
 
-    query.snapshots().listen(_handleStream as void Function(QuerySnapshot<Object>)?);
+    query
+        .snapshots()
+        .listen(_handleStream as void Function(QuerySnapshot<Object?>)?);
     return _streamController!.stream;
   }
 
@@ -80,9 +82,9 @@ class FredericChartData {
       if ((value ?? 0) > (_data[date] ?? 0)) _data[date] = value;
     }
 
-    _list = List<FredericChartDataPoint>();
-    _data
-        .forEach((key, value) => _list!.add(FredericChartDataPoint(value, key)));
+    _list = <FredericChartDataPoint>[];
+    _data.forEach(
+        (key, value) => _list!.add(FredericChartDataPoint(value, key)));
     _list!.sort();
     _streamController!.add(this);
   }

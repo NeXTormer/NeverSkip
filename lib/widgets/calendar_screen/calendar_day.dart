@@ -17,12 +17,13 @@ class CalendarDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime day = DateTime.now().add(Duration(days: index));
-    List<FredericActivity?> activities = List<FredericActivity?>();
+    List<FredericActivity?> activities = <FredericActivity?>[];
     for (String workout in user.activeWorkouts) {
       if (!workoutManager[workout]!.hasActivitiesLoaded)
         workoutManager[workout]!.loadActivities();
       if (workoutManager[workout]!.activities != null)
-        activities.addAll(workoutManager[workout]!.activities!.getDay(day) ?? []);
+        activities
+            .addAll(workoutManager[workout]!.activities!.getDay(day) ?? []);
     }
 
     return Container(
@@ -234,5 +235,6 @@ class _CalendarDayCard extends StatelessWidget {
       case 7:
         return 'Sun';
     }
+    return 'Err';
   }
 }

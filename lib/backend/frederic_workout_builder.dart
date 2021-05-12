@@ -61,7 +61,7 @@ class _FredericWorkoutBuilderState extends State<FredericWorkoutBuilder> {
       if (_singleWorkout) {
         _workout = _workoutManager![widget.id];
       } else if (_selectedWorkouts) {
-        _workoutList = List<FredericWorkout?>();
+        _workoutList = <FredericWorkout?>[];
         for (String id in widget.activeWorkouts!) {
           _workoutList!.add(_workoutManager!.workouts![id]);
         }

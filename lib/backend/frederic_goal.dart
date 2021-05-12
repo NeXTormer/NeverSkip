@@ -146,7 +146,10 @@ class FredericGoal {
     updateData();
   }
 
-  bool operator ==(other) => goalID == other.goalID;
+  bool operator ==(other) {
+    if (other is FredericGoal) return goalID == other.goalID;
+    return false;
+  }
 
   void discard() {
     _activity?.removeListener(updateData);

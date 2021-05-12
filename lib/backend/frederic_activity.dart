@@ -408,6 +408,7 @@ class FredericActivity with ChangeNotifier {
     for (int i = 0; i < muscleGroupsStrings.length; i++) {
       l.add(parseSingleMuscleGroup(muscleGroupsStrings[i]));
     }
+    return l;
   }
 
   //============================================================================
@@ -465,7 +466,7 @@ class FredericActivity with ChangeNotifier {
   ///
   static List<String> parseMuscleGroupListToStringList(
       List<FredericActivityMuscleGroup> groupList) {
-    List<String> strings = List<String>();
+    List<String> strings = <String>[];
     for (int i = 0; i < groupList.length; i++) {
       strings.add(parseSingleMuscleGroupToString(groupList[i]));
     }
