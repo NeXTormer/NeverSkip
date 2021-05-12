@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
@@ -30,6 +31,12 @@ final Color kCardBorderColor = const Color(0xFFE2E2E2);
 final List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
 void main() {
+  LicenseRegistry.addLicense(() async* {
+    final license =
+        await rootBundle.loadString('assets/fonts/Montserrat/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+
   runApp(Frederic());
 }
 
@@ -85,11 +92,22 @@ class Frederic extends StatelessWidget {
         title: 'Frederic',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          textTheme:
-              GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
-          primaryColor: Color(0xFF3E4FD8),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+            primaryColor: kMainColor,
+            accentColor: kAccentColor,
+            brightness: Brightness.light,
+            backgroundColor: Colors.white,
+            fontFamily: 'Montserrat',
+            textTheme: TextTheme(
+                headline1: TextStyle(
+                    color: const Color(0xFF272727),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.6,
+                    fontSize: 13),
+                subtitle1: TextStyle(
+                    color: const Color(0xFF272727),
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.1,
+                    fontSize: 17))),
         home: AuthenticationWrapper(
           homePage: false
               ? HomeScreen()

@@ -40,18 +40,10 @@ class HomeScreenAppbar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Good morning, ${user.name.split(' ')[0]}!',
-                        style: GoogleFonts.montserrat(
-                            color: const Color(0xFF272727),
-                            fontWeight: FontWeight.w400,
-                            letterSpacing: 0.6,
-                            fontSize: 13)),
+                        style: Theme.of(context).textTheme.headline1),
                     SizedBox(height: 8),
                     Text('Let\'s find you a workout',
-                        style: GoogleFonts.montserrat(
-                            color: const Color(0xFF272727),
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.1,
-                            fontSize: 17))
+                        style: Theme.of(context).textTheme.subtitle1)
                   ],
                 ),
                 GestureDetector(
