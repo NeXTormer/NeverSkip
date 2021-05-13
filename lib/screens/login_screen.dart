@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -36,6 +39,28 @@ class _LoginScreenState extends State<LoginScreen> {
   bool termsandconditions = false;
   bool hasError = false;
   String errorText = '';
+
+  StreamSubscription<FredericUser>? streamSubscription;
+
+  @override
+  void initState() {
+    streamSubscription =
+        FredericBackend.instance.userManager.stream.listen((user) {
+      if (user.statusMessage != '') {
+        setState(() {
+          hasError = true;
+          errorText = user.statusMessage;
+        });
+      }
+      if (user.statusMessage == '' && !user.authenticated) {
+        setState(() {
+          hasError = false;
+          errorText = '';
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -271,16 +296,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         hasError = false;
       });
-      FredericBackend.instance!.authService!
-          .signIn(email, password)
-          .then((value) {
-        if (value != 'success' && value != null) {
-          errorText = value;
-          setState(() {
-            hasError = true;
-          });
-        }
-      });
+      FredericBackend.instance.userManager
+          .add(FredericLoginEvent(email, password));
     } else {
       if (email.isEmpty ||
           password.isEmpty ||
@@ -323,17 +340,10 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
-      FredericBackend.instance!.authService!
-          .signUp(emailController.text.trim(), passwordController.text.trim(),
-              nameController.text.trim())
-          .then((value) {
-        if (value != 'success') {
-          errorText = value;
-          setState(() {
-            hasError = true;
-          });
-        }
-      });
+      FredericBackend.instance.userManager.add(FredericSignupEvent(
+          nameController.text.trim(),
+          emailController.text.trim(),
+          passwordController.text.trim()));
     }
   }
 
@@ -344,5 +354,6 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
     nameController.dispose();
     passwordConfirmationController.dispose();
+    streamSubscription?.cancel();
   }
 }

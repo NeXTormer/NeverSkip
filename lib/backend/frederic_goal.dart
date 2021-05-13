@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:frederic/backend/backend.dart';
 
 ///
 /// A Goal and a achievement are the same object. Achieved goals are
@@ -19,6 +20,8 @@ class FredericGoal {
 
   final String goalID;
   late String _activityID;
+
+  FredericActivity? activity;
 
   late final DocumentReference _documentReference;
 
@@ -48,16 +51,17 @@ class FredericGoal {
   bool get isLoss => startState > endState;
 
   double get progress {
+    _current = activity?.bestProgress ?? -1;
     double diff = endState.toDouble() - startState.toDouble();
     double change = currentState.toDouble() - startState.toDouble();
     double percentage = change / diff;
     if (percentage < 0) percentage = 0;
     if (percentage > 1) percentage = 1;
-    print('progress $percentage');
     return percentage;
   }
 
   int get progressPercentage {
+    _current = activity?.bestProgress ?? -1;
     num diff = endState - startState;
     num change = currentState - startState;
     num percentage = change / diff;
@@ -115,6 +119,8 @@ class FredericGoal {
     _startDate = snapshot.data()?['startdate'];
     _endDate = snapshot.data()?['enddate'];
     _isCompleted = snapshot.data()?['iscompleted'];
+
+    activity = FredericBackend.instance.activityManager[activityID];
   }
 
   bool operator ==(other) {

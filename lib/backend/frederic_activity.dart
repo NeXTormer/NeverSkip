@@ -102,7 +102,7 @@ class FredericActivity with ChangeNotifier {
 
   int get bestReps {
     int max = 0;
-    sets!.forEach((element) {
+    sets?.forEach((element) {
       max = element.reps > max ? element.reps : max;
     });
     return max;

@@ -1,4 +1,3 @@
-export 'authentication_service.dart';
 export 'authentication_wrapper.dart';
 export 'frederic_activity.dart';
 export 'frederic_activity_builder.dart';

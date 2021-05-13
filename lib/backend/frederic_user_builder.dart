@@ -17,7 +17,7 @@ class _FredericUserBuilderState extends State<FredericUserBuilder> {
   @override
   void initState() {
     _backend = FredericBackend.instance;
-    _backend!.currentUser!.addListener(updateData);
+    //_backend!.currentUser!.addListener(updateData);
 
     super.initState();
     updateData();
@@ -30,13 +30,13 @@ class _FredericUserBuilderState extends State<FredericUserBuilder> {
 
   void updateData() {
     setState(() {
-      currentUser = _backend!.currentUser;
+      //currentUser = _backend!.currentUser;
     });
   }
 
   @override
   void dispose() {
-    _backend!.currentUser!.removeListener(updateData);
+    //_backend!.currentUser!.removeListener(updateData);
     super.dispose();
   }
 }

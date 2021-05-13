@@ -48,6 +48,7 @@ class FredericGoalManager with ChangeNotifier {
       FredericGoal goal = FredericGoal(doc.id);
       goal.insertData(doc);
       _allGoals.add(goal);
+      //load activity goal.activityID
     }
     notifyListeners();
   }
