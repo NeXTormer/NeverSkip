@@ -150,7 +150,7 @@ class FredericWorkout with ChangeNotifier {
       'name': title,
       'description': description,
       'image': image,
-      'owner': FirebaseAuth.instance.currentUser!.uid,
+      'owner': FirebaseAuth.instance.currentUser?.uid,
       'period': period,
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate)
@@ -207,7 +207,7 @@ class FredericWorkout with ChangeNotifier {
     _activities!.repeating = snapshot.data()!['repeating'];
     _startDate = snapshot.data()!['startdate'].toDate();
 
-    _canEdit = _owner == FirebaseAuth.instance.currentUser!.uid;
+    _canEdit = _owner == FirebaseAuth.instance.currentUser?.uid;
 
     return this;
   }

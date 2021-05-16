@@ -32,7 +32,7 @@ class FredericGoalManager with ChangeNotifier {
     CollectionReference<Map<String, dynamic>> goalsCollection =
         FirebaseFirestore.instance
             .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc(FirebaseAuth.instance.currentUser?.uid)
             .collection('goals');
     _snapshots = goalsCollection.snapshots();
     _snapshots!.listen(_handleGoalSnapshot);

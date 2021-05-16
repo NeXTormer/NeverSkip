@@ -55,7 +55,7 @@ class FredericActivityManager with ChangeNotifier {
     Stream<QuerySnapshot> globalStream =
         _activitiesCollection.where('owner', isEqualTo: 'global').snapshots();
     Stream<QuerySnapshot> userStream = _activitiesCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .snapshots();
 
     Stream<QuerySnapshot> streamGroup =

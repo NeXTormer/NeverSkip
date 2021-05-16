@@ -37,7 +37,7 @@ class FredericActivity with ChangeNotifier {
     _muscleGroups = <FredericActivityMuscleGroup>[];
     _setsCollection = FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection('sets');
 
     loadSets();
@@ -509,7 +509,7 @@ class FredericActivity with ChangeNotifier {
       'image': image,
       'recommendedsets': recommendedSets,
       'recommendedreps': recommendedReps,
-      'owner': FirebaseAuth.instance.currentUser!.uid,
+      'owner': FirebaseAuth.instance.currentUser?.uid,
       'musclegroup': parseMuscleGroupListToStringList(muscleGroups)
     });
 

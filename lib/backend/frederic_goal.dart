@@ -13,7 +13,7 @@ class FredericGoal {
   FredericGoal(this.goalID) {
     _documentReference = FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection('goals')
         .doc(uid);
   }
@@ -120,7 +120,7 @@ class FredericGoal {
     _endDate = snapshot.data()?['enddate'];
     _isCompleted = snapshot.data()?['iscompleted'];
 
-    activity = FredericBackend.instance.activityManager[activityID];
+    activity = FredericBackend.instance.activityManager?[activityID];
   }
 
   bool operator ==(other) {

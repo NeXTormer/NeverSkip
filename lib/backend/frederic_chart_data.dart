@@ -59,7 +59,7 @@ class FredericChartData {
         Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute));
 
     Query query = _setsCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .where('activity', isEqualTo: activityID)
         .where('timestamp',
             isGreaterThanOrEqualTo:

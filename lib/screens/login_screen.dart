@@ -7,6 +7,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/FredericButton.dart';
 import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -56,6 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           hasError = false;
           errorText = '';
+        });
+      }
+    });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getBool('wasLoggedIn') ?? false) {
+        setState(() {
+          login = true;
         });
       }
     });

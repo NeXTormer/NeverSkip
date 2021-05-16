@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/home_screen.dart';
@@ -34,7 +35,9 @@ void main() {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  runApp(Frederic());
+  runApp(Phoenix(
+    child: Frederic(),
+  ));
 }
 
 class Frederic extends StatelessWidget {

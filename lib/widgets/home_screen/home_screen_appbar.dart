@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/authentication/frederic_user_manager.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -47,8 +48,10 @@ class HomeScreenAppbar extends StatelessWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () => FredericBackend.instance.userManager
-                      .add(FredericSignOutEvent('appbar button pressed')),
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    Phoenix.rebirth(context);
+                  },
                   child: Container(
                       height: 32,
                       width: 32,

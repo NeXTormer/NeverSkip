@@ -4,50 +4,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:get_it/get_it.dart';
-
-abstract class FredericAuthEvent {}
-
-class FredericLoginEvent extends FredericAuthEvent {
-  FredericLoginEvent(this.email, this.password);
-
-  final String email;
-  final String password;
-}
-
-class FredericSignupEvent extends FredericAuthEvent {
-  FredericSignupEvent(this.name, this.email, this.password);
-
-  final String name;
-  final String email;
-  final String password;
-}
-
-class FredericSignOutEvent extends FredericAuthEvent {
-  FredericSignOutEvent([this.reason]);
-  final String? reason;
-}
-
-class FredericUserDataChangedEvent extends FredericAuthEvent {
-  FredericUserDataChangedEvent(this.snapshot);
-  final DocumentSnapshot<Map<String, dynamic>> snapshot;
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
-  FredericUserManager() : super(FredericUser(''));
+  FredericUserManager({this.onLoadData, this.logTransition = false})
+      : super(FredericUser('', waiting: true)) {
+    FirebaseAuth.instance.authStateChanges().listen((userdata) {
+      if (userdata != null) {
+        add(FredericRestoreLoginStatusEvent(userdata.uid));
+      }
+    });
+  }
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
       _userStreamSubscription;
+
+  bool hasLoaded = false;
+  final bool logTransition;
+  Function? onLoadData;
 
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
     if (event is FredericUserDataChangedEvent) {
       yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
           snapshot: event.snapshot);
+      if (!hasLoaded) {
+        hasLoaded = true;
+        onLoadData?.call();
+      }
+    } else if (event is FredericRestoreLoginStatusEvent) {
+      if (state.waiting == true) {
+        yield FredericUser(event.uid, waiting: false);
+      }
     } else if (event is FredericLoginEvent) {
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: event.email, password: event.password);
+        SharedPreferences.getInstance()
+            .then((value) => value.setBool('wasLoggedIn', true));
         yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -59,11 +53,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       }
     } else if (event is FredericSignOutEvent) {
       FirebaseAuth.instance.signOut();
-      if (GetIt.instance.isRegistered<FredericBackend>()) {
-        FredericBackend.instance.dispose();
-      }
-      GetIt.instance.unregister<FredericBackend>();
-      GetIt.instance.registerSingleton<FredericBackend>(FredericBackend());
       yield FredericUser('');
     } else if (event is FredericSignupEvent) {
       try {
@@ -97,7 +86,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   @override
   void onTransition(Transition<FredericAuthEvent, FredericUser> transition) {
     if (transition.event is FredericLoginEvent ||
-        transition.event is FredericSignupEvent) {
+        transition.event is FredericSignupEvent ||
+        transition.event is FredericRestoreLoginStatusEvent) {
       _userStreamSubscription = FirebaseFirestore.instance
           .collection('users')
           .doc(transition.nextState.uid)
@@ -106,8 +96,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     } else if (transition.event is FredericSignOutEvent) {
       _userStreamSubscription?.cancel();
     }
+    if (logTransition) {
+      print('==========Frederic User Transition==========');
+      print(transition);
+      print('============================================');
+    }
 
-    print(transition);
     super.onTransition(transition);
   }
 
@@ -177,4 +171,36 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       'progressmonitors': <String>[]
     });
   }
+}
+
+abstract class FredericAuthEvent {}
+
+class FredericLoginEvent extends FredericAuthEvent {
+  FredericLoginEvent(this.email, this.password);
+
+  final String email;
+  final String password;
+}
+
+class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
+  FredericRestoreLoginStatusEvent(this.uid);
+  final String uid;
+}
+
+class FredericSignupEvent extends FredericAuthEvent {
+  FredericSignupEvent(this.name, this.email, this.password);
+
+  final String name;
+  final String email;
+  final String password;
+}
+
+class FredericSignOutEvent extends FredericAuthEvent {
+  FredericSignOutEvent([this.reason]);
+  final String? reason;
+}
+
+class FredericUserDataChangedEvent extends FredericAuthEvent {
+  FredericUserDataChangedEvent(this.snapshot);
+  final DocumentSnapshot<Map<String, dynamic>> snapshot;
 }

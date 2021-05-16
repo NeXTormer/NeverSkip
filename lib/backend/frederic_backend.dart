@@ -14,39 +14,40 @@ import 'backend.dart';
 ///
 class FredericBackend {
   FredericBackend() {
-    _userManager = FredericUserManager();
+    _userManager =
+        FredericUserManager(onLoadData: loadData, logTransition: true);
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
+
+  late final FredericUserManager _userManager;
+  FredericUserManager get userManager => _userManager;
+
+  FredericActivityManager? _activityManager;
+  FredericActivityManager? get activityManager => _activityManager;
+
+  FredericWorkoutManager? _workoutManager;
+  FredericWorkoutManager? get workoutManager => _workoutManager;
+
+  FredericGoalManager? _goalManager;
+  FredericGoalManager? get goalManager => _goalManager;
 
   Future<void> loadData() async {
     //TODO: wait until data loaded to complete
 
     _activityManager = FredericActivityManager();
-    _activityManager.loadData();
-    await _activityManager.hasData();
+    _activityManager?.loadData();
+    await _activityManager?.hasData();
     _workoutManager = FredericWorkoutManager();
-    _workoutManager.loadData();
+    _workoutManager?.loadData();
     _goalManager = FredericGoalManager();
-    _goalManager.loadData();
+    _goalManager?.loadData();
     return;
   }
 
-  late final FredericUserManager _userManager;
-  FredericUserManager get userManager => _userManager;
-
-  late final FredericActivityManager _activityManager;
-  FredericActivityManager get activityManager => _activityManager;
-
-  late final FredericWorkoutManager _workoutManager;
-  FredericWorkoutManager get workoutManager => _workoutManager;
-
-  late final FredericGoalManager _goalManager;
-  FredericGoalManager get goalManager => _goalManager;
-
   void dispose() {
-    _activityManager.dispose();
-    _workoutManager.dispose();
-    _goalManager.dispose();
+    _activityManager?.dispose();
+    _workoutManager?.dispose();
+    _goalManager?.dispose();
   }
 }

@@ -9,31 +9,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FredericUser {
   FredericUser(this._uid,
       {DocumentSnapshot<Map<String, dynamic>>? snapshot,
-      this.statusMessage = ''}) {
+      this.statusMessage = '',
+      this.waiting = false}) {
     insertDocumentSnapshot(snapshot);
   }
 
   final String _uid;
   final String statusMessage;
-  late final String _email;
-  late final String _name;
-  late final String _image;
-  late final int? _weight;
-  late final int? _height;
-  late final DateTime? _birthday;
-  late final List<String> _activeWorkouts;
-  late final List<String> _progressMonitors;
+  String? _email;
+  String? _name;
+  String? _image;
+  int? _weight;
+  int? _height;
+  bool waiting;
+  DateTime? _birthday;
+  List<String>? _activeWorkouts;
+  List<String>? _progressMonitors;
 
   bool get authenticated => _uid != '';
+  bool get finishedLoading => _name != null;
   String get uid => _uid;
-  String get email => _email;
-  String get name => _name;
-  String get image => _image;
+  String get email => _email ?? '';
+  String get name => _name ?? '';
+  String get image =>
+      _image ?? 'https://via.placeholder.com/300x300?text=profile';
   int get weight => _weight ?? -1;
   int get height => _height ?? -1;
   DateTime get birthday => _birthday ?? DateTime.now();
-  List<String> get progressMonitors => _progressMonitors ?? [];
-  List<String> get activeWorkouts => _activeWorkouts ?? [];
+  List<String> get progressMonitors => _progressMonitors ?? const <String>[];
+  List<String> get activeWorkouts => _activeWorkouts ?? const <String>[];
 
   int get age {
     var diff = birthday.difference(DateTime.now());
@@ -64,7 +68,7 @@ class FredericUser {
 
   @override
   String toString() {
-    return 'FredericUser[name: $name, email: $email, uid: $uid]';
+    return 'FredericUser[$uid, $name, waiting: $waiting, authenticated: $authenticated]';
   }
 
   @override
