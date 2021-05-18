@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
@@ -106,7 +107,7 @@ class Frederic extends StatelessWidget {
                       label: 'Calendar',
                     ),
                     FredericScreen(
-                      screen: Container(),
+                      screen: ActivityListScreen(),
                       icon: ExtraIcons.dumbbell,
                       label: 'Exercises',
                     ),

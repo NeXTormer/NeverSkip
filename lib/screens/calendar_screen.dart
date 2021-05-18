@@ -77,7 +77,7 @@ class CalendarScreen extends StatelessWidget {
                   SliverList(delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return Container();
-                      //return CalendarDay(index, user, workouts);
+                      // return CalendarDay(index, user, workouts);
                     },
                   ))
                 ],
