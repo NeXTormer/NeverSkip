@@ -34,15 +34,16 @@ class FeaturedActivitySegment extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: false,
                   scrollDirection: Axis.horizontal,
-                  itemCount: finished ? length : 2,
+                  itemCount: 5,
                   itemBuilder: (context, index) {
+                    // TODO Padding on scrolling
                     return Padding(
                       padding: EdgeInsets.only(
                         left: index == 0 ? 16 : 12,
                         right: index == (length - 1) ? 16 : 0,
                       ),
                       child: FredericRecommendedActivity(
-                        finished ? featuredActivities[index] : '0',
+                        finished ? featuredActivities[index % 2] : '0',
                         loading: !finished,
                       ),
                     );

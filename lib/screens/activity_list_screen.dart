@@ -23,6 +23,7 @@ class ActivityListScreen extends StatelessWidget {
                 builder: (context, filter, child) {
                   return CustomScrollView(
                     slivers: [
+                      // TODO Pull Request for finished activity screen
                       ActivityHeader(),
                       SliverDivider(),
                       FeaturedActivitySegment(
@@ -31,7 +32,9 @@ class ActivityListScreen extends StatelessWidget {
                               .progressMonitors), // TODO get list of user specific 'featured activities'
                       FeaturedActivitySegment('Calisthenics',
                           user.progressMonitors), // TODO get list of user? specific 'calisthenics activites'
-                      ActivityFilterSegment(filterController: filter),
+                      ActivityFilterSegment(
+                          filterController:
+                              filter), // TODO Update Muscle Buttons to Radio Buttons
                       ActivityListSegment(filterController: filter),
                     ],
                   );

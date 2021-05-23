@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_card.dart';
+import 'package:frederic/widgets/standard_elements/activity_card.dart';
 
 import '../../backend/frederic_activity.dart';
 import '../../backend/frederic_activity_builder.dart';
