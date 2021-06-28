@@ -185,7 +185,7 @@ class FredericWorkout with ChangeNotifier {
       int weekday = snapshot.docs[i].data()['weekday'];
       String? activityID = snapshot.docs[i].data()['activity'];
       if (weekday >= _activities!.activities!.length) continue;
-      _activities!.activities![weekday].add(_activityManager![activityID]);
+      _activities!.activities![weekday].add(_activityManager![activityID!]);
     }
     notifyListeners();
   }
@@ -240,28 +240,6 @@ class FredericWorkout with ChangeNotifier {
     List<FredericActivity?> list = _activities!.activities![weekday];
     list.remove(activity);
     _removeActivityDB(activity, weekday);
-  }
-
-  //============================================================================
-  /// Moves the activity to another day in the workout plan
-  ///
-  void moveActivityToOtherDay(FredericActivity activity, int to) async {
-    int fromWeekday = activity.weekday;
-
-    CollectionReference collectionReference = FirebaseFirestore.instance
-        .collection('workouts')
-        .doc(workoutID)
-        .collection('activities');
-
-    QuerySnapshot snapshot = await collectionReference
-        .where('activity', isEqualTo: activity.activityID)
-        .where('weekday', isEqualTo: fromWeekday)
-        .get();
-
-    if (snapshot.docs.length != 1) return;
-
-    String docID = snapshot.docs[0].id;
-    collectionReference.doc(docID).update({'weekday': to});
   }
 
   void _addActivityDB(FredericActivity activity, int day) {

@@ -63,7 +63,7 @@ class SetCard extends StatelessWidget {
                       fontSize: 14),
                 ),
                 SizedBox(width: 3),
-                Text(activity!.bestProgressType,
+                Text(activity!.progressUnit!,
                     style: TextStyle(
                         color: kTextColor,
                         fontWeight: FontWeight.w500,

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity_builder.dart';
 import 'package:frederic/backend/frederic_workout.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
@@ -96,38 +95,38 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: FredericActivityBuilder(
-                        type: FredericActivityBuilderType.WorkoutActivities,
-                        id: workout.workoutID,
-                        builder: (context, list) {
-                          FredericWorkoutActivities activities = list;
-                          return PageView(
-                              physics: BouncingScrollPhysics(),
-                              onPageChanged: handleDayChangeBySwiping,
-                              controller: activityPageController,
-                              children:
-                                  List.generate(activities.period, (weekday) {
-                                return CupertinoScrollbar(
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.only(top: 8),
-                                    itemBuilder: (context, index) {
-                                      return Container();
-
-                                      // return ActivityCard(
-                                      //   activities.activities[weekday + 1]
-                                      //       [index],
-                                      //   dismissible: workout.canEdit,
-                                      //   onDismiss: handleDeleteActivity,
-                                      // );
-                                    },
-                                    itemCount: activities
-                                        .activities![weekday + 1].length,
-                                  ),
-                                );
-                              }));
-                        }),
-                  ),
+                  // Expanded(
+                  //   child: FredericActivityBuilder(
+                  //       type: FredericActivityBuilderType.WorkoutActivities,
+                  //       id: workout.workoutID,
+                  //       builder: (context, list) {
+                  //         FredericWorkoutActivities activities = list;
+                  //         return PageView(
+                  //             physics: BouncingScrollPhysics(),
+                  //             onPageChanged: handleDayChangeBySwiping,
+                  //             controller: activityPageController,
+                  //             children:
+                  //                 List.generate(activities.period, (weekday) {
+                  //               return CupertinoScrollbar(
+                  //                 child: ListView.builder(
+                  //                   padding: EdgeInsets.only(top: 8),
+                  //                   itemBuilder: (context, index) {
+                  //                     return Container();
+                  //
+                  //                     // return ActivityCard(
+                  //                     //   activities.activities[weekday + 1]
+                  //                     //       [index],
+                  //                     //   dismissible: workout.canEdit,
+                  //                     //   onDismiss: handleDeleteActivity,
+                  //                     // );
+                  //                   },
+                  //                   itemCount: activities
+                  //                       .activities![weekday + 1].length,
+                  //                 ),
+                  //               );
+                  //             }));
+                  //       }),
+                  // ),
                 ],
               ));
         });

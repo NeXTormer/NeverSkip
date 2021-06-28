@@ -25,8 +25,13 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: FredericBackend.instance.userManager,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<FredericUserManager>.value(
+            value: FredericBackend.instance.userManager),
+        BlocProvider<FredericActivityManager>.value(
+            value: FredericBackend.instance.activityManager),
+      ],
       child: BlocBuilder<FredericUserManager, FredericUser>(
           buildWhen: (previous, next) =>
               previous.authenticated != next.authenticated,

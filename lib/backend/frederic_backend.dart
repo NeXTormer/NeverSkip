@@ -13,7 +13,8 @@ import 'backend.dart';
 class FredericBackend {
   FredericBackend() {
     _userManager =
-        FredericUserManager(onLoadData: loadData, logTransition: true);
+        FredericUserManager(onLoadData: loadData, logTransition: false);
+    _activityManager = FredericActivityManager();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -21,7 +22,7 @@ class FredericBackend {
   late final FredericUserManager _userManager;
   FredericUserManager get userManager => _userManager;
 
-  FredericActivityManager _activityManager = FredericActivityManager();
+  late FredericActivityManager _activityManager;
   FredericActivityManager get activityManager => _activityManager;
 
   FredericWorkoutManager? _workoutManager;

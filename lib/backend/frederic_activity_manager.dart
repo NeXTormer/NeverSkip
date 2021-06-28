@@ -59,7 +59,10 @@ class FredericActivityManager
   @override
   Stream<FredericActivityListData> mapEventToState(
       FredericActivityEvent event) async* {
+    print(event.changed);
     if (event is FredericActivityUpdateEvent) {
+      _activities[event.updated.activityID] = event.updated;
+      yield FredericActivityListData([event.updated.activityID]);
     } else if (event is FredericActivityCreateEvent) {
       DocumentReference newActivity = await _activitiesCollection.add({
         'name': event.newActivity.name,
@@ -77,6 +80,13 @@ class FredericActivityManager
     } else if (event is FredericActivityEvent) {
       yield FredericActivityListData(event.changed);
     }
+  }
+
+  @override
+  void onTransition(
+      Transition<FredericActivityEvent, FredericActivityListData> transition) {
+    print(transition);
+    super.onTransition(transition);
   }
 }
 

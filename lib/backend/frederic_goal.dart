@@ -51,23 +51,25 @@ class FredericGoal {
   bool get isLoss => startState > endState;
 
   double get progress {
-    _current = activity?.bestProgress ?? -1;
-    double diff = endState.toDouble() - startState.toDouble();
-    double change = currentState.toDouble() - startState.toDouble();
-    double percentage = change / diff;
-    if (percentage < 0) percentage = 0;
-    if (percentage > 1) percentage = 1;
-    return percentage;
+    // _current = activity?.bestProgress ?? -1;
+    // double diff = endState.toDouble() - startState.toDouble();
+    // double change = currentState.toDouble() - startState.toDouble();
+    // double percentage = change / diff;
+    // if (percentage < 0) percentage = 0;
+    // if (percentage > 1) percentage = 1;
+    // return percentage;
+    return 1;
   }
 
   int get progressPercentage {
-    _current = activity?.bestProgress ?? -1;
-    num diff = endState - startState;
-    num change = currentState - startState;
-    num percentage = change / diff;
-    if (percentage < 0) percentage = 0;
-    if (percentage > 1) percentage = 1;
-    return (percentage * 100).toInt();
+    // _current = activity?.bestProgress ?? -1;
+    // num diff = endState - startState;
+    // num change = currentState - startState;
+    // num percentage = change / diff;
+    // if (percentage < 0) percentage = 0;
+    // if (percentage > 1) percentage = 1;
+    // return (percentage * 100).toInt();
+    return 1;
   }
 
   String get timeLeftFormatted {

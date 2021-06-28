@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 
@@ -20,7 +19,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
           child: FredericHeading('Best stats', onPressed: () {}),
         ),
         FutureBuilder<void>(
-            future: FredericBackend.instance!.activityManager!.hasData(),
+            future: Future.delayed(Duration.zero),
             builder: (context, snapshot) {
               bool finished =
                   (snapshot.connectionState == ConnectionState.done);

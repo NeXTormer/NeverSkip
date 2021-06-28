@@ -70,7 +70,5 @@ class FredericWorkoutManager with ChangeNotifier {
       }
     }
     notifyListeners();
-    print(
-        'notify listeners ========================================================');
   }
 }
