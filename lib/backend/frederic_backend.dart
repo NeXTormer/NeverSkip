@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
@@ -23,8 +21,8 @@ class FredericBackend {
   late final FredericUserManager _userManager;
   FredericUserManager get userManager => _userManager;
 
-  FredericActivityManager? _activityManager;
-  FredericActivityManager? get activityManager => _activityManager;
+  FredericActivityManager _activityManager = FredericActivityManager();
+  FredericActivityManager get activityManager => _activityManager;
 
   FredericWorkoutManager? _workoutManager;
   FredericWorkoutManager? get workoutManager => _workoutManager;
@@ -32,12 +30,10 @@ class FredericBackend {
   FredericGoalManager? _goalManager;
   FredericGoalManager? get goalManager => _goalManager;
 
-  Future<void> loadData() async {
+  void loadData() {
     //TODO: wait until data loaded to complete
 
-    _activityManager = FredericActivityManager();
-    _activityManager?.loadData();
-    await _activityManager?.hasData();
+    _activityManager.reload();
     _workoutManager = FredericWorkoutManager();
     _workoutManager?.loadData();
     _goalManager = FredericGoalManager();
@@ -46,7 +42,6 @@ class FredericBackend {
   }
 
   void dispose() {
-    _activityManager?.dispose();
     _workoutManager?.dispose();
     _goalManager?.dispose();
   }

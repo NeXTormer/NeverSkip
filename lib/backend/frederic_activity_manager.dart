@@ -1,88 +1,100 @@
-import 'dart:async';
 import 'dart:collection';
 
-import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_activity_list_data.dart';
+import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 
 ///
-/// Manages all Activities. Only one instance of this should exist. Instantiated in
-/// [FredericBackend].
+/// Manages all Activities.
 ///
-/// Get an activity using the [] operator, e.g.
-/// ```
-/// FredericActivity activity = activityManager['activityID'];
-/// ```
-///
-class FredericActivityManager with ChangeNotifier {
-  FredericActivityManager() {
-    _activities = HashMap<String, FredericActivity>();
-    _hasDataCompleter = Completer<void>();
-    _dataLoaded = false;
-  }
-
-  late bool _dataLoaded;
-
-  late HashMap<String, FredericActivity> _activities;
-  late Completer<void> _hasDataCompleter;
+class FredericActivityManager
+    extends Bloc<FredericActivityEvent, FredericActivityListData> {
+  FredericActivityManager() : super(FredericActivityListData(<String>[]));
 
   final CollectionReference _activitiesCollection =
       FirebaseFirestore.instance.collection('activities');
 
-  FredericActivity? operator [](String? value) {
-    return _activities[value!];
+  //global and mutable
+  HashMap<String, FredericActivity> _activities =
+      HashMap<String, FredericActivity>();
+
+  FredericActivity? operator [](String value) {
+    return _activities[value];
   }
 
   Iterable<FredericActivity> get activities => _activities.values;
 
-  ///
-  /// The futures gets completed if the activities have been loaded
-  ///
-  /// TODO: not sure if it works multiple times
-  ///
-  Future<void> hasData() {
-    return _hasDataCompleter.future;
-  }
-
-  ///
-  /// Called once in [FredericBackend]
-  ///
-  void loadData() {
-    if (_dataLoaded) return;
-    _dataLoaded = true;
-    Stream<QuerySnapshot> globalStream =
-        _activitiesCollection.where('owner', isEqualTo: 'global').snapshots();
-    Stream<QuerySnapshot> userStream = _activitiesCollection
+  void reload() async {
+    QuerySnapshot<Object?> global =
+        await _activitiesCollection.where('owner', isEqualTo: 'global').get();
+    QuerySnapshot<Object?> private = await _activitiesCollection
         .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .snapshots();
+        .get();
 
-    Stream<QuerySnapshot> streamGroup =
-        StreamGroup.merge([globalStream, userStream]);
+    List<String> changed = <String>[];
+    _activities.clear();
 
-    streamGroup.listen(_handleActivitiesStream);
+    for (int i = 0; i < global.docs.length; i++) {
+      _activities[global.docs[i].id] = FredericActivity(global.docs[i]);
+      changed.add(global.docs[i].id);
+    }
+    for (int i = 0; i < private.docs.length; i++) {
+      _activities[private.docs[i].id] = FredericActivity(private.docs[i]);
+      changed.add(private.docs[i].id);
+    }
+
+    add(FredericActivityEvent(changed));
   }
 
-  void _handleActivitiesStream(QuerySnapshot snapshot) {
-    bool changed = false;
-    for (int i = 0; i < snapshot.docChanges.length; i++) {
-      var docSnapshot = snapshot.docChanges[i].doc;
-      if (_activities.containsKey(docSnapshot.id)) {
-        _activities[docSnapshot.id]!
-            .insertSnapshot(snapshot.docChanges[i].doc)
-            .notifyListeners();
-        changed = true;
-      } else {
-        _activities[docSnapshot.id] = FredericActivity(docSnapshot.id)
-          ..insertSnapshot(docSnapshot);
-      }
-    }
-    if (changed) {
-      notifyListeners();
-    }
-    if (!_hasDataCompleter.isCompleted) _hasDataCompleter.complete();
+  List<FredericActivity> getFilteredActivities(
+      ActivityFilterController filter) {
+    return activities
+        .where((element) => element.matchFilterController(filter))
+        .toList();
   }
 
-  void updateData() => notifyListeners();
+  @override
+  Stream<FredericActivityListData> mapEventToState(
+      FredericActivityEvent event) async* {
+    if (event is FredericActivityUpdateEvent) {
+    } else if (event is FredericActivityCreateEvent) {
+      DocumentReference newActivity = await _activitiesCollection.add({
+        'name': event.newActivity.name,
+        'description': event.newActivity.description,
+        'image': event.newActivity.image,
+        'recommendedsets': event.newActivity.recommendedSets,
+        'recommendedreps': event.newActivity.recommendedReps,
+        'owner': FirebaseAuth.instance.currentUser?.uid,
+        'musclegroup': FredericActivity.parseMuscleGroupListToStringList(
+            event.newActivity.muscleGroups)
+      });
+      DocumentSnapshot<Object?> newActivitySnapshot = await newActivity.get();
+      _activities[newActivity.id] = FredericActivity(newActivitySnapshot);
+      yield FredericActivityListData([newActivity.id]);
+    } else if (event is FredericActivityEvent) {
+      yield FredericActivityListData(event.changed);
+    }
+  }
+}
+
+class FredericActivityEvent {
+  FredericActivityEvent(this.changed);
+  List<String> changed;
+}
+
+class FredericActivityUpdateEvent extends FredericActivityEvent {
+  FredericActivityUpdateEvent(this.updated)
+      : super(<String>[updated.activityID]);
+
+  FredericActivity updated;
+}
+
+class FredericActivityCreateEvent extends FredericActivityEvent {
+  FredericActivityCreateEvent(this.newActivity)
+      : super(<String>[newActivity.activityID]);
+
+  FredericActivity newActivity;
 }

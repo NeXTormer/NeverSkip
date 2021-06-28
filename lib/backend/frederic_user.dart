@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 ///
 /// Represents the user of the app
-///
-/// Getting other users not yet supported but planned
+/// Not mutable, managed by FredericUserManager Bloc
 ///
 class FredericUser {
   FredericUser(this._uid,
@@ -47,18 +46,19 @@ class FredericUser {
   void insertDocumentSnapshot(
       DocumentSnapshot<Map<String, dynamic>>? snapshot) {
     if (snapshot?.data() == null) return;
+    Map<String, dynamic>? data = snapshot!.data();
 
     _email = FirebaseAuth.instance.currentUser?.email ?? '';
-    _name = snapshot!.data()?['name'] ?? '';
-    _image = snapshot!.data()?['image'] ??
-        'https://via.placeholder.com/300x300?text=profile';
-    _weight = snapshot!.data()?['weight'];
-    _height = snapshot!.data()?['height'];
-    _birthday = snapshot!.data()?['birthday']?.toDate();
-    _progressMonitors = snapshot!.data()?['progressmonitors']?.cast<String>() ??
-        const <String>[];
+    _name = data?['name'] ?? '';
+    _image =
+        data?['image'] ?? 'https://via.placeholder.com/300x300?text=profile';
+    _weight = data?['weight'];
+    _height = data?['height'];
+    _birthday = data?['birthday']?.toDate();
+    _progressMonitors =
+        data?['progressmonitors']?.cast<String>() ?? const <String>[];
     _activeWorkouts =
-        snapshot!.data()?['activeworkouts']?.cast<String>() ?? const <String>[];
+        data?['activeworkouts']?.cast<String>() ?? const <String>[];
   }
 
   @override

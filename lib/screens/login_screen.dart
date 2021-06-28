@@ -8,6 +8,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/FredericButton.dart';
 import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -18,6 +19,8 @@ class LoginScreen extends StatefulWidget {
   final String titleSignup = 'Create a new account';
   final String subtitleSignup =
       'Sign up and create an account so that you can remain healthy by following your daily goals and plans.';
+
+  final String termsAndContidionsURL = 'https://hawkford.io/';
 
   final String subtitle =
       'Sign in and continue so that you can remain healthy by following your daily goals and plans.';
@@ -182,11 +185,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: TextStyle(
                                           fontSize: 11,
                                           color: const Color(0xFF2F2E41))),
-                                  Text('Terms & Conditions',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 11,
-                                          color: const Color(0xFF2F2E41))),
+                                  GestureDetector(
+                                    onTap: () {
+                                      launch(widget.termsAndContidionsURL);
+                                    },
+                                    child: Text('Terms & Conditions',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 11,
+                                            color: const Color(0xFF2F2E41))),
+                                  ),
                                   Text(' of this app.',
                                       style: TextStyle(
                                           fontSize: 11,
@@ -263,27 +271,6 @@ class _LoginScreenState extends State<LoginScreen> {
               color: const Color(0xFF5C5C5C),
             )
           : null,
-    );
-  }
-
-  Future<void> showLoginError(String text) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login error'),
-          content: Text(text ?? ''),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 

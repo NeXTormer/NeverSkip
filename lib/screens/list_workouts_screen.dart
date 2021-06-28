@@ -28,7 +28,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
                 itemBuilder: (context, index) {
                   return WorkoutCard(workouts[index]);
                 },
-                itemCount: workouts?.length ?? 0,
+                itemCount: workouts.length,
               );
             }),
           ),

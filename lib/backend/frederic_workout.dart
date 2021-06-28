@@ -21,7 +21,7 @@ import 'package:frederic/backend/frederic_activity_manager.dart';
 ///
 class FredericWorkout with ChangeNotifier {
   FredericWorkout(this.workoutID) {
-    _activityManager = FredericBackend.instance!.activityManager;
+    _activityManager = FredericBackend.instance.activityManager;
     _activities = FredericWorkoutActivities(this);
   }
 
@@ -166,7 +166,7 @@ class FredericWorkout with ChangeNotifier {
   }
 
   void loadActivities() {
-    if (_hasActivitiesLoaded ?? false) return;
+    if (_hasActivitiesLoaded) return;
     _hasActivitiesLoaded = true;
 
     CollectionReference activitiesCollection = FirebaseFirestore.instance
