@@ -7,8 +7,7 @@ import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 
 class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
-  FredericSetManager(FredericSetListData initialState)
-      : super(FredericSetListData(<String>[])) {
+  FredericSetManager() : super(FredericSetListData(<String>[])) {
     setsCollection = FirebaseFirestore.instance
         .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
   }
@@ -20,7 +19,8 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   HashMap<String, FredericSetList> _sets = HashMap<String, FredericSetList>();
 
   FredericSetList operator [](String value) {
-    if (!_sets.containsKey(value)) _sets[value] = FredericSetList(value, this);
+    if (!_sets.containsKey(value))
+      _sets[value] = FredericSetList(value, this)..loadData(2);
     return _sets[value]!;
   }
 

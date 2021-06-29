@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 
@@ -12,12 +13,14 @@ class FredericSet implements Comparable {
 
   FredericSet.fromMap(Map<String, dynamic> map)
       : reps = map['reps'],
-        weight = map['value'],
-        timestamp = map['timestamp'];
+        weight = map['value'] {
+    Timestamp ts = map['timestamp'];
+    timestamp = ts.toDate();
+  }
 
   final int reps;
   final int weight;
-  final DateTime timestamp;
+  late final DateTime timestamp;
 
   int get month {
     int yearDiff = timestamp.year - FredericSetManager.startingYear;

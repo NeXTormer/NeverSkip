@@ -9,7 +9,9 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 ///
 class FredericSetList {
   FredericSetList(this.activityID, FredericSetManager setManager)
-      : _setManager = setManager;
+      : _setManager = setManager {
+    loadData(2);
+  }
 
   final String activityID;
   final FredericSetManager _setManager;
@@ -61,7 +63,7 @@ class FredericSetList {
       if (month == null) continue;
 
       List<FredericSet> sets = <FredericSet>[];
-      List<Map<String, dynamic>>? setList = document.data()?['sets'];
+      List<dynamic>? setList = document.data()?['sets'];
 
       if (setList == null) continue;
 
@@ -73,6 +75,4 @@ class FredericSetList {
     }
     _setManager.add(FredericSetEvent(<String>[activityID]));
   }
-
-  void loadAdditionalMonths(int count) {}
 }
