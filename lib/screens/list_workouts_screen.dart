@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_workout_builder.dart';
+import 'package:frederic/backend/workouts/frederic_workout_builder.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/workout_list_screen/edit_workout_page.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_card.dart';

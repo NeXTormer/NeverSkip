@@ -1,7 +1,7 @@
+import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
-import 'package:frederic/backend/frederic_activity_manager.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
-import 'package:frederic/backend/frederic_workout_manager.dart';
+import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
 import 'backend.dart';

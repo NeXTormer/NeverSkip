@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout_builder.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';

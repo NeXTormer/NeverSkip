@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/frederic_workout_manager.dart';
-
-import 'backend.dart';
+import 'package:frederic/backend/backend.dart';
 
 ///
 /// Similar to a StreamBuilder, meaning that it provides the latest data for one

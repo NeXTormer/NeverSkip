@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity.dart';
-import 'package:frederic/backend/frederic_activity_manager.dart';
 
 ///
 /// Contains all the data for a workout

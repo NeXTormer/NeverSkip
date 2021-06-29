@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity_list_data.dart';
 import 'package:frederic/widgets/standard_elements/activity_card.dart';
 
 class TestActivityList extends StatelessWidget {
