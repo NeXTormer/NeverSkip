@@ -169,13 +169,14 @@ class FredericWorkout with ChangeNotifier {
     if (_hasActivitiesLoaded) return;
     _hasActivitiesLoaded = true;
 
-    CollectionReference activitiesCollection = FirebaseFirestore.instance
-        .collection('workouts')
-        .doc(workoutID)
-        .collection('activities');
-    Stream<QuerySnapshot> queryStream = activitiesCollection.snapshots();
-    queryStream.listen(
-        _processActivityQuerySnapshot as void Function(QuerySnapshot<Object?>));
+    CollectionReference<Map<String, dynamic>> activitiesCollection =
+        FirebaseFirestore.instance
+            .collection('workouts')
+            .doc(workoutID)
+            .collection('activities');
+    Stream<QuerySnapshot<Map<String, dynamic>>> queryStream =
+        activitiesCollection.snapshots();
+    queryStream.listen(_processActivityQuerySnapshot);
   }
 
   void _processActivityQuerySnapshot(
@@ -317,7 +318,6 @@ class FredericWorkoutActivities {
     if (day.isAfter(end) && workout.repeating == false)
       return <FredericActivity>[];
     int daysdiff = day.difference(start).inDays % period;
-    // daysdiff + 1 because activities[1] is the first day
     return activities![daysdiff + 1] + activities![0];
   }
 

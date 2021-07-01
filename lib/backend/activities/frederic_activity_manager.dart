@@ -18,7 +18,6 @@ class FredericActivityManager
   final CollectionReference _activitiesCollection =
       FirebaseFirestore.instance.collection('activities');
 
-  //global and mutable
   HashMap<String, FredericActivity> _activities =
       HashMap<String, FredericActivity>();
 
