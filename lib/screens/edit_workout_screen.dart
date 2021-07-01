@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity_builder.dart';
-import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout_builder.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/activity_screen/activity_header.dart';
@@ -80,7 +80,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         id: widget.workoutID,
         builder: (context, data) {
           FredericWorkout workout = data;
-          if (workout?.name == null) return Container();
           return Scaffold(
               backgroundColor: Colors.white,
               floatingActionButton: workout.canEdit!
@@ -139,38 +138,38 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: FredericActivityBuilder(
-                        type: FredericActivityBuilderType.WorkoutActivities,
-                        id: workout.workoutID,
-                        builder: (context, list) {
-                          FredericWorkoutActivities activities = list;
-                          return PageView(
-                              physics: BouncingScrollPhysics(),
-                              onPageChanged: handleDayChangeBySwiping,
-                              controller: activityPageController,
-                              children:
-                                  List.generate(activities.period, (weekday) {
-                                return CupertinoScrollbar(
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.only(top: 8),
-                                    itemBuilder: (context, index) {
-                                      return Container();
-
-                                      // return ActivityCard(
-                                      //   activities.activities[weekday + 1]
-                                      //       [index],
-                                      //   dismissible: workout.canEdit,
-                                      //   onDismiss: handleDeleteActivity,
-                                      // );
-                                    },
-                                    itemCount: activities
-                                        .activities![weekday + 1].length,
-                                  ),
-                                );
-                              }));
-                        }),
-                  ),
+                  // Expanded(
+                  //   child: FredericActivityBuilder(
+                  //       type: FredericActivityBuilderType.WorkoutActivities,
+                  //       id: workout.workoutID,
+                  //       builder: (context, list) {
+                  //         FredericWorkoutActivities activities = list;
+                  //         return PageView(
+                  //             physics: BouncingScrollPhysics(),
+                  //             onPageChanged: handleDayChangeBySwiping,
+                  //             controller: activityPageController,
+                  //             children:
+                  //                 List.generate(activities.period, (weekday) {
+                  //               return CupertinoScrollbar(
+                  //                 child: ListView.builder(
+                  //                   padding: EdgeInsets.only(top: 8),
+                  //                   itemBuilder: (context, index) {
+                  //                     return Container();
+                  //
+                  //                     // return ActivityCard(
+                  //                     //   activities.activities[weekday + 1]
+                  //                     //       [index],
+                  //                     //   dismissible: workout.canEdit,
+                  //                     //   onDismiss: handleDeleteActivity,
+                  //                     // );
+                  //                   },
+                  //                   itemCount: activities
+                  //                       .activities![weekday + 1].length,
+                  //                 ),
+                  //               );
+                  //             }));
+                  //       }),
+                  // ),
                 ],
               ));
         });
@@ -203,8 +202,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleAddActivity(FredericActivity activity) {
-    bool success = FredericBackend.instance()!
-            .workoutManager![widget.workoutID]
+    bool success = FredericBackend.instance.workoutManager![widget.workoutID]
             ?.addActivity(activity, sliderController!.currentDay) ??
         false;
 
@@ -214,8 +212,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleDeleteActivity(FredericActivity activity) {
-    FredericBackend.instance()!
-        .workoutManager![widget.workoutID]
+    FredericBackend.instance.workoutManager![widget.workoutID]
         ?.removeActivity(activity, sliderController!.currentDay);
   }
 

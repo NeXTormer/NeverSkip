@@ -109,7 +109,7 @@ class _FredericCircularProgressIndicatorState
       ),
       Image(
         width: innerRadius - 20,
-        image: AssetImage('assets/dumbbell_with_bg_blue.png'),
+        image: AssetImage('assets/images/dumbbell_with_bg_blue.png'),
       ),
     ]);
   }

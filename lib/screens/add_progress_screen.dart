@@ -6,7 +6,6 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -155,8 +154,10 @@ class AddProgressScreen extends StatelessWidget {
                 SliverList(
                     delegate: SliverChildBuilderDelegate(
                         (context, index) =>
-                            SetCard(activity!.sets![index], activity),
-                        childCount: activity!.sets!.length))
+                            Container(height: 20, color: Colors.black26)
+                        //SetCard(activity!.sets![index], activity)
+                        ,
+                        childCount: /*activity!.sets!.length*/ 2))
               ],
             ),
           ),

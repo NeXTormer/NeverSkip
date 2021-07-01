@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/frederic_workout_manager.dart';
-
-import 'backend.dart';
+import 'package:frederic/backend/backend.dart';
 
 ///
 /// Similar to a StreamBuilder, meaning that it provides the latest data for one
@@ -37,7 +35,7 @@ class _FredericWorkoutBuilderState extends State<FredericWorkoutBuilder> {
 
   @override
   void initState() {
-    _workoutManager = FredericBackend.instance()!.workoutManager;
+    _workoutManager = FredericBackend.instance.workoutManager;
     _singleWorkout = widget.id != null && widget.activeWorkouts == null;
     _selectedWorkouts = widget.activeWorkouts != null;
     super.initState();

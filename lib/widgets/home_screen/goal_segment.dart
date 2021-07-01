@@ -15,7 +15,7 @@ class _GoalSegmentState extends State<GoalSegment> {
 
   @override
   void initState() {
-    goalManager = FredericBackend.instance()!.goalManager;
+    goalManager = FredericBackend.instance!.goalManager;
     goalManager?.addListener(updateData);
     goals = goalManager!.goals;
     super.initState();

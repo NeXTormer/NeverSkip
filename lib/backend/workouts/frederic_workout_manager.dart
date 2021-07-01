@@ -41,7 +41,7 @@ class FredericWorkoutManager with ChangeNotifier {
     Stream<QuerySnapshot> globalStream =
         _workoutsCollection.where('owner', isEqualTo: 'global').snapshots();
     Stream<QuerySnapshot> userStream = _workoutsCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .snapshots();
 
     Stream<QuerySnapshot> streamGroup =
@@ -60,15 +60,15 @@ class FredericWorkoutManager with ChangeNotifier {
 
       if (_workouts!.containsKey(docSnapshot.id)) {
         _workouts![docSnapshot.id]!
-            .insertSnapshot(snapshot.docChanges[i].doc as DocumentSnapshot<Map<String, dynamic>>)
+            .insertSnapshot(snapshot.docChanges[i].doc
+                as DocumentSnapshot<Map<String, dynamic>>)
             .notifyListeners();
       } else {
         _workouts![docSnapshot.id] = FredericWorkout(docSnapshot.id)
-          ..insertSnapshot(docSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+          ..insertSnapshot(
+              docSnapshot as DocumentSnapshot<Map<String, dynamic>>);
       }
     }
     notifyListeners();
-    print(
-        'notify listeners ========================================================');
   }
 }

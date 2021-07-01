@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
 
 class WorkoutCard extends StatefulWidget {
@@ -93,7 +93,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
               top: 10,
               child: InkWell(
                 onTap: () {
-                  final RenderBox? box = context.findRenderObject() as RenderBox?;
+                  final RenderBox? box =
+                      context.findRenderObject() as RenderBox?;
                 },
                 child: CircleAvatar(
                   radius: 25,

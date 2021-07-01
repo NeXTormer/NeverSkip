@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
@@ -14,7 +14,6 @@ import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 final Future<FirebaseApp> app = Firebase.initializeApp();
@@ -37,7 +36,9 @@ void main() {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  runApp(Frederic());
+  runApp(Phoenix(
+    child: Frederic(),
+  ));
 }
 
 class Frederic extends StatelessWidget {
@@ -76,64 +77,55 @@ class Frederic extends StatelessWidget {
     //SystemChrome.setSystemUIOverlayStyle(
     //    SystemUiOverlayStyle(statusBarColor: Colors.blue));
 
-    return MultiProvider(
-      providers: [
-        StreamProvider<User?>(
-          initialData: FirebaseAuth.instance.currentUser,
-          create: (context) =>
-              context.read<FredericBackend>().authService!.authStateChanges,
-        ),
+    return MaterialApp(
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      child: MaterialApp(
-        navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics),
-        ],
-        showPerformanceOverlay: false,
-        title: 'Frederic',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            primaryColor: kMainColor,
-            accentColor: kAccentColor,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            fontFamily: 'Montserrat',
-            textTheme: TextTheme(
-              headline1: TextStyle(
-                  color: const Color(0xFF272727),
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.6,
-                  fontSize: 13),
-            )),
-        home: AuthenticationWrapper(
-          homePage: false
-              ? HomeScreen()
-              : BottomNavigationScreen(
-                  [
-                    FredericScreen(
-                      screen: HomeScreen(),
-                      icon: ExtraIcons.person,
-                      label: 'Home',
-                    ),
-                    FredericScreen(
-                      screen: CalendarScreen(),
-                      icon: ExtraIcons.calendar,
-                      label: 'Calendar',
-                    ),
-                    FredericScreen(
-                      screen: ActivityListScreen(),
-                      icon: ExtraIcons.dumbbell,
-                      label: 'Exercises',
-                    ),
-                    FredericScreen(
-                      screen: ListWorkoutsScreen(),
-                      icon: ExtraIcons.statistics,
-                      label: 'Workouts',
-                    ),
-                  ],
-                ),
-          loginPage: LoginScreen(),
-          splashScreen: splashScreen,
-        ),
+      showPerformanceOverlay: false,
+      title: 'Frederic',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          primaryColor: kMainColor,
+          accentColor: kAccentColor,
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
+          fontFamily: 'Montserrat',
+          textTheme: TextTheme(
+            headline1: TextStyle(
+                color: const Color(0xFF272727),
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.6,
+                fontSize: 13),
+          )),
+      home: AuthenticationWrapper(
+        homePage: false
+            ? HomeScreen()
+            : BottomNavigationScreen(
+                [
+                  FredericScreen(
+                    screen: HomeScreen(),
+                    icon: ExtraIcons.person,
+                    label: 'Home',
+                  ),
+                  FredericScreen(
+                    screen: CalendarScreen(),
+                    icon: ExtraIcons.calendar,
+                    label: 'Calendar',
+                  ),
+                  FredericScreen(
+                    screen: TestActivityList(),
+                    icon: ExtraIcons.dumbbell,
+                    label: 'Exercises',
+                  ),
+                  FredericScreen(
+                    screen: ListWorkoutsScreen(),
+                    icon: ExtraIcons.statistics,
+                    label: 'Workouts',
+                  ),
+                ],
+              ),
+        loginPage: LoginScreen(),
+        splashScreen: splashScreen,
       ),
     );
   }

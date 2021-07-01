@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_activity.dart';
-import 'package:frederic/backend/frederic_activity_manager.dart';
 
 ///
 /// Contains all the data for a workout
@@ -21,7 +21,7 @@ import 'package:frederic/backend/frederic_activity_manager.dart';
 ///
 class FredericWorkout with ChangeNotifier {
   FredericWorkout(this.workoutID) {
-    _activityManager = FredericBackend.instance()!.activityManager;
+    _activityManager = FredericBackend.instance.activityManager;
     _activities = FredericWorkoutActivities(this);
   }
 
@@ -150,7 +150,7 @@ class FredericWorkout with ChangeNotifier {
       'name': title,
       'description': description,
       'image': image,
-      'owner': FirebaseAuth.instance.currentUser!.uid,
+      'owner': FirebaseAuth.instance.currentUser?.uid,
       'period': period,
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate)
@@ -166,7 +166,7 @@ class FredericWorkout with ChangeNotifier {
   }
 
   void loadActivities() {
-    if (_hasActivitiesLoaded ?? false) return;
+    if (_hasActivitiesLoaded) return;
     _hasActivitiesLoaded = true;
 
     CollectionReference activitiesCollection = FirebaseFirestore.instance
@@ -185,7 +185,7 @@ class FredericWorkout with ChangeNotifier {
       int weekday = snapshot.docs[i].data()['weekday'];
       String? activityID = snapshot.docs[i].data()['activity'];
       if (weekday >= _activities!.activities!.length) continue;
-      _activities!.activities![weekday].add(_activityManager![activityID]);
+      _activities!.activities![weekday].add(_activityManager![activityID!]);
     }
     notifyListeners();
   }
@@ -207,7 +207,7 @@ class FredericWorkout with ChangeNotifier {
     _activities!.repeating = snapshot.data()!['repeating'];
     _startDate = snapshot.data()!['startdate'].toDate();
 
-    _canEdit = _owner == FirebaseAuth.instance.currentUser!.uid;
+    _canEdit = _owner == FirebaseAuth.instance.currentUser?.uid;
 
     return this;
   }
@@ -240,28 +240,6 @@ class FredericWorkout with ChangeNotifier {
     List<FredericActivity?> list = _activities!.activities![weekday];
     list.remove(activity);
     _removeActivityDB(activity, weekday);
-  }
-
-  //============================================================================
-  /// Moves the activity to another day in the workout plan
-  ///
-  void moveActivityToOtherDay(FredericActivity activity, int to) async {
-    int fromWeekday = activity.weekday;
-
-    CollectionReference collectionReference = FirebaseFirestore.instance
-        .collection('workouts')
-        .doc(workoutID)
-        .collection('activities');
-
-    QuerySnapshot snapshot = await collectionReference
-        .where('activity', isEqualTo: activity.activityID)
-        .where('weekday', isEqualTo: fromWeekday)
-        .get();
-
-    if (snapshot.docs.length != 1) return;
-
-    String docID = snapshot.docs[0].id;
-    collectionReference.doc(docID).update({'weekday': to});
   }
 
   void _addActivityDB(FredericActivity activity, int day) {

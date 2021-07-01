@@ -5,7 +5,6 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'frederic_vertical_divider.dart';
@@ -33,40 +32,20 @@ class ActivityCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          //crossAxisAlignment: CrossAxisAlignment.baseline,
                           children: [
                             Text(activity!.name,
-                                style: GoogleFonts.montserrat(
+                                style: TextStyle(
+                                    //textBaseline: TextBaseline.alphabetic,
+                                    fontFamily: 'Montserrat',
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500,
-                                    color: true
-                                        ? kTextColor
-                                        : const Color(0x993A3A3A))),
+                                    color: kTextColor)),
                             Expanded(child: Container()),
-                            if (false &&
-                                activity!.type ==
-                                    FredericActivityType.Weighted &&
-                                activity!.bestProgress != 0)
+                            if (activity!.type == FredericActivityType.Weighted)
                               Icon(ExtraIcons.dumbbell,
                                   color: kMainColor, size: 16),
                             SizedBox(width: 6),
-                            if (activity!.bestProgress != 0)
-                              Text(
-                                '${activity!.bestProgress}',
-                                style: TextStyle(
-                                    color: kTextColor,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.5,
-                                    fontSize: 14),
-                              ),
-                            SizedBox(width: 2),
-                            if (activity!.bestProgress != 0)
-                              Text(activity!.bestProgressType,
-                                  style: TextStyle(
-                                      color: kTextColor,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 0.5,
-                                      fontSize: 12)),
                           ]),
                       Row(
                         children: [
