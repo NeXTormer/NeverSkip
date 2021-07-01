@@ -54,7 +54,6 @@ class Frederic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    //splashScreen = SplashScreen();
 
     return FutureBuilder(
         future: app,

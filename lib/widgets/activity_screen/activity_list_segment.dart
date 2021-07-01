@@ -16,8 +16,8 @@ class ActivityListSegment extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FredericActivityManager, FredericActivityListData>(
       builder: (context, listData) {
-        List<FredericActivity> list = FredericBackend.instance.activityManager
-            .getFilteredActivities(filterController);
+        List<FredericActivity> list =
+            listData.getFilteredActivities(filterController);
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {

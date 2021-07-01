@@ -5,14 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
 
 ///
 /// Manages all Activities.
 ///
 class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
-  FredericActivityManager() : super(FredericActivityListData(<String>[]));
+  FredericActivityManager()
+      : super(FredericActivityListData(
+            <String>[], HashMap<String, FredericActivity>()));
 
   final CollectionReference _activitiesCollection =
       FirebaseFirestore.instance.collection('activities');
@@ -49,20 +50,12 @@ class FredericActivityManager
     add(FredericActivityEvent(changed));
   }
 
-  List<FredericActivity> getFilteredActivities(
-      ActivityFilterController filter) {
-    return activities
-        .where((element) => element.matchFilterController(filter))
-        .toList();
-  }
-
   @override
   Stream<FredericActivityListData> mapEventToState(
       FredericActivityEvent event) async* {
-    print(event.changed);
     if (event is FredericActivityUpdateEvent) {
       _activities[event.updated.activityID] = event.updated;
-      yield FredericActivityListData([event.updated.activityID]);
+      yield FredericActivityListData([event.updated.activityID], _activities);
     } else if (event is FredericActivityCreateEvent) {
       DocumentReference newActivity = await _activitiesCollection.add({
         'name': event.newActivity.name,
@@ -76,16 +69,22 @@ class FredericActivityManager
       });
       DocumentSnapshot<Object?> newActivitySnapshot = await newActivity.get();
       _activities[newActivity.id] = FredericActivity(newActivitySnapshot);
-      yield FredericActivityListData([newActivity.id]);
+      yield FredericActivityListData([newActivity.id], _activities);
     } else if (event is FredericActivityEvent) {
-      yield FredericActivityListData(event.changed);
+      yield FredericActivityListData(event.changed, _activities);
     }
   }
 
   @override
   void onTransition(
       Transition<FredericActivityEvent, FredericActivityListData> transition) {
+    print('ActivityManager========================================');
     print(transition);
+    print('Activities:');
+    print(activities.length);
+    print('Changes:');
+    print(state.changed.toString());
+    print('ActivityManager========================================');
     super.onTransition(transition);
   }
 }

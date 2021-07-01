@@ -34,44 +34,44 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
             Row(
               children: [
                 ActivityMuscleGroupButton('Arms',
-                    isActive: widget.filterController.arms!, onPressed: () {
+                    isActive: widget.filterController.arms, onPressed: () {
                   setState(() {
                     handleMuscleFilters(MuscleGroup.Arms);
                     widget.filterController.arms =
-                        !widget.filterController.arms!;
+                        !widget.filterController.arms;
                   });
                 }),
                 SizedBox(width: aspectRatio),
                 ActivityMuscleGroupButton('Chest',
-                    isActive: widget.filterController.chest!,
+                    isActive: widget.filterController.chest,
                     onPressed: () => setState(() {
                           handleMuscleFilters(MuscleGroup.Chest);
                           widget.filterController.chest =
-                              !widget.filterController.chest!;
+                              !widget.filterController.chest;
                         })),
                 SizedBox(width: aspectRatio),
                 ActivityMuscleGroupButton('Back',
-                    isActive: widget.filterController.back!,
+                    isActive: widget.filterController.back,
                     onPressed: () => setState(() {
                           handleMuscleFilters(MuscleGroup.Back);
                           widget.filterController.back =
-                              !widget.filterController.back!;
+                              !widget.filterController.back;
                         })),
                 SizedBox(width: aspectRatio),
                 ActivityMuscleGroupButton('Abs',
-                    isActive: widget.filterController.abs!,
+                    isActive: widget.filterController.abs,
                     onPressed: () => setState(() {
                           handleMuscleFilters(MuscleGroup.Abs);
                           widget.filterController.abs =
-                              !widget.filterController.abs!;
+                              !widget.filterController.abs;
                         })),
                 SizedBox(width: aspectRatio),
                 ActivityMuscleGroupButton('Legs',
-                    isActive: widget.filterController.legs!,
+                    isActive: widget.filterController.legs,
                     onPressed: () => setState(() {
                           handleMuscleFilters(MuscleGroup.Legs);
                           widget.filterController.legs =
-                              !widget.filterController.legs!;
+                              !widget.filterController.legs;
                         })),
               ],
             ),

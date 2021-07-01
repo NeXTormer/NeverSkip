@@ -26,10 +26,11 @@ class FeaturedActivitySegment extends StatelessWidget {
             ),
           ),
           BlocBuilder<FredericActivityManager, FredericActivityListData>(
-            builder: (context, snapshot) {
-              List<FredericActivity> list = List.of(FredericBackend
-                  .instance.activityManager.activities
-                  .where((element) => featuredActivities.contains(element)));
+            buildWhen: (current, next) => true,
+            builder: (context, data) {
+              List<FredericActivity> list = List.of(data.activities.values
+                  .where((element) =>
+                      featuredActivities.contains(element.activityID)));
               return Container(
                 height: 60,
                 child: ListView.builder(
