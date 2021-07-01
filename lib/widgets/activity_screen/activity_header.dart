@@ -57,7 +57,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Text(
