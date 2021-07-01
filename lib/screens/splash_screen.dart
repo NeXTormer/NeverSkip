@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'file:///C:/Dev/Projects/frederic/lib/widgets/standard_elements/frederic_circular_progress_indicator.dart';
+import '../widgets/standard_elements/frederic_circular_progress_indicator.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({this.onComplete});

@@ -22,11 +22,11 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
         children: [
           Expanded(
             child: FredericWorkoutBuilder(builder: (context, list) {
-              List<FredericWorkout> workouts = list;
+              List<FredericWorkout?> workouts = list;
               return ListView.builder(
                 padding: EdgeInsets.only(top: 8),
                 itemBuilder: (context, index) {
-                  return WorkoutCard(workouts[index]);
+                  return WorkoutCard(workouts[index]!);
                 },
                 itemCount: workouts.length,
               );

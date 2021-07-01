@@ -4,8 +4,13 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout.dart';
 import 'package:frederic/backend/workouts/frederic_workout_builder.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/activity_screen/activity_header.dart';
+import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
+import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workoutID);
@@ -18,6 +23,8 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
+  static const double SIDE_PADDING = 16;
+
   PageController? activityPageController;
   WeekdaySliderController? sliderController;
 
@@ -32,6 +39,41 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     super.initState();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    return FredericWorkoutBuilder(
+      id: widget.workoutID,
+      builder: (context, data) {
+        FredericWorkout workout = data;
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: SIDE_PADDING),
+              child: Column(
+                children: [
+                  EditWorkoutHeader(),
+                  Divider(color: const Color(0xFFC9C9C9)),
+                  WeekdaysSlider(
+                    controller: sliderController,
+                    onSelectDay: null,
+                    weekCount: workout.period,
+                  ),
+                  Divider(color: const Color(0xFFC9C9C9)),
+                ],
+              ),
+            ),
+          ),
+          floatingActionButton:
+              workout.canEdit! ? buildAddExerciseButton(width) : null,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+        );
+      },
+    );
+  }
+/*
   @override
   Widget build(BuildContext context) {
     return FredericWorkoutBuilder(
@@ -131,6 +173,32 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 ],
               ));
         });
+  }*/
+
+  Widget buildAddExerciseButton(double width) {
+    return Container(
+      height: 44,
+      width: width,
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: FloatingActionButton(
+        elevation: 0,
+        backgroundColor: kMainColor,
+        onPressed: () => {}, //showActivityList(context),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
+        ),
+        child: Text(
+          'Add Exercise',
+          style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.1,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    );
   }
 
   void handleAddActivity(FredericActivity activity) {

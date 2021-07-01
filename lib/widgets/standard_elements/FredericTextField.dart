@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 
+import '../../main.dart';
+
 class FredericTextField extends StatefulWidget {
   FredericTextField(
     this.placeholder, {
@@ -8,12 +10,16 @@ class FredericTextField extends StatefulWidget {
     this.onSubmit,
     this.keyboardType = TextInputType.text,
     this.icon = Icons.person,
+    this.size = 16,
+    this.suffixIcon,
     this.isPasswordField = false,
   });
 
   final String placeholder;
   final TextInputType keyboardType;
   final IconData icon;
+  final IconData? suffixIcon;
+  final double size;
   final bool isPasswordField;
   final TextEditingController? controller;
 
@@ -47,9 +53,16 @@ class _FredericTextFieldState extends State<FredericTextField> {
           hintStyle: TextStyle(color: const Color(0xFFA5A5A5)),
           prefixIcon: Icon(
             widget.icon,
-            size: 16,
-            color: Color(0xFF3E4FD8),
+            size: widget.size,
+            color: const Color(0xFF3E4FD8),
           ),
+          suffixIcon: widget.suffixIcon == null
+              ? null
+              : Icon(
+                  widget.suffixIcon,
+                  size: widget.size,
+                  color: kMainColor,
+                ),
           suffix: widget.isPasswordField
               ? Padding(
                   padding: const EdgeInsets.only(right: 8, left: 2),

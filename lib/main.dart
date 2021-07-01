@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/screens/activity_list_test.dart';
+import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
