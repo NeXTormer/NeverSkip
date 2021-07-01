@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/widgets/standard_elements/circular_plus_icon.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../../backend/frederic_activity.dart';
+import '../../backend/activities/frederic_activity.dart';
 import '../../main.dart';
 import '../../screens/add_progress_screen.dart';
 import '../standard_elements/frederic_card.dart';
@@ -48,7 +48,7 @@ class ActivityListCard extends StatelessWidget {
                         FredericVerticalDivider(length: 16),
                         SizedBox(width: 6),
                         Text(
-                          '${activity.bestReps}',
+                          '${1}', // activity.bestreps
                           style: TextStyle(
                               color: kGreyColor, // TODO Change to darker grey
                               fontWeight: FontWeight.w500,

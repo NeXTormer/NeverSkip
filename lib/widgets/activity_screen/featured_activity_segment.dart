@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/widgets/activity_screen/frederic_recommended_activity.dart';
 
 import '../../backend/backend.dart';
@@ -23,29 +25,25 @@ class FeaturedActivitySegment extends StatelessWidget {
               onPressed: () {},
             ),
           ),
-          FutureBuilder<void>(
-            future: FredericBackend.instance()!.activityManager!.hasData(),
+          BlocBuilder<FredericActivityManager, FredericActivityListData>(
             builder: (context, snapshot) {
-              bool finished =
-                  (snapshot.connectionState == ConnectionState.done);
-              int length = featuredActivities.length;
+              List<FredericActivity> list = List.of(FredericBackend
+                  .instance.activityManager.activities
+                  .where((element) => featuredActivities.contains(element)));
               return Container(
                 height: 60,
                 child: ListView.builder(
                   shrinkWrap: false,
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: list.length,
                   itemBuilder: (context, index) {
                     // TODO Padding on scrolling
                     return Padding(
                       padding: EdgeInsets.only(
                         left: index == 0 ? 16 : 12,
-                        right: index == (length - 1) ? 16 : 0,
+                        right: index == (list.length - 1) ? 16 : 0,
                       ),
-                      child: FredericRecommendedActivity(
-                        finished ? featuredActivities[index % 2] : '0',
-                        loading: !finished,
-                      ),
+                      child: SmallActivityCard(list[index]),
                     );
                   },
                 ),
