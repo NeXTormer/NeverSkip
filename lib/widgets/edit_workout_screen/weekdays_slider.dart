@@ -1,5 +1,7 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WeekdaysSlider extends StatefulWidget {
   WeekdaysSlider(
@@ -17,7 +19,7 @@ class WeekdaysSlider extends StatefulWidget {
 
 class _WeekdaysSliderState extends State<WeekdaysSlider> {
   PageController? pageController;
-  int _currentDay = 1;
+  int _currentDay = DateTime.now().day;
 
   int get currentDay => _currentDay;
 
@@ -37,20 +39,21 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 2,
-      child: Container(
-        height: 150,
-        color: Colors.white,
-        child: PageView(
-          controller: pageController,
-          children: List.generate(
-              widget.weekCount,
-              (index) => WeekdaysSliderPage(
-                  weekIndex: index,
-                  onSelectDay: handleChangeDay,
-                  currentDay: currentDay)),
-        ),
+    return Center(
+      child: ExpandablePageView(
+        animateFirstPage: true,
+        itemCount: widget.weekCount,
+        itemBuilder: (context, index) {
+          return Padding(
+            // TODO Somehow the widget is not centered,
+            // so the paddings are not symmetrical
+            padding: EdgeInsets.only(left: 15, right: 20),
+            child: WeekdaysSliderPage(
+                weekIndex: index,
+                onSelectDay: handleChangeDay,
+                currentDay: currentDay),
+          );
+        },
       ),
     );
   }
@@ -88,18 +91,8 @@ class WeekdaysSliderPage extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              'Week ${weekIndex + 1}',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ...List.generate(
                 7,
@@ -129,69 +122,66 @@ class WeekdaySliderDayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return currentDay == number
-        ? Stack(
-            overflow: Overflow.visible,
-            children: [
-              Positioned(
-                left: 1,
-                right: 1,
-                bottom: -5.0,
-                child: Container(
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: kMainColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8.0),
-                    ),
-                  ),
-                ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    'Day',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    //'${numToWeekday(number)}',
-                    '$number',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          )
-        : Container(
+        ? Container(
+            width: width / 10,
+            padding: EdgeInsets.symmetric(vertical: 3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color: kMainColor.withOpacity(0.1),
+            ),
             child: Column(
               children: [
+                Text('$number',
+                    style: GoogleFonts.montserrat(
+                      color: kMainColor,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.1,
+                      fontSize: 17,
+                    )),
                 Text(
-                  'Day',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black54,
+                  '${numToWeekday(number)}',
+                  style: GoogleFonts.montserrat(
+                    color: kMainColor.withOpacity(0.7),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.6,
+                    fontSize: 13,
                   ),
-                ),
+                )
+              ],
+            ),
+          )
+        : Container(
+            width: width / 10,
+            padding: EdgeInsets.symmetric(vertical: 3),
+            child: Column(
+              children: [
+                Text('$number',
+                    style: GoogleFonts.montserrat(
+                      color: kTextColor,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.1,
+                      fontSize: 17,
+                    )),
                 Text(
-                  //'${numToWeekday(number)}',
-                  '$number',
-                  style: TextStyle(
-                    fontSize: 18.0,
+                  '${numToWeekday(number)}',
+                  style: GoogleFonts.montserrat(
+                    color: kTextColor.withOpacity(0.8),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.6,
+                    fontSize: 13,
                   ),
-                ),
+                )
               ],
             ),
           );
   }
 
   String numToWeekday(num number) {
-    switch (number) {
+    switch (number % 7) {
+      case 0:
+        return 'Sun';
       case 1:
         return 'Mon';
       case 2:
@@ -204,8 +194,6 @@ class WeekdaySliderDayButton extends StatelessWidget {
         return 'Fri';
       case 6:
         return 'Sat';
-      case 7:
-        return 'Sun';
       default:
         return number.toString();
     }

@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+///
+/// Part of the EditWorkoutScreen. Responsible for displaying
+/// the top bar of information.
+///
 class EditWorkoutHeader extends StatelessWidget {
   const EditWorkoutHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Column(
         children: [
           Row(
