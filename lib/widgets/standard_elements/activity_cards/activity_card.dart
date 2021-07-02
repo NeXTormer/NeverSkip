@@ -16,6 +16,7 @@ class ActivityCard extends StatelessWidget {
   ActivityCard(this.activity,
       {this.type = ActivityCardType.Normal,
       this.onClick,
+      this.addButton = false,
       this.mainColor = kMainColor,
       this.accentColor = kAccentColor});
 
@@ -25,34 +26,28 @@ class ActivityCard extends StatelessWidget {
   final Color mainColor;
   final Color accentColor;
 
+  final bool addButton;
+
   final Function? onClick;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.loose,
-      children: [
-        if (type == ActivityCardType.Calendar)
-          CalendarActivityCardContent(activity),
-        if (type == ActivityCardType.Small) SmallActivityCardContent(activity),
-        if (type == ActivityCardType.Normal)
-          NormalActivityCardContent(activity),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            splashColor: Colors.grey.withAlpha(32),
-            highlightColor: Colors.grey.withAlpha(15),
-            onTap: () => handleClick(context),
-            child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent),
-                padding: EdgeInsets.all(12)),
-          ),
-        )
-      ],
-    );
+    if (type == ActivityCardType.Calendar)
+      return CalendarActivityCardContent(activity, () => handleClick(context));
+    if (type == ActivityCardType.Small)
+      return SmallActivityCardContent(activity, () => handleClick(context));
+    if (type == ActivityCardType.Normal)
+      return NormalActivityCardContent(activity, () => handleClick(context),
+          addButton: addButton);
+    if (type == ActivityCardType.WorkoutEditor)
+      return CalendarActivityCardContent(activity, () => handleClick(context),
+          deleteButton: true);
+
+    return Container(
+        color: Colors.redAccent,
+        height: 40,
+        width: 200,
+        child: Center(child: Text("error")));
   }
 
   void handleClick(BuildContext context) {

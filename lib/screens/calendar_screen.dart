@@ -82,22 +82,27 @@ class CalendarScreen extends StatelessWidget {
                         padding: EdgeInsets.all(16),
                         child: Column(
                           children: [
-                            ActivityCard(data.activities.values.first),
+                            ActivityCard(data.activities.values.last),
                             SizedBox(height: 16),
-                            ActivityCard(data.activities.values.first,
+                            ActivityCard(data.activities.values.last,
+                                addButton: true, onClick: () => print('add')),
+                            SizedBox(height: 16),
+                            ActivityCard(data.activities.values.last,
                                 type: ActivityCardType.Calendar),
                             SizedBox(height: 16),
-                            ActivityCard(data.activities.values.first,
+                            ActivityCard(data.activities.values.last,
                                 type: ActivityCardType.Small),
                             SizedBox(height: 16),
-                            ActivityCard(data.activities.values.first,
-                                type: ActivityCardType.WorkoutEditor),
+                            ActivityCard(
+                              data.activities.values.last,
+                              type: ActivityCardType.WorkoutEditor,
+                              onClick: () => print('delete'),
+                            ),
                           ],
                         ),
                       );
                     },
                   )),
-                  // SliverList(delegate: SliverChildBuilderDelegate(
                   //   (context, index) {
                   //     return ActivityCard(FredericBackend
                   //         .instance.activityManager['ATo1D6xT5G5oi9W6s1q9']!);

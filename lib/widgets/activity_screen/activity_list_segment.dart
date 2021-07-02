@@ -21,9 +21,11 @@ class ActivityListSegment extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return ActivityCard(list[index],
-                  onClick:
-                      () {}); // TODO implement onClick function for adding to workout
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: ActivityCard(list[index], onClick: () {}),
+              ); // TODO implement onClick function for adding to workout
             },
             childCount: list.length,
           ),

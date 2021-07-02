@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
-import 'package:frederic/widgets/standard_elements/activity_cards/small_activity_card_content.dart';
+import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 
 import '../../backend/backend.dart';
 import '../standard_elements/frederic_heading.dart';
@@ -44,7 +44,8 @@ class FeaturedActivitySegment extends StatelessWidget {
                         left: index == 0 ? 16 : 12,
                         right: index == (list.length - 1) ? 16 : 0,
                       ),
-                      child: SmallActivityCardContent(list[index]),
+                      child: ActivityCard(list[index],
+                          type: ActivityCardType.Small),
                     );
                   },
                 ),

@@ -11,7 +11,7 @@ class ActivityHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: Consumer<ActivityFilterController>(
           builder: (context, filter, child) {
             return ActivityHeaderContent(filterController: filter);

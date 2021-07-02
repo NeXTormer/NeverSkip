@@ -12,7 +12,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class AddProgressScreen extends StatelessWidget {
   AddProgressScreen(this.activity);
 
-  final FredericActivity? activity;
+  final FredericActivity activity;
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +81,14 @@ class AddProgressScreen extends StatelessWidget {
                       border: Border.all(color: kCardBorderColor)),
                   child: Row(
                     children: [
-                      PictureIcon(activity!.image),
+                      PictureIcon(activity.image),
                       SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(activity!.name,
+                            Text(activity.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(
@@ -97,10 +97,10 @@ class AddProgressScreen extends StatelessWidget {
                                     fontSize: 17)),
                             SizedBox(height: 4),
                             Text(
-                                activity!.description +
-                                    activity!.description +
-                                    activity!.description +
-                                    activity!.description,
+                                activity.description +
+                                    activity.description +
+                                    activity.description +
+                                    activity.description,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(

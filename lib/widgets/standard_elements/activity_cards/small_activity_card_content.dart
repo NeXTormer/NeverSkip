@@ -6,13 +6,15 @@ import '../frederic_card.dart';
 import '../picture_icon.dart';
 
 class SmallActivityCardContent extends StatelessWidget {
-  SmallActivityCardContent(this.activity);
+  SmallActivityCardContent(this.activity, this.onClick);
 
   final FredericActivity activity;
+  final void Function()? onClick;
 
   @override
   Widget build(BuildContext context) {
     return FredericCard(
+      onTap: onClick,
       width: MediaQuery.of(context).size.width / 2.3,
       height: 70,
       padding: const EdgeInsets.all(10),

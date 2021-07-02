@@ -8,17 +8,26 @@ import '../frederic_vertical_divider.dart';
 import '../picture_icon.dart';
 
 class NormalActivityCardContent extends StatelessWidget {
-  NormalActivityCardContent(this.activity);
+  NormalActivityCardContent(this.activity, this.onClick,
+      {this.addButton = false});
 
   final FredericActivity activity;
+  final void Function()? onClick;
+  final bool addButton;
 
   @override
   Widget build(BuildContext context) {
     return FredericCard(
+      onTap: addButton ? null : onClick,
+      height: 60,
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          Container(width: 40, height: 40, child: PictureIcon(activity.image)),
+          Container(
+              width: 40,
+              height: 40,
+              child: AspectRatio(
+                  aspectRatio: 1, child: PictureIcon(activity.image))),
           SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -62,10 +71,14 @@ class NormalActivityCardContent extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 40,
-            child: CircularPlusIcon(onPressed: () {}),
-          ),
+          if (addButton && onClick != null)
+            GestureDetector(
+              onTap: onClick,
+              child: Container(
+                width: 40,
+                child: CircularPlusIcon(),
+              ),
+            ),
         ],
       ),
     );
