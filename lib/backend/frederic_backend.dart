@@ -16,6 +16,7 @@ class FredericBackend {
     _userManager =
         FredericUserManager(onLoadData: loadData, logTransition: false);
     _activityManager = FredericActivityManager();
+    _setManager = FredericSetManager();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -23,7 +24,7 @@ class FredericBackend {
   late final FredericUserManager _userManager;
   FredericUserManager get userManager => _userManager;
 
-  final FredericSetManager _setManager = FredericSetManager();
+  late final FredericSetManager _setManager;
   FredericSetManager get setManager => _setManager;
 
   late FredericActivityManager _activityManager;

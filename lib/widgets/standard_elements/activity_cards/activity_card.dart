@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/calendar_activity_card_content.dart';
@@ -57,6 +59,10 @@ class ActivityCard extends StatelessWidget {
         //expand: true,
         enableDrag: true,
         context: context,
-        builder: (context) => AddProgressScreen(activity));
+        builder: (newContext) {
+          return BlocProvider.value(
+              value: BlocProvider.of<FredericSetManager>(context),
+              child: AddProgressScreen(activity));
+        });
   }
 }

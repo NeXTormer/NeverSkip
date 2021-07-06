@@ -34,7 +34,7 @@ class SetCard extends StatelessWidget {
             ),
             SizedBox(width: 16),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
+              //crossAxisAlignment: CrossAxisAlignment.baseline,
               children: [
                 Text(
                   '${set.reps}',

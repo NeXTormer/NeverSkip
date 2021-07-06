@@ -10,7 +10,7 @@ import 'package:frederic/main.dart';
 ///
 class NumberSlider extends StatefulWidget {
   NumberSlider(
-      {this.controller,
+      {required this.controller,
       this.numberOfItems = 400,
       this.startingIndex = 10,
       this.itemWidth = 0.2});
@@ -18,7 +18,7 @@ class NumberSlider extends StatefulWidget {
   final int startingIndex;
   final int numberOfItems;
   final double itemWidth;
-  final NumberSliderController? controller;
+  final NumberSliderController controller;
 
   @override
   _NumberSliderState createState() => _NumberSliderState();
@@ -41,7 +41,8 @@ class _NumberSliderState extends State<NumberSlider> {
   Widget build(BuildContext context) {
     int start = widget.startingIndex - 2;
     if (start < 0) start = 0;
-    Future.delayed(Duration.zero).then((value) => controller!.jumpToPage(start));
+    Future.delayed(Duration.zero)
+        .then((value) => controller!.jumpToPage(start));
     return Container(
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black12),
@@ -74,7 +75,7 @@ class _NumberSliderState extends State<NumberSlider> {
               physics: BouncingScrollPhysics(),
               pageSnapping: false,
               onPageChanged: (index) {
-                widget.controller!.value = index + 1;
+                widget.controller.value = index + 1;
                 HapticFeedback.selectionClick();
               },
               controller: controller,

@@ -21,6 +21,23 @@ class FredericSetList {
   int get bestProgress => 0;
   String get progressType => 'kg';
 
+  List<FredericSet> getLatestSets([int count = 6]) {
+    List<FredericSet> sets = <FredericSet>[];
+    _setDocuments.sort();
+    int documentIndex = 0;
+    int setIndex = 0;
+    for (int i = 0; i < count; i++) {
+      if (documentIndex >= _setDocuments.length) break;
+      if (setIndex >= _setDocuments[documentIndex].sets.length) {
+        setIndex = 0;
+        documentIndex++;
+      }
+      _setDocuments[documentIndex].sets.sort();
+      sets.add(_setDocuments[documentIndex].sets[setIndex]);
+    }
+    return sets;
+  }
+
   void deleteSet(FredericSet set) {
     if (_setDocuments
         .where((element) => element.month == set.month)

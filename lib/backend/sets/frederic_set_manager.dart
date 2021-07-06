@@ -26,18 +26,20 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
-    yield FredericSetListData(event.changedActivities);
+    yield FredericSetListData(event.changedActivities, event.sets);
   }
 }
 
 class FredericSetListData {
-  FredericSetListData(this.changedActivities);
+  FredericSetListData(this.changedActivities, this.sets);
   final List<String> changedActivities;
+  final HashMap<String, FredericSetList> sets;
 
-  bool isUpdated(String activityID) => changedActivities.contains(activityID);
+  bool hasChanged(String activityID) => changedActivities.contains(activityID);
 }
 
 class FredericSetEvent {
-  FredericSetEvent(this.changedActivities);
+  FredericSetEvent(this.changedActivities, this.sets);
   final List<String> changedActivities;
+  final HashMap<String, FredericSetList> sets;
 }

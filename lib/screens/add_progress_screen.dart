@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/standard_elements/FredericButton.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -13,6 +17,11 @@ class AddProgressScreen extends StatelessWidget {
   AddProgressScreen(this.activity);
 
   final FredericActivity activity;
+
+  final NumberSliderController repsSliderController = NumberSliderController();
+  final NumberSliderController setsSliderController = NumberSliderController();
+  final NumberSliderController weightSliderController =
+      NumberSliderController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +61,10 @@ class AddProgressScreen extends StatelessWidget {
                       },
                       child: Text(
                         'Save',
-                        style: GoogleFonts.montserrat(
-                            color: kMainColor, fontSize: 16),
+                        style: const TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: kMainColor,
+                            fontSize: 16),
                       ),
                     ),
                   ),
@@ -132,15 +143,34 @@ class AddProgressScreen extends StatelessWidget {
                       children: [
                         buildSubHeading('Reps', Icons.loop),
                         SizedBox(height: 12),
-                        NumberSlider(itemWidth: 0.14),
+                        NumberSlider(
+                            controller: repsSliderController,
+                            itemWidth: 0.14,
+                            numberOfItems: 100,
+                            startingIndex: activity.recommendedReps + 1),
                         SizedBox(height: 12),
                         buildSubHeading('Sets', Icons.loop),
                         SizedBox(height: 12),
-                        NumberSlider(itemWidth: 0.14),
+                        NumberSlider(
+                          controller: setsSliderController,
+                          itemWidth: 0.14,
+                          numberOfItems: 10,
+                          startingIndex: 1,
+                        ),
                         SizedBox(height: 12),
                         buildSubHeading('Weight', Icons.loop),
                         SizedBox(height: 12),
-                        NumberSlider(itemWidth: 0.14)
+                        NumberSlider(
+                            controller: weightSliderController,
+                            itemWidth: 0.14,
+                            startingIndex: 56), //TODO: set to average weight
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 0, right: 0, top: 16),
+                          child: FredericButton('Save', onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                        )
                       ],
                     ),
                   ),
@@ -151,13 +181,21 @@ class AddProgressScreen extends StatelessWidget {
                       left: 16, right: 16, top: 16, bottom: 16),
                   child: FredericHeading('Previous Performance'),
                 )),
-                SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        (context, index) =>
-                            Container(height: 20, color: Colors.black26)
-                        //SetCard(activity!.sets![index], activity)
-                        ,
-                        childCount: /*activity!.sets!.length*/ 2))
+                BlocBuilder<FredericSetManager, FredericSetListData>(
+                    buildWhen: (current, next) =>
+                        next.hasChanged(activity.activityID),
+                    builder: (context, setListData) {
+                      List<FredericSet> sets = FredericBackend
+                          .instance.setManager[activity.activityID]
+                          .getLatestSets();
+                      return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              (context, index) =>
+                                  //Container(height: 20, color: Colors.black26)
+                                  SetCard(sets[index], activity),
+                              childCount: sets.length));
+                    }),
+                SliverToBoxAdapter(child: SizedBox(height: 12))
               ],
             ),
           ),
@@ -173,7 +211,8 @@ class AddProgressScreen extends StatelessWidget {
         SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
+              fontFamily: 'Montserrat',
               color: const Color(0x803A3A3A),
               fontSize: 12,
               fontWeight: FontWeight.w500),

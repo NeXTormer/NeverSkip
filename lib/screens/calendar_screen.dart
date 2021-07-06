@@ -75,34 +75,36 @@ class CalendarScreen extends StatelessWidget {
                     ),
                   ),
                   SliverDivider(),
-                  SliverToBoxAdapter(child: BlocBuilder<FredericActivityManager,
-                      FredericActivityListData>(
-                    builder: (context, data) {
-                      return Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            ActivityCard(data.activities.values.last),
-                            SizedBox(height: 16),
-                            ActivityCard(data.activities.values.last,
-                                addButton: true, onClick: () => print('add')),
-                            SizedBox(height: 16),
-                            ActivityCard(data.activities.values.last,
-                                type: ActivityCardType.Calendar),
-                            SizedBox(height: 16),
-                            ActivityCard(data.activities.values.last,
-                                type: ActivityCardType.Small),
-                            SizedBox(height: 16),
-                            ActivityCard(
-                              data.activities.values.last,
-                              type: ActivityCardType.WorkoutEditor,
-                              onClick: () => print('delete'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  )),
+                  if (false)
+                    SliverToBoxAdapter(child: BlocBuilder<
+                        FredericActivityManager, FredericActivityListData>(
+                      builder: (context, data) {
+                        return Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              ActivityCard(data.activities.values.last),
+                              SizedBox(height: 16),
+                              ActivityCard(data.activities.values.last,
+                                  addButton: true, onClick: () => print('add')),
+                              SizedBox(height: 16),
+                              ActivityCard(data.activities.values.last,
+                                  type: ActivityCardType.Calendar),
+                              SizedBox(height: 16),
+                              ActivityCard(data.activities.values.last,
+                                  type: ActivityCardType.Small),
+                              SizedBox(height: 16),
+                              ActivityCard(
+                                data.activities.values.last,
+                                type: ActivityCardType.WorkoutEditor,
+                                onClick: () => print('delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )),
+
                   //   (context, index) {
                   //     return ActivityCard(FredericBackend
                   //         .instance.activityManager['ATo1D6xT5G5oi9W6s1q9']!);

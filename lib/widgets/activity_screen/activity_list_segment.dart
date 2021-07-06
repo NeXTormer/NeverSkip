@@ -24,7 +24,7 @@ class ActivityListSegment extends StatelessWidget {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ActivityCard(list[index], onClick: () {}),
+                child: ActivityCard(list[index]),
               ); // TODO implement onClick function for adding to workout
             },
             childCount: list.length,
