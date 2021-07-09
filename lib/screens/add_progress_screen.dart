@@ -185,9 +185,8 @@ class AddProgressScreen extends StatelessWidget {
                     buildWhen: (current, next) =>
                         next.hasChanged(activity.activityID),
                     builder: (context, setListData) {
-                      List<FredericSet> sets = FredericBackend
-                          .instance.setManager[activity.activityID]
-                          .getLatestSets();
+                      List<FredericSet> sets =
+                          setListData[activity.activityID].getLatestSets();
                       return SliverList(
                           delegate: SliverChildBuilderDelegate(
                               (context, index) =>
