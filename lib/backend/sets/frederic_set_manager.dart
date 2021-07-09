@@ -35,6 +35,15 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   }
 
   @override
+  void onTransition(
+      Transition<FredericSetEvent, FredericSetListData> transition) {
+    // print('============');
+    // print(transition);
+    // print('============');
+    super.onTransition(transition);
+  }
+
+  @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
     yield FredericSetListData(event.changedActivities, _sets);
   }
@@ -54,7 +63,12 @@ class FredericSetListData {
     return sets[value]!;
   }
 
+  bool operator ==(other) => false;
+
   bool hasChanged(String activityID) => changedActivities.contains(activityID);
+
+  @override
+  int get hashCode => changedActivities.hashCode + sets.hashCode;
 }
 
 class FredericSetEvent {

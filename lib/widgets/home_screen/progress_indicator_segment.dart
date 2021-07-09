@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
+import 'package:frederic/backend/authentication/frederic_user_manager.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 
 class ProgressIndicatorSegment extends StatelessWidget {
-  ProgressIndicatorSegment(this.progressMonitors, {this.sidePadding = 16});
+  ProgressIndicatorSegment({this.sidePadding = 16});
 
   final double sidePadding;
-  final List<String> progressMonitors;
 
   @override
   Widget build(BuildContext context) {
@@ -16,35 +21,43 @@ class ProgressIndicatorSegment extends StatelessWidget {
         Padding(
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 6, bottom: 8),
-          child: FredericHeading('Best stats', onPressed: () {}),
+          child: FredericHeading('Personal records', onPressed: () {}),
         ),
-        FutureBuilder<void>(
-            future: Future.delayed(Duration.zero),
-            builder: (context, snapshot) {
-              bool finished =
-                  (snapshot.connectionState == ConnectionState.done);
-              int count = progressMonitors.length;
-
-              return Container(
-                height: 60,
-                child: ListView.builder(
-                    shrinkWrap: false,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: finished ? count : 2,
-                    physics: BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            left: index == 0 ? 16 : 12,
-                            right: index == (count - 1) ? 16 : 0),
-                        child: ProgressIndicatorCard(
-                          finished ? progressMonitors[index] : '0',
-                          loading: !finished,
-                        ),
-                      );
-                    }),
-              );
-            })
+        BlocBuilder<FredericActivityManager, FredericActivityListData>(
+            builder: (context, activityListData) {
+          return BlocBuilder<FredericUserManager, FredericUser>(
+              builder: (context, user) {
+            return BlocBuilder<FredericSetManager, FredericSetListData>(
+                buildWhen: (current, next) => next.changedActivities
+                    .any((element) => user.progressMonitors.contains(element)),
+                builder: (context, setData) {
+                  List<FredericSetList> activities = <FredericSetList>[];
+                  for (String activityID in user.progressMonitors) {
+                    activities.add(setData[activityID]);
+                  }
+                  return Container(
+                    height: 60,
+                    child: ListView.builder(
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: activities.length,
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                left: index == 0 ? 16 : 12,
+                                right:
+                                    index == (activities.length - 1) ? 16 : 0),
+                            child: ProgressIndicatorCard(
+                                activities[index],
+                                activityListData
+                                    .activities[activities[index].activityID]),
+                          );
+                        }),
+                  );
+                });
+          });
+        })
       ],
     ));
   }

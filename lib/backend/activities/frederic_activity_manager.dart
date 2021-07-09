@@ -77,13 +77,13 @@ class FredericActivityManager
   @override
   void onTransition(
       Transition<FredericActivityEvent, FredericActivityListData> transition) {
-    print('ActivityManager========================================');
-    print(transition);
-    print('Activities:');
-    print(activities.length);
-    print('Changes:');
-    print(state.changed.toString());
-    print('ActivityManager========================================');
+    // print('ActivityManager========================================');
+    // print(transition);
+    // print('Activities:');
+    // print(activities.length);
+    // print('Changes:');
+    // print(state.changed.toString());
+    // print('ActivityManager========================================');
     super.onTransition(transition);
   }
 }
