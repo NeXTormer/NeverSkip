@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
@@ -25,16 +27,20 @@ class FredericSetList {
     List<FredericSet> sets = <FredericSet>[];
     _setDocuments.sort();
     int documentIndex = 0;
-    int setIndex = 0;
+    int setIndex = -1;
     for (int i = 0; i < count; i++) {
+      setIndex++;
       if (documentIndex >= _setDocuments.length) break;
       if (setIndex >= _setDocuments[documentIndex].sets.length) {
-        setIndex = 0;
         documentIndex++;
+        setIndex = -1;
+        continue;
       }
       _setDocuments[documentIndex].sets.sort();
       sets.add(_setDocuments[documentIndex].sets[setIndex]);
     }
+    log('getlatestsets for $activityID with doccount: ${_setDocuments.length}, returned: ${sets.length}');
+
     return sets;
   }
 
@@ -50,7 +56,6 @@ class FredericSetList {
     if (_setDocuments.isEmpty ||
         _setDocuments.where((element) => element.month == set.month).isEmpty) {
       _createDocumentWith(set);
-      _setManager.add(FredericSetEvent(<String>[activityID]));
     } else {
       if (_setDocuments
           .where((element) => element.month == set.month)
@@ -59,22 +64,26 @@ class FredericSetList {
     }
   }
 
-  void _createDocumentWith(FredericSet set) {
-    _setManager.setsCollection.add({
+  void _createDocumentWith(FredericSet set) async {
+    var doc = await _setManager.setsCollection.add({
       'activityid': activityID,
       'month': set.month,
       'sets': <Map<String, dynamic>>[set.asMap()]
     });
+    _setDocuments.add(
+        FredericSetDocument(doc.id, set.month, activityID, <FredericSet>[set]));
+    _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 
   void loadData(int monthsToLoad) async {
     int lastMonth = _setManager.currentMonth - (monthsToLoad - 1);
-    _setDocuments.clear();
     QuerySnapshot<Map<String, dynamic>> snapshot = await _setManager
         .setsCollection
         .where('activityid', isEqualTo: activityID)
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();
+
+    _setDocuments.clear();
     for (DocumentSnapshot<Map<String, dynamic>> document in snapshot.docs) {
       int? month = document.data()?['month'];
       if (month == null) continue;
@@ -91,5 +100,6 @@ class FredericSetList {
           .add(FredericSetDocument(document.id, month, activityID, sets));
     }
     _setManager.add(FredericSetEvent(<String>[activityID]));
+    log('loaded sets for $activityID - count: ${_setDocuments.length}');
   }
 }

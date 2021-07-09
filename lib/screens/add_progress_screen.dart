@@ -5,7 +5,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/widgets/standard_elements/FredericButton.dart';
+import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
@@ -78,6 +78,7 @@ class AddProgressScreen extends StatelessWidget {
           ),
           Expanded(
             child: CustomScrollView(
+              physics: ClampingScrollPhysics(),
               controller: ModalScrollController.of(context),
               slivers: [
                 SliverPadding(padding: EdgeInsets.only(bottom: 12)),
@@ -141,7 +142,7 @@ class AddProgressScreen extends StatelessWidget {
                         border: Border.all(color: kCardBorderColor)),
                     child: Column(
                       children: [
-                        buildSubHeading('Reps', Icons.loop),
+                        buildSubHeading('Reps', Icons.repeat_outlined),
                         SizedBox(height: 12),
                         NumberSlider(
                             controller: repsSliderController,
@@ -149,7 +150,7 @@ class AddProgressScreen extends StatelessWidget {
                             numberOfItems: 100,
                             startingIndex: activity.recommendedReps + 1),
                         SizedBox(height: 12),
-                        buildSubHeading('Sets', Icons.loop),
+                        buildSubHeading('Sets', Icons.account_tree_outlined),
                         SizedBox(height: 12),
                         NumberSlider(
                           controller: setsSliderController,
@@ -158,7 +159,7 @@ class AddProgressScreen extends StatelessWidget {
                           startingIndex: 1,
                         ),
                         SizedBox(height: 12),
-                        buildSubHeading('Weight', Icons.loop),
+                        buildSubHeading('Weight', ExtraIcons.dumbbell),
                         SizedBox(height: 12),
                         NumberSlider(
                             controller: weightSliderController,
@@ -168,6 +169,15 @@ class AddProgressScreen extends StatelessWidget {
                           padding:
                               const EdgeInsets.only(left: 0, right: 0, top: 16),
                           child: FredericButton('Save', onPressed: () {
+                            int sets = setsSliderController.value.toInt();
+                            int reps = repsSliderController.value.toInt();
+                            int weight = weightSliderController.value.toInt();
+                            for (int i = 0; i < sets; i++) {
+                              FredericBackend.instance.setManager
+                                  .state[activity.activityID]
+                                  .addSet(FredericSet(
+                                      reps, weight, DateTime.now()));
+                            }
                             Navigator.of(context).pop();
                           }),
                         )

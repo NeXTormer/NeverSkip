@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../misc/ExtraIcons.dart';
-import '../standard_elements/FredericTextField.dart';
+import '../standard_elements/frederic_text_field.dart';
 import 'activity_filter_controller.dart';
 
 class ActivityHeader extends StatelessWidget {

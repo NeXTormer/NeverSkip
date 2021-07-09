@@ -105,5 +105,5 @@ class _NumberSliderElement extends StatelessWidget {
 }
 
 class NumberSliderController {
-  num? value;
+  num value = 0;
 }

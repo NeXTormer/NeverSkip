@@ -56,7 +56,7 @@ class FredericSetDocument extends Comparable {
   @override
   int compareTo(other) {
     if (other is FredericSetDocument)
-      return month.compareTo(other.month);
+      return month - other.month;
     else
       return 0;
   }
