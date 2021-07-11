@@ -8,9 +8,12 @@ import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.
 import 'activity_filter_controller.dart';
 
 class ActivityListSegment extends StatelessWidget {
-  ActivityListSegment({required this.filterController});
+  ActivityListSegment(
+      {required this.filterController, this.onTap, this.isSelector = false});
 
   final ActivityFilterController filterController;
+  final void Function(FredericActivity)? onTap;
+  final bool isSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,11 @@ class ActivityListSegment extends StatelessWidget {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ActivityCard(list[index]),
+                child: ActivityCard(
+                  list[index],
+                  onClick:
+                      onTap == null ? null : () => onTap?.call(list[index]),
+                ),
               ); // TODO implement onClick function for adding to workout
             },
             childCount: list.length,

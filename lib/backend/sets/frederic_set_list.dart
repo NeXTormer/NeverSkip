@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
@@ -41,8 +39,6 @@ class FredericSetList {
       _setDocuments[documentIndex].sets.sort();
       sets.add(_setDocuments[documentIndex].sets[setIndex]);
     }
-    log('getlatestsets for $activityID with doccount: ${_setDocuments.length}, returned: ${sets.length}');
-
     return sets;
   }
 

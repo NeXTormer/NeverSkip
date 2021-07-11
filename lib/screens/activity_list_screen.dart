@@ -12,6 +12,17 @@ import '../widgets/activity_screen/activity_filter_controller.dart';
 import '../widgets/standard_elements/sliver_divider.dart';
 
 class ActivityListScreen extends StatelessWidget {
+  ActivityListScreen(
+      {this.isSelector = false,
+      this.onSelect,
+      this.title = 'All exercises',
+      this.subtitle = 'Find an exercise'});
+
+  final bool isSelector;
+  final void Function(FredericActivity)? onSelect;
+  final String title;
+  final String subtitle;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActivityFilterController>(
@@ -28,16 +39,28 @@ class ActivityListScreen extends StatelessWidget {
                   return CustomScrollView(
                     slivers: [
                       // TODO Pull Request for finished activity screen
-                      ActivityHeader(),
+                      ActivityHeader(title, subtitle),
                       SliverDivider(),
-                      FeaturedActivitySegment('Featured',
-                          user.progressMonitors), // TODO get list of user specific 'featured activities'
-                      FeaturedActivitySegment('Calisthenics',
-                          user.progressMonitors), // TODO get list of user? specific 'calisthenics activites'
+                      FeaturedActivitySegment(
+                        'Featured',
+                        user.progressMonitors,
+                        onTap: onSelect,
+                        isSelector: isSelector,
+                      ), // TODO get list of user specific 'featured activities'
+                      FeaturedActivitySegment(
+                        'Calisthenics',
+                        user.progressMonitors,
+                        onTap: onSelect,
+                        isSelector: isSelector,
+                      ), // TODO get list of user? specific 'calisthenics activites'
                       ActivityFilterSegment(
                           filterController:
                               filter), // TODO Update Muscle Buttons to Radio Buttons
-                      ActivityListSegment(filterController: filter),
+                      ActivityListSegment(
+                        filterController: filter,
+                        onTap: onSelect,
+                        isSelector: isSelector,
+                      ),
                     ],
                   );
                 },

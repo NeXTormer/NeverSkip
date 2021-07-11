@@ -6,6 +6,7 @@ import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/unit_text.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProgressIndicatorCard extends StatelessWidget {
   ProgressIndicatorCard(this.sets, this.activity);
@@ -15,8 +16,7 @@ class ProgressIndicatorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (activity == null)
-      return Container(width: 10, height: 1, color: Colors.red);
+    bool loading = activity == null;
     return FredericCard(
         height: 65,
         width: 160,
@@ -39,29 +39,62 @@ class ProgressIndicatorCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                          'Do you want to delete the personal record display? This cannot be undone!'),
+                          'Do you want to delete the personal record display? This cannot be undone!',
+                          textAlign: TextAlign.center),
                     ),
                   ));
         },
         padding: EdgeInsets.all(10),
-        child: Row(
-          children: [
-            AspectRatio(aspectRatio: 1, child: PictureIcon(activity!.image)),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: loading
+            ? Shimmer.fromColors(
+                enabled: loading,
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Row(
+                  children: [
+                    AspectRatio(aspectRatio: 1, child: PictureIcon(null)),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            color: Colors.black54,
+                            height: 10,
+                            width: 80,
+                            margin: EdgeInsets.only(left: 2),
+                          ),
+                          Container(
+                              color: Colors.black54,
+                              height: 18,
+                              width: 42,
+                              margin: EdgeInsets.only(left: 2)),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : Row(
                 children: [
-                  Text(
-                    activity!.name,
-                    style: FredericTextTheme.cardTitleSmall,
-                  ),
-                  UnitText('${sets.bestProgress}', sets.progressType)
+                  AspectRatio(
+                      aspectRatio: 1, child: PictureIcon(activity!.image)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          activity!.name,
+                          style: FredericTextTheme.cardTitleSmall,
+                        ),
+                        UnitText('${sets.bestProgress}', sets.progressType)
+                      ],
+                    ),
+                  )
                 ],
-              ),
-            )
-          ],
-        ));
+              ));
   }
 }

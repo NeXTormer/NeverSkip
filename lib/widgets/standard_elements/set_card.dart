@@ -28,7 +28,8 @@ class SetCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                          'Do you want to delete this set? This cannot be undone!'),
+                          'Do you want to delete this set? This cannot be undone!',
+                          textAlign: TextAlign.center),
                     ),
                     onConfirm: () {
                       FredericBackend
