@@ -9,6 +9,7 @@ class FredericActionDialog extends StatelessWidget {
       this.actionText = 'Confirm',
       required this.onConfirm,
       this.destructiveAction = false,
+      this.infoOnly = false,
       Key? key})
       : super(key: key);
 
@@ -16,6 +17,7 @@ class FredericActionDialog extends StatelessWidget {
   final String? title;
   final String actionText;
   final bool destructiveAction;
+  final bool infoOnly;
   final void Function() onConfirm;
 
   @override
@@ -45,29 +47,39 @@ class FredericActionDialog extends StatelessWidget {
                       ),
                     ),
                   if (child != null) child!,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                            padding:
-                                EdgeInsets.only(left: 12, bottom: 12, top: 8),
-                            child: FredericButton('Cancel',
-                                onPressed: () => Navigator.of(context).pop(),
-                                inverted: true)),
+                  if (infoOnly)
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: 12, right: 12, bottom: 12, top: 8),
+                      child: FredericButton(
+                        'Okay',
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
-                      Expanded(
-                        child: Container(
-                            padding: EdgeInsets.only(
-                                right: 12, bottom: 12, left: 12, top: 8),
-                            child: FredericButton(
-                              'Delete',
-                              onPressed: onConfirm,
-                              mainColor:
-                                  destructiveAction ? Colors.red : kMainColor,
-                            )),
-                      ),
-                    ],
-                  )
+                    ),
+                  if (!infoOnly)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              padding:
+                                  EdgeInsets.only(left: 12, bottom: 12, top: 8),
+                              child: FredericButton('Cancel',
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  inverted: true)),
+                        ),
+                        Expanded(
+                          child: Container(
+                              padding: EdgeInsets.only(
+                                  right: 12, bottom: 12, left: 12, top: 8),
+                              child: FredericButton(
+                                'Delete',
+                                onPressed: onConfirm,
+                                mainColor:
+                                    destructiveAction ? Colors.red : kMainColor,
+                              )),
+                        ),
+                      ],
+                    )
                 ],
               ),
               //padding: EdgeInsets.all(16),

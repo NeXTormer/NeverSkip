@@ -127,12 +127,10 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   ///
   set progressMonitors(List<String> value) {
     if (super.state.uid == '') return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(super.state.uid)
-          .update({'progressmonitors': value});
-    }
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(super.state.uid)
+        .update({'progressmonitors': value});
   }
 
   ///
@@ -140,12 +138,10 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   ///
   set activeWorkouts(List<String> value) {
     if (super.state.uid == '') return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(super.state.uid)
-          .update({'activeworkouts': value});
-    }
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(super.state.uid)
+        .update({'activeworkouts': value});
   }
 
   ///

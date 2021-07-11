@@ -80,18 +80,22 @@ class ProgressIndicatorCard extends StatelessWidget {
                 children: [
                   AspectRatio(
                       aspectRatio: 1, child: PictureIcon(activity!.image)),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          activity!.name,
-                          style: FredericTextTheme.cardTitleSmall,
-                        ),
-                        UnitText('${sets.bestProgress}', sets.progressType)
-                      ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            activity!.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: FredericTextTheme.cardTitleSmall,
+                          ),
+                          UnitText('${sets.bestProgress}', sets.progressType)
+                        ],
+                      ),
                     ),
                   )
                 ],
