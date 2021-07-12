@@ -49,6 +49,20 @@ class FredericActivityManager
     add(FredericActivityEvent(changed));
   }
 
+  Future<FredericActivity> getActivity(String id) async {
+    if (_activities.containsKey(id)) return _activities[id]!;
+
+    DocumentSnapshot<Object?> snapshot =
+        await _activitiesCollection.doc(id).get();
+
+    if (snapshot.exists) {
+      _activities[id] = FredericActivity(snapshot);
+      return _activities[id]!;
+    }
+
+    return FredericActivity.empty();
+  }
+
   @override
   Stream<FredericActivityListData> mapEventToState(
       FredericActivityEvent event) async* {

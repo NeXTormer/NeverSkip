@@ -6,6 +6,7 @@ import 'package:frederic/widgets/activity_screen/activity_filter_segment.dart';
 import 'package:frederic/widgets/activity_screen/activity_header.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_segment.dart';
 import 'package:frederic/widgets/activity_screen/featured_activity_segment.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/activity_screen/activity_filter_controller.dart';
@@ -37,6 +38,8 @@ class ActivityListScreen extends StatelessWidget {
               return Consumer<ActivityFilterController>(
                 builder: (context, filter, child) {
                   return CustomScrollView(
+                    controller:
+                        isSelector ? ModalScrollController.of(context) : null,
                     slivers: [
                       // TODO Pull Request for finished activity screen
                       ActivityHeader(title, subtitle),

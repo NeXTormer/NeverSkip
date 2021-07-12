@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
+import 'package:frederic/widgets/calendar_screen/calendar_day.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -74,43 +73,9 @@ class CalendarScreen extends StatelessWidget {
                 ),
               ),
               SliverDivider(),
-              if (false)
-                SliverToBoxAdapter(child: BlocBuilder<FredericActivityManager,
-                    FredericActivityListData>(
-                  builder: (context, data) {
-                    return Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          ActivityCard(data.activities.values.last),
-                          SizedBox(height: 16),
-                          ActivityCard(data.activities.values.last,
-                              addButton: true, onClick: () => print('add')),
-                          SizedBox(height: 16),
-                          ActivityCard(data.activities.values.last,
-                              type: ActivityCardType.Calendar),
-                          SizedBox(height: 16),
-                          ActivityCard(data.activities.values.last,
-                              type: ActivityCardType.Small),
-                          SizedBox(height: 16),
-                          ActivityCard(
-                            data.activities.values.last,
-                            type: ActivityCardType.WorkoutEditor,
-                            onClick: () => print('delete'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                )),
-
-              //   (context, index) {
-              //     return ActivityCard(FredericBackend
-              //         .instance.activityManager['ATo1D6xT5G5oi9W6s1q9']!);
-              //     return CalendarDay(index, user,
-              //         FredericBackend.instance.workoutManager!);
-              //   },
-              // ))
+              SliverList(delegate: SliverChildBuilderDelegate((context, index) {
+                return CalendarDay(index, user, workoutListData);
+              }))
             ],
           );
         });

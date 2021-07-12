@@ -43,11 +43,11 @@ class FredericWorkoutManager
     _workouts.clear();
 
     for (int i = 0; i < global.docs.length; i++) {
-      _workouts[global.docs[i].id] = FredericWorkout(global.docs[i]);
+      _workouts[global.docs[i].id] = FredericWorkout(global.docs[i], this);
       changed.add(global.docs[i].id);
     }
     for (int i = 0; i < private.docs.length; i++) {
-      _workouts[private.docs[i].id] = FredericWorkout(private.docs[i]);
+      _workouts[private.docs[i].id] = FredericWorkout(private.docs[i], this);
       changed.add(private.docs[i].id);
     }
 
@@ -57,13 +57,21 @@ class FredericWorkoutManager
   @override
   Stream<FredericWorkoutListData> mapEventToState(
       FredericWorkoutEvent event) async* {
-    yield FredericWorkoutListData(_workouts, event.changed);
+    if (event is FredericWorkoutEvent) {
+      yield FredericWorkoutListData(_workouts, event.changed);
+    } else if (event is FredericWorkoutUpdateEvent) {
+      yield FredericWorkoutListData(_workouts, event.changed);
+    }
   }
 }
 
 class FredericWorkoutEvent {
   FredericWorkoutEvent(this.changed);
   List<String> changed;
+}
+
+class FredericWorkoutUpdateEvent extends FredericWorkoutEvent {
+  FredericWorkoutUpdateEvent(String updated) : super([updated]);
 }
 
 class FredericWorkoutListData {

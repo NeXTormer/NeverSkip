@@ -157,6 +157,22 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
+  void addActiveWorkout(String workoutID) {
+    List<String> activeWorkoutsList = state.activeWorkouts;
+    if (!activeWorkoutsList.contains(workoutID)) {
+      activeWorkoutsList.add(workoutID);
+      activeWorkouts = activeWorkoutsList;
+    }
+  }
+
+  void removeActiveWorkout(String workoutID) {
+    List<String> activeWorkoutsList = state.activeWorkouts;
+    if (activeWorkoutsList.contains(workoutID)) {
+      activeWorkoutsList.remove(workoutID);
+      activeWorkouts = activeWorkoutsList;
+    }
+  }
+
   Future<void> _createUserEntryInDB(String uid, String name) async {
     return FirebaseFirestore.instance.collection('users').doc(uid).set({
       'name': name,

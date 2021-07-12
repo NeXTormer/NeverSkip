@@ -8,24 +8,22 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarDay extends StatelessWidget {
-  CalendarDay(this.index, this.user, this.workoutManager);
+  CalendarDay(this.index, this.user, this.workoutListData);
 
   final FredericUser user;
-  final FredericWorkoutManager workoutManager;
+  final FredericWorkoutListData workoutListData;
 
   final int index;
 
   @override
   Widget build(BuildContext context) {
     DateTime day = DateTime.now().add(Duration(days: index));
-    List<FredericActivity?> activities = <FredericActivity?>[];
-    // for (String workout in user.activeWorkouts) {
-    //   if (!workoutManager[workout]!.hasActivitiesLoaded)
-    //     workoutManager[workout]!.loadActivities();
-    //   if (workoutManager[workout]!.activities != null)
-    //     activities
-    //         .addAll(workoutManager[workout]!.activities!.getDay(day) ?? []);
-    // }
+    List<FredericActivity> activities = <FredericActivity>[];
+    for (String workout in user.activeWorkouts) {
+      if (workoutListData.workouts[workout] != null)
+        activities
+            .addAll(workoutListData.workouts[workout]!.activities.getDay(day));
+    }
 
     return Container(
         padding: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
@@ -41,8 +39,8 @@ class CalendarDay extends StatelessWidget {
                   child: Column(
                     children: List.generate(
                         activities.length,
-                        (index) => _CalendarActivityCard(
-                            activities[index], index == 0)),
+                        (i) =>
+                            _CalendarActivityCard(activities[i], index == 0)),
                   ),
                 )
               ],
@@ -117,7 +115,7 @@ class _CalendarMonthCard extends StatelessWidget {
 class _CalendarActivityCard extends StatelessWidget {
   _CalendarActivityCard(this.activity, [this.indicator = false]);
 
-  final FredericActivity? activity;
+  final FredericActivity activity;
   final bool indicator;
 
   @override
@@ -130,7 +128,8 @@ class _CalendarActivityCard extends StatelessWidget {
         children: [
           _CalendarTimeLine(indicator),
           SizedBox(width: 8),
-          Expanded(child: ActivityCard(activity!))
+          Expanded(
+              child: ActivityCard(activity, type: ActivityCardType.Calendar))
         ],
       ),
     );

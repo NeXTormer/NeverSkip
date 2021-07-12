@@ -95,7 +95,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
           icon: Icons.search,
           size: 20,
           suffixIcon:
-              ExtraIcons.settings, // TODO? Simulare style as in homescreen
+              ExtraIcons.settings, // TODO? similar style as in homescreen
         ),
         SizedBox(height: 8),
       ],
