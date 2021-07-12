@@ -19,13 +19,13 @@ class CalendarDay extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime day = DateTime.now().add(Duration(days: index));
     List<FredericActivity?> activities = <FredericActivity?>[];
-    for (String workout in user.activeWorkouts) {
-      if (!workoutManager[workout]!.hasActivitiesLoaded)
-        workoutManager[workout]!.loadActivities();
-      if (workoutManager[workout]!.activities != null)
-        activities
-            .addAll(workoutManager[workout]!.activities!.getDay(day) ?? []);
-    }
+    // for (String workout in user.activeWorkouts) {
+    //   if (!workoutManager[workout]!.hasActivitiesLoaded)
+    //     workoutManager[workout]!.loadActivities();
+    //   if (workoutManager[workout]!.activities != null)
+    //     activities
+    //         .addAll(workoutManager[workout]!.activities!.getDay(day) ?? []);
+    // }
 
     return Container(
         padding: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),

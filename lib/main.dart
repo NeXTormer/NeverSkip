@@ -87,6 +87,8 @@ class Frederic extends StatelessWidget {
             value: FredericBackend.instance.setManager),
         BlocProvider<FredericActivityManager>.value(
             value: FredericBackend.instance.activityManager),
+        BlocProvider<FredericWorkoutManager>.value(
+            value: FredericBackend.instance.workoutManager),
       ],
       child: MaterialApp(
         navigatorObservers: [

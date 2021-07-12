@@ -17,104 +17,103 @@ class CalendarScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: BlocBuilder<FredericUserManager, FredericUser>(
           builder: (context, user) {
-        return FredericWorkoutBuilder(
-            activeWorkouts: user.activeWorkouts,
-            builder: (context, data) {
-              return CustomScrollView(
-                physics: ClampingScrollPhysics(),
-                slivers: [
-                  SliverAppBar(
-                    backgroundColor: Colors.white,
-                    title: Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+        return BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
+            builder: (context, workoutListData) {
+          return CustomScrollView(
+            physics: ClampingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Colors.white,
+                title: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        ExtraIcons.calendar,
+                        color: kMainColor,
+                        size: 20,
+                      ),
+                      SizedBox(width: 12),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: Text(
+                          'Upcoming exercises',
+                          style: true
+                              ? GoogleFonts.montserrat(
+                                  color: kTextColor,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17)
+                              : TextStyle(
+                                  color: kTextColor,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.2),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Container(
+                        width: 1,
+                        height: 18,
+                        decoration: BoxDecoration(
+                            color: const Color(0xFFCDCDCD),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100))),
+                      ),
+                      SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text('get to work!',
+                            style: GoogleFonts.montserrat(
+                                color: const Color(0xF2A5A5A5),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                letterSpacing: 0.6)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverDivider(),
+              if (false)
+                SliverToBoxAdapter(child: BlocBuilder<FredericActivityManager,
+                    FredericActivityListData>(
+                  builder: (context, data) {
+                    return Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
                         children: [
-                          Icon(
-                            ExtraIcons.calendar,
-                            color: kMainColor,
-                            size: 20,
-                          ),
-                          SizedBox(width: 12),
-                          Padding(
-                            padding: EdgeInsets.only(top: 2),
-                            child: Text(
-                              'Upcoming exercises',
-                              style: true
-                                  ? GoogleFonts.montserrat(
-                                      color: kTextColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17)
-                                  : TextStyle(
-                                      color: kTextColor,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.2),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Container(
-                            width: 1,
-                            height: 18,
-                            decoration: BoxDecoration(
-                                color: const Color(0xFFCDCDCD),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(100))),
-                          ),
-                          SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Text('get to work!',
-                                style: GoogleFonts.montserrat(
-                                    color: const Color(0xF2A5A5A5),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    letterSpacing: 0.6)),
+                          ActivityCard(data.activities.values.last),
+                          SizedBox(height: 16),
+                          ActivityCard(data.activities.values.last,
+                              addButton: true, onClick: () => print('add')),
+                          SizedBox(height: 16),
+                          ActivityCard(data.activities.values.last,
+                              type: ActivityCardType.Calendar),
+                          SizedBox(height: 16),
+                          ActivityCard(data.activities.values.last,
+                              type: ActivityCardType.Small),
+                          SizedBox(height: 16),
+                          ActivityCard(
+                            data.activities.values.last,
+                            type: ActivityCardType.WorkoutEditor,
+                            onClick: () => print('delete'),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  SliverDivider(),
-                  if (false)
-                    SliverToBoxAdapter(child: BlocBuilder<
-                        FredericActivityManager, FredericActivityListData>(
-                      builder: (context, data) {
-                        return Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              ActivityCard(data.activities.values.last),
-                              SizedBox(height: 16),
-                              ActivityCard(data.activities.values.last,
-                                  addButton: true, onClick: () => print('add')),
-                              SizedBox(height: 16),
-                              ActivityCard(data.activities.values.last,
-                                  type: ActivityCardType.Calendar),
-                              SizedBox(height: 16),
-                              ActivityCard(data.activities.values.last,
-                                  type: ActivityCardType.Small),
-                              SizedBox(height: 16),
-                              ActivityCard(
-                                data.activities.values.last,
-                                type: ActivityCardType.WorkoutEditor,
-                                onClick: () => print('delete'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )),
+                    );
+                  },
+                )),
 
-                  //   (context, index) {
-                  //     return ActivityCard(FredericBackend
-                  //         .instance.activityManager['ATo1D6xT5G5oi9W6s1q9']!);
-                  //     return CalendarDay(index, user,
-                  //         FredericBackend.instance.workoutManager!);
-                  //   },
-                  // ))
-                ],
-              );
-            });
+              //   (context, index) {
+              //     return ActivityCard(FredericBackend
+              //         .instance.activityManager['ATo1D6xT5G5oi9W6s1q9']!);
+              //     return CalendarDay(index, user,
+              //         FredericBackend.instance.workoutManager!);
+              //   },
+              // ))
+            ],
+          );
+        });
       }),
     );
   }
