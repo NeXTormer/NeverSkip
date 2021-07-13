@@ -9,13 +9,11 @@ import 'activity_filter_controller.dart';
 
 class ActivityListSegment extends StatelessWidget {
   ActivityListSegment(
-      {required this.filterController,
-      this.isAddable = false,
-      required this.handleAdd});
+      {required this.filterController, this.onTap, this.isSelector = false});
 
   final ActivityFilterController filterController;
-  final bool isAddable;
-  final Function(FredericActivity) handleAdd;
+  final void Function(FredericActivity)? onTap;
+  final bool isSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,11 @@ class ActivityListSegment extends StatelessWidget {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ActivityCard(list[index], onClick: () {}),
+                child: ActivityCard(
+                  list[index],
+                  onClick:
+                      onTap == null ? null : () => onTap?.call(list[index]),
+                ),
               ); // TODO implement onClick function for adding to workout
             },
             childCount: list.length,

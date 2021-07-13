@@ -16,48 +16,85 @@ class FredericSetList {
   final String activityID;
   final FredericSetManager _setManager;
 
+  int _bestProgress = 0;
+
   List<FredericSetDocument> _setDocuments = <FredericSetDocument>[];
 
-  int get bestProgress => 0;
+  int get bestProgress => _bestProgress;
   String get progressType => 'kg';
+
+  List<FredericSet> getLatestSets([int count = 6]) {
+    List<FredericSet> sets = <FredericSet>[];
+    _setDocuments.sort();
+    int documentIndex = 0;
+    int setIndex = -1;
+    for (int i = 0; i < count; i++) {
+      setIndex++;
+      if (documentIndex >= _setDocuments.length) break;
+      if (setIndex >= _setDocuments[documentIndex].sets.length) {
+        documentIndex++;
+        setIndex = -1;
+        continue;
+      }
+      _setDocuments[documentIndex].sets.sort();
+      sets.add(_setDocuments[documentIndex].sets[setIndex]);
+    }
+    return sets;
+  }
+
+  void _calculateBestProgress() {
+    for (FredericSetDocument setDoc in _setDocuments) {
+      for (FredericSet set in setDoc.sets) {
+        if (set.weight > _bestProgress) _bestProgress = set.weight;
+      }
+    }
+  }
 
   void deleteSet(FredericSet set) {
     if (_setDocuments
         .where((element) => element.month == set.month)
         .first
-        .deleteSet(set))
+        .deleteSet(set)) {
+      if (set.weight >= _bestProgress) {
+        _calculateBestProgress();
+      }
       _setManager.add(FredericSetEvent(<String>[activityID]));
+    }
   }
 
   void addSet(FredericSet set) {
     if (_setDocuments.isEmpty ||
         _setDocuments.where((element) => element.month == set.month).isEmpty) {
       _createDocumentWith(set);
-      _setManager.add(FredericSetEvent(<String>[activityID]));
     } else {
       if (_setDocuments
           .where((element) => element.month == set.month)
           .first
           .addSet(set)) _setManager.add(FredericSetEvent(<String>[activityID]));
     }
+    if (set.weight > _bestProgress) _bestProgress = set.weight;
   }
 
-  void _createDocumentWith(FredericSet set) {
-    _setManager.setsCollection.add({
+  void _createDocumentWith(FredericSet set) async {
+    var doc = await _setManager.setsCollection.add({
       'activityid': activityID,
       'month': set.month,
       'sets': <Map<String, dynamic>>[set.asMap()]
     });
+    _setDocuments.add(
+        FredericSetDocument(doc.id, set.month, activityID, <FredericSet>[set]));
+    _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 
   void loadData(int monthsToLoad) async {
     int lastMonth = _setManager.currentMonth - (monthsToLoad - 1);
-    _setDocuments.clear();
     QuerySnapshot<Map<String, dynamic>> snapshot = await _setManager
         .setsCollection
         .where('activityid', isEqualTo: activityID)
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();
+
+    _setDocuments.clear();
     for (DocumentSnapshot<Map<String, dynamic>> document in snapshot.docs) {
       int? month = document.data()?['month'];
       if (month == null) continue;
@@ -73,6 +110,7 @@ class FredericSetList {
       _setDocuments
           .add(FredericSetDocument(document.id, month, activityID, sets));
     }
+    _calculateBestProgress();
     _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 }

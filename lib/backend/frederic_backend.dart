@@ -16,6 +16,8 @@ class FredericBackend {
     _userManager =
         FredericUserManager(onLoadData: loadData, logTransition: false);
     _activityManager = FredericActivityManager();
+    _setManager = FredericSetManager();
+    _workoutManager = FredericWorkoutManager();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -23,14 +25,14 @@ class FredericBackend {
   late final FredericUserManager _userManager;
   FredericUserManager get userManager => _userManager;
 
-  final FredericSetManager _setManager = FredericSetManager();
+  late final FredericSetManager _setManager;
   FredericSetManager get setManager => _setManager;
 
-  late FredericActivityManager _activityManager;
+  late final FredericActivityManager _activityManager;
   FredericActivityManager get activityManager => _activityManager;
 
-  FredericWorkoutManager? _workoutManager;
-  FredericWorkoutManager? get workoutManager => _workoutManager;
+  late final FredericWorkoutManager _workoutManager;
+  FredericWorkoutManager get workoutManager => _workoutManager;
 
   FredericGoalManager? _goalManager;
   FredericGoalManager? get goalManager => _goalManager;
@@ -39,14 +41,12 @@ class FredericBackend {
     //TODO: wait until data loaded to complete
 
     _activityManager.reload();
-    _workoutManager = FredericWorkoutManager();
-    _workoutManager?.loadData();
+    _workoutManager.reload();
     _goalManager = FredericGoalManager();
     _goalManager?.loadData();
   }
 
   void dispose() {
-    _workoutManager?.dispose();
     _goalManager?.dispose();
   }
 }

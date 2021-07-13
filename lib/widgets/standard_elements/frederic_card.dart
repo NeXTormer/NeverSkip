@@ -10,6 +10,7 @@ class FredericCard extends StatelessWidget {
       this.margin,
       this.child,
       this.color,
+      this.onLongPress,
       this.onTap});
 
   final double? width;
@@ -20,6 +21,7 @@ class FredericCard extends StatelessWidget {
   final Widget? child;
   final Color? color;
   final void Function()? onTap;
+  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class FredericCard extends StatelessWidget {
                 splashColor: Colors.grey.withAlpha(32),
                 highlightColor: Colors.grey.withAlpha(15),
                 onTap: onTap,
+                onLongPress: onLongPress,
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(borderRadius),

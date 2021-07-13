@@ -23,7 +23,6 @@ class _WorkoutCardState extends State<WorkoutCard> {
       elevation: 2,
       child: InkWell(
         onTap: () {
-          widget.workout.loadActivities();
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) =>
                   EditWorkoutScreen(widget.workout.workoutID)));

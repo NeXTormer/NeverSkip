@@ -1,74 +1,83 @@
 import 'dart:collection';
 
-import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 
 ///
 /// Manages all Workouts. Only one instance of this should exist. Instantiated in
 /// [FredericBackend].
 ///
-/// Get a workout using the [] operator, e.g.
-/// ```
-/// FredericWorkout workout = workoutManager['workoutID'];
-/// ```
-///
-class FredericWorkoutManager with ChangeNotifier {
-  FredericWorkoutManager() {
-    _workouts = HashMap<String, FredericWorkout?>();
-  }
+class FredericWorkoutManager
+    extends Bloc<FredericWorkoutEvent, FredericWorkoutListData> {
+  FredericWorkoutManager()
+      : _workouts = HashMap<String, FredericWorkout>(),
+        super(FredericWorkoutListData(
+            HashMap<String, FredericWorkout>(), <String>[]));
 
   final CollectionReference _workoutsCollection =
       FirebaseFirestore.instance.collection('workouts');
 
-  HashMap<String, FredericWorkout?>? _workouts;
-  bool _dataLoaded = false;
+  HashMap<String, FredericWorkout> _workouts;
 
-  FredericWorkout? operator [](String? value) {
-    return _workouts![value!];
+  FredericWorkout? operator [](String value) {
+    return _workouts[value];
   }
 
-  HashMap<String, FredericWorkout?>? get workouts => _workouts;
+  HashMap<String, FredericWorkout> get workouts => state.workouts;
 
-  ///
-  /// Called once in [FredericBackend]
-  ///
-  void loadData() {
-    if (_dataLoaded) return;
-    _dataLoaded = true;
-    Stream<QuerySnapshot> globalStream =
-        _workoutsCollection.where('owner', isEqualTo: 'global').snapshots();
-    Stream<QuerySnapshot> userStream = _workoutsCollection
+  void reload() async {
+    QuerySnapshot<Object?> global =
+        await _workoutsCollection.where('owner', isEqualTo: 'global').get();
+    QuerySnapshot<Object?> private = await _workoutsCollection
         .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .snapshots();
+        .get();
 
-    Stream<QuerySnapshot> streamGroup =
-        StreamGroup.merge([globalStream, userStream]);
+    List<String> changed = <String>[];
+    _workouts.clear();
 
-    streamGroup.listen(_handleWorkoutsStream);
-  }
-
-  void _handleWorkoutsStream(QuerySnapshot snapshot) {
-    for (int i = 0; i < snapshot.docChanges.length; i++) {
-      var docSnapshot = snapshot.docChanges[i].doc;
-      if (snapshot.docChanges[i].type == DocumentChangeType.removed) {
-        _workouts!.remove(docSnapshot.id);
-        continue;
-      }
-
-      if (_workouts!.containsKey(docSnapshot.id)) {
-        _workouts![docSnapshot.id]!
-            .insertSnapshot(snapshot.docChanges[i].doc
-                as DocumentSnapshot<Map<String, dynamic>>)
-            .notifyListeners();
-      } else {
-        _workouts![docSnapshot.id] = FredericWorkout(docSnapshot.id)
-          ..insertSnapshot(
-              docSnapshot as DocumentSnapshot<Map<String, dynamic>>);
-      }
+    for (int i = 0; i < global.docs.length; i++) {
+      _workouts[global.docs[i].id] = FredericWorkout(global.docs[i], this);
+      changed.add(global.docs[i].id);
     }
-    notifyListeners();
+    for (int i = 0; i < private.docs.length; i++) {
+      _workouts[private.docs[i].id] = FredericWorkout(private.docs[i], this);
+      changed.add(private.docs[i].id);
+    }
+
+    add(FredericWorkoutEvent(changed));
   }
+
+  @override
+  Stream<FredericWorkoutListData> mapEventToState(
+      FredericWorkoutEvent event) async* {
+    if (event is FredericWorkoutEvent) {
+      yield FredericWorkoutListData(_workouts, event.changed);
+    } else if (event is FredericWorkoutUpdateEvent) {
+      yield FredericWorkoutListData(_workouts, event.changed);
+    }
+  }
+}
+
+class FredericWorkoutEvent {
+  FredericWorkoutEvent(this.changed);
+  List<String> changed;
+}
+
+class FredericWorkoutUpdateEvent extends FredericWorkoutEvent {
+  FredericWorkoutUpdateEvent(String updated) : super([updated]);
+}
+
+class FredericWorkoutListData {
+  FredericWorkoutListData(this.workouts, this.changed);
+
+  final HashMap<String, FredericWorkout> workouts;
+  final List<String> changed;
+
+  @override
+  bool operator ==(Object other) => false;
+
+  @override
+  int get hashCode => changed.hashCode;
 }

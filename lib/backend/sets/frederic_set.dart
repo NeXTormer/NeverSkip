@@ -45,7 +45,7 @@ class FredericSet implements Comparable {
   @override
   int compareTo(other) {
     if (other is FredericSet) {
-      return timestamp.compareTo(other.timestamp);
+      return other.timestamp.compareTo(timestamp);
     }
     return 0;
   }

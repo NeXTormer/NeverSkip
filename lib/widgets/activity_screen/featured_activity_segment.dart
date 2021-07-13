@@ -7,10 +7,13 @@ import '../../backend/backend.dart';
 import '../standard_elements/frederic_heading.dart';
 
 class FeaturedActivitySegment extends StatelessWidget {
-  FeaturedActivitySegment(this.label, this.featuredActivities);
+  FeaturedActivitySegment(this.label, this.featuredActivities,
+      {this.isSelector = false, this.onTap});
 
   final String label;
   final List<String> featuredActivities;
+  final void Function(FredericActivity)? onTap;
+  final bool isSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,9 @@ class FeaturedActivitySegment extends StatelessWidget {
                         right: index == (list.length - 1) ? 16 : 0,
                       ),
                       child: ActivityCard(list[index],
+                          onClick: onTap == null
+                              ? null
+                              : () => onTap?.call(list[index]),
                           type: ActivityCardType.Small),
                     );
                   },

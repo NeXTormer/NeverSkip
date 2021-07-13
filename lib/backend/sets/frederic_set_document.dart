@@ -8,7 +8,7 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 /// The month is calculated as the number of months starting from Jan 2021.
 ///   For example: August 2021 is 8, January 2022 is 13
 ///
-class FredericSetDocument {
+class FredericSetDocument extends Comparable {
   FredericSetDocument(
       this.documentID, this.month, this.activityID, List<FredericSet> sets)
       : _sets = sets {
@@ -23,6 +23,8 @@ class FredericSetDocument {
   late final DocumentReference _documentReference;
 
   List<FredericSet> _sets;
+
+  List<FredericSet> get sets => _sets;
 
   bool addSet(FredericSet set) {
     if (calculateMonth(set.timestamp) != month) return false;
@@ -49,5 +51,13 @@ class FredericSetDocument {
   static int calculateMonth(DateTime timestamp) {
     int yearDiff = timestamp.year - FredericSetManager.startingYear;
     return timestamp.month + (yearDiff * 12);
+  }
+
+  @override
+  int compareTo(other) {
+    if (other is FredericSetDocument)
+      return month - other.month;
+    else
+      return 0;
   }
 }

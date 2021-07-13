@@ -5,8 +5,8 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/widgets/standard_elements/FredericButton.dart';
-import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
+import 'package:frederic/widgets/standard_elements/frederic_button.dart';
+import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 

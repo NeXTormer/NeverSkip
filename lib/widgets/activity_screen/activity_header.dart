@@ -3,10 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../misc/ExtraIcons.dart';
-import '../standard_elements/FredericTextField.dart';
+import '../standard_elements/frederic_text_field.dart';
 import 'activity_filter_controller.dart';
 
 class ActivityHeader extends StatelessWidget {
+  ActivityHeader(this.title, this.subtitle);
+
+  final String title;
+  final String subtitle;
+
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -14,7 +19,8 @@ class ActivityHeader extends StatelessWidget {
         padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: Consumer<ActivityFilterController>(
           builder: (context, filter, child) {
-            return ActivityHeaderContent(filterController: filter);
+            return ActivityHeaderContent(title, subtitle,
+                filterController: filter);
           },
         ),
       ),
@@ -23,9 +29,12 @@ class ActivityHeader extends StatelessWidget {
 }
 
 class ActivityHeaderContent extends StatefulWidget {
-  ActivityHeaderContent({required this.filterController});
+  ActivityHeaderContent(this.title, this.subtitle,
+      {required this.filterController});
 
   final ActivityFilterController filterController;
+  final String title;
+  final String subtitle;
 
   @override
   _ActivityHeaderContentState createState() => _ActivityHeaderContentState();
@@ -47,7 +56,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                 Row(
                   children: [
                     Text(
-                      'Search for an exercise',
+                      widget.subtitle,
                       style: GoogleFonts.montserrat(
                         color: const Color(0xFF272727),
                         fontWeight: FontWeight.w400,
@@ -61,7 +70,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                 Row(
                   children: [
                     Text(
-                      'Exercise List',
+                      widget.title,
                       style: GoogleFonts.montserrat(
                         color: const Color(0xFF272727),
                         fontWeight: FontWeight.w500,
@@ -86,7 +95,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
           icon: Icons.search,
           size: 20,
           suffixIcon:
-              ExtraIcons.settings, // TODO? Simulare style as in homescreen
+              ExtraIcons.settings, // TODO? similar style as in homescreen
         ),
         SizedBox(height: 8),
       ],
