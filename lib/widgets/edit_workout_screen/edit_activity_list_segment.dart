@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
+import 'package:frederic/screens/edit_workout_screen.dart';
 
 ///
 /// Part of the EditWorkoutScreen. Responsible for
@@ -9,11 +9,13 @@ import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
 ///
 class EditActivityListSegment extends StatelessWidget {
   EditActivityListSegment(
-      this.workout, this.sliderController, this.activityPageController);
+      {required this.workout,
+      required this.pageController,
+      required this.weekdaysSliderController});
 
   final FredericWorkout workout;
-  final PageController? activityPageController;
-  final WeekdaySliderController? sliderController;
+  final PageController? pageController;
+  final WeekdaysSliderController? weekdaysSliderController;
 
   @override
   Widget build(BuildContext context) {
@@ -24,32 +26,27 @@ class EditActivityListSegment extends StatelessWidget {
           builder: (context, list) {
             FredericWorkoutActivities activities = list;
             return PageView(
-                physics: BouncingScrollPhysics(),
-                onPageChanged: handleDayChangeBySwiping,
-                controller: activityPageController,
+                onPageChanged: (index) {
+                  weekdaysSliderController!.onChangeCallback(index);
+                },
+                controller: pageController,
                 children: List.generate(activities.period, (weekday) {
                   return CupertinoScrollbar(
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(top: 8),
-                      itemBuilder: (context, index) {
-                        return Container();
-
-                        // return ActivityCard(
-                        //   activities.activities[weekday + 1]
-                        //       [index],
-                        //   dismissible: workout.canEdit,
-                        //   onDismiss: handleDeleteActivity,
-                        // );
-                      },
-                      itemCount: activities.activities![weekday + 1].length,
-                    ),
-                  );
+                      child: ListView.builder(
+                          padding: const EdgeInsets.only(top: 8),
+                          itemCount: activities.activities![weekday + 1].length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.all(10),
+                              color: Colors.black26,
+                              width: 100,
+                              height: 100,
+                            );
+                            // ActivityListCard(
+                            //     activities.activities![weekday + 1][index]!);
+                          }));
                 }));
           }),
     );
-  }
-
-  void handleDayChangeBySwiping(int day) {
-    sliderController!.setDayOnlyVisual(day + 1);
   }
 }

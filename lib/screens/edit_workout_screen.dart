@@ -7,7 +7,6 @@ import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_activity_list_segment.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
-import 'package:frederic/widgets/edit_workout_screen/weekdays_slider.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,17 +24,13 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  PageController? activityPageController;
-  WeekdaySliderController? sliderController;
-
-  int selectedDay = 1;
+  PageController? pageController;
+  WeekdaysSliderController? weekdaysSliderController;
 
   @override
   void initState() {
-    sliderController =
-        WeekdaySliderController(onDayChange: handleDayChangeByButton);
-    activityPageController = PageController();
-
+    pageController = PageController();
+    weekdaysSliderController = WeekdaysSliderController();
     super.initState();
   }
 
@@ -51,12 +46,17 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           body: SafeArea(
             child: Column(
               children: [
-                EditWorkoutHeader(),
+                EditWorkoutHeader(workout),
                 Divider(color: const Color(0xFFC9C9C9)),
-                WeekdaysSliderSegment(workout, sliderController),
+                WeekdaysSliderSegment(
+                    pageController: pageController!,
+                    weekdaysSliderController: weekdaysSliderController!,
+                    workout: workout),
                 Divider(color: const Color(0xFFC9C9C9)),
                 EditActivityListSegment(
-                    workout, sliderController, activityPageController),
+                    workout: workout,
+                    pageController: pageController!,
+                    weekdaysSliderController: weekdaysSliderController!),
               ],
             ),
           ),
@@ -69,12 +69,11 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     );
   }
 
-  // TODO maybe add to Standard Element
   Widget buildAddExerciseButton(double width, double height) {
     return Container(
       height: height,
       width: width,
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      margin: const EdgeInsets.all(16.0),
       child: FloatingActionButton(
         elevation: 0,
         backgroundColor: kMainColor,
@@ -99,26 +98,18 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   void handleAddActivity(FredericActivity activity) {
     bool success = FredericBackend.instance()!
             .workoutManager![widget.workoutID]
-            ?.addActivity(activity, sliderController!.currentDay) ??
+            ?.addActivity(activity, pageController!.page!.toInt()) ??
         false;
 
     if (success) {
       UserFeedbackToast().showAddedToast(context);
     }
-  }
 
-  void handleDeleteActivity(FredericActivity activity) {
-    FredericBackend.instance()!
-        .workoutManager![widget.workoutID]
-        ?.removeActivity(activity, sliderController!.currentDay);
-  }
-
-  void handleDayChangeByButton(int day) {
-    if ((day - 1 - activityPageController!.page!).abs() <= 2)
-      activityPageController!.animateToPage(day - 1,
-          duration: Duration(milliseconds: 350), curve: Curves.easeInOutExpo);
-    else
-      activityPageController!.jumpToPage(day - 1);
+    void handleDeleteActivity(FredericActivity activity) {
+      FredericBackend.instance()!
+          .workoutManager![widget.workoutID]
+          ?.removeActivity(activity, pageController!.page!.toInt());
+    }
   }
 
   void showActivityList(BuildContext context) {
@@ -134,8 +125,10 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.8,
-          // TODO SET ActivityListScreen backgroundcolor to transparent
-          child: ActivityListScreen(),
+          child: ActivityListScreen(
+            isAddable: true,
+            handleAdd: handleAddActivity,
+          ),
         );
       },
     );
@@ -143,6 +136,20 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   void dispose() {
+    pageController!.dispose();
     super.dispose();
+  }
+}
+
+class WeekdaysSliderController {
+  WeekdaysSliderController();
+  late Function(int) _setChangeDayCallback;
+
+  void setCallback(Function(int) handleChangeDay) {
+    _setChangeDayCallback = handleChangeDay;
+  }
+
+  void onChangeCallback(int index) {
+    _setChangeDayCallback(index);
   }
 }

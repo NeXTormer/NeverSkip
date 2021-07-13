@@ -6,9 +6,14 @@ import '../../backend/frederic_activity_builder.dart';
 import 'activity_filter_controller.dart';
 
 class ActivityListSegment extends StatelessWidget {
-  ActivityListSegment({required this.filterController});
+  ActivityListSegment(
+      {required this.filterController,
+      this.isAddable = false,
+      required this.handleAdd});
 
   final ActivityFilterController filterController;
+  final bool isAddable;
+  final Function(FredericActivity) handleAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +25,11 @@ class ActivityListSegment extends StatelessWidget {
             (context, index) {
               FredericActivity activity = list[index];
               if (activity.matchFilterController(filterController)) {
-                return ActivityListCard(activity,
-                    onClick:
-                        () {}); // TODO implement onClick function for adding to workout
+                return ActivityListCard(
+                  activity,
+                  selectable: true,
+                  onClick: isAddable ? () => handleAdd(activity) : () {},
+                );
               }
               return Container();
             },

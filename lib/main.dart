@@ -107,7 +107,9 @@ class Frederic extends StatelessWidget {
                       label: 'Calendar',
                     ),
                     FredericScreen(
-                      screen: ActivityListScreen(),
+                      screen: ActivityListScreen(
+                        handleAdd: (_) {},
+                      ),
                       icon: ExtraIcons.dumbbell,
                       label: 'Exercises',
                     ),
