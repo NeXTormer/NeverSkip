@@ -9,11 +9,6 @@ import 'package:frederic/backend/backend.dart';
 /// Manages all Workouts. Only one instance of this should exist. Instantiated in
 /// [FredericBackend].
 ///
-/// Get a workout using the [] operator, e.g.
-/// ```
-/// FredericWorkout workout = workoutManager['workoutID'];
-/// ```
-///
 class FredericWorkoutManager
     extends Bloc<FredericWorkoutEvent, FredericWorkoutListData> {
   FredericWorkoutManager()

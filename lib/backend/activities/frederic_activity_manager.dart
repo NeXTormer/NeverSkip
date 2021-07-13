@@ -7,7 +7,11 @@ import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/backend.dart';
 
 ///
-/// Manages all Activities.
+/// Manages all Activities using the Bloc Pattern
+/// Access activities either with bloc builder or with
+/// ```
+/// FredericBackend.instance.activityManager.state
+/// ```
 ///
 class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
@@ -27,6 +31,9 @@ class FredericActivityManager
 
   Iterable<FredericActivity> get activities => _activities.values;
 
+  ///
+  /// (Re)Loads all activities from the database
+  ///
   void reload() async {
     QuerySnapshot<Object?> global =
         await _activitiesCollection.where('owner', isEqualTo: 'global').get();
@@ -49,6 +56,9 @@ class FredericActivityManager
     add(FredericActivityEvent(changed));
   }
 
+  ///
+  /// Returns an Activity using its id. Loads the Activity if needed.
+  ///
   Future<FredericActivity> getActivity(String id) async {
     if (_activities.containsKey(id)) return _activities[id]!;
 

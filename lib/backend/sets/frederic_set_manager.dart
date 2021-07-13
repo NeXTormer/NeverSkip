@@ -27,7 +27,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     return _sets[value]!;
   }
 
-  void loadOrAddNewSet(String id) {
+  void _loadOrAddNewSet(String id) {
     if (!_sets.containsKey(id)) {
       _sets[id] = FredericSetList(id, this)..loadData(2);
     }
@@ -56,7 +56,7 @@ class FredericSetListData {
 
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {
-      FredericBackend.instance.setManager.loadOrAddNewSet(value);
+      FredericBackend.instance.setManager._loadOrAddNewSet(value);
       //TODO: find a better solution
       return FredericSetList(value, FredericBackend.instance.setManager);
     }

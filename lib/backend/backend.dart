@@ -1,5 +1,4 @@
 export 'activities/frederic_activity.dart';
-export 'activities/frederic_activity_builder.dart';
 export 'activities/frederic_activity_manager.dart';
 export 'authentication/authentication_wrapper.dart';
 export 'frederic_backend.dart';
