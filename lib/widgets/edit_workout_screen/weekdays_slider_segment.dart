@@ -106,7 +106,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
                           handleChangeDay(index + (week * 7));
                         },
                         child: WeekDaysSliderDayButton(
-                          indexDay: index + (week * 7),
+                          dayIndex: index + (week * 7),
                           selectedDate: selectedDate,
                           date: widget.startingDate!.add(
                             Duration(
@@ -146,19 +146,19 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
 ///
 class WeekDaysSliderDayButton extends StatelessWidget {
   WeekDaysSliderDayButton({
-    required this.indexDay,
+    required this.dayIndex,
     required this.selectedDate,
     required this.date,
   });
 
-  final int indexDay;
+  final int dayIndex;
   final int selectedDate;
   final DateTime date;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return selectedDate == indexDay
+    return selectedDate == dayIndex
         ? Container(
             width: width / 10,
             padding: const EdgeInsets.symmetric(vertical: 3),
