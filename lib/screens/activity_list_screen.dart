@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
@@ -12,12 +13,17 @@ import '../widgets/activity_screen/activity_filter_controller.dart';
 import '../widgets/standard_elements/sliver_divider.dart';
 
 class ActivityListScreen extends StatelessWidget {
+  ActivityListScreen({this.isAddable = false, required this.handleAdd});
+
+  final bool isAddable;
+  final Function(FredericActivity) handleAdd;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           child: BlocBuilder<FredericUserManager, FredericUser>(
             buildWhen: (last, next) =>
@@ -37,7 +43,11 @@ class ActivityListScreen extends StatelessWidget {
                       ActivityFilterSegment(
                           filterController:
                               filter), // TODO Update Muscle Buttons to Radio Buttons
-                      ActivityListSegment(filterController: filter),
+                      ActivityListSegment(
+                        filterController: filter,
+                        handleAdd: handleAdd,
+                        isAddable: isAddable,
+                      ),
                     ],
                   );
                 },

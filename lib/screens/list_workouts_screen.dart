@@ -13,8 +13,6 @@ class ListWorkoutsScreen extends StatefulWidget {
 }
 
 class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
-  double test = 1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

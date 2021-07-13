@@ -48,6 +48,9 @@ dependencies:
   modal_bottom_sheet: ^2.0.0
   cached_network_image: ^3.0.0
 
+  expandable_page_view: ^1.0.5
+  date_format: ^2.0.2
+
 flutter_native_splash:
   color: "#FFFFFF"
   image: assets/splash.png
