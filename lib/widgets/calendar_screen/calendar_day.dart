@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/standard_elements/activity_card.dart';
+import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -129,7 +130,7 @@ class _CalendarActivityCard extends StatelessWidget {
         children: [
           _CalendarTimeLine(indicator),
           SizedBox(width: 8),
-          Expanded(child: ActivityCard(activity))
+          Expanded(child: ActivityCard(activity!))
         ],
       ),
     );

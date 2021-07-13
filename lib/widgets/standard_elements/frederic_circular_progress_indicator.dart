@@ -12,7 +12,7 @@ class FredericCircularProgressIndicator extends StatefulWidget {
       this.stroke = 10,
       this.increment = 0.02,
       this.onFinished})
-      : isStatic = staticProgress != null;
+      : isStatic = staticProgress != -1;
 
   final image;
   final double size;
@@ -41,7 +41,7 @@ class _FredericCircularProgressIndicatorState
       timer = Timer.periodic(Duration(milliseconds: 16), (Timer t) {
         setState(() {
           progress += widget.increment;
-          if (progress! >= 1) {
+          if (progress >= 1) {
             t.cancel();
             if (widget.onFinished != null) {
               widget.onFinished!();
@@ -55,11 +55,11 @@ class _FredericCircularProgressIndicatorState
 
   @override
   Widget build(BuildContext context) {
-    if (progress! > 1) progress = 1;
-    if (progress! < 0) progress = 0;
+    if (progress > 1) progress = 1;
+    if (progress < 0) progress = 0;
     double? curveProgress = widget.isStatic
         ? widget.staticProgress
-        : Curves.easeInOutExpo.transform(progress!);
+        : Curves.easeInOutExpo.transform(progress);
 
     double innerRadius = widget.size - (widget.stroke * 2);
 
@@ -92,7 +92,7 @@ class _FredericCircularProgressIndicatorState
               return SweepGradient(
                       startAngle: 0,
                       endAngle: 2 * pi,
-                      stops: [curveProgress!, curveProgress],
+                      stops: [curveProgress, curveProgress],
                       // 0.0 , 0.5 , 0.5 , 1.0
                       center: Alignment.center,
                       colors: [Colors.white, Colors.transparent])
@@ -109,7 +109,7 @@ class _FredericCircularProgressIndicatorState
       ),
       Image(
         width: innerRadius - 20,
-        image: AssetImage('assets/dumbbell_with_bg_blue.png'),
+        image: AssetImage('assets/images/dumbbell_with_bg_blue.png'),
       ),
     ]);
   }

@@ -6,14 +6,13 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddProgressScreen extends StatelessWidget {
   AddProgressScreen(this.activity);
 
-  final FredericActivity? activity;
+  final FredericActivity activity;
 
   @override
   Widget build(BuildContext context) {
@@ -82,14 +81,14 @@ class AddProgressScreen extends StatelessWidget {
                       border: Border.all(color: kCardBorderColor)),
                   child: Row(
                     children: [
-                      PictureIcon(activity!.image),
+                      PictureIcon(activity.image),
                       SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(activity!.name,
+                            Text(activity.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(
@@ -98,10 +97,10 @@ class AddProgressScreen extends StatelessWidget {
                                     fontSize: 17)),
                             SizedBox(height: 4),
                             Text(
-                                activity!.description +
-                                    activity!.description +
-                                    activity!.description +
-                                    activity!.description,
+                                activity.description +
+                                    activity.description +
+                                    activity.description +
+                                    activity.description,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(
@@ -155,8 +154,10 @@ class AddProgressScreen extends StatelessWidget {
                 SliverList(
                     delegate: SliverChildBuilderDelegate(
                         (context, index) =>
-                            SetCard(activity!.sets![index], activity),
-                        childCount: activity!.sets!.length))
+                            Container(height: 20, color: Colors.black26)
+                        //SetCard(activity!.sets![index], activity)
+                        ,
+                        childCount: /*activity!.sets!.length*/ 2))
               ],
             ),
           ),

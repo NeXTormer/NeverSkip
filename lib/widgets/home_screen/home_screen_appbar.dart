@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:frederic/misc/frederic_text_theme.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
   HomeScreenAppbar(this.user);
@@ -40,22 +41,17 @@ class HomeScreenAppbar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Good morning, ${user.name.split(' ')[0]}!',
-                        style: GoogleFonts.montserrat(
-                            color: const Color(0xFF272727),
-                            fontWeight: FontWeight.w400,
-                            letterSpacing: 0.6,
-                            fontSize: 13)),
+                        style: FredericTextTheme.homeScreenAppBarTitle),
                     SizedBox(height: 8),
                     Text('Let\'s find you a workout',
-                        style: GoogleFonts.montserrat(
-                            color: const Color(0xFF272727),
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.1,
-                            fontSize: 17))
+                        style: FredericTextTheme.homeScreenAppBarSubTitle)
                   ],
                 ),
                 GestureDetector(
-                  onTap: () => FirebaseAuth.instance.signOut(),
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    Phoenix.rebirth(context);
+                  },
                   child: Container(
                       height: 32,
                       width: 32,

@@ -59,44 +59,44 @@ class GoalCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  width: 180,
-                  child: Row(
-                    children: [
-                      Text(
-                        '${goal.startState}',
-                        style: TextStyle(
-                            color: kTextColor,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                            fontSize: 13),
-                      ),
-                      SizedBox(width: 2),
-                      Text('${goal.activity!.bestProgressType}',
-                          style: TextStyle(
-                              color: kTextColor,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.5,
-                              fontSize: 11)),
-                      Expanded(child: Container()),
-                      Text(
-                        '${goal.endState}',
-                        style: TextStyle(
-                            color: kTextColor,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                            fontSize: 13),
-                      ),
-                      SizedBox(width: 2),
-                      Text('${goal.activity!.bestProgressType}',
-                          style: TextStyle(
-                              color: kTextColor,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.5,
-                              fontSize: 11))
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: 180,
+                //   child: Row(
+                //     children: [
+                //       Text(
+                //         '${goal.startState}',
+                //         style: TextStyle(
+                //             color: kTextColor,
+                //             fontWeight: FontWeight.w600,
+                //             letterSpacing: 0.5,
+                //             fontSize: 13),
+                //       ),
+                //       SizedBox(width: 2),
+                //       Text('${goal.activity?.bestProgressType}',
+                //           style: TextStyle(
+                //               color: kTextColor,
+                //               fontWeight: FontWeight.w500,
+                //               letterSpacing: 0.5,
+                //               fontSize: 11)),
+                //       Expanded(child: Container()),
+                //       Text(
+                //         '${goal.endState}',
+                //         style: TextStyle(
+                //             color: kTextColor,
+                //             fontWeight: FontWeight.w600,
+                //             letterSpacing: 0.5,
+                //             fontSize: 13),
+                //       ),
+                //       SizedBox(width: 2),
+                //       Text('${goal.activity?.bestProgressType}',
+                //           style: TextStyle(
+                //               color: kTextColor,
+                //               fontWeight: FontWeight.w500,
+                //               letterSpacing: 0.5,
+                //               fontSize: 11))
+                //     ],
+                //   ),
+                // ),
                 ProgressBar((goal.progressPercentage / 100).toDouble())
               ],
             ),

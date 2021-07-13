@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/FredericButton.dart';
 import 'package:frederic/widgets/standard_elements/FredericTextField.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -14,6 +19,8 @@ class LoginScreen extends StatefulWidget {
   final String titleSignup = 'Create a new account';
   final String subtitleSignup =
       'Sign up and create an account so that you can remain healthy by following your daily goals and plans.';
+
+  final String termsAndContidionsURL = 'https://hawkford.io/';
 
   final String subtitle =
       'Sign in and continue so that you can remain healthy by following your daily goals and plans.';
@@ -36,6 +43,35 @@ class _LoginScreenState extends State<LoginScreen> {
   bool termsandconditions = false;
   bool hasError = false;
   String errorText = '';
+
+  StreamSubscription<FredericUser>? streamSubscription;
+
+  @override
+  void initState() {
+    streamSubscription =
+        FredericBackend.instance.userManager.stream.listen((user) {
+      if (user.statusMessage != '') {
+        setState(() {
+          hasError = true;
+          errorText = user.statusMessage;
+        });
+      }
+      if (user.statusMessage == '' && !user.authenticated) {
+        setState(() {
+          hasError = false;
+          errorText = '';
+        });
+      }
+    });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getBool('wasLoggedIn') ?? false) {
+        setState(() {
+          login = true;
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,11 +185,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: TextStyle(
                                           fontSize: 11,
                                           color: const Color(0xFF2F2E41))),
-                                  Text('Terms & Conditions',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 11,
-                                          color: const Color(0xFF2F2E41))),
+                                  GestureDetector(
+                                    onTap: () {
+                                      launch(widget.termsAndContidionsURL);
+                                    },
+                                    child: Text('Terms & Conditions',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 11,
+                                            color: const Color(0xFF2F2E41))),
+                                  ),
                                   Text(' of this app.',
                                       style: TextStyle(
                                           fontSize: 11,
@@ -233,27 +274,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> showLoginError(String text) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login error'),
-          content: Text(text ?? ''),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void buttonHandler() {
     String email = emailController.text.trim();
     String name = nameController.text.trim();
@@ -271,17 +291,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         hasError = false;
       });
-      FredericBackend.instance()!
-          .authService!
-          .signIn(email, password)
-          .then((value) {
-        if (value != 'success' && value != null) {
-          errorText = value;
-          setState(() {
-            hasError = true;
-          });
-        }
-      });
+      FredericBackend.instance.userManager
+          .add(FredericLoginEvent(email, password));
     } else {
       if (email.isEmpty ||
           password.isEmpty ||
@@ -324,17 +335,10 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
 
-      FredericBackend.instance()!
-          .authService!
-          .signUp(emailController.text.trim(), passwordController.text.trim())
-          .then((value) {
-        if (value != 'success' && value != null) {
-          errorText = value;
-          setState(() {
-            hasError = true;
-          });
-        }
-      });
+      FredericBackend.instance.userManager.add(FredericSignupEvent(
+          nameController.text.trim(),
+          emailController.text.trim(),
+          passwordController.text.trim()));
     }
   }
 
@@ -345,5 +349,6 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
     nameController.dispose();
     passwordConfirmationController.dispose();
+    streamSubscription?.cancel();
   }
 }

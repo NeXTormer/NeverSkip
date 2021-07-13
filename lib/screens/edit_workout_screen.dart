@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout_builder.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_activity_list_segment.dart';
@@ -69,7 +70,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     );
   }
 
-  Widget buildAddExerciseButton(double width, double height) {
+  Widget buildAddExerciseButton(double width) {
     return Container(
       height: height,
       width: width,

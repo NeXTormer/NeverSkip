@@ -1,10 +1,8 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frederic/backend/frederic_activity_manager.dart';
+import 'package:frederic/backend/activities/frederic_activity_manager.dart';
+import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/frederic_goal_manager.dart';
-import 'package:frederic/backend/frederic_workout_manager.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
 import 'backend.dart';
@@ -15,19 +13,21 @@ import 'backend.dart';
 ///
 class FredericBackend {
   FredericBackend() {
-    _authenticationService = AuthenticationService(FirebaseAuth.instance);
+    _userManager =
+        FredericUserManager(onLoadData: loadData, logTransition: false);
     _activityManager = FredericActivityManager();
-    _workoutManager = FredericWorkoutManager();
-    _goalManager = FredericGoalManager();
-    _currentUserCompleter = Completer<FredericUser>();
-    _currentUser = FredericUser(FirebaseAuth.instance.currentUser?.uid);
   }
 
-  AuthenticationService? _authenticationService;
-  AuthenticationService? get authService => _authenticationService;
+  static FredericBackend get instance => getIt<FredericBackend>();
 
-  FredericActivityManager? _activityManager;
-  FredericActivityManager? get activityManager => _activityManager;
+  late final FredericUserManager _userManager;
+  FredericUserManager get userManager => _userManager;
+
+  final FredericSetManager _setManager = FredericSetManager();
+  FredericSetManager get setManager => _setManager;
+
+  late FredericActivityManager _activityManager;
+  FredericActivityManager get activityManager => _activityManager;
 
   FredericWorkoutManager? _workoutManager;
   FredericWorkoutManager? get workoutManager => _workoutManager;
@@ -35,67 +35,18 @@ class FredericBackend {
   FredericGoalManager? _goalManager;
   FredericGoalManager? get goalManager => _goalManager;
 
-  FredericUser? _currentUser;
-  FredericUser? get currentUser => _currentUser;
-
-  Stream<FredericUser>? _currentUserStream;
-  Stream<FredericUser>? get currentUserStream => _currentUserStream;
-
-  static FredericBackend? instance() => getIt<FredericBackend>();
-
-  late Completer<FredericUser> _currentUserCompleter;
-
-  ///
-  /// Use this to load the data for the currentUser, instead of using
-  /// currentUser.loadData().
-  ///
-  /// Normally called in AuthenticationWrapper
-  ///
-  Future<FredericUser> loadCurrentUser() async {
-    _loadCurrentUserStream();
-    return _currentUserCompleter.future;
-  }
-
   void loadData() {
-    _activityManager!.loadData();
-    _workoutManager!.loadData();
-    _goalManager!.loadData();
+    //TODO: wait until data loaded to complete
+
+    _activityManager.reload();
+    _workoutManager = FredericWorkoutManager();
+    _workoutManager?.loadData();
+    _goalManager = FredericGoalManager();
+    _goalManager?.loadData();
   }
 
-  void logIn(String uid) {
-    _currentUser!.uid = uid;
-  }
-
-  void logOut() {
-    FirebaseAuth.instance.signOut();
-    dispose();
-    if (getIt.isRegistered<FredericBackend>())
-      getIt.unregister<FredericBackend>();
-    getIt.registerSingleton<FredericBackend>(FredericBackend());
-  }
-
-  void _loadCurrentUserStream() {
-    if (currentUser?.uid == null) return null;
-
-    CollectionReference usersCollection =
-        FirebaseFirestore.instance.collection('users');
-
-    Stream<DocumentSnapshot> userStream =
-        usersCollection.doc(currentUser!.uid).snapshots();
-
-    userStream.listen(_handleUserStream);
-  }
-
-  void _handleUserStream(DocumentSnapshot snapshot) {
-    currentUser!.insertDocumentSnapshot(snapshot as DocumentSnapshot<Map<String, dynamic>>);
-    if (!_currentUserCompleter.isCompleted)
-      _currentUserCompleter.complete(currentUser);
-  }
-
-  //TODO: Call this on app close/logout
   void dispose() {
-    _activityManager!.dispose();
-    _workoutManager!.dispose();
-    _goalManager!.dispose();
+    _workoutManager?.dispose();
+    _goalManager?.dispose();
   }
 }
