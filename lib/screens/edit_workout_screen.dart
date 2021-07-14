@@ -10,6 +10,7 @@ import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
 /// Screen create/edit individual workouts
@@ -25,8 +26,8 @@ class EditWorkoutScreen extends StatefulWidget {
 }
 
 class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
-  PageController? pageController;
-  WeekdaysSliderController? weekdaysSliderController;
+  late PageController pageController;
+  late WeekdaysSliderController weekdaysSliderController;
 
   @override
   void initState() {
@@ -49,19 +50,19 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 EditWorkoutHeader(workout),
                 Divider(color: const Color(0xFFC9C9C9)),
                 WeekdaysSliderSegment(
-                    pageController: pageController!,
-                    weekdaysSliderController: weekdaysSliderController!,
+                    pageController: pageController,
+                    weekdaysSliderController: weekdaysSliderController,
                     workout: workout),
                 Divider(color: const Color(0xFFC9C9C9)),
                 EditActivityListSegment(
                     workout: workout,
-                    pageController: pageController!,
-                    weekdaysSliderController: weekdaysSliderController!),
+                    pageController: pageController,
+                    weekdaysSliderController: weekdaysSliderController),
               ],
             ),
           ),
           floatingActionButton:
-              workout.canEdit! ? buildAddExerciseButton(width, 44) : null,
+              workout.canEdit ? buildAddExerciseButton(width, 44) : null,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
         );
@@ -69,7 +70,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     );
   }
 
-  Widget buildAddExerciseButton(double width) {
+  Widget buildAddExerciseButton(double width, double height) {
     return Container(
       height: height,
       width: width,
@@ -96,38 +97,33 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   }
 
   void handleAddActivity(FredericActivity activity) {
-    bool success = FredericBackend.instance()!
-            .workoutManager![widget.workoutID]
-            ?.addActivity(activity, pageController!.page!.toInt()) ??
+    bool success = FredericBackend
+            .instance.workoutManager.state.workouts[widget.workoutID]
+            ?.addActivity(activity, pageController.page!.toInt() + 1) ??
         false;
 
     if (success) {
       UserFeedbackToast().showAddedToast(context);
     }
+  }
 
-    void handleDeleteActivity(FredericActivity activity) {
-      FredericBackend.instance()!
-          .workoutManager![widget.workoutID]
-          ?.removeActivity(activity, pageController!.page!.toInt());
-    }
+  void handleDeleteActivity(FredericActivity activity) {
+    FredericBackend.instance.workoutManager.state.workouts[widget.workoutID]
+        ?.removeActivity(activity, pageController.page!.toInt());
   }
 
   void showActivityList(BuildContext context) {
-    showModalBottomSheet<dynamic>(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12.0),
-          topRight: Radius.circular(12.0),
-        ),
-      ),
+    CupertinoScaffold.showCupertinoModalBottomSheet(
       context: context,
-      builder: (context) {
+      builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.8,
+          //height: MediaQuery.of(ctx).size.height * 0.8,
           child: ActivityListScreen(
-            isAddable: true,
-            handleAdd: handleAddActivity,
+            isSelector: true,
+            onSelect: (activity) {
+              handleAddActivity(activity);
+              Navigator.of(ctx).pop();
+            },
           ),
         );
       },
@@ -136,7 +132,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   void dispose() {
-    pageController!.dispose();
+    pageController.dispose();
     super.dispose();
   }
 }

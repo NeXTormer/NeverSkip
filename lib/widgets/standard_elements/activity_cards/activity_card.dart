@@ -55,7 +55,7 @@ class ActivityCard extends StatelessWidget {
   void handleClick(BuildContext context) {
     if (onClick != null) return onClick!();
 
-    showCupertinoModalBottomSheet(
+    CupertinoScaffold.showCupertinoModalBottomSheet(
         //expand: true,
         enableDrag: true,
         context: context,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_segment.dart';
@@ -30,7 +30,7 @@ class ActivityListScreen extends StatelessWidget {
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: BlocBuilder<FredericUserManager, FredericUser>(
             buildWhen: (last, next) =>

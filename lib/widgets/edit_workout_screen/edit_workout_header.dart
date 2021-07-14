@@ -16,7 +16,7 @@ class EditWorkoutHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String dateFormatString =
-        formatDate(workout.startDate!, [dd, ' ', M, ' ', yyyy]);
+        formatDate(workout.startDate, const [dd, ' ', M, ' ', yyyy]);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Column(

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class WorkoutCard extends StatefulWidget {
   WorkoutCard(this.workout);
@@ -24,8 +26,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  EditWorkoutScreen(widget.workout.workoutID)));
+              builder: (context) => CupertinoScaffold(
+                  body: EditWorkoutScreen(widget.workout.workoutID))));
         },
         child: Stack(
           children: [

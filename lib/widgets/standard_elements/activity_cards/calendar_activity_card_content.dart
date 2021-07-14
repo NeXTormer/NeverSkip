@@ -20,7 +20,7 @@ class CalendarActivityCardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return FredericCard(
         onTap: deleteButton ? null : onClick,
-        height: 90,
+        height: deleteButton ? 70 : 90,
         padding: EdgeInsets.all(10),
         child: Row(
           children: [

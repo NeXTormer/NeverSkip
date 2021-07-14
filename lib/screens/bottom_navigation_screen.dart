@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   BottomNavigationScreen(this.screens);
@@ -36,44 +37,47 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      extendBodyBehindAppBar: false,
-      body: PageView(
-        children: screens,
-        controller: pageController,
-        onPageChanged: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
-          ],
+    return CupertinoScaffold(
+      body: Scaffold(
+        backgroundColor: Colors.white,
+        extendBodyBehindAppBar: false,
+        body: PageView(
+          children: screens,
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-          child: BottomNavigationBar(
-            items: items,
-            elevation: 0,
-            backgroundColor: Colors.white,
-            selectedItemColor: kAccentColor,
-            unselectedItemColor: kMainColor,
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: currentIndex,
-            onTap: (index) {
-              setState(() {
-                currentIndex = index;
-                pageController!.jumpToPage(index);
-              });
-            },
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+            boxShadow: [
+              BoxShadow(
+                  color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            child: BottomNavigationBar(
+              items: items,
+              elevation: 0,
+              backgroundColor: Colors.white,
+              selectedItemColor: kAccentColor,
+              unselectedItemColor: kMainColor,
+              showUnselectedLabels: true,
+              type: BottomNavigationBarType.fixed,
+              currentIndex: currentIndex,
+              onTap: (index) {
+                setState(() {
+                  currentIndex = index;
+                  pageController!.jumpToPage(index);
+                });
+              },
+            ),
           ),
         ),
       ),
