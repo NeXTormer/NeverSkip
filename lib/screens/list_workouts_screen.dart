@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/workout_list_screen/edit_workout_page.dart';
-import 'package:frederic/widgets/workout_list_screen/workout_card.dart';
+import 'package:frederic/widgets/workout_list_screen/workout_card_old.dart';
 
 class ListWorkoutsScreen extends StatefulWidget {
   static String routeName = '/workouts';
@@ -26,7 +26,7 @@ class _ListWorkoutsScreenState extends State<ListWorkoutsScreen> {
               return ListView.builder(
                 padding: EdgeInsets.only(top: 8),
                 itemBuilder: (context, index) {
-                  return WorkoutCard(workouts[index]);
+                  return WorkoutCardOld(workouts[index]);
                 },
                 itemCount: workouts.length,
               );

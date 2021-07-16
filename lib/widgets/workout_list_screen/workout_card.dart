@@ -1,13 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/workouts/frederic_workout.dart';
-import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:frederic/main.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 
 class WorkoutCard extends StatefulWidget {
-  WorkoutCard(this.workout);
+  const WorkoutCard(this.workout, {Key? key}) : super(key: key);
 
   final FredericWorkout workout;
 
@@ -16,134 +14,147 @@ class WorkoutCard extends StatefulWidget {
 }
 
 class _WorkoutCardState extends State<WorkoutCard> {
-  static bool _isActive = false;
+  bool isSelected = false;
+  bool isRepeating = false;
+
+  @override
+  void initState() {
+    isSelected = FredericBackend.instance.userManager.state.activeWorkouts
+        .contains(widget.workout.workoutID);
+    isRepeating = widget.workout.repeating;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(8),
-      elevation: 2,
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => CupertinoScaffold(
-                  body: EditWorkoutScreen(widget.workout.workoutID))));
-        },
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 160,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        topRight: Radius.circular(5.0)),
-                    child: Image(
-                      image: CachedNetworkImageProvider(widget.workout.image),
-                      fit: BoxFit.fitWidth,
+    return FredericCard(
+      height: 80,
+      child: true
+          ? Material(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(8),
+                            topLeft: Radius.circular(8))),
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.workout.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w600)),
+                            SizedBox(height: 6),
+                            Text(
+                              widget.workout.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          ]),
                     ),
+                  )),
+                  FredericVerticalDivider(
+                    length: 110,
+                    thickness: 0.6,
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: Text(
-                      widget.workout.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    widget.workout.description,
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Created by: ',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            widget.workout.ownerName,
-                          )
-                        ],
+                  InkWell(
+                    customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(8),
+                            topRight: Radius.circular(8))),
+                    onTap: () {
+                      setState(() {
+                        List<String> activeWorkouts = FredericBackend
+                            .instance.userManager.state.activeWorkouts;
+                        if (activeWorkouts.contains(widget.workout.workoutID)) {
+                          activeWorkouts.remove(widget.workout.workoutID);
+                          if (isSelected) isSelected = false;
+                        } else {
+                          activeWorkouts.add(widget.workout.workoutID);
+                          if (!isSelected) isSelected = true;
+                        }
+                        FredericBackend.instance.userManager.activeWorkouts =
+                            activeWorkouts;
+                      });
+                    },
+                    child: Container(
+                      width: 84,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '3 Weeks',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400, fontSize: 14),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (isRepeating)
+                                  Icon(Icons.repeat_outlined,
+                                      color: kMainColor),
+                                Expanded(child: Container()),
+                                Icon(
+                                  isSelected
+                                      ? Icons.check_box_outlined
+                                      : Icons.check_box_outline_blank_outlined,
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    _buildActiveStatusButton(),
-                  ],
-                ),
-              ],
-            ),
-            Positioned(
-              left: 10,
-              top: 10,
-              child: InkWell(
-                onTap: () {
-                  final RenderBox? box =
-                      context.findRenderObject() as RenderBox?;
-                },
-                child: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.share,
-                    color: Colors.black,
-                    size: 30,
+                  )
+                ],
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      // PictureIcon(
+                      //     'https://www.holzdiesonne.net/fileadmin/_processed_/f/9/csm_Portrait-Werner-Findenig_82b6dca0e5.png'),
+                      // SizedBox(width: 8),
+                      Text(
+                        'Bring sally up challenge',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      Icon(Icons.check),
+                      Icon(
+                        Icons.repeat_outlined,
+                        color: kMainColor,
+                      ),
+                      Text('3 Weeks')
+                    ],
                   ),
                 ),
-              ),
+                Divider(),
+                Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Bring sally up challenge Bring sally up challenge Bring sally up challenge Bring sally up challenge Bring sally up challenge',
+                      maxLines: 2,
+                    ))
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActiveStatusButton() {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _isActive = !_isActive;
-        });
-      },
-      child: Container(
-        margin: EdgeInsets.all(8),
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Active: '),
-            _isActive == true
-                ? Icon(
-                    Icons.done_all,
-                    color: Colors.greenAccent[400],
-                  )
-                : const Icon(
-                    Icons.clear,
-                    color: Colors.red,
-                  )
-          ],
-        ),
-      ),
     );
   }
 }

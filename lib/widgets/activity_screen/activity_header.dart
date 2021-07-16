@@ -44,6 +44,14 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
   final textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    textController.addListener(() {
+      widget.filterController.searchText = textController.text;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -90,7 +98,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
         ),
         SizedBox(height: 16),
         FredericTextField(
-          'Search exercise',
+          'Search...',
           controller: textController,
           icon: Icons.search,
           size: 20,
@@ -100,14 +108,6 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
         SizedBox(height: 8),
       ],
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    textController.addListener(() {
-      widget.filterController.searchText = textController.text;
-    });
   }
 
   @override

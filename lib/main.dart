@@ -16,6 +16,7 @@ import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/screens/home_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/screens/splash_screen.dart';
+import 'package:frederic/screens/workout_list_screen.dart';
 import 'package:get_it/get_it.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -131,7 +132,7 @@ class Frederic extends StatelessWidget {
                       label: 'Exercises',
                     ),
                     FredericScreen(
-                      screen: ListWorkoutsScreen(),
+                      screen: WorkoutListScreen(),
                       icon: ExtraIcons.statistics,
                       label: 'Workouts',
                     ),

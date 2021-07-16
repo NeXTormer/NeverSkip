@@ -21,8 +21,6 @@ class HomeScreen extends StatelessWidget {
             slivers: [
               HomeScreenAppbar(user), //TODO NULL SAFETY
               SliverDivider(),
-              //SliverToBoxAdapter(child: Text(user.uid)),
-              //SliverToBoxAdapter(child: Text(user.name)),
               ProgressIndicatorSegment(),
               //GoalSegment(),
               TrainingVolumeChartSegment(),
