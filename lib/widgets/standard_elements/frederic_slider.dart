@@ -99,8 +99,27 @@ class _FredericSliderThumb extends SliderComponentShape {
     canvas.drawCircle(center, 12, Paint()..color = kMainColorLight);
     canvas.drawCircle(center, 12, Paint()..color = kMainColorLight);
     canvas.drawCircle(center, 8, paint);
-    RRect rect = RRect.fromLTRBR(center.dx - 50, center.dy + 20, center.dx + 50,
-        center.dy + 32 + 20, Radius.circular(10));
+
+    double normalWidth = 80;
+
+    double left = center.dx - 39;
+    double offset = 0;
+    if (left < 0) {
+      offset = -left - 10;
+      left = -10;
+    }
+    if (left + normalWidth > parentBox.constraints.maxWidth) {
+      offset = (left - parentBox.constraints.maxWidth) + 35;
+      left = parentBox.constraints.maxWidth - normalWidth + 20;
+    }
+
+    double width = offset == 0 ? normalWidth : 70;
+    double height = 31;
+    double top = center.dy + 20;
+    double right = left + width;
+    double bottom = top + height;
+
+    RRect rect = RRect.fromLTRBR(left, top, right, bottom, Radius.circular(10));
     canvas.drawRRect(rect, Paint()..color = Colors.white);
     canvas.drawRRect(
         rect,
@@ -114,6 +133,6 @@ class _FredericSliderThumb extends SliderComponentShape {
     TextPainter textPainter = TextPainter(
         text: text, textDirection: textDirection, textAlign: TextAlign.center);
     textPainter.layout();
-    textPainter.paint(canvas, Offset(center.dx - 28, center.dy + 26));
+    textPainter.paint(canvas, Offset(center.dx - 28 + offset, center.dy + 26));
   }
 }
