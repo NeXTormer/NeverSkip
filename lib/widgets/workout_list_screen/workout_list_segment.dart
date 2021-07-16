@@ -20,7 +20,6 @@ class WorkoutListSegment extends StatelessWidget {
           List<FredericWorkout> workouts = workoutList.workouts.values
               .where((element) => element.name.contains(searchTerm.searchTerm))
               .toList();
-          print('===consume');
           return SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
             return Padding(

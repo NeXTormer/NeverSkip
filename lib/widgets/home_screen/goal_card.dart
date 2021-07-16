@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 
@@ -41,21 +41,7 @@ class GoalCard extends StatelessWidget {
                               letterSpacing: 0.3),
                         ),
                       ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                        decoration: BoxDecoration(
-                            color: kAccentColor,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100))),
-                        child: Text(
-                          goal.timeLeftFormatted,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              letterSpacing: 0.3),
-                        ),
-                      )
+                      FredericChip(goal.timeLeftFormatted)
                     ],
                   ),
                 ),
