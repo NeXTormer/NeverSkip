@@ -18,7 +18,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workoutID);
 
-  static const routeName = '/workout';
   final String workoutID;
 
   @override

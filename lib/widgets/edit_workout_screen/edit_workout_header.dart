@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/edit_workout_data_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
 /// Part of the EditWorkoutScreen. Responsible for displaying
@@ -58,10 +60,15 @@ class EditWorkoutHeader extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Icon(
-                  ExtraIcons.settings,
-                  color: kMainColor,
+                padding: const EdgeInsets.only(right: 10, top: 8),
+                child: InkWell(
+                  onTap: () => CupertinoScaffold.showCupertinoModalBottomSheet(
+                      context: context,
+                      builder: (c) => EditWorkoutDataScreen(workout)),
+                  child: Icon(
+                    ExtraIcons.settings,
+                    color: kMainColor,
+                  ),
                 ),
               ),
             ],

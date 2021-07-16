@@ -46,110 +46,108 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(12),
-                topRight: const Radius.circular(12),
-              )),
-          child: Form(
-            key: _form,
-            child: Column(
-              children: [
-                _buildWorkoutImageSection(),
-                _buildTitleTextField(),
-                _buildDescriptionTextBox(),
-                PeriodSlider(
-                    onChanged: (value) => setState(() => _period = value),
-                    startValue: _period),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Text('Weeks: '),
-                      Text(
-                        '${_period.toInt()}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Expanded(child: Container()),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 12),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Repeating'),
-                      Switch.adaptive(
-                        activeColor: kMainColor,
-                        value: _repeating,
-                        onChanged: (bool value) {
-                          setState(() {
-                            _repeating = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Starting week'),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.5, color: Colors.black38),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: GestureDetector(
-                          onTap: _selectStartDate,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.date_range,
-                                size: 20,
-                                color: Colors.black87,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                _dateText,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 6),
-                Divider(
-                  thickness: 1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(12),
+              topRight: const Radius.circular(12),
+            )),
+        child: Form(
+          key: _form,
+          child: Column(
+            children: [
+              _buildWorkoutImageSection(),
+              _buildTitleTextField(),
+              _buildDescriptionTextBox(),
+              PeriodSlider(
+                  onChanged: (value) => setState(() => _period = value),
+                  startValue: _period),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
                   children: [
-                    if (widget.loadedWorkout?.canEdit ?? false)
-                      _buildDeleteButton()
-                    else
-                      Container(),
-                    _buildSubmitButton(),
+                    Text('Weeks: '),
+                    Text(
+                      '${_period.toInt()}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(child: Container()),
                   ],
                 ),
-                SizedBox(height: 6)
-              ],
-            ),
+              ),
+              SizedBox(height: 12),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Repeating'),
+                    Switch.adaptive(
+                      activeColor: kMainColor,
+                      value: _repeating,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _repeating = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Starting week'),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.5, color: Colors.black38),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: GestureDetector(
+                        onTap: _selectStartDate,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.date_range,
+                              size: 20,
+                              color: Colors.black87,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              _dateText,
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 6),
+              Divider(
+                thickness: 1,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.loadedWorkout?.canEdit ?? false)
+                    _buildDeleteButton()
+                  else
+                    Container(),
+                  _buildSubmitButton(),
+                ],
+              ),
+              SizedBox(height: 6)
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
