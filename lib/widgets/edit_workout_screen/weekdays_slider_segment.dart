@@ -1,9 +1,9 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:expandable_page_view/expandable_page_view.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum Direction { left, right }
 
@@ -91,7 +91,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
         itemBuilder: (context, week) {
           widget.weekdaysSliderController!.setCallback(changeDayCallback);
           return Padding(
-            // TODO
+            // TODO:
             // Somehow the widget is not centred, therefore an asymmetric
             // padding was chosen here.
             padding: const EdgeInsets.only(left: 15, right: 20),
@@ -101,7 +101,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ...List.generate(7, (index) {
-                      return InkWell(
+                      return GestureDetector(
                         onTap: () {
                           handleChangeDay(index + (week * 7));
                         },

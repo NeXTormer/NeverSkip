@@ -76,30 +76,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                 child: Transform.scale(
                                   scale: 0.88,
                                   child: CupertinoSwitch(
+                                    key: ValueKey(widget.workout.workoutID),
                                     value: isSelected,
                                     activeColor: kMainColor,
-                                    onChanged: (value) => setState(() {
-                                      List<String> activeWorkouts =
-                                          FredericBackend.instance.userManager
-                                              .state.activeWorkouts;
-                                      if (value) {
-                                        if (!activeWorkouts.contains(
-                                            widget.workout.workoutID)) {
-                                          activeWorkouts
-                                              .add(widget.workout.workoutID);
-                                          isSelected = true;
-                                        }
-                                      } else {
-                                        if (activeWorkouts.contains(
-                                            widget.workout.workoutID)) {
-                                          activeWorkouts
-                                              .remove(widget.workout.workoutID);
-                                          isSelected = false;
-                                        }
-                                      }
-                                      FredericBackend.instance.userManager
-                                          .activeWorkouts = activeWorkouts;
-                                    }),
+                                    onChanged: handleSwitch,
                                   ),
                                 ),
                               )
@@ -135,5 +115,24 @@ class _WorkoutCardState extends State<WorkoutCard> {
             )
           ],
         ));
+  }
+
+  void handleSwitch(bool value) {
+    setState(() {
+      List<String> activeWorkouts =
+          FredericBackend.instance.userManager.state.activeWorkouts;
+      if (value) {
+        if (!activeWorkouts.contains(widget.workout.workoutID)) {
+          activeWorkouts.add(widget.workout.workoutID);
+        }
+        isSelected = true;
+      } else {
+        if (activeWorkouts.contains(widget.workout.workoutID)) {
+          activeWorkouts.remove(widget.workout.workoutID);
+        }
+        isSelected = false;
+      }
+      FredericBackend.instance.userManager.activeWorkouts = activeWorkouts;
+    });
   }
 }

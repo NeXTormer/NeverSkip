@@ -7,7 +7,9 @@ import 'package:frederic/widgets/workout_list_screen/workout_card.dart';
 import 'package:provider/provider.dart';
 
 class WorkoutListSegment extends StatelessWidget {
-  const WorkoutListSegment({Key? key}) : super(key: key);
+  const WorkoutListSegment(this.active, {Key? key}) : super(key: key);
+
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +21,19 @@ class WorkoutListSegment extends StatelessWidget {
             builder: (context, searchTerm, child) {
           List<FredericWorkout> workouts = workoutList.workouts.values
               .where((element) => element.name.contains(searchTerm.searchTerm))
-              .toList();
+              .where((element) {
+            if (active) {
+              return user.activeWorkouts.contains(element.workoutID);
+            } else {
+              return !user.activeWorkouts.contains(element.workoutID);
+            }
+          }).toList();
           return SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: WorkoutCard(workouts[index]),
+              child: WorkoutCard(workouts[index],
+                  key: ValueKey(workouts[index].workoutID)),
             );
           }, childCount: workouts.length));
         });

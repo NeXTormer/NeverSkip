@@ -25,46 +25,30 @@ class FredericCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (onTap == null) return _buildContainer();
     return Container(
-      child: Stack(
-        children: [
-          _buildContainer(),
-          Container(
-            width: width,
-            height: height,
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(borderRadius),
-                splashColor: Colors.grey.withAlpha(32),
-                highlightColor: Colors.grey.withAlpha(15),
-                onTap: onTap,
-                onLongPress: onLongPress,
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        color: Colors.transparent),
-                    padding: EdgeInsets.all(12)),
-              ),
-            ),
-          )
-        ],
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          color: color,
+          border: Border.all(color: kCardBorderColor)),
+      child: Material(
+        borderRadius: BorderRadius.circular(borderRadius),
+        color: Colors.transparent,
+        child: InkWell(
+          customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
+          splashColor: Colors.grey.withAlpha(32),
+          highlightColor: Colors.grey.withAlpha(15),
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Container(
+            child: child,
+            padding: padding,
+            margin: margin,
+          ),
+        ),
       ),
     );
-  }
-
-  Widget _buildContainer() {
-    return Container(
-        color: color,
-        width: width,
-        height: height,
-        padding: padding,
-        margin: margin,
-        child: child,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            color: Colors.white,
-            border: Border.all(color: kCardBorderColor)));
   }
 }

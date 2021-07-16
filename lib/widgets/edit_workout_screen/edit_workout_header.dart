@@ -1,6 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -56,10 +57,13 @@ class EditWorkoutHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              Icon(
-                ExtraIcons.bell_1,
-                color: Colors.grey,
-              )
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(
+                  ExtraIcons.settings,
+                  color: kMainColor,
+                ),
+              ),
             ],
           )
         ],
