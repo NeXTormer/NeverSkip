@@ -43,6 +43,10 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         FredericWorkout workout = workoutListData.workouts[widget.workoutID]!;
         return Scaffold(
           backgroundColor: Colors.white,
+          floatingActionButton:
+              workout.canEdit ? buildAddExerciseButton(width, 44) : null,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           body: SafeArea(
             child: Column(
               children: [
@@ -60,10 +64,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
               ],
             ),
           ),
-          floatingActionButton:
-              workout.canEdit ? buildAddExerciseButton(width, 44) : null,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
         );
       },
     );
@@ -76,6 +76,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       margin: const EdgeInsets.all(16.0),
       child: FloatingActionButton(
         elevation: 0,
+        highlightElevation: 0,
         backgroundColor: kMainColor,
         onPressed: () => showActivityList(context),
         shape: RoundedRectangleBorder(

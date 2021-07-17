@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
@@ -16,9 +14,12 @@ import 'package:frederic/widgets/workout_list_screen/workout_card.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EditWorkoutDataScreen extends StatefulWidget {
-  const EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key);
+  EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key) {
+    isNewWorkout = workout.workoutID == 'new';
+  }
 
   final FredericWorkout workout;
+  late final bool isNewWorkout;
 
   @override
   _EditWorkoutDataScreenState createState() => _EditWorkoutDataScreenState();
@@ -30,8 +31,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  String? dummyDescription;
-  String? dummyName;
+  String dummyDescription = '';
+  String dummyName = '';
   bool dummyRepeating = false;
   int dummyPeriod = 1;
 
@@ -98,14 +99,17 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                 ),
                 SizedBox(width: 32),
                 Text(
-                  'Edit workout',
+                  widget.isNewWorkout ? 'Create workout' : 'Edit workout',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 Expanded(child: Container()),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () {
+                    saveData();
+                    Navigator.of(context).pop();
+                  },
                   child: Text(
-                    'Save',
+                    widget.isNewWorkout ? 'Create' : 'Save',
                     style: TextStyle(
                         color: kMainColor, fontWeight: FontWeight.w500),
                   ),
@@ -217,7 +221,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Starting week'),
+                      Text('Start day'),
                       FredericCard(
                         width: 100,
                         onTap: () {
@@ -272,7 +276,10 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                     context: context,
                                     builder: (ctx) => FredericActionDialog(
                                           onConfirm: () {
-                                            log('TODO: DELETE WORKOUT');
+                                            FredericBackend
+                                                .instance.workoutManager
+                                                .add(FredericWorkoutDeleteEvent(
+                                                    widget.workout));
                                             Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                             Navigator.of(context).pop();
@@ -289,8 +296,12 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                       if (widget.workout.canEdit) SizedBox(width: 16),
                       Expanded(
                           flex: 2,
-                          child: FredericButton('Save',
-                              onPressed: () => Navigator.of(context).pop()))
+                          child: FredericButton(
+                              widget.isNewWorkout ? 'Create' : 'Save',
+                              onPressed: () {
+                            saveData();
+                            Navigator.of(context).pop();
+                          }))
                     ],
                   ),
                   SizedBox(height: 16)
@@ -303,13 +314,29 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     );
   }
 
+  void saveData() {
+    if (widget.isNewWorkout) {
+      widget.workout.save(
+          title: dummyName,
+          description: dummyDescription,
+          image: widget.workout.image,
+          period: dummyPeriod,
+          repeating: dummyRepeating,
+          startDate: selectedStartDate ?? DateTime.now());
+    } else {
+      if (selectedStartDate != null &&
+          widget.workout.startDate != selectedStartDate!) {
+        widget.workout.startDate = selectedStartDate!;
+      }
+      widget.workout.name = dummyName;
+      widget.workout.description = dummyDescription;
+      widget.workout.repeating = dummyRepeating;
+      widget.workout.period = dummyPeriod;
+    }
+  }
+
   @override
   void dispose() {
-    if (selectedStartDate != null &&
-        widget.workout.startDate != selectedStartDate!) {
-      widget.workout.startDate = selectedStartDate!;
-    }
-
     super.dispose();
   }
 }

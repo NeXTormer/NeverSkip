@@ -95,7 +95,9 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                     key: ValueKey(widget.workout.workoutID),
                                     value: isSelected,
                                     activeColor: kMainColor,
-                                    onChanged: handleSwitch,
+                                    onChanged: widget.workout.workoutID == 'new'
+                                        ? null
+                                        : handleSwitch,
                                   ),
                                 ),
                               )

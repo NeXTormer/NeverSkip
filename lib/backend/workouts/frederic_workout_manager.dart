@@ -52,9 +52,16 @@ class FredericWorkoutManager
   @override
   Stream<FredericWorkoutListData> mapEventToState(
       FredericWorkoutEvent event) async* {
-    if (event is FredericWorkoutEvent) {
+    if (event is FredericWorkoutUpdateEvent) {
       yield FredericWorkoutListData(_workouts, event.changed);
-    } else if (event is FredericWorkoutUpdateEvent) {
+    } else if (event is FredericWorkoutCreateEvent) {
+      _workouts[event.workout.workoutID] = event.workout;
+      yield FredericWorkoutListData(_workouts, event.changed);
+    } else if (event is FredericWorkoutDeleteEvent) {
+      _workouts[event.workout.workoutID]?.delete();
+      _workouts.remove(event.workout.workoutID);
+      yield FredericWorkoutListData(_workouts, event.changed);
+    } else if (event is FredericWorkoutEvent) {
       yield FredericWorkoutListData(_workouts, event.changed);
     }
   }
@@ -67,6 +74,16 @@ class FredericWorkoutEvent {
 
 class FredericWorkoutUpdateEvent extends FredericWorkoutEvent {
   FredericWorkoutUpdateEvent(String updated) : super([updated]);
+}
+
+class FredericWorkoutCreateEvent extends FredericWorkoutEvent {
+  FredericWorkoutCreateEvent(this.workout) : super([workout.workoutID]);
+  FredericWorkout workout;
+}
+
+class FredericWorkoutDeleteEvent extends FredericWorkoutEvent {
+  FredericWorkoutDeleteEvent(this.workout) : super([workout.workoutID]);
+  FredericWorkout workout;
 }
 
 class FredericWorkoutListData {

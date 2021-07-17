@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
@@ -32,6 +30,12 @@ class FredericWorkout {
     _loadActivities(activitiesList);
   }
 
+  FredericWorkout.create()
+      : workoutID = 'new',
+        _workoutManager = FredericBackend.instance.workoutManager {
+    _activities = FredericWorkoutActivities(this);
+  }
+
   final String workoutID;
   final FredericWorkoutManager _workoutManager;
 
@@ -47,10 +51,11 @@ class FredericWorkout {
   bool? _repeating;
 
   DateTime get startDate => _startDate ?? DateTime.now();
-  String get name => _name ?? 'Empty workout';
-  String get description => _description ?? 'Empty...';
+  String get name => _name ?? 'Workout name';
+  String get description => _description ?? 'Workout description';
   String get image =>
-      _image ?? 'https://via.placeholder.com/400x400?text=noimage';
+      _image ??
+      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fpush-up.png?alt=media&token=60cfa88e-4777-46fe-8005-5263c490c109';
   String get owner => _owner ?? 'No owner';
   String get ownerName => _ownerName ?? (canEdit ? 'You' : 'Other');
 
@@ -143,21 +148,20 @@ class FredericWorkout {
   }
 
   //============================================================================
-  /// Creates a new activity using the passed [name], [description], and [image] in the
-  /// DB and returns it as a future when finished.
-  /// The [owner] is the current user
+  /// Saves the workout to the database. Only use when created with
+  /// FredericWorkout.create()
   ///
-  @deprecated
-  static Future<bool> create(
-      {String? title,
-      String? description,
-      String? image,
-      int? period,
-      bool? repeating,
+  void save(
+      {required String title,
+      required String description,
+      required String image,
+      required int period,
+      required bool repeating,
       required DateTime startDate}) async {
+    if (workoutID != 'new') return;
     CollectionReference workouts =
         FirebaseFirestore.instance.collection('workouts');
-    DocumentReference newWorkout = await workouts.add({
+    var newWorkout = await workouts.add({
       'name': title,
       'description': description,
       'image': image,
@@ -166,14 +170,15 @@ class FredericWorkout {
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate)
     });
-    return true;
+    var snapshot = await newWorkout.get();
+    _workoutManager.add(
+        FredericWorkoutCreateEvent(FredericWorkout(snapshot, _workoutManager)));
   }
 
   ///
-  /// Deletes the workout from the DB
+  /// Deletes the workout from the DB, don't call directly
   ///
   void delete() {
-    //TODO: move to workoutmanager
     FirebaseFirestore.instance.collection('workouts').doc(workoutID).delete();
   }
 
@@ -249,8 +254,7 @@ class FredericWorkoutActivities {
   }
 
   List<FredericActivity> getDay(DateTime day) {
-    DateTime start = workout.startDate
-        .subtract(Duration(days: workout.startDate.weekday - 1));
+    DateTime start = workout.startDate;
     DateTime end = workout.startDate.add(Duration(days: period * 7));
     if (day.isAfter(end) && workout.repeating == false)
       return <FredericActivity>[];

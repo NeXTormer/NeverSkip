@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
@@ -42,7 +43,6 @@ class ActivityListScreen extends StatelessWidget {
                     controller:
                         isSelector ? ModalScrollController.of(context) : null,
                     slivers: [
-                      // TODO Pull Request for finished activity screen
                       ActivityHeader(title, subtitle),
                       SliverDivider(),
                       FeaturedActivitySegment(
@@ -50,13 +50,13 @@ class ActivityListScreen extends StatelessWidget {
                         user.progressMonitors,
                         onTap: onSelect,
                         isSelector: isSelector,
-                      ), // TODO get list of user specific 'featured activities'
+                      ),
                       FeaturedActivitySegment(
                         'Calisthenics',
                         user.progressMonitors,
                         onTap: onSelect,
                         isSelector: isSelector,
-                      ), // TODO get list of user? specific 'calisthenics activites'
+                      ),
                       ActivityFilterSegment(
                           filterController:
                               filter), // TODO Update Muscle Buttons to Radio Buttons
