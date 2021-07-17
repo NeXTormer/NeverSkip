@@ -9,7 +9,21 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class WorkoutCard extends StatefulWidget {
-  const WorkoutCard(this.workout, {Key? key}) : super(key: key);
+  const WorkoutCard(this.workout,
+      {Key? key, this.name, this.description, this.period, this.repeating})
+      : clickable = true,
+        super(key: key);
+
+  const WorkoutCard.dummy(this.workout,
+      {this.name, this.description, this.period, this.repeating})
+      : clickable = false;
+
+  final String? name;
+  final String? description;
+  final int? period;
+  final bool? repeating;
+
+  final bool clickable;
 
   final FredericWorkout workout;
 
@@ -25,19 +39,21 @@ class _WorkoutCardState extends State<WorkoutCard> {
   void initState() {
     isSelected = FredericBackend.instance.userManager.state.activeWorkouts
         .contains(widget.workout.workoutID);
-    isRepeating = widget.workout.repeating;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    isRepeating = widget.repeating ?? widget.workout.repeating;
     return FredericCard(
         height: 114,
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => CupertinoScaffold(
-                  body: EditWorkoutScreen(widget.workout.workoutID))));
-        },
+        onTap: widget.clickable
+            ? () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CupertinoScaffold(
+                        body: EditWorkoutScreen(widget.workout.workoutID))));
+              }
+            : null,
         padding: EdgeInsets.only(top: 12, left: 12, bottom: 10, right: 3),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -64,7 +80,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  widget.workout.name,
+                                  widget.name ?? widget.workout.name,
                                   maxLines: 1,
                                   style: TextStyle(
                                       fontSize: 15,
@@ -90,7 +106,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             FredericChip(
-                              '${widget.workout.period} weeks',
+                              '${widget.period ?? widget.workout.period} week${(widget.period ?? widget.workout.period) == 1 ? '' : 's'}',
                               fontSize: 12,
                             ),
                             SizedBox(width: 10),
@@ -110,7 +126,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
             Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.only(right: 9),
-              child: Text(widget.workout.description,
+              child: Text(widget.description ?? widget.workout.description,
                   maxLines: 2, overflow: TextOverflow.ellipsis),
             )
           ],

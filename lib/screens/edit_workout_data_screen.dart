@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
+import 'package:frederic/widgets/standard_elements/frederic_button.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_slider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
@@ -24,6 +29,55 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+
+  String? dummyDescription;
+  String? dummyName;
+  bool dummyRepeating = false;
+  int dummyPeriod = 1;
+
+  bool isRepeating = false;
+  bool datePickerOpen = false;
+
+  DateTime? selectedStartDate;
+
+  String dateText = '';
+
+  int totalActivities = 0;
+
+  @override
+  void initState() {
+    isRepeating = widget.workout.repeating;
+    dateText = formatDateTime(widget.workout.startDate);
+    dummyDescription = widget.workout.description;
+    dummyName = widget.workout.name;
+    dummyRepeating = widget.workout.repeating;
+    dummyPeriod = widget.workout.period;
+
+    descriptionController.addListener(() {
+      setState(() {
+        dummyDescription = descriptionController.text;
+      });
+    });
+    nameController.addListener(() {
+      setState(() {
+        dummyName = nameController.text;
+      });
+    });
+
+    for (List<FredericActivity> list in widget.workout.activities.activities) {
+      totalActivities += list.length;
+    }
+
+    super.initState();
+  }
+
+  String formatDateTime(DateTime date) {
+    String day = date.day.toString();
+    if (date.day < 10) day = day.padLeft(2, '0');
+    String month = date.month.toString();
+    if (date.month < 10) month = month.padLeft(2, '0');
+    return '$day.$month.${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +102,13 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 Expanded(child: Container()),
-                Text(
-                  'Save',
-                  style:
-                      TextStyle(color: kMainColor, fontWeight: FontWeight.w500),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                        color: kMainColor, fontWeight: FontWeight.w500),
+                  ),
                 )
               ],
             ),
@@ -60,7 +117,13 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
           SliverToBoxAdapter(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: WorkoutCard(widget.workout),
+            child: WorkoutCard.dummy(
+              widget.workout,
+              description: dummyDescription,
+              period: dummyPeriod,
+              repeating: dummyRepeating,
+              name: dummyName,
+            ),
           )),
           SliverDivider(),
           SliverToBoxAdapter(
@@ -112,13 +175,141 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
             child: FredericSlider(
               min: 1,
               max: 8,
+              value: widget.workout.period.toDouble(),
               onChanged: (double value) {
-                print(value);
+                setState(() {
+                  dummyPeriod = value.toInt();
+                });
               },
+            ),
+          ),
+          SliverPadding(padding: const EdgeInsets.only(bottom: 42)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Repeating'),
+                      CupertinoSwitch(
+                          value: isRepeating,
+                          onChanged: (value) {
+                            setState(() {
+                              isRepeating = value;
+                              dummyRepeating = value;
+                            });
+                          },
+                          activeColor: kMainColor)
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Text('Number of activities'),
+                      Expanded(child: Container()),
+                      Text('$totalActivities'),
+                      SizedBox(width: 5)
+                    ],
+                  ),
+                  SizedBox(height: 13),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Starting week'),
+                      FredericCard(
+                        width: 100,
+                        onTap: () {
+                          setState(() {
+                            datePickerOpen = !datePickerOpen;
+                          });
+                        },
+                        padding: EdgeInsets.all(8),
+                        child: Center(
+                          child: Text(
+                            dateText,
+                            maxLines: 1,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  AnimatedContainer(
+                      height: datePickerOpen ? 150 : 0.0001,
+                      duration: Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          border: Border.all(color: kCardBorderColor)),
+                      child: CupertinoDatePicker(
+                        minimumYear: DateTime.now().year - 1,
+                        maximumYear: DateTime.now().year + 1,
+                        mode: CupertinoDatePickerMode.date,
+                        initialDateTime: widget.workout.startDate,
+                        onDateTimeChanged: (date) {
+                          selectedStartDate = date;
+                          setState(() {
+                            dateText = formatDateTime(date);
+                          });
+                        },
+                      )),
+                  SizedBox(
+                      height: (MediaQuery.of(context).size.height < 950
+                          ? 950 - MediaQuery.of(context).size.height
+                          : 16)),
+                  Row(
+                    children: [
+                      if (widget.workout.canEdit)
+                        Expanded(
+                            flex: 1,
+                            child: FredericButton(
+                              'Delete',
+                              mainColor: Colors.red,
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) => FredericActionDialog(
+                                          onConfirm: () {
+                                            log('TODO: DELETE WORKOUT');
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                          title: 'Confirm deletion',
+                                          destructiveAction: true,
+                                          child: Text(
+                                              'Do you want to delete the workout plan? This cannot be undone!',
+                                              textAlign: TextAlign.center),
+                                        ));
+                              },
+                              inverted: true,
+                            )),
+                      if (widget.workout.canEdit) SizedBox(width: 16),
+                      Expanded(
+                          flex: 2,
+                          child: FredericButton('Save',
+                              onPressed: () => Navigator.of(context).pop()))
+                    ],
+                  ),
+                  SizedBox(height: 16)
+                ],
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (selectedStartDate != null &&
+        widget.workout.startDate != selectedStartDate!) {
+      widget.workout.startDate = selectedStartDate!;
+    }
+
+    super.dispose();
   }
 }

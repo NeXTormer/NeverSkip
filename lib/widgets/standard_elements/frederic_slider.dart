@@ -70,7 +70,7 @@ class _FredericSliderThumb extends SliderComponentShape {
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return Size.fromRadius(0);
+    return Size.fromRadius(1);
   }
 
   @override
@@ -113,6 +113,8 @@ class _FredericSliderThumb extends SliderComponentShape {
       left = parentBox.constraints.maxWidth - normalWidth + 20;
     }
 
+    if (offset < -20) offset = 0;
+
     double width = offset == 0 ? normalWidth : 70;
     double height = 31;
     double top = center.dy + 20;
@@ -128,10 +130,11 @@ class _FredericSliderThumb extends SliderComponentShape {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1);
     TextSpan text = TextSpan(
-        style: TextStyle(color: Colors.black, fontSize: 16),
+        style: TextStyle(color: Colors.black54, fontSize: 16),
         text: '${val.ceil()} week${val.ceil() == 1 ? '' : 's'}');
-    TextPainter textPainter = TextPainter(
-        text: text, textDirection: textDirection, textAlign: TextAlign.center);
+    TextPainter textPainter =
+        TextPainter(text: text, textDirection: textDirection);
+
     textPainter.layout();
     textPainter.paint(canvas, Offset(center.dx - 28 + offset, center.dy + 26));
   }

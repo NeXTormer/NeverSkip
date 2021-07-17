@@ -64,7 +64,8 @@ class EditWorkoutHeader extends StatelessWidget {
                 child: InkWell(
                   onTap: () => CupertinoScaffold.showCupertinoModalBottomSheet(
                       context: context,
-                      builder: (c) => EditWorkoutDataScreen(workout)),
+                      builder: (c) =>
+                          Scaffold(body: EditWorkoutDataScreen(workout))),
                   child: Icon(
                     ExtraIcons.settings,
                     color: kMainColor,
