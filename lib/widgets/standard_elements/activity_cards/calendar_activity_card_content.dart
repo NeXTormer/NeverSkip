@@ -42,10 +42,10 @@ class CalendarActivityCardContent extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: kTextColor)),
                     Expanded(child: Container()),
-                    if (activity.type == FredericActivityType.Weighted &&
-                        !deleteButton)
-                      Icon(ExtraIcons.dumbbell, color: kMainColor, size: 16),
-                    SizedBox(width: 6),
+                    // if (activity.type == FredericActivityType.Weighted &&
+                    //     !deleteButton)
+                    //   Icon(ExtraIcons.dumbbell, color: kMainColor, size: 16),
+                    // SizedBox(width: 6),
                   ]),
                   Row(
                     children: [

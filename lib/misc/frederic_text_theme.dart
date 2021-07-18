@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
 class FredericTextTheme {
-  static const Color greyTextColor = const Color(0x7A3A3A3A);
+  static const Color greyTextColor = const Color(0xBF3A3A3A);
 
   static const TextStyle homeScreenAppBarTitle = const TextStyle(
       fontFamily: 'Montserrat',

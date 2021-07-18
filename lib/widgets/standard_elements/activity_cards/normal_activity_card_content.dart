@@ -4,7 +4,6 @@ import 'package:frederic/widgets/standard_elements/circular_plus_icon.dart';
 import '../../../backend/activities/frederic_activity.dart';
 import '../../../main.dart';
 import '../frederic_card.dart';
-import '../frederic_vertical_divider.dart';
 import '../picture_icon.dart';
 
 class NormalActivityCardContent extends StatelessWidget {
@@ -39,22 +38,22 @@ class NormalActivityCardContent extends StatelessWidget {
                       '${activity.name}',
                       style: TextStyle(
                         color: kTextColor,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0,
+                        fontSize: 13,
                       ),
                     ),
-                    SizedBox(width: 6),
-                    FredericVerticalDivider(length: 16),
-                    SizedBox(width: 6),
-                    Text(
-                      '${1}', // activity.bestreps
-                      style: TextStyle(
-                          color: kGreyColor, // TODO Change to darker grey
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
-                          fontSize: 12),
-                    ),
+                    // SizedBox(width: 6),
+                    // FredericVerticalDivider(length: 16),
+                    // SizedBox(width: 6),
+                    // Text(
+                    //   '${1}', // activity.bestreps
+                    //   style: TextStyle(
+                    //       color: kGreyColor,
+                    //       fontWeight: FontWeight.w500,
+                    //       letterSpacing: 0.5,
+                    //       fontSize: 12),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 6),
@@ -62,9 +61,9 @@ class NormalActivityCardContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                       style: TextStyle(
-                          color: kGreyColor, // TODO Change to darker grey
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
+                          color: const Color(0xC03A3A3A),
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.2,
                           fontSize: 12),
                       text: '${activity.description}'),
                 ),

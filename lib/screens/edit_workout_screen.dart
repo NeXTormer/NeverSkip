@@ -40,11 +40,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     var width = MediaQuery.of(context).size.width;
     return BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
       builder: (context, workoutListData) {
-        FredericWorkout workout = workoutListData.workouts[widget.workoutID]!;
+        FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
+        if (workout == null) return Scaffold();
         return Scaffold(
           backgroundColor: Colors.white,
           floatingActionButton:
-              workout.canEdit ? buildAddExerciseButton(width, 44) : null,
+              workout!.canEdit ? buildAddExerciseButton(width, 44) : null,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           body: SafeArea(

@@ -15,109 +15,111 @@ class SetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FredericCard(
-        margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        padding: EdgeInsets.all(8),
-        height: 50,
-        onLongPress: () {
-          showDialog(
-              context: context,
-              builder: (context) => FredericActionDialog(
-                    title: 'Confirm deletion',
-                    actionText: 'Delete',
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(
-                          'Do you want to delete this set? This cannot be undone!',
-                          textAlign: TextAlign.center),
-                    ),
-                    onConfirm: () {
-                      FredericBackend
-                          .instance.setManager.state[activity.activityID]
-                          .deleteSet(set);
-                      Navigator.of(context).pop();
-                    },
-                    destructiveAction: true,
-                  ));
-        },
-        onTap: () {},
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: kMainColorLight),
-              child: Icon(
-                ExtraIcons.statistics,
-                color: kMainColor,
-                size: 18,
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
+      child: FredericCard(
+          padding: EdgeInsets.all(8),
+          height: 51,
+          onLongPress: () {
+            showDialog(
+                context: context,
+                builder: (context) => FredericActionDialog(
+                      title: 'Confirm deletion',
+                      actionText: 'Delete',
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                            'Do you want to delete this set? This cannot be undone!',
+                            textAlign: TextAlign.center),
+                      ),
+                      onConfirm: () {
+                        FredericBackend
+                            .instance.setManager.state[activity.activityID]
+                            .deleteSet(set);
+                        Navigator.of(context).pop();
+                      },
+                      destructiveAction: true,
+                    ));
+          },
+          onTap: () {},
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: kMainColorLight),
+                child: Icon(
+                  ExtraIcons.statistics,
+                  color: kMainColor,
+                  size: 18,
+                ),
               ),
-            ),
-            SizedBox(width: 16),
-            Row(
-              //crossAxisAlignment: CrossAxisAlignment.baseline,
-              children: [
-                Text(
-                  '${set.reps}',
-                  style: TextStyle(
-                      color: kTextColor,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                      fontSize: 14),
-                ),
-                SizedBox(width: 3),
-                Text('reps',
+              SizedBox(width: 16),
+              Row(
+                //crossAxisAlignment: CrossAxisAlignment.baseline,
+                children: [
+                  Text(
+                    '${set.reps}',
                     style: TextStyle(
                         color: kTextColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
-                        fontSize: 12)),
-                SizedBox(width: 10),
-                FredericVerticalDivider(length: 16),
-                SizedBox(width: 10),
-                Text(
-                  '${set.weight}',
-                  style: TextStyle(
-                      color: kTextColor,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                      fontSize: 14),
-                ),
-                SizedBox(width: 3),
-                Text(activity.progressUnit,
+                        fontSize: 14),
+                  ),
+                  SizedBox(width: 3),
+                  Text('reps',
+                      style: TextStyle(
+                          color: kTextColor,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                          fontSize: 12)),
+                  SizedBox(width: 10),
+                  FredericVerticalDivider(length: 16),
+                  SizedBox(width: 10),
+                  Text(
+                    '${set.weight}',
                     style: TextStyle(
                         color: kTextColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
-                        fontSize: 12)),
-              ],
-            ),
-            Expanded(
-              child: Container(),
-            ),
-            Text(
-              '${DateFormat.yMMMd().format(set.timestamp.toLocal())}',
-              style: TextStyle(
-                  color: kTextColor,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.4,
-                  fontSize: 14),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '${DateFormat.Hm().format(set.timestamp.toLocal())}',
-              style: TextStyle(
-                  color: kTextColor,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.3,
-                  fontSize: 14),
-            ),
-            SizedBox(width: 12),
-            Icon(ExtraIcons.calendar, color: kMainColor, size: 22),
-          ],
-        ));
+                        fontSize: 14),
+                  ),
+                  SizedBox(width: 3),
+                  Text(activity.progressUnit,
+                      style: TextStyle(
+                          color: kTextColor,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                          fontSize: 12)),
+                ],
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              Text(
+                '${DateFormat.yMMMd().format(set.timestamp.toLocal())}',
+                style: TextStyle(
+                    color: kTextColor,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.4,
+                    fontSize: 14),
+              ),
+              SizedBox(width: 8),
+              Text(
+                '${DateFormat.Hm().format(set.timestamp.toLocal())}',
+                style: TextStyle(
+                    color: kTextColor,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.3,
+                    fontSize: 14),
+              ),
+              SizedBox(width: 12),
+              Icon(ExtraIcons.calendar, color: kMainColor, size: 22),
+            ],
+          )),
+    );
   }
 }

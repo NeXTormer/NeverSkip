@@ -13,15 +13,21 @@ class PictureIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (url == null)
-      return Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8), color: Colors.black54),
+      return AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8), color: Colors.black54),
+        ),
       );
-    return Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8), color: kMainColorLight),
-        child: CachedNetworkImage(imageUrl: url!, color: kMainColor));
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8), color: kMainColorLight),
+          child: CachedNetworkImage(imageUrl: url!, color: kMainColor)),
+    );
   }
 }

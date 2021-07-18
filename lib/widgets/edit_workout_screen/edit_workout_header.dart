@@ -61,16 +61,19 @@ class EditWorkoutHeader extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 10, top: 8),
-                child: InkWell(
-                  onTap: () => CupertinoScaffold.showCupertinoModalBottomSheet(
-                      context: context,
-                      builder: (c) =>
-                          Scaffold(body: EditWorkoutDataScreen(workout))),
-                  child: Icon(
-                    ExtraIcons.settings,
-                    color: kMainColor,
-                  ),
-                ),
+                child: workout.canEdit
+                    ? InkWell(
+                        onTap: () =>
+                            CupertinoScaffold.showCupertinoModalBottomSheet(
+                                context: context,
+                                builder: (c) => Scaffold(
+                                    body: EditWorkoutDataScreen(workout))),
+                        child: Icon(
+                          ExtraIcons.settings,
+                          color: kMainColor,
+                        ),
+                      )
+                    : null,
               ),
             ],
           )

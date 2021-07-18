@@ -47,6 +47,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
                 child: FredericHeading('Other'),
               )),
               WorkoutListSegment(false),
+              SliverToBoxAdapter(child: Container(height: 100))
             ],
           ),
         ),

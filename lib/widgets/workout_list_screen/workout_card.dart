@@ -83,8 +83,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                   widget.name ?? widget.workout.name,
                                   maxLines: 1,
                                   style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700),
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14,
+                                      color: kTextColor,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
                               Padding(

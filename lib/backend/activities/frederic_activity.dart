@@ -252,14 +252,12 @@ class FredericActivity {
         return FredericActivityMuscleGroup.Arms;
       case 'chest':
         return FredericActivityMuscleGroup.Chest;
-      case 'shoulders':
-        return FredericActivityMuscleGroup.Shoulders;
       case 'back':
         return FredericActivityMuscleGroup.Back;
       case 'legs':
         return FredericActivityMuscleGroup.Legs;
-      case 'abs':
-        return FredericActivityMuscleGroup.Abs;
+      case 'core':
+        return FredericActivityMuscleGroup.Core;
       default:
         return FredericActivityMuscleGroup.None;
     }
@@ -275,14 +273,12 @@ class FredericActivity {
         return 'arms';
       case FredericActivityMuscleGroup.Chest:
         return 'chest';
-      case FredericActivityMuscleGroup.Shoulders:
-        return 'shoulders';
       case FredericActivityMuscleGroup.Back:
         return 'back';
       case FredericActivityMuscleGroup.Legs:
         return 'legs';
-      case FredericActivityMuscleGroup.Abs:
-        return 'abs';
+      case FredericActivityMuscleGroup.Core:
+        return 'core';
       default:
         return 'none';
     }
@@ -309,7 +305,7 @@ class FredericActivity {
 
   @override
   String toString() {
-    return 'FredericActivity[id: $activityID, name: $name, description: $description, owner: $owner]';
+    return 'FredericActivity[id: $activityID, name: $name, owner: $owner]';
   }
 
   @override
@@ -318,12 +314,4 @@ class FredericActivity {
 
 enum FredericActivityType { Weighted, Calisthenics, Stretch, None }
 
-enum FredericActivityMuscleGroup {
-  Arms,
-  Chest,
-  Back,
-  Abs,
-  Legs,
-  Shoulders,
-  None
-}
+enum FredericActivityMuscleGroup { Arms, Chest, Back, Core, Legs, None }

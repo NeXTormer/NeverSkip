@@ -30,7 +30,7 @@ class SmallActivityCardContent extends StatelessWidget {
                 Text(
                   activity.name,
                   style: const TextStyle(
-                      color: const Color(0x7A3A3A3A),
+                      color: const Color(0xBE3A3A3A),
                       fontSize: 10,
                       letterSpacing: 0.3),
                 ),

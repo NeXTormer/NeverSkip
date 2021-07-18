@@ -12,7 +12,7 @@ class ActivityFilterController with ChangeNotifier {
     _muscleGroups[FredericActivityMuscleGroup.Arms] = true;
     _muscleGroups[FredericActivityMuscleGroup.Chest] = true;
     _muscleGroups[FredericActivityMuscleGroup.Back] = true;
-    _muscleGroups[FredericActivityMuscleGroup.Abs] = true;
+    _muscleGroups[FredericActivityMuscleGroup.Core] = true;
     _muscleGroups[FredericActivityMuscleGroup.Legs] = true;
   }
 
@@ -28,7 +28,7 @@ class ActivityFilterController with ChangeNotifier {
   bool get arms => _muscleGroups[FredericActivityMuscleGroup.Arms] ?? false;
   bool get chest => _muscleGroups[FredericActivityMuscleGroup.Chest] ?? false;
   bool get back => _muscleGroups[FredericActivityMuscleGroup.Back] ?? false;
-  bool get abs => _muscleGroups[FredericActivityMuscleGroup.Abs] ?? false;
+  bool get abs => _muscleGroups[FredericActivityMuscleGroup.Core] ?? false;
   bool get legs => _muscleGroups[FredericActivityMuscleGroup.Legs] ?? false;
 
   bool get allTypes => (weighted == calisthenics) == stretch;
@@ -65,7 +65,7 @@ class ActivityFilterController with ChangeNotifier {
   }
 
   set abs(bool value) {
-    _muscleGroups[FredericActivityMuscleGroup.Abs] = value;
+    _muscleGroups[FredericActivityMuscleGroup.Core] = value;
     notifyListeners();
   }
 
