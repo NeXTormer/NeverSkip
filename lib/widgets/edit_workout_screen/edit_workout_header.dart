@@ -25,39 +25,38 @@ class EditWorkoutHeader extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '$dateFormatString',
-                        style: GoogleFonts.montserrat(
-                          color: const Color(0xFF272727),
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.6,
-                          fontSize: 13,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        '${workout.name}',
-                        style: GoogleFonts.montserrat(
-                          color: const Color(0xFF272727),
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.1,
-                          fontSize: 17,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '$dateFormatString',
+                          style: GoogleFonts.montserrat(
+                            color: const Color(0xFF272727),
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0.6,
+                            fontSize: 13,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '${workout.name}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.montserrat(
+                        color: const Color(0xFF272727),
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.1,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 10, top: 8),

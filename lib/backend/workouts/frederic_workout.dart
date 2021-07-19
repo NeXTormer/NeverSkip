@@ -107,6 +107,7 @@ class FredericWorkout {
           .doc(workoutID)
           .update({'period': value});
       _period = value;
+      _activities.resizeForPeriod(value);
       _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
     }
   }
@@ -245,11 +246,8 @@ class FredericWorkoutActivities {
   List<FredericActivity> get everyday => activities[0];
 
   void resizeForPeriod(int value) {
-    if (value > period) {
-      num diff = (value - period) * 7;
-      while (_activities.length <= (diff + 1)) {
-        _activities.add(<FredericActivity>[]);
-      }
+    while (_activities.length <= ((value * 7))) {
+      _activities.add(<FredericActivity>[]);
     }
   }
 

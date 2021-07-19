@@ -22,17 +22,19 @@ class SmallActivityCardContent extends StatelessWidget {
         children: [
           AspectRatio(aspectRatio: 1, child: PictureIcon(activity.image)),
           Padding(
-            padding: const EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.only(left: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  activity.name,
-                  style: const TextStyle(
-                      color: const Color(0xBE3A3A3A),
-                      fontSize: 10,
-                      letterSpacing: 0.3),
+                Flexible(
+                  child: Text(
+                    activity.name,
+                    style: const TextStyle(
+                        color: const Color(0xBE3A3A3A),
+                        fontSize: 10,
+                        letterSpacing: 0.3),
+                  ),
                 ),
                 Row(
                   children: [

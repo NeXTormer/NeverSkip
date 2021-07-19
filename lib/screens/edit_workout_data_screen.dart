@@ -247,18 +247,20 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                           border: Border.all(color: kCardBorderColor)),
-                      child: CupertinoDatePicker(
-                        minimumYear: DateTime.now().year - 1,
-                        maximumYear: DateTime.now().year + 1,
-                        mode: CupertinoDatePickerMode.date,
-                        initialDateTime: widget.workout.startDate,
-                        onDateTimeChanged: (date) {
-                          selectedStartDate = date;
-                          setState(() {
-                            dateText = formatDateTime(date);
-                          });
-                        },
-                      )),
+                      child: true
+                          ? null
+                          : CupertinoDatePicker(
+                              minimumYear: DateTime.now().year - 1,
+                              maximumYear: DateTime.now().year + 1,
+                              mode: CupertinoDatePickerMode.date,
+                              initialDateTime: widget.workout.startDate,
+                              onDateTimeChanged: (date) {
+                                selectedStartDate = date;
+                                setState(() {
+                                  dateText = formatDateTime(date);
+                                });
+                              },
+                            )),
                   SizedBox(
                       height: (MediaQuery.of(context).size.height < 950
                           ? 950 - MediaQuery.of(context).size.height

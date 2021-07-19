@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_musclegroup_button.dart';
 
 import '../standard_elements/frederic_heading.dart';
 import 'activity_filter_controller.dart';
 
-enum MuscleGroup { Arms, Chest, Back, Abs, Legs, None }
+enum MuscleGroup { Arms, Chest, Back, Abs, Legs, None, All }
 
 class ActivityFilterSegment extends StatefulWidget {
   ActivityFilterSegment({required this.filterController});
@@ -16,9 +17,37 @@ class ActivityFilterSegment extends StatefulWidget {
 }
 
 class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
+  int selectedIndex = 0;
+
+  final allKey = GlobalKey();
+  final armsKey = GlobalKey();
+  final chestKey = GlobalKey();
+  final backKey = GlobalKey();
+  final absKey = GlobalKey();
+  final legsKey = GlobalKey();
+
+  List<GlobalKey> keys = <GlobalKey>[];
+
+  final dotKey = GlobalKey();
+
+  double positionedX = 0;
+
+  @override
+  void initState() {
+    keys.add(allKey);
+    keys.add(armsKey);
+    keys.add(chestKey);
+    keys.add(backKey);
+    keys.add(absKey);
+    keys.add(legsKey);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double aspectRatio = MediaQuery.of(context).size.width / 10;
+    final double padding = MediaQuery.of(context).size.width / 14;
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
@@ -31,48 +60,73 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
             // TODO Update Backend functionality for case:
             // No filter is selected, so every activity is shown
             // Default value = false for all filters
-            Row(
+            Stack(
               children: [
-                ActivityMuscleGroupButton('Arms',
-                    isActive: widget.filterController.arms, onPressed: () {
-                  setState(() {
-                    handleMuscleFilters(MuscleGroup.Arms);
-                    widget.filterController.arms =
-                        !widget.filterController.arms;
-                  });
-                }),
-                SizedBox(width: aspectRatio),
-                ActivityMuscleGroupButton('Chest',
-                    isActive: widget.filterController.chest,
-                    onPressed: () => setState(() {
-                          handleMuscleFilters(MuscleGroup.Chest);
-                          widget.filterController.chest =
-                              !widget.filterController.chest;
-                        })),
-                SizedBox(width: aspectRatio),
-                ActivityMuscleGroupButton('Back',
-                    isActive: widget.filterController.back,
-                    onPressed: () => setState(() {
-                          handleMuscleFilters(MuscleGroup.Back);
-                          widget.filterController.back =
-                              !widget.filterController.back;
-                        })),
-                SizedBox(width: aspectRatio),
-                ActivityMuscleGroupButton('Abs',
-                    isActive: widget.filterController.abs,
-                    onPressed: () => setState(() {
-                          handleMuscleFilters(MuscleGroup.Abs);
-                          widget.filterController.abs =
-                              !widget.filterController.abs;
-                        })),
-                SizedBox(width: aspectRatio),
-                ActivityMuscleGroupButton('Legs',
-                    isActive: widget.filterController.legs,
-                    onPressed: () => setState(() {
-                          handleMuscleFilters(MuscleGroup.Legs);
-                          widget.filterController.legs =
-                              !widget.filterController.legs;
-                        })),
+                Row(
+                  children: [
+                    ActivityMuscleGroupButton('All',
+                        key: allKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 0, onPressed: () {
+                      setState(() {
+                        handleMuscleFilters(MuscleGroup.All);
+                        selectedIndex = 0;
+                      });
+                    }),
+                    ActivityMuscleGroupButton('Arms',
+                        key: armsKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 1, onPressed: () {
+                      setState(() {
+                        handleMuscleFilters(MuscleGroup.Arms);
+                        selectedIndex = 1;
+                      });
+                    }),
+                    ActivityMuscleGroupButton('Chest',
+                        key: chestKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 2,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Chest);
+                              selectedIndex = 2;
+                            })),
+                    ActivityMuscleGroupButton('Back',
+                        key: backKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 3,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Back);
+                              selectedIndex = 3;
+                            })),
+                    ActivityMuscleGroupButton('Abs',
+                        key: absKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 4,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Abs);
+                              selectedIndex = 4;
+                            })),
+                    ActivityMuscleGroupButton('Legs',
+                        key: legsKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 5,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Legs);
+                              selectedIndex = 5;
+                            })),
+                  ],
+                ),
+                AnimatedPositioned(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                  bottom: 0,
+                  left: keys[selectedIndex].positionedDifference(dotKey),
+                  child: Icon(
+                    Icons.circle,
+                    size: 8,
+                    color: kMainColor,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 12),
@@ -89,11 +143,14 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
         widget.filterController.back = false;
         widget.filterController.legs = false;
         widget.filterController.abs = false;
+        widget.filterController.arms = true;
+
         break;
       case MuscleGroup.Chest:
         widget.filterController.arms = false;
         widget.filterController.back = false;
         widget.filterController.abs = false;
+        widget.filterController.chest = true;
         widget.filterController.legs = false;
         break;
       case MuscleGroup.Back:
@@ -101,18 +158,28 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
         widget.filterController.chest = false;
         widget.filterController.abs = false;
         widget.filterController.legs = false;
+        widget.filterController.back = true;
         break;
       case MuscleGroup.Abs:
         widget.filterController.arms = false;
         widget.filterController.chest = false;
         widget.filterController.back = false;
         widget.filterController.legs = false;
+        widget.filterController.abs = true;
         break;
       case MuscleGroup.Legs:
         widget.filterController.arms = false;
         widget.filterController.chest = false;
         widget.filterController.back = false;
         widget.filterController.abs = false;
+        widget.filterController.legs = true;
+        break;
+      case MuscleGroup.All:
+        widget.filterController.arms = true;
+        widget.filterController.chest = true;
+        widget.filterController.back = true;
+        widget.filterController.abs = true;
+        widget.filterController.legs = true;
         break;
       default:
         widget.filterController.arms = false;
@@ -121,6 +188,26 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
         widget.filterController.legs = false;
         widget.filterController.abs = false;
         break;
+    }
+  }
+}
+
+extension GlobalKeyExtension on GlobalKey {
+  double positionedDifference(GlobalKey other) {
+    final renderObject = currentContext?.findRenderObject();
+    var translation = renderObject
+        ?.getTransformTo(other.currentContext?.findRenderObject())
+        .getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      Rect? rect =
+          renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+      if (rect != null) {
+        return rect.left - 16;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
     }
   }
 }

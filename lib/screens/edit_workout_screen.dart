@@ -41,11 +41,18 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     return BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
       builder: (context, workoutListData) {
         FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
-        if (workout == null) return Scaffold();
+        if (workout == null) {
+          Navigator.of(context).pop();
+          return Scaffold(
+            body: Center(
+              child: Text('Workout does not exist'),
+            ),
+          );
+        }
         return Scaffold(
           backgroundColor: Colors.white,
           floatingActionButton:
-              workout!.canEdit ? buildAddExerciseButton(width, 44) : null,
+              workout.canEdit ? buildAddExerciseButton(width, 44) : null,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           body: SafeArea(

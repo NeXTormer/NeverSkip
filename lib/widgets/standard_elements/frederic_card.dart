@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
 
 class FredericCard extends StatelessWidget {
@@ -41,7 +42,12 @@ class FredericCard extends StatelessWidget {
           splashColor: Colors.grey.withAlpha(32),
           highlightColor: Colors.grey.withAlpha(15),
           onTap: onTap,
-          onLongPress: onLongPress,
+          onLongPress: onLongPress == null
+              ? null
+              : () {
+                  HapticFeedback.selectionClick();
+                  onLongPress!.call();
+                },
           child: Container(
             child: child,
             padding: padding,

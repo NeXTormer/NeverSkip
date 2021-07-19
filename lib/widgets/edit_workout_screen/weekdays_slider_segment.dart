@@ -1,4 +1,3 @@
-import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -18,20 +17,20 @@ class WeekdaysSliderSegment extends StatelessWidget {
       required this.workout});
 
   final PageController pageController;
-  final FredericWorkout? workout;
-  final WeekdaysSliderController? weekdaysSliderController;
+  final FredericWorkout workout;
+  final WeekdaysSliderController weekdaysSliderController;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        buildWeekdayArrowIndicator(8, Direction.left),
-        buildWeekdayArrowIndicator(8, Direction.right),
+        if (workout.period != 1) buildWeekdayArrowIndicator(8, Direction.left),
+        if (workout.period != 1) buildWeekdayArrowIndicator(8, Direction.right),
         WeekdaysSlider(
-          startingDate: workout!.startDate,
+          startingDate: workout.startDate,
           pageController: pageController,
           weekdaysSliderController: weekdaysSliderController,
-          weekCount: workout!.period,
+          weekCount: workout.period,
         ),
       ],
     );
@@ -45,12 +44,24 @@ class WeekdaysSliderSegment extends StatelessWidget {
         alignment: direction == Direction.left
             ? Alignment.centerLeft
             : Alignment.centerRight,
-        child: Icon(
-          direction == Direction.left
-              ? Icons.arrow_back_ios
-              : Icons.arrow_forward_ios,
-          size: 15,
-          color: kTextColor.withOpacity(0.8),
+        child: GestureDetector(
+          onTap: () {
+            direction == Direction.left
+                ? pageController.previousPage(
+                    duration: Duration(milliseconds: 250),
+                    curve: Curves.easeInOutCirc)
+                : pageController.nextPage(
+                    duration: Duration(milliseconds: 250),
+                    curve: Curves.easeInOutCirc);
+            print('tap');
+          },
+          child: Icon(
+            direction == Direction.left
+                ? Icons.arrow_back_ios
+                : Icons.arrow_forward_ios,
+            size: 15,
+            color: kTextColor.withOpacity(0.8),
+          ),
         ),
       ),
     );
@@ -70,9 +81,9 @@ class WeekdaysSlider extends StatefulWidget {
       Key? key})
       : super(key: key);
 
-  final DateTime? startingDate;
-  final PageController? pageController;
-  final WeekdaysSliderController? weekdaysSliderController;
+  final DateTime startingDate;
+  final PageController pageController;
+  final WeekdaysSliderController weekdaysSliderController;
   final int weekCount;
 
   @override
@@ -82,61 +93,70 @@ class WeekdaysSlider extends StatefulWidget {
 class _WeekdaysSliderState extends State<WeekdaysSlider> {
   int selectedDate = 0;
 
+  late PageController weekPageController;
+
+  @override
+  void initState() {
+    widget.weekdaysSliderController.setCallback(changeDayCallback);
+    weekPageController = PageController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ExpandablePageView(
-        animateFirstPage: true,
-        itemCount: widget.weekCount,
-        itemBuilder: (context, week) {
-          widget.weekdaysSliderController!.setCallback(changeDayCallback);
-          return Padding(
-            // TODO:
-            // Somehow the widget is not centred, therefore an asymmetric
-            // padding was chosen here.
-            padding: const EdgeInsets.only(left: 15, right: 20),
-            child: Container(
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ...List.generate(7, (index) {
-                      return GestureDetector(
-                        onTap: () {
-                          handleChangeDay(index + (week * 7));
-                        },
-                        child: WeekDaysSliderDayButton(
-                          dayIndex: index + (week * 7),
-                          selectedDate: selectedDate,
-                          date: widget.startingDate!.add(
-                            Duration(
-                              days: (index + (week * 7)),
-                            ),
-                          ),
+    return Container(
+      height: 50,
+      child: PageView(
+          controller: weekPageController,
+          children: List.generate(
+              widget.weekCount,
+              (week) => Padding(
+                    // Somehow the widget is not centred, therefore an asymmetric
+                    // padding was chosen here.
+                    padding: const EdgeInsets.only(left: 15, right: 20),
+                    child: Container(
+                      child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: List.generate(7, (index) {
+                            return GestureDetector(
+                              onTap: () => handleChangeDay(index + (week * 7)),
+                              child: WeekDaysSliderDayButton(
+                                dayIndex: index + (week * 7),
+                                selectedDate: selectedDate,
+                                date: widget.startingDate.add(
+                                  Duration(
+                                    days: (index + (week * 7)),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
-                      );
-                    })
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+                      ),
+                    ),
+                  ))),
     );
   }
 
   void changeDayCallback(int index) {
+    int week = index ~/ 7;
+    if (weekPageController.page?.toInt() != week) {
+      weekPageController.animateToPage(week,
+          duration: Duration(milliseconds: 250), curve: Curves.easeInOutCirc);
+    }
     setState(() {
       selectedDate = index;
     });
   }
 
   void handleChangeDay(int index) {
-    setState(() {
-      widget.pageController!.animateToPage(index,
-          duration: Duration(milliseconds: 250), curve: Curves.easeIn);
-    });
+    if (((widget.pageController.page?.toInt() ?? 0) - index).abs() <= 1) {
+      widget.pageController.animateToPage(index,
+          duration: Duration(milliseconds: 250), curve: Curves.easeInOutCirc);
+    } else {
+      widget.pageController.jumpToPage(index);
+    }
   }
 }
 
@@ -161,12 +181,12 @@ class WeekDaysSliderDayButton extends StatelessWidget {
     return selectedDate == dayIndex
         ? Container(
             width: width / 10,
-            padding: const EdgeInsets.symmetric(vertical: 3),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color: kMainColor.withOpacity(0.1),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
                     style: GoogleFonts.montserrat(
@@ -191,6 +211,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
             width: width / 10,
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
                     style: GoogleFonts.montserrat(

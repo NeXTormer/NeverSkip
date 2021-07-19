@@ -76,7 +76,7 @@ class _NumberSliderState extends State<NumberSlider> {
               pageSnapping: false,
               onPageChanged: (index) {
                 widget.controller.value = index + 1;
-                HapticFeedback.selectionClick();
+                HapticFeedback.lightImpact();
               },
               controller: controller,
             ),
