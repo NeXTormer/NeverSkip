@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
 
 import '../../../backend/backend.dart';
 import '../../../main.dart';
@@ -6,13 +7,20 @@ import '../frederic_card.dart';
 import '../picture_icon.dart';
 
 class SmallActivityCardContent extends StatelessWidget {
-  SmallActivityCardContent(this.activity, this.onClick);
+  SmallActivityCardContent(this.activity, this.onClick,
+      {Key? key, required this.setList})
+      : super(key: key);
 
   final FredericActivity activity;
+  final FredericSetList? setList;
   final void Function()? onClick;
 
   @override
   Widget build(BuildContext context) {
+    int bestProgress = (activity.type == FredericActivityType.Weighted
+            ? setList?.bestWeight
+            : setList?.bestReps) ??
+        0;
     return FredericCard(
       onTap: onClick,
       width: MediaQuery.of(context).size.width / 2.3,
@@ -39,7 +47,7 @@ class SmallActivityCardContent extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${activity.recommendedReps}',
+                      '$bestProgress',
                       style: TextStyle(
                           color: kTextColor,
                           fontWeight: FontWeight.w600,
@@ -47,7 +55,7 @@ class SmallActivityCardContent extends StatelessWidget {
                           fontSize: 16),
                     ),
                     SizedBox(width: 2),
-                    Text(activity.progressUnit, //TODO: best progress type
+                    Text(activity.progressUnit,
                         style: TextStyle(
                             color: kTextColor,
                             fontWeight: FontWeight.w500,

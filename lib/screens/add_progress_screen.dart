@@ -6,6 +6,7 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
@@ -82,50 +83,7 @@ class AddProgressScreen extends StatelessWidget {
               controller: ModalScrollController.of(context),
               slivers: [
                 SliverPadding(padding: EdgeInsets.only(bottom: 12)),
-                SliverToBoxAdapter(
-                    child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  padding: EdgeInsets.all(10),
-                  height: 80,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(color: kCardBorderColor)),
-                  child: Row(
-                    children: [
-                      PictureIcon(activity.image),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(activity.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.montserrat(
-                                    color: kMainColor,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17)),
-                            SizedBox(height: 4),
-                            Text(
-                                activity.description +
-                                    activity.description +
-                                    activity.description +
-                                    activity.description,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.montserrat(
-                                    color: const Color(0xFF3A3A3A),
-                                    letterSpacing: 0.2,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+                _DisplayActivityCard(activity),
                 SliverToBoxAdapter(
                     child: Padding(
                   padding: const EdgeInsets.only(
@@ -134,8 +92,8 @@ class AddProgressScreen extends StatelessWidget {
                 )),
                 SliverToBoxAdapter(
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    padding: EdgeInsets.all(12),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
@@ -158,13 +116,15 @@ class AddProgressScreen extends StatelessWidget {
                           numberOfItems: 10,
                           startingIndex: 1,
                         ),
-                        SizedBox(height: 12),
-                        buildSubHeading('Weight', ExtraIcons.dumbbell),
-                        SizedBox(height: 12),
-                        NumberSlider(
-                            controller: weightSliderController,
-                            itemWidth: 0.14,
-                            startingIndex: 56), //TODO: set to average weight
+                        if (activity.type == FredericActivityType.Weighted) ...[
+                          SizedBox(height: 12),
+                          buildSubHeading('Weight', ExtraIcons.dumbbell),
+                          SizedBox(height: 12),
+                          NumberSlider(
+                              controller: weightSliderController,
+                              itemWidth: 0.14,
+                              startingIndex: 56)
+                        ], //TODO: set to average weight
                         Padding(
                           padding:
                               const EdgeInsets.only(left: 0, right: 0, top: 16),
@@ -228,5 +188,76 @@ class AddProgressScreen extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class _DisplayActivityCard extends StatefulWidget {
+  const _DisplayActivityCard(this.activity, {Key? key}) : super(key: key);
+
+  final FredericActivity activity;
+
+  @override
+  __DisplayActivityCardState createState() => __DisplayActivityCardState();
+}
+
+class __DisplayActivityCardState extends State<_DisplayActivityCard> {
+  bool expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+        child: FredericCard(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.all(10),
+      height: expanded ? 142 : 80,
+      onTap: () {
+        setState(() {
+          expanded = !expanded;
+        });
+      },
+      child: Row(
+        children: [
+          AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              width: expanded ? 0 : 60,
+              height: double.infinity,
+              //constraints: BoxConstraints(maxWidth: expanded ? 0 : 60),
+              child: LayoutBuilder(builder: (context, constraints) {
+                return ConstrainedBox(
+                    constraints: constraints,
+                    child: PictureIcon(widget.activity.image));
+              })),
+          AnimatedPadding(
+              padding: EdgeInsets.symmetric(horizontal: expanded ? 0 : 6),
+              duration: Duration(milliseconds: 200)),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(widget.activity.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.montserrat(
+                        color: kMainColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17)),
+                SizedBox(height: 4),
+                Flexible(
+                  child: Text(widget.activity.description,
+                      maxLines: expanded ? 6 : 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.montserrat(
+                          color: const Color(0xFF3A3A3A),
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13)),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    ));
   }
 }

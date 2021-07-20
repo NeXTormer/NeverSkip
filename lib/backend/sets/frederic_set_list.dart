@@ -16,12 +16,13 @@ class FredericSetList {
   final String activityID;
   final FredericSetManager _setManager;
 
-  int _bestProgress = 0;
+  int _bestWeight = 0;
+  int _bestReps = 0;
 
   List<FredericSetDocument> _setDocuments = <FredericSetDocument>[];
 
-  int get bestProgress => _bestProgress;
-  String get progressType => 'kg';
+  int get bestWeight => _bestWeight;
+  int get bestReps => _bestReps;
 
   List<FredericSet> getLatestSets([int count = 6]) {
     List<FredericSet> sets = <FredericSet>[];
@@ -45,7 +46,8 @@ class FredericSetList {
   void _calculateBestProgress() {
     for (FredericSetDocument setDoc in _setDocuments) {
       for (FredericSet set in setDoc.sets) {
-        if (set.weight > _bestProgress) _bestProgress = set.weight;
+        if (set.reps > _bestReps) _bestReps = set.reps;
+        if (set.weight > _bestWeight) _bestWeight = set.weight;
       }
     }
   }
@@ -55,7 +57,10 @@ class FredericSetList {
         .where((element) => element.month == set.month)
         .first
         .deleteSet(set)) {
-      if (set.weight >= _bestProgress) {
+      if (set.weight >= _bestWeight) {
+        _calculateBestProgress();
+      }
+      if (set.reps >= _bestReps) {
         _calculateBestProgress();
       }
       _setManager.add(FredericSetEvent(<String>[activityID]));
@@ -72,7 +77,8 @@ class FredericSetList {
           .first
           .addSet(set)) _setManager.add(FredericSetEvent(<String>[activityID]));
     }
-    if (set.weight > _bestProgress) _bestProgress = set.weight;
+    if (set.weight > _bestWeight) _bestWeight = set.weight;
+    if (set.reps > _bestReps) _bestReps = set.reps;
   }
 
   void _createDocumentWith(FredericSet set) async {

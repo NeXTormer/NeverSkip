@@ -17,6 +17,9 @@ class ProgressIndicatorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool loading = activity == null;
+    int bestProgress = (activity?.type == FredericActivityType.Weighted
+        ? sets.bestWeight
+        : sets.bestReps);
     return FredericCard(
         height: 65,
         width: 160,
@@ -94,7 +97,7 @@ class ProgressIndicatorCard extends StatelessWidget {
                               style: FredericTextTheme.cardTitleSmall,
                             ),
                           ),
-                          UnitText('${sets.bestProgress}', sets.progressType)
+                          UnitText('$bestProgress', activity!.progressUnit)
                         ],
                       ),
                     ),

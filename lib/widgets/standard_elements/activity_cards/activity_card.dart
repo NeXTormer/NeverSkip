@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
@@ -17,13 +18,18 @@ enum ActivityCardType { Calendar, Small, Normal, WorkoutEditor }
 class ActivityCard extends StatelessWidget {
   ActivityCard(this.activity,
       {this.type = ActivityCardType.Normal,
+      Key? key,
+      this.setList,
       this.onClick,
       this.addButton = false,
       this.mainColor = kMainColor,
-      this.accentColor = kAccentColor});
+      this.accentColor = kAccentColor})
+      : super(key: key) {}
 
   final FredericActivity activity;
   final ActivityCardType type;
+
+  final FredericSetList? setList;
 
   final Color mainColor;
   final Color accentColor;
@@ -35,15 +41,17 @@ class ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == ActivityCardType.Calendar)
-      return CalendarActivityCardContent(activity, () => handleClick(context));
+      return CalendarActivityCardContent(activity, () => handleClick(context),
+          key: key);
     if (type == ActivityCardType.Small)
-      return SmallActivityCardContent(activity, () => handleClick(context));
+      return SmallActivityCardContent(activity, () => handleClick(context),
+          key: key, setList: setList);
     if (type == ActivityCardType.Normal)
       return NormalActivityCardContent(activity, () => handleClick(context),
-          addButton: addButton);
+          addButton: addButton, key: key);
     if (type == ActivityCardType.WorkoutEditor)
       return CalendarActivityCardContent(activity, () => handleClick(context),
-          deleteButton: true);
+          deleteButton: true, key: key);
 
     return Container(
         color: Colors.redAccent,
@@ -56,7 +64,6 @@ class ActivityCard extends StatelessWidget {
     if (onClick != null) return onClick!();
 
     CupertinoScaffold.showCupertinoModalBottomSheet(
-        //expand: true,
         enableDrag: true,
         context: context,
         builder: (newContext) {

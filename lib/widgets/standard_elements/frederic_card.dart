@@ -11,6 +11,7 @@ class FredericCard extends StatelessWidget {
       this.margin,
       this.child,
       this.color,
+      this.duration = const Duration(milliseconds: 200),
       this.onLongPress,
       this.onTap});
 
@@ -23,35 +24,40 @@ class FredericCard extends StatelessWidget {
   final Color? color;
   final void Function()? onTap;
   final void Function()? onLongPress;
+  final Duration duration;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: duration,
       width: width,
+      margin: margin,
       height: height,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius),
           color: color,
           border: Border.all(color: kCardBorderColor)),
-      child: Material(
-        borderRadius: BorderRadius.circular(borderRadius),
-        color: Colors.transparent,
-        child: InkWell(
-          customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
-          splashColor: Colors.grey.withAlpha(32),
-          highlightColor: Colors.grey.withAlpha(15),
-          onTap: onTap,
-          onLongPress: onLongPress == null
-              ? null
-              : () {
-                  HapticFeedback.selectionClick();
-                  onLongPress!.call();
-                },
-          child: Container(
-            child: child,
-            padding: padding,
-            margin: margin,
+      child: Container(
+        height: height,
+        child: Material(
+          borderRadius: BorderRadius.circular(borderRadius),
+          color: Colors.transparent,
+          child: InkWell(
+            customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
+            splashColor: Colors.grey.withAlpha(32),
+            highlightColor: Colors.grey.withAlpha(15),
+            onTap: onTap,
+            onLongPress: onLongPress == null
+                ? null
+                : () {
+                    HapticFeedback.selectionClick();
+                    onLongPress!.call();
+                  },
+            child: Container(
+              child: child,
+              padding: padding,
+            ),
           ),
         ),
       ),

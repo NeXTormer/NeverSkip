@@ -59,7 +59,7 @@ class SetCard extends StatelessWidget {
               ),
               SizedBox(width: 16),
               Row(
-                //crossAxisAlignment: CrossAxisAlignment.baseline,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     '${set.reps}',
@@ -76,24 +76,26 @@ class SetCard extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.5,
                           fontSize: 12)),
-                  SizedBox(width: 10),
-                  FredericVerticalDivider(length: 16),
-                  SizedBox(width: 10),
-                  Text(
-                    '${set.weight}',
-                    style: TextStyle(
-                        color: kTextColor,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                        fontSize: 14),
-                  ),
-                  SizedBox(width: 3),
-                  Text(activity.progressUnit,
+                  if (activity.type == FredericActivityType.Weighted) ...[
+                    SizedBox(width: 10),
+                    FredericVerticalDivider(length: 16),
+                    SizedBox(width: 10),
+                    Text(
+                      '${set.weight}',
                       style: TextStyle(
                           color: kTextColor,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
-                          fontSize: 12)),
+                          fontSize: 14),
+                    ),
+                    SizedBox(width: 3),
+                    Text(activity.progressUnit,
+                        style: TextStyle(
+                            color: kTextColor,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5,
+                            fontSize: 12)),
+                  ]
                 ],
               ),
               Expanded(

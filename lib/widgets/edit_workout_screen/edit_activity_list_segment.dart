@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 
@@ -38,10 +39,30 @@ class EditActivityListSegment extends StatelessWidget {
                             left: 16, right: 16, bottom: 16),
                         child: ActivityCard(
                             workout.activities.activities[weekday + 1][index],
+                            key: ValueKey(workout.activities
+                                .activities[weekday + 1][index].activityID),
                             type: ActivityCardType.WorkoutEditor, onClick: () {
                           workout.removeActivity(
                               workout.activities.activities[weekday + 1][index],
                               weekday + 1);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: Duration(seconds: 4),
+                            elevation: 0,
+                            content: Text(
+                              'Activity removed from workout.',
+                              style: TextStyle(fontFamily: 'Montserrat'),
+                            ),
+                            action: SnackBarAction(
+                              textColor: Colors.white,
+                              label: 'Undo',
+                              onPressed: () {},
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12))),
+                            backgroundColor: kMainColor,
+                          ));
                         }),
                       );
                     }));

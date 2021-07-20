@@ -8,7 +8,8 @@ import '../picture_icon.dart';
 
 class NormalActivityCardContent extends StatelessWidget {
   NormalActivityCardContent(this.activity, this.onClick,
-      {this.addButton = false});
+      {this.addButton = false, Key? key})
+      : super(key: key);
 
   final FredericActivity activity;
   final void Function()? onClick;

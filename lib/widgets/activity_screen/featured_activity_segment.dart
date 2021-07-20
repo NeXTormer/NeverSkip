@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 
 import '../../backend/backend.dart';
@@ -31,31 +33,41 @@ class FeaturedActivitySegment extends StatelessWidget {
           BlocBuilder<FredericActivityManager, FredericActivityListData>(
             buildWhen: (current, next) => true,
             builder: (context, data) {
-              List<FredericActivity> list = List.of(data.activities.values
-                  .where((element) =>
+              List<FredericActivity> activityList = List.of(
+                  data.activities.values.where((element) =>
                       featuredActivities.contains(element.activityID)));
-              return Container(
-                height: 60,
-                child: ListView.builder(
-                  shrinkWrap: false,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    // TODO Padding on scrolling
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: index == 0 ? 16 : 12,
-                        right: index == (list.length - 1) ? 16 : 0,
-                      ),
-                      child: ActivityCard(list[index],
-                          onClick: onTap == null
-                              ? null
-                              : () => onTap?.call(list[index]),
-                          type: ActivityCardType.Small),
-                    );
-                  },
-                ),
-              );
+              return BlocBuilder<FredericSetManager, FredericSetListData>(
+                  buildWhen: (current, next) {
+                return next.changedActivities
+                    .any((element) => featuredActivities.contains(element));
+              }, builder: (context, setListData) {
+                return Container(
+                  height: 60,
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: false,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: activityList.length,
+                    itemBuilder: (context, index) {
+                      FredericSetList setList =
+                          setListData[activityList[index].activityID];
+                      // TODO Padding on scrolling
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: index == 0 ? 16 : 12,
+                          right: index == (activityList.length - 1) ? 16 : 0,
+                        ),
+                        child: ActivityCard(activityList[index],
+                            setList: setList,
+                            onClick: onTap == null
+                                ? null
+                                : () => onTap?.call(activityList[index]),
+                            type: ActivityCardType.Small),
+                      );
+                    },
+                  ),
+                );
+              });
             },
           ),
         ],
