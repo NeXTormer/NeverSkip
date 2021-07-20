@@ -24,6 +24,12 @@ class FredericSetList {
   int get bestWeight => _bestWeight;
   int get bestReps => _bestReps;
 
+  bool wasActiveToday() {
+    List<FredericSet> latest = getLatestSets(1);
+    if (latest.isEmpty) return false;
+    return latest[0].timestamp.isSameDate(DateTime.now());
+  }
+
   List<FredericSet> getLatestSets([int count = 6]) {
     List<FredericSet> sets = <FredericSet>[];
     _setDocuments.sort();
@@ -118,5 +124,13 @@ class FredericSetList {
     }
     _calculateBestProgress();
     _setManager.add(FredericSetEvent(<String>[activityID]));
+  }
+}
+
+extension DateOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return this.year == other.year &&
+        this.month == other.month &&
+        this.day == other.day;
   }
 }

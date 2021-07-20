@@ -27,6 +27,8 @@ const Color kMainColor = const Color(0xFF3E4FD8);
 const Color kAccentColor = const Color(0xFF4791FF);
 const Color kMainColorLight = const Color(0x1A3E4FD8);
 const Color kAccentColorLight = const Color(0xFFF4F7FE);
+const Color kGreenColor = const Color(0xFF1CBB3F);
+const Color kGreenColorLight = const Color(0x1A1CBB3F);
 const Color kGreyColor = const Color(0xFFC4C4C4);
 
 const Color kTextColor = const Color(0xFF272727);

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
@@ -8,10 +10,15 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CalendarDay extends StatelessWidget {
-  CalendarDay(this.index, this.user, this.workoutListData);
+  CalendarDay(this.index, this.user, this.workoutListData, this.setListData) {
+    today = index == 0;
+  }
 
   final FredericUser user;
   final FredericWorkoutListData workoutListData;
+  final FredericSetListData? setListData;
+
+  late final bool today;
 
   final int index;
 
@@ -24,6 +31,21 @@ class CalendarDay extends StatelessWidget {
         activities
             .addAll(workoutListData.workouts[workout]!.activities.getDay(day));
     }
+    List<bool> finished =
+        today ? List.filled(activities.length, false) : <bool>[];
+    bool dayFinished = true;
+    if (today) {
+      if (setListData != null) {
+        for (int i = 0; i < activities.length; i++) {
+          FredericSetList setList = setListData![activities[i].activityID];
+          bool activityFinished = setList.wasActiveToday();
+          finished[i] = activityFinished;
+          if (activityFinished == false) {
+            dayFinished = false;
+          }
+        }
+      }
+    }
 
     return Container(
         padding: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
@@ -34,13 +56,14 @@ class CalendarDay extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _CalendarDayCard(day),
+                _CalendarDayCard(day, dayFinished && today),
                 Expanded(
                   child: Column(
                     children: List.generate(
                         activities.length,
-                        (i) =>
-                            _CalendarActivityCard(activities[i], index == 0)),
+                        (i) => _CalendarActivityCard(activities[i],
+                            indicator: index == 0,
+                            completed: finished.isNotEmpty && finished[i])),
                   ),
                 )
               ],
@@ -113,10 +136,12 @@ class _CalendarMonthCard extends StatelessWidget {
 }
 
 class _CalendarActivityCard extends StatelessWidget {
-  _CalendarActivityCard(this.activity, [this.indicator = false]);
+  _CalendarActivityCard(this.activity,
+      {this.completed = false, this.indicator = false});
 
   final FredericActivity activity;
   final bool indicator;
+  final bool completed;
 
   @override
   Widget build(BuildContext context) {
@@ -126,10 +151,17 @@ class _CalendarActivityCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _CalendarTimeLine(indicator),
+          _CalendarTimeLine(
+            isActive: indicator,
+            activeColor: completed ? kGreenColor : kMainColor,
+          ),
           SizedBox(width: 8),
           Expanded(
-              child: ActivityCard(activity, type: ActivityCardType.Calendar))
+              child: ActivityCard(activity,
+                  type: ActivityCardType.Calendar,
+                  state: completed
+                      ? ActivityCardState.Green
+                      : ActivityCardState.Normal))
         ],
       ),
     );
@@ -137,11 +169,12 @@ class _CalendarActivityCard extends StatelessWidget {
 }
 
 class _CalendarTimeLine extends StatelessWidget {
-  const _CalendarTimeLine([this.isActive = false]);
+  const _CalendarTimeLine(
+      {this.isActive = false, this.activeColor = const Color(0xFF3E4FD8)});
 
   final bool isActive;
 
-  final Color activeColor = const Color(0xFF3E4FD8);
+  final Color activeColor;
   final Color disabledColor = const Color(0x66A5A5A5);
 
   @override
@@ -152,7 +185,10 @@ class _CalendarTimeLine extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: isActive
-                ? [circle(kMainColor, 8), circle(kMainColorLight, 16)]
+                ? [
+                    circle(activeColor, 8),
+                    circle(activeColor.withOpacity(0.1), 16)
+                  ]
                 : [
                     circle(disabledColor, 10),
                     circle(Colors.white, 6),
@@ -189,8 +225,9 @@ class _CalendarTimeLine extends StatelessWidget {
 }
 
 class _CalendarDayCard extends StatelessWidget {
-  _CalendarDayCard(this.day);
+  _CalendarDayCard(this.day, [this.completed = false]);
   final DateTime day;
+  final completed;
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +235,8 @@ class _CalendarDayCard extends StatelessWidget {
       height: 66,
       width: 56,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8), color: kMainColorLight),
+          borderRadius: BorderRadius.circular(8),
+          color: completed ? kGreenColorLight : kMainColorLight),
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -207,11 +245,13 @@ class _CalendarDayCard extends StatelessWidget {
             Text(
               '${day.day}',
               style: GoogleFonts.montserrat(
-                  color: kMainColor, fontSize: 20, fontWeight: FontWeight.w500),
+                  color: completed ? kGreenColor : kMainColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500),
             ),
             Text('${getWeekdayName(day.weekday)}',
                 style: GoogleFonts.montserrat(
-                    color: kMainColor,
+                    color: completed ? kGreenColor : kMainColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w300))
           ]),

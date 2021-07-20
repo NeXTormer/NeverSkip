@@ -4,7 +4,7 @@ import 'package:frederic/main.dart';
 
 class PictureIcon extends StatelessWidget {
   PictureIcon(this.url,
-      {this.mainColor = kMainColor, this.accentColor = kAccentColor});
+      {this.mainColor = kMainColor, this.accentColor = kMainColorLight});
 
   final String? url;
   final Color mainColor;
@@ -26,8 +26,8 @@ class PictureIcon extends StatelessWidget {
       child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8), color: kMainColorLight),
-          child: CachedNetworkImage(imageUrl: url!, color: kMainColor)),
+              borderRadius: BorderRadius.circular(8), color: accentColor),
+          child: CachedNetworkImage(imageUrl: url!, color: mainColor)),
     );
   }
 }

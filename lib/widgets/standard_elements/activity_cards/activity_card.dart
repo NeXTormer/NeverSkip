@@ -12,6 +12,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 enum ActivityCardType { Calendar, Small, Normal, WorkoutEditor }
 
+enum ActivityCardState { Normal, Green }
+
 ///
 /// onClick is null: when clicked open AddProgressSheet
 ///
@@ -21,13 +23,15 @@ class ActivityCard extends StatelessWidget {
       Key? key,
       this.setList,
       this.onClick,
+      this.state = ActivityCardState.Normal,
       this.addButton = false,
       this.mainColor = kMainColor,
       this.accentColor = kAccentColor})
-      : super(key: key) {}
+      : super(key: key);
 
   final FredericActivity activity;
   final ActivityCardType type;
+  final ActivityCardState state;
 
   final FredericSetList? setList;
 
@@ -41,17 +45,33 @@ class ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == ActivityCardType.Calendar)
-      return CalendarActivityCardContent(activity, () => handleClick(context),
-          key: key);
+      return CalendarActivityCardContent(
+        activity,
+        () => handleClick(context),
+        key: key,
+        state: state,
+      );
     if (type == ActivityCardType.Small)
-      return SmallActivityCardContent(activity, () => handleClick(context),
-          key: key, setList: setList);
+      return SmallActivityCardContent(
+        activity,
+        () => handleClick(context),
+        key: key,
+        setList: setList,
+      );
     if (type == ActivityCardType.Normal)
-      return NormalActivityCardContent(activity, () => handleClick(context),
-          addButton: addButton, key: key);
+      return NormalActivityCardContent(
+        activity,
+        () => handleClick(context),
+        addButton: addButton,
+        key: key,
+      );
     if (type == ActivityCardType.WorkoutEditor)
-      return CalendarActivityCardContent(activity, () => handleClick(context),
-          deleteButton: true, key: key);
+      return CalendarActivityCardContent(
+        activity,
+        () => handleClick(context),
+        deleteButton: true,
+        key: key,
+      );
 
     return Container(
         color: Colors.redAccent,

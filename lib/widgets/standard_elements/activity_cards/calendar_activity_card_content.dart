@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
 class CalendarActivityCardContent extends StatefulWidget {
   const CalendarActivityCardContent(this.activity, this.onClick,
-      {Key? key, this.deleteButton = false})
+      {Key? key,
+      this.deleteButton = false,
+      this.state = ActivityCardState.Normal})
       : super(key: key);
 
   final FredericActivity activity;
+  final ActivityCardState state;
   final void Function()? onClick;
   final bool deleteButton;
 
@@ -39,7 +43,13 @@ class _CalendarActivityCardContentState
             : Row(
                 children: [
                   AspectRatio(
-                    child: PictureIcon(widget.activity.image),
+                    child: PictureIcon(widget.activity.image,
+                        mainColor: widget.state == ActivityCardState.Normal
+                            ? kMainColor
+                            : kGreenColor,
+                        accentColor: widget.state == ActivityCardState.Normal
+                            ? kMainColorLight
+                            : kGreenColorLight),
                     aspectRatio: 1,
                   ),
                   SizedBox(width: 12),
