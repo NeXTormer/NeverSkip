@@ -6,6 +6,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_slider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
@@ -45,6 +46,9 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   int totalActivities = 0;
 
+  bool setStateNameController = true;
+  bool setStateDescriptionController = true;
+
   @override
   void initState() {
     isRepeating = widget.workout.repeating;
@@ -54,14 +58,16 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     dummyRepeating = widget.workout.repeating;
     dummyPeriod = widget.workout.period;
 
-    descriptionController.addListener(() {
-      setState(() {
-        dummyDescription = descriptionController.text;
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      descriptionController.addListener(() {
+        setState(() {
+          dummyDescription = descriptionController.text;
+        });
       });
-    });
-    nameController.addListener(() {
-      setState(() {
-        dummyName = nameController.text;
+      nameController.addListener(() {
+        setState(() {
+          dummyName = nameController.text;
+        });
       });
     });
 
@@ -241,25 +247,32 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   ),
                   SizedBox(height: 8),
                   AnimatedContainer(
-                      height: datePickerOpen ? 150 : 0.0001,
+                      height: datePickerOpen ? 150 : 0,
                       duration: Duration(milliseconds: 200),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                           border: Border.all(color: kCardBorderColor)),
-                      child: true
-                          ? null
-                          : CupertinoDatePicker(
-                              minimumYear: DateTime.now().year - 1,
-                              maximumYear: DateTime.now().year + 1,
-                              mode: CupertinoDatePickerMode.date,
-                              initialDateTime: widget.workout.startDate,
-                              onDateTimeChanged: (date) {
-                                selectedStartDate = date;
-                                setState(() {
-                                  dateText = formatDateTime(date);
-                                });
-                              },
+                      child: false
+                          ? FredericDatePicker(initialDate: DateTime.now())
+                          : SingleChildScrollView(
+                              controller: ScrollController(),
+                              physics: NeverScrollableScrollPhysics(),
+                              child: Container(
+                                height: 150,
+                                child: CupertinoDatePicker(
+                                  minimumYear: DateTime.now().year - 1,
+                                  maximumYear: DateTime.now().year + 1,
+                                  mode: CupertinoDatePickerMode.date,
+                                  initialDateTime: widget.workout.startDate,
+                                  onDateTimeChanged: (date) {
+                                    selectedStartDate = date;
+                                    setState(() {
+                                      dateText = formatDateTime(date);
+                                    });
+                                  },
+                                ),
+                              ),
                             )),
                   SizedBox(
                       height: (MediaQuery.of(context).size.height < 950
@@ -339,6 +352,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   @override
   void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 }

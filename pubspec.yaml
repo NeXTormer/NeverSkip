@@ -46,9 +46,9 @@ dependencies:
   fluttertoast: ^8.0.6
   url_launcher: ^6.0.6
   cupertino_icons: ^1.0.3
+  infinite_listview: ^1.1.0
   modal_bottom_sheet: ^2.0.0
   cached_network_image: ^3.0.0
-  smooth_page_indicator: ^0.3.0-nullsafety.0
 
   date_format: ^2.0.2
 
