@@ -13,6 +13,9 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.lightBlue,
+    );
+    return Scaffold(
       backgroundColor: kScaffoldBackgroundColor,
       body: SafeArea(
         child: BlocBuilder<FredericUserManager, FredericUser>(
@@ -77,6 +80,7 @@ class CalendarScreen extends StatelessWidget {
                     ),
                   )),
                   SliverDivider(),
+                  //if (false)
                   SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                     return CalendarDay(index, user, workoutListData,

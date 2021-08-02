@@ -18,6 +18,7 @@ class FredericBackend {
     _activityManager = FredericActivityManager();
     _setManager = FredericSetManager();
     _workoutManager = FredericWorkoutManager();
+    _goalManager = FredericGoalManager();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -42,7 +43,6 @@ class FredericBackend {
 
     _activityManager.reload();
     _workoutManager.reload();
-    _goalManager = FredericGoalManager();
     _goalManager.loadData();
   }
 

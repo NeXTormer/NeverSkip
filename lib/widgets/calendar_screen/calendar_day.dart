@@ -86,16 +86,18 @@ class _CalendarMonthCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Text('${getMonthName(day)}',
-              style: GoogleFonts.montserrat(
+              style: const TextStyle(
+                  fontFamily: 'Montserrat',
                   color: kTextColor,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.6,
                   fontSize: 15)),
           SizedBox(width: 8),
           Text('${day.year}',
-              style: GoogleFonts.montserrat(
+              style: const TextStyle(
+                  fontFamily: 'Montserrat',
                   color: kTextColor,
                   fontWeight: FontWeight.w300,
                   letterSpacing: 0.6,
@@ -131,8 +133,9 @@ class _CalendarMonthCard extends StatelessWidget {
         return 'November';
       case 12:
         return 'December';
+      default:
+        return 'Other';
     }
-    return '';
   }
 }
 
