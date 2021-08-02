@@ -15,7 +15,8 @@ enum ActivityCardType { Calendar, Small, Normal, WorkoutEditor }
 enum ActivityCardState { Normal, Green }
 
 ///
-/// onClick is null: when clicked open AddProgressSheet
+/// Opens the AddProgressSheet of the activity if clicked and no other onClick
+/// function is passed in.
 ///
 class ActivityCard extends StatelessWidget {
   ActivityCard(this.activity,

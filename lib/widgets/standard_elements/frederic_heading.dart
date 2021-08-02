@@ -13,7 +13,7 @@ class FredericHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool showsubheading = subHeading != null;
+    bool showSubHeading = subHeading != null;
     return Column(
       children: [
         Row(
@@ -25,8 +25,8 @@ class FredericHeading extends StatelessWidget {
                     fontSize: 15,
                     color: kTextColor,
                     letterSpacing: 0.6)),
-            if (showsubheading) SizedBox(width: 8),
-            if (showsubheading)
+            if (showSubHeading) SizedBox(width: 8),
+            if (showSubHeading)
               Container(
                 width: 1,
                 height: 18,
@@ -34,8 +34,8 @@ class FredericHeading extends StatelessWidget {
                     color: const Color(0xFFCDCDCD),
                     borderRadius: BorderRadius.all(Radius.circular(100))),
               ),
-            if (showsubheading) SizedBox(width: 8),
-            if (showsubheading)
+            if (showSubHeading) SizedBox(width: 8),
+            if (showSubHeading)
               Text(subHeading!,
                   style: const TextStyle(
                       color: const Color(0xF2A5A5A5),

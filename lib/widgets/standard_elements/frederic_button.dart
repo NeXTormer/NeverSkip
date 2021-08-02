@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FredericButton extends StatelessWidget {
   FredericButton(this.text,
       {required this.onPressed,
-      this.mainColor = const Color(0xFF3E4FD8),
-      this.textColor = const Color(0xFFFFFFFF),
+      this.mainColor = kMainColor,
+      this.textColor = kBrightTextColor,
       this.inverted = false,
       this.fontSize = 15,
       this.fontWeight = FontWeight.w600});

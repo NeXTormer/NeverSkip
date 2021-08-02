@@ -1,6 +1,6 @@
 import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
-import 'package:frederic/backend/frederic_goal_manager.dart';
+import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
@@ -34,8 +34,8 @@ class FredericBackend {
   late final FredericWorkoutManager _workoutManager;
   FredericWorkoutManager get workoutManager => _workoutManager;
 
-  FredericGoalManager? _goalManager;
-  FredericGoalManager? get goalManager => _goalManager;
+  late final FredericGoalManager _goalManager;
+  FredericGoalManager get goalManager => _goalManager;
 
   void loadData() {
     //TODO: wait until data loaded to complete
@@ -43,10 +43,10 @@ class FredericBackend {
     _activityManager.reload();
     _workoutManager.reload();
     _goalManager = FredericGoalManager();
-    _goalManager?.loadData();
+    _goalManager.loadData();
   }
 
   void dispose() {
-    _goalManager?.dispose();
+    _goalManager.dispose();
   }
 }

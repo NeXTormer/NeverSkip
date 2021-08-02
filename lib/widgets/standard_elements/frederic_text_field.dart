@@ -71,7 +71,7 @@ class _FredericTextFieldState extends State<FredericTextField> {
               : Icon(
                   widget.icon,
                   size: widget.size,
-                  color: const Color(0xFF3E4FD8),
+                  color: kMainColor,
                 ),
           suffixIcon: widget.suffixIcon == null
               ? null
@@ -105,7 +105,7 @@ class _FredericTextFieldState extends State<FredericTextField> {
           floatingLabelBehavior: FloatingLabelBehavior.never,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(width: 0.6, color: Color(0xFF3E4FD8)),
+            borderSide: BorderSide(width: 0.6, color: kMainColor),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),

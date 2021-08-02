@@ -1,10 +1,9 @@
 export 'activities/frederic_activity.dart';
 export 'activities/frederic_activity_manager.dart';
 export 'authentication/authentication_wrapper.dart';
+export 'authentication/frederic_user.dart';
 export 'frederic_backend.dart';
-export 'frederic_chart_data.dart';
-export 'frederic_goal.dart';
-export 'frederic_user.dart';
+export 'goals/frederic_goal.dart';
 export 'sets/frederic_set.dart';
 export 'workouts/frederic_workout.dart';
 export 'workouts/frederic_workout_manager.dart';

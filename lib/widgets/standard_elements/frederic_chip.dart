@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
 class FredericChip extends StatelessWidget {
-  const FredericChip(this.text, {Key? key, this.fontSize = 10})
+  const FredericChip(this.text,
+      {Key? key, this.fontSize = 10, this.color = kAccentColor})
       : super(key: key);
 
   final String text;
+  final Color color;
   final double fontSize;
 
   @override
@@ -13,8 +15,7 @@ class FredericChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-          color: kAccentColor,
-          borderRadius: BorderRadius.all(Radius.circular(100))),
+          color: color, borderRadius: BorderRadius.all(Radius.circular(100))),
       child: Text(
         text,
         style: TextStyle(

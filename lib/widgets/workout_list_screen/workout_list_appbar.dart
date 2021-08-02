@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/state/workout_search_term.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
@@ -42,7 +43,7 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
                         'Find your perfect workout plan',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: const Color(0xFF272727),
+                          color: kTextColor,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.6,
                           fontSize: 13,
@@ -57,7 +58,7 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
                         'All workout plans',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: const Color(0xFF272727),
+                          color: kTextColor,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.1,
                           fontSize: 17,

@@ -11,7 +11,7 @@ class ActivityMuscleGroupButton extends StatelessWidget {
       : this.label = label,
         super(key: key);
 
-  final Function onPressed;
+  final Function() onPressed;
   final double rightPadding;
   final String label;
   final bool isActive;
@@ -20,9 +20,7 @@ class ActivityMuscleGroupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: GestureDetector(
-          onTap: () {
-            onPressed();
-          },
+          onTap: onPressed,
           child: Container(
             color: Colors.white,
             child: Padding(

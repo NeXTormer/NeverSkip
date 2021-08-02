@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:frederic/backend/activities/frederic_activity.dart';
-import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
+import 'package:frederic/state/activity_filter_controller.dart';
 
 class FredericActivityListData {
   FredericActivityListData(this.changed, this.activities);

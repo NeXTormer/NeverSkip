@@ -33,29 +33,14 @@ class NormalActivityCardContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      '${activity.name}',
-                      style: TextStyle(
-                        color: kTextColor,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0,
-                        fontSize: 13,
-                      ),
-                    ),
-                    // SizedBox(width: 6),
-                    // FredericVerticalDivider(length: 16),
-                    // SizedBox(width: 6),
-                    // Text(
-                    //   '${1}', // activity.bestreps
-                    //   style: TextStyle(
-                    //       color: kGreyColor,
-                    //       fontWeight: FontWeight.w500,
-                    //       letterSpacing: 0.5,
-                    //       fontSize: 12),
-                    // ),
-                  ],
+                Text(
+                  '${activity.name}',
+                  style: TextStyle(
+                    color: kTextColor,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0,
+                    fontSize: 13,
+                  ),
                 ),
                 SizedBox(height: 6),
                 RichText(

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/calendar_screen/calendar_day.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
@@ -12,14 +13,13 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kScaffoldBackgroundColor,
       body: SafeArea(
         child: BlocBuilder<FredericUserManager, FredericUser>(
             builder: (context, user) {
           return BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
               builder: (context, workoutListData) {
             return BlocBuilder<FredericSetManager, FredericSetListData>(
-                //TODO: BuildWhen
                 builder: (context, setListData) {
               return CustomScrollView(
                 physics: ClampingScrollPhysics(),

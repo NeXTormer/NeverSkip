@@ -46,6 +46,7 @@ class FredericSetList {
       _setDocuments[documentIndex].sets.sort();
       sets.add(_setDocuments[documentIndex].sets[setIndex]);
     }
+    sets.sort();
     return sets;
   }
 

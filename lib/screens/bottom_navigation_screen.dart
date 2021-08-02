@@ -39,7 +39,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   Widget build(BuildContext context) {
     return CupertinoScaffold(
       body: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: kScaffoldBackgroundColor,
         extendBodyBehindAppBar: false,
         body: PageView(
           children: screens,

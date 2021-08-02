@@ -122,7 +122,7 @@ class _FredericSliderThumb extends SliderComponentShape {
     double bottom = top + height;
 
     RRect rect = RRect.fromLTRBR(left, top, right, bottom, Radius.circular(10));
-    canvas.drawRRect(rect, Paint()..color = Colors.white);
+    canvas.drawRRect(rect, Paint()..color = kScaffoldBackgroundColor);
     canvas.drawRRect(
         rect,
         Paint()
@@ -130,7 +130,7 @@ class _FredericSliderThumb extends SliderComponentShape {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1);
     TextSpan text = TextSpan(
-        style: TextStyle(color: Colors.black54, fontSize: 16),
+        style: TextStyle(color: kBlack54Color, fontSize: 16),
         text: '${val.ceil()} week${val.ceil() == 1 ? '' : 's'}');
     TextPainter textPainter =
         TextPainter(text: text, textDirection: textDirection);

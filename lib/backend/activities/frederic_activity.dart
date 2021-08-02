@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/widgets/activity_screen/activity_filter_controller.dart';
+import 'package:frederic/state/activity_filter_controller.dart';
 
 ///
 /// Represents a single Activity.

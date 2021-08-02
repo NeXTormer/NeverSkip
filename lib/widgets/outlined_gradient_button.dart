@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+@deprecated
 class OutlinedGradientButton extends StatelessWidget {
   final _GradientPainter _painter;
-  final Widget _child;
+  final Widget? child;
   final VoidCallback _callback;
   final double _radius;
   final double _padding;
@@ -12,11 +13,10 @@ class OutlinedGradientButton extends StatelessWidget {
     required double radius,
     required double padding,
     required Gradient gradient,
-    required Widget child,
+    this.child,
     required VoidCallback onPressed,
-  })  : this._painter = _GradientPainter(
+  })   : this._painter = _GradientPainter(
             strokeWidth: strokeWidth, radius: radius, gradient: gradient),
-        this._child = child,
         this._callback = onPressed,
         this._radius = radius,
         this._padding = padding;
@@ -31,17 +31,7 @@ class OutlinedGradientButton extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(_radius),
           onTap: _callback,
-          child: Container(
-            // constraints: BoxConstraints(minWidth: 88, minHeight: 48),
-            padding: EdgeInsets.all(_padding),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _child,
-              ],
-            ),
-          ),
+          child: child,
         ),
       ),
     );

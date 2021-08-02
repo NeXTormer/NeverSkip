@@ -50,7 +50,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           );
         }
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: kScaffoldBackgroundColor,
           floatingActionButton:
               workout.canEdit ? buildAddExerciseButton(width, 44) : null,
           floatingActionButtonLocation:
@@ -59,12 +59,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             child: Column(
               children: [
                 EditWorkoutHeader(workout),
-                Divider(color: const Color(0xFFC9C9C9)),
+                Divider(color: kDividerColor),
                 WeekdaysSliderSegment(
                     pageController: pageController,
                     weekdaysSliderController: weekdaysSliderController,
                     workout: workout),
-                Divider(color: const Color(0xFFC9C9C9)),
+                Divider(color: kDividerColor),
                 EditActivityListSegment(
                     workout: workout,
                     pageController: pageController,

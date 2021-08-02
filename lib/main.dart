@@ -25,13 +25,22 @@ final getIt = GetIt.instance;
 
 const Color kMainColor = const Color(0xFF3E4FD8);
 const Color kAccentColor = const Color(0xFF4791FF);
+// const Color kMainColor = const Color(0xFFD8903E);
+// const Color kAccentColor = const Color(0xFFFFEA47);
+// const Color kMainColorLight = const Color(0x1AD8903E);
+// const Color kAccentColorLight = const Color(0xFFFFEA47);
+const Color kDividerColor = const Color(0xFFC9C9C9);
+const Color kScaffoldBackgroundColor = Colors.white;
 const Color kMainColorLight = const Color(0x1A3E4FD8);
 const Color kAccentColorLight = const Color(0xFFF4F7FE);
 const Color kGreenColor = const Color(0xFF1CBB3F);
 const Color kGreenColorLight = const Color(0x1A1CBB3F);
 const Color kGreyColor = const Color(0xFFC4C4C4);
+const Color kCalendarDisabledColor = const Color(0x66A5A5A5);
 
 const Color kTextColor = const Color(0xFF272727);
+const Color kBlack54Color = Colors.black54;
+const Color kBrightTextColor = Colors.white;
 const Color kCardBorderColor = const Color(0xFFE2E2E2);
 const List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 

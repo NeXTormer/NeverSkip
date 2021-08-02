@@ -48,7 +48,8 @@ class CalendarDay extends StatelessWidget {
     }
 
     return Container(
-        padding: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
+        padding:
+            const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
         child: Column(
           children: [
             if (day.day == 1 || index == 0) _CalendarMonthCard(day),
@@ -59,11 +60,11 @@ class CalendarDay extends StatelessWidget {
                 _CalendarDayCard(day, dayFinished && today),
                 Expanded(
                   child: Column(
-                    children: List.generate(
-                        activities.length,
-                        (i) => _CalendarActivityCard(activities[i],
-                            indicator: index == 0,
-                            completed: finished.isNotEmpty && finished[i])),
+                    children: List<Widget>.generate(activities.length, (i) {
+                      return _CalendarActivityCard(activities[i],
+                          indicator: index == 0,
+                          completed: finished.isNotEmpty && finished[i]);
+                    }),
                   ),
                 )
               ],
@@ -88,14 +89,14 @@ class _CalendarMonthCard extends StatelessWidget {
         children: [
           Text('${getMonthName(day)}',
               style: GoogleFonts.montserrat(
-                  color: const Color(0xFF272727),
+                  color: kTextColor,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.6,
                   fontSize: 15)),
           SizedBox(width: 8),
           Text('${day.year}',
               style: GoogleFonts.montserrat(
-                  color: const Color(0xFF272727),
+                  color: kTextColor,
                   fontWeight: FontWeight.w300,
                   letterSpacing: 0.6,
                   fontSize: 13)),
@@ -170,12 +171,12 @@ class _CalendarActivityCard extends StatelessWidget {
 
 class _CalendarTimeLine extends StatelessWidget {
   const _CalendarTimeLine(
-      {this.isActive = false, this.activeColor = const Color(0xFF3E4FD8)});
+      {this.isActive = false, this.activeColor = kMainColor});
 
   final bool isActive;
 
   final Color activeColor;
-  final Color disabledColor = const Color(0x66A5A5A5);
+  final Color disabledColor = kCalendarDisabledColor;
 
   @override
   Widget build(BuildContext context) {

@@ -34,6 +34,7 @@ class _CalendarActivityCardContentState
   @override
   Widget build(BuildContext context) {
     return FredericCard(
+        animated: widget.deleteButton,
         onTap: widget.deleteButton ? null : widget.onClick,
         height: widget.deleteButton ? (deleted ? 0 : 70) : 90,
         padding: EdgeInsets.all(deleted ? 0 : 10),

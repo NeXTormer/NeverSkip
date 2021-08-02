@@ -11,7 +11,6 @@ import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/set_card.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddProgressScreen extends StatelessWidget {
@@ -27,7 +26,7 @@ class AddProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kScaffoldBackgroundColor,
       body: Column(
         children: [
           Padding(
@@ -46,7 +45,8 @@ class AddProgressScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 2),
                   child: Text(
                     'Exercise Progress',
-                    style: GoogleFonts.montserrat(
+                    style: const TextStyle(
+                        fontFamily: 'Montserrat',
                         color: kTextColor,
                         fontWeight: FontWeight.w500,
                         fontSize: 17),
@@ -160,7 +160,6 @@ class AddProgressScreen extends StatelessWidget {
                       return SliverList(
                           delegate: SliverChildBuilderDelegate(
                               (context, index) =>
-                                  //Container(height: 20, color: Colors.black26)
                                   SetCard(sets[index], activity),
                               childCount: sets.length));
                     }),
@@ -182,7 +181,7 @@ class AddProgressScreen extends StatelessWidget {
           title,
           style: TextStyle(
               fontFamily: 'Montserrat',
-              color: const Color(0x803A3A3A),
+              color: kTextColor,
               fontSize: 12,
               fontWeight: FontWeight.w500),
         )
@@ -207,6 +206,7 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
         child: FredericCard(
+      animated: true,
       margin: EdgeInsets.symmetric(horizontal: 16),
       padding: EdgeInsets.all(10),
       height: expanded ? 142 : 80,
@@ -221,7 +221,6 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
               duration: Duration(milliseconds: 200),
               width: expanded ? 0 : 60,
               height: double.infinity,
-              //constraints: BoxConstraints(maxWidth: expanded ? 0 : 60),
               child: LayoutBuilder(builder: (context, constraints) {
                 return ConstrainedBox(
                     constraints: constraints,
@@ -238,7 +237,8 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                 Text(widget.activity.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.montserrat(
+                    style: const TextStyle(
+                        fontFamily: 'Montserrat',
                         color: kMainColor,
                         fontWeight: FontWeight.w500,
                         fontSize: 17)),
@@ -247,8 +247,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                   child: Text(widget.activity.description,
                       maxLines: expanded ? 6 : 2,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.montserrat(
-                          color: const Color(0xFF3A3A3A),
+                      style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: kTextColor,
                           letterSpacing: 0.2,
                           fontWeight: FontWeight.w400,
                           fontSize: 13)),

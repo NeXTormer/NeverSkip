@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController nameController = TextEditingController();
 
   bool login = false;
-  bool termsandconditions = false;
+  bool acceptedTermsAndConditions = false;
   bool hasError = false;
   String errorText = '';
 
@@ -75,15 +75,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenheight = MediaQuery.of(context).size.height;
-    bool smallscreen = screenheight < 700;
-    bool medscreen = screenheight < 800;
+    double screenHeight = MediaQuery.of(context).size.height;
+    bool smallScreen = screenHeight < 700;
+    bool medScreen = screenHeight < 800;
     return Scaffold(
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: kScaffoldBackgroundColor,
         body: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
           child: Container(
-            height: screenheight,
+            height: screenHeight,
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -92,9 +92,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Column(
                     children: [
                       SizedBox(
-                          height: smallscreen
+                          height: smallScreen
                               ? 50
-                              : medscreen
+                              : medScreen
                                   ? 40
                                   : 80),
                       Align(
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontWeight: FontWeight.w400,
                                   color: Color(0x993A3A3A)))),
                       SizedBox(height: 40),
-                      if (!smallscreen)
+                      if (!smallScreen)
                         Padding(
                             padding: EdgeInsets.symmetric(horizontal: 26),
                             child: Image(
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Container(
                       child: Column(
                         children: [
-                          if (!smallscreen)
+                          if (!smallScreen)
                             Expanded(flex: 50, child: Container()),
                           //SizedBox(height: 50),
                           if (!login)
@@ -173,7 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (!login)
                             GestureDetector(
                               onTap: () => setState(() =>
-                                  termsandconditions = !termsandconditions),
+                                  acceptedTermsAndConditions =
+                                      !acceptedTermsAndConditions),
                               onLongPress: () =>
                                   print('Show Terms and Conditions'),
                               child: Row(
@@ -264,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
           borderRadius: BorderRadius.circular(3),
           border: Border.all(color: const Color(0xFFB8B8B8)),
           color: Colors.white),
-      child: termsandconditions
+      child: acceptedTermsAndConditions
           ? Icon(
               Icons.check,
               size: 12,
@@ -321,7 +322,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      if (!termsandconditions) {
+      if (!acceptedTermsAndConditions) {
         errorText = 'You need to accept the Terms & Conditions to use the app.';
         setState(() {
           hasError = true;

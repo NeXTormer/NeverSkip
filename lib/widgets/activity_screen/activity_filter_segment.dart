@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_musclegroup_button.dart';
 
+import '../../state/activity_filter_controller.dart';
 import '../standard_elements/frederic_heading.dart';
-import 'activity_filter_controller.dart';
 
 enum MuscleGroup { Arms, Chest, Back, Abs, Legs, None, All }
 
@@ -57,9 +57,6 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
               'Muscle Groups',
               onPressed: () {},
             ),
-            // TODO Update Backend functionality for case:
-            // No filter is selected, so every activity is shown
-            // Default value = false for all filters
             Stack(
               children: [
                 Row(

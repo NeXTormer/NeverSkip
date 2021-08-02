@@ -5,7 +5,7 @@ import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 
-import 'activity_filter_controller.dart';
+import '../../state/activity_filter_controller.dart';
 
 class ActivityListSegment extends StatelessWidget {
   ActivityListSegment(
@@ -32,7 +32,7 @@ class ActivityListSegment extends StatelessWidget {
                   onClick:
                       onTap == null ? null : () => onTap?.call(list[index]),
                 ),
-              ); // TODO implement onClick function for adding to workout
+              );
             },
             childCount: list.length,
           ),

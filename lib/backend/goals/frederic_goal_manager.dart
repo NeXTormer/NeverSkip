@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'backend.dart';
+import '../backend.dart';
 
 ///
 /// Manages all goals. Only one instance of this should exist. Instantiated in

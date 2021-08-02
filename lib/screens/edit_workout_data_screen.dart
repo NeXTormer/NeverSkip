@@ -27,8 +27,6 @@ class EditWorkoutDataScreen extends StatefulWidget {
 }
 
 class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
-  final Color disabledBorderColor = Color(0xFFE2E2E2);
-
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
@@ -89,7 +87,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kScaffoldBackgroundColor,
       body: CustomScrollView(
         controller: ModalScrollController.of(context),
         slivers: [
@@ -253,7 +251,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                           border: Border.all(color: kCardBorderColor)),
-                      child: false
+                      child: true
                           ? FredericDatePicker(initialDate: DateTime.now())
                           : SingleChildScrollView(
                               controller: ScrollController(),

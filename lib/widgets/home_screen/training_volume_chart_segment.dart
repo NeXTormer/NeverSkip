@@ -14,8 +14,8 @@ class TrainingVolumeChartSegment extends StatelessWidget {
       if (data > highest) highest = data;
     }
     highest += (100 - (highest % 100));
-    double midhigh = (highest / 3) * 2;
-    double midlow = highest / 3;
+    double midHigh = (highest / 3) * 2;
+    double midLow = highest / 3;
 
     return SliverToBoxAdapter(
         child: Column(
@@ -42,8 +42,8 @@ class TrainingVolumeChartSegment extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       buildIndexText(highest),
-                      buildIndexText(midhigh),
-                      buildIndexText(midlow),
+                      buildIndexText(midHigh),
+                      buildIndexText(midLow),
                       buildIndexText(lowest),
                     ],
                   ),

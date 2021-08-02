@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../misc/ExtraIcons.dart';
+import '../../state/activity_filter_controller.dart';
 import '../standard_elements/frederic_text_field.dart';
-import 'activity_filter_controller.dart';
 
 class ActivityHeader extends StatelessWidget {
   ActivityHeader(this.title, this.subtitle);
@@ -66,7 +67,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                     Text(
                       widget.subtitle,
                       style: GoogleFonts.montserrat(
-                        color: const Color(0xFF272727),
+                        color: kTextColor,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.6,
                         fontSize: 13,
@@ -80,7 +81,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                     Text(
                       widget.title,
                       style: GoogleFonts.montserrat(
-                        color: const Color(0xFF272727),
+                        color: kTextColor,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.1,
                         fontSize: 17,

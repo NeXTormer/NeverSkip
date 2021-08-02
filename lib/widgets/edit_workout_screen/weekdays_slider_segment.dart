@@ -53,7 +53,6 @@ class WeekdaysSliderSegment extends StatelessWidget {
                 : pageController.nextPage(
                     duration: Duration(milliseconds: 250),
                     curve: Curves.easeInOutCirc);
-            print('tap');
           },
           child: Icon(
             direction == Direction.left
