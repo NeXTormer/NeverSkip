@@ -6,6 +6,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/misc/frederic_text_theme.dart';
+import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
   HomeScreenAppbar(this.user);
@@ -27,10 +28,7 @@ class HomeScreenAppbar extends StatelessWidget {
                   radius: 20,
                   backgroundImage: CachedNetworkImageProvider(user.image),
                 ),
-                Icon(
-                  ExtraIcons.bell_1,
-                  color: Colors.grey,
-                )
+                StreakIcon(user: user),
               ],
             ),
             SizedBox(height: 12),

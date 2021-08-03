@@ -293,9 +293,14 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                                 .instance.workoutManager
                                                 .add(FredericWorkoutDeleteEvent(
                                                     widget.workout));
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
+
+                                            // Navigator.of(context).pop();
+                                            WidgetsBinding.instance
+                                                ?.addPostFrameCallback(
+                                                    (timeStamp) {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            });
                                           },
                                           title: 'Confirm deletion',
                                           destructiveAction: true,

@@ -58,6 +58,13 @@ class FredericWorkoutManager
       _workouts[event.workout.workoutID] = event.workout;
       yield FredericWorkoutListData(_workouts, event.changed);
     } else if (event is FredericWorkoutDeleteEvent) {
+      if (FredericBackend.instance.userManager.state.activeWorkouts
+          .contains(event.workout.workoutID)) {
+        List<String> activeWorkouts =
+            FredericBackend.instance.userManager.state.activeWorkouts;
+        activeWorkouts.remove(event.workout.workoutID);
+        FredericBackend.instance.userManager.activeWorkouts = activeWorkouts;
+      }
       _workouts[event.workout.workoutID]?.delete();
       _workouts.remove(event.workout.workoutID);
       yield FredericWorkoutListData(_workouts, event.changed);
