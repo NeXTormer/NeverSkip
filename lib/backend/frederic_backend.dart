@@ -43,10 +43,10 @@ class FredericBackend {
 
     _activityManager.reload();
     _workoutManager.reload();
-    _goalManager.loadData();
+    _goalManager.reload();
   }
 
-  void dispose() {
-    _goalManager.dispose();
-  }
+  // void dispose() {
+  //   _goalManager.dispose();
+  // }
 }

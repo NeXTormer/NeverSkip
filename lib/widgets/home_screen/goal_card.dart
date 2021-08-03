@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
@@ -41,7 +41,8 @@ class GoalCard extends StatelessWidget {
                               letterSpacing: 0.3),
                         ),
                       ),
-                      FredericChip(goal.timeLeftFormatted)
+                      //  FredericChip(goal.timeLeftFormatted)
+                      FredericChip('1'),
                     ],
                   ),
                 ),
@@ -83,7 +84,8 @@ class GoalCard extends StatelessWidget {
                 //     ],
                 //   ),
                 // ),
-                ProgressBar((goal.progressPercentage / 100).toDouble())
+                // ProgressBar((goal.progressPercentage / 100).toDouble())
+                ProgressBar((1 / 100).toDouble())
               ],
             ),
           )
