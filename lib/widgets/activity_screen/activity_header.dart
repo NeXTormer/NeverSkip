@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -8,10 +10,11 @@ import '../../state/activity_filter_controller.dart';
 import '../standard_elements/frederic_text_field.dart';
 
 class ActivityHeader extends StatelessWidget {
-  ActivityHeader(this.title, this.subtitle);
+  ActivityHeader(this.title, this.subtitle, {required this.user});
 
   final String title;
   final String subtitle;
+  final FredericUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class ActivityHeader extends StatelessWidget {
         child: Consumer<ActivityFilterController>(
           builder: (context, filter, child) {
             return ActivityHeaderContent(title, subtitle,
-                filterController: filter);
+                filterController: filter, user: user);
           },
         ),
       ),
@@ -31,9 +34,10 @@ class ActivityHeader extends StatelessWidget {
 
 class ActivityHeaderContent extends StatefulWidget {
   ActivityHeaderContent(this.title, this.subtitle,
-      {required this.filterController});
+      {required this.filterController, required this.user});
 
   final ActivityFilterController filterController;
+  final FredericUser user;
   final String title;
   final String subtitle;
 
@@ -91,10 +95,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                 ),
               ],
             ),
-            Icon(
-              ExtraIcons.bell_1,
-              color: Colors.grey,
-            )
+            StreakIcon(user: widget.user)
           ],
         ),
         SizedBox(height: 16),

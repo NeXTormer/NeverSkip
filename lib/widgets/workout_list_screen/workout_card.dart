@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
@@ -99,7 +100,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                     activeColor: kMainColor,
                                     onChanged: widget.workout.workoutID == 'new'
                                         ? null
-                                        : handleSwitch,
+                                        : (value) =>
+                                            handleSwitch(context, value),
                                   ),
                                 ),
                               )
@@ -137,22 +139,32 @@ class _WorkoutCardState extends State<WorkoutCard> {
         ));
   }
 
-  void handleSwitch(bool value) {
-    setState(() {
-      List<String> activeWorkouts =
-          FredericBackend.instance.userManager.state.activeWorkouts;
-      if (value) {
-        if (!activeWorkouts.contains(widget.workout.workoutID)) {
-          activeWorkouts.add(widget.workout.workoutID);
-        }
-        isSelected = true;
-      } else {
-        if (activeWorkouts.contains(widget.workout.workoutID)) {
-          activeWorkouts.remove(widget.workout.workoutID);
-        }
-        isSelected = false;
-      }
-      FredericBackend.instance.userManager.activeWorkouts = activeWorkouts;
-    });
+  void handleSwitch(BuildContext context, bool value) {
+    String action = value ? 'Enable' : 'Disable';
+    FredericActionDialog.show(
+        context: context,
+        dialog: FredericActionDialog(
+          actionText: action,
+          title: 'Change active status',
+          closeOnConfirm: true,
+          childText: 'Do you want to ${action.toLowerCase()} the workout?',
+          onConfirm: () => setState(() {
+            List<String> activeWorkouts =
+                FredericBackend.instance.userManager.state.activeWorkouts;
+            if (value) {
+              if (!activeWorkouts.contains(widget.workout.workoutID)) {
+                activeWorkouts.add(widget.workout.workoutID);
+              }
+              isSelected = true;
+            } else {
+              if (activeWorkouts.contains(widget.workout.workoutID)) {
+                activeWorkouts.remove(widget.workout.workoutID);
+              }
+              isSelected = false;
+            }
+            FredericBackend.instance.userManager.activeWorkouts =
+                activeWorkouts;
+          }),
+        ));
   }
 }

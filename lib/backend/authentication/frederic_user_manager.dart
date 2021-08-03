@@ -34,7 +34,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       }
     } else if (event is FredericRestoreLoginStatusEvent) {
       if (state.waiting == true) {
-        yield FredericUser(event.uid, waiting: false);
+        yield FredericUser(event.uid, waiting: false, shouldUpdateStreak: true);
       }
     } else if (event is FredericLoginEvent) {
       try {
@@ -42,7 +42,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
             email: event.email, password: event.password);
         SharedPreferences.getInstance()
             .then((value) => value.setBool('wasLoggedIn', true));
-        yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
+        yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
+            shouldUpdateStreak: true);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           yield FredericUser('', statusMessage: 'The email does not exist.');

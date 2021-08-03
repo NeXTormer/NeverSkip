@@ -7,17 +7,26 @@ class FredericActionDialog extends StatelessWidget {
       {this.child,
       this.title,
       this.actionText = 'Confirm',
+      this.childText,
       required this.onConfirm,
       this.destructiveAction = false,
       this.infoOnly = false,
+      this.closeOnConfirm = false,
       Key? key})
       : super(key: key);
+
+  static void show(
+      {required BuildContext context, required FredericActionDialog dialog}) {
+    showDialog(context: context, builder: (context) => dialog);
+  }
 
   final Widget? child;
   final String? title;
   final String actionText;
+  final String? childText;
   final bool destructiveAction;
   final bool infoOnly;
+  final bool closeOnConfirm;
   final void Function() onConfirm;
 
   @override
@@ -47,6 +56,11 @@ class FredericActionDialog extends StatelessWidget {
                       ),
                     ),
                   if (child != null) child!,
+                  if (child == null && childText != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(childText!, textAlign: TextAlign.center),
+                    ),
                   if (infoOnly)
                     Container(
                       padding: EdgeInsets.only(
@@ -72,8 +86,13 @@ class FredericActionDialog extends StatelessWidget {
                               padding: EdgeInsets.only(
                                   right: 12, bottom: 12, left: 12, top: 8),
                               child: FredericButton(
-                                'Delete',
-                                onPressed: onConfirm,
+                                actionText,
+                                onPressed: () {
+                                  onConfirm();
+                                  if (closeOnConfirm) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
                                 mainColor:
                                     destructiveAction ? Colors.red : kMainColor,
                               )),

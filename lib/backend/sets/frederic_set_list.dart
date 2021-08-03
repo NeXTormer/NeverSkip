@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/extensions.dart';
 
 ///
 /// Represents all loaded sets of a specific activity. Use this class to add
@@ -27,7 +28,7 @@ class FredericSetList {
   bool wasActiveToday() {
     List<FredericSet> latest = getLatestSets(1);
     if (latest.isEmpty) return false;
-    return latest[0].timestamp.isSameDate(DateTime.now());
+    return latest[0].timestamp.isSameDay(DateTime.now());
   }
 
   List<FredericSet> getLatestSets([int count = 6]) {
@@ -125,13 +126,5 @@ class FredericSetList {
     }
     _calculateBestProgress();
     _setManager.add(FredericSetEvent(<String>[activityID]));
-  }
-}
-
-extension DateOnlyCompare on DateTime {
-  bool isSameDate(DateTime other) {
-    return this.year == other.year &&
-        this.month == other.month &&
-        this.day == other.day;
   }
 }
