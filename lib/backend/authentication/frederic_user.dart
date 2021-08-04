@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
 
 ///
@@ -22,6 +23,7 @@ class FredericUser {
   String? _image;
   int? _weight;
   int? _height;
+  int _currentStreak = 0;
   bool waiting;
   bool shouldUpdateStreak;
   bool? _hasStreak;
@@ -43,6 +45,7 @@ class FredericUser {
       _image ?? 'https://via.placeholder.com/300x300?text=profile';
   int get weight => _weight ?? -1;
   int get height => _height ?? -1;
+  int get currentStreak => _currentStreak;
   DateTime get birthday => _birthday ?? DateTime.now();
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
@@ -52,6 +55,54 @@ class FredericUser {
   int get age {
     var diff = birthday.difference(DateTime.now());
     return diff.inDays ~/ 365;
+  }
+
+  set name(String value) {
+    if (uid == '') return;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'name': value});
+    }
+  }
+
+  set progressMonitors(List<String> value) {
+    if (uid == '') return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'progressmonitors': value});
+  }
+
+  set activeWorkouts(List<String> value) {
+    if (uid == '') return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'activeworkouts': value});
+  }
+
+  set image(String value) {
+    if (uid == '') return;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'image': value});
+    }
+  }
+
+  set streakStartDate(DateTime? value) {
+    if (uid == '') return;
+    FirebaseFirestore.instance.collection('users').doc(uid).update(
+        {'streakstart': value == null ? null : Timestamp.fromDate(value)});
+  }
+
+  set streakLatestDate(DateTime? value) {
+    if (uid == '') return;
+    FirebaseFirestore.instance.collection('users').doc(uid).update(
+        {'streaklatest': value == null ? null : Timestamp.fromDate(value)});
   }
 
   void insertDocumentSnapshot(
@@ -73,16 +124,57 @@ class FredericUser {
     _streakStartDate = data?['streakstart']?.toDate();
     _streakLatestDate = data?['streaklatest']?.toDate();
 
+    if (_streakLatestDate != null) {
+      if (_streakStartDate == null) {
+        streakStartDate = _streakLatestDate;
+      }
+    }
+
     if (shouldUpdateStreak) {
       _updateStreak();
     }
+    if (_streakStartDate?.isSameDay(_streakLatestDate) ?? false) {
+      _currentStreak = 1;
+    }
   }
 
-  void _updateStreak() {
+  /// Called once when the user logs in (i.e. every app start)
+  void _updateStreak() async {
     if (_checkIfStreakNeedsUpdating()) {
-      
-      //check if there have been no activities in the calendar from startdate to now
+      var lastCompletion = _streakLatestDate;
+      var now = DateTime.now();
+      bool streakBroken = false;
+      for (int i = 0;
+          now.subtract(Duration(days: i)).isNotSameDay(lastCompletion);
+          i++) {
+        bool calendarDayIsEmpty =
+            await hasActivitiesOnDay(now.subtract(Duration(days: i)));
+        if (!calendarDayIsEmpty) {
+          streakBroken = true;
+          break;
+        }
+      }
+      if (streakBroken) {
+        streakStartDate = null;
+        streakLatestDate = null;
+        _currentStreak = 0;
+      } else {
+        streakLatestDate = DateTime.now();
+        _currentStreak =
+            _streakStartDate!.difference(_streakLatestDate!).inDays;
+      }
     }
+  }
+
+  Future<bool> hasActivitiesOnDay(DateTime day) async {
+    await FredericBackend.instance.workoutManager.waitForFirstReload();
+    for (var workoutID in activeWorkouts) {
+      FredericWorkout? workout =
+          FredericBackend.instance.workoutManager.workouts[workoutID];
+      if (workout == null) continue;
+      if (workout.activities.getDay(day).isNotEmpty) return true;
+    }
+    return false;
   }
 
   /// when this returns true, both _streakStartDate and _streakLatestDate are

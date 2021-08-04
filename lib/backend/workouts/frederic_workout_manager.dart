@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,6 +19,10 @@ class FredericWorkoutManager
 
   final CollectionReference _workoutsCollection =
       FirebaseFirestore.instance.collection('workouts');
+
+  bool _hasCompletedFirstReload = false;
+  bool get hasCompletedFirstReload => _hasCompletedFirstReload;
+  List<Completer<void>> _waitForFirstLoadCompleters = <Completer<void>>[];
 
   HashMap<String, FredericWorkout> _workouts;
 
@@ -47,6 +52,21 @@ class FredericWorkoutManager
     }
 
     add(FredericWorkoutEvent(changed));
+
+    if (!_hasCompletedFirstReload) {
+      _hasCompletedFirstReload = true;
+      for (var completer in _waitForFirstLoadCompleters) {
+        completer.complete();
+      }
+    }
+  }
+
+  /// Future gets completed when workouts have been loaded one time
+  Future<void> waitForFirstReload() async {
+    if (_hasCompletedFirstReload) return;
+    Completer<void> completer = Completer<void>();
+    _waitForFirstLoadCompleters.add(completer);
+    return completer.future;
   }
 
   @override
