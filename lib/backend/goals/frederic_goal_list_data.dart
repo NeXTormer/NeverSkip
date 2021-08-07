@@ -9,7 +9,11 @@ class FredericGoalListData {
   HashMap<String, FredericGoal> goals;
 
   List<FredericGoal> getGoals() {
-    return goals.values.toList();
+    return goals.values.where((element) => !element.isCompleted).toList();
+  }
+
+  List<FredericGoal> getAchievements() {
+    return goals.values.where((element) => element.isCompleted).toList();
   }
 
   @override

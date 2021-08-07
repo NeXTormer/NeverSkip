@@ -15,13 +15,13 @@ class FredericGoal {
 
     _title = data['title'];
     _image = data['image'];
-    _start = data['start'];
-    _end = data['end'];
-    _current = data['current'];
-    _startDate = data['startDate'];
-    _endDate = data['endDate'];
-    _isCompleted = data['isCompleted'];
-    _isDeleted = data['isDeleted'];
+    _start = data['startstate'];
+    _end = data['endstate'];
+    _current = data['currentstate'];
+    _startDate = data['startdate'];
+    _endDate = data['enddate'];
+    _isCompleted = data['iscompleted'];
+    _isDeleted = data['isdeleted'];
   }
 
   ///
@@ -174,7 +174,7 @@ class FredericGoal {
   /// Updates the end date of the goal in the Database
   ///
   set endDate(DateTime value) {
-    if (value.isAfter(startDate)) {
+    if (true) {
       FirebaseFirestore.instance
           .collection('goals')
           .doc(goalID)

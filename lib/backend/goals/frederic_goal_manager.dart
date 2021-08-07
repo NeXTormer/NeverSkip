@@ -18,8 +18,10 @@ class FredericGoalManager
       : super(
             FredericGoalListData(<String>[], HashMap<String, FredericGoal>()));
 
-  final CollectionReference _goalsCollection =
-      FirebaseFirestore.instance.collection('goals');
+  final CollectionReference _goalsCollection = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .collection('goals');
 
   HashMap<String, FredericGoal> _goals = HashMap<String, FredericGoal>();
 
@@ -33,9 +35,7 @@ class FredericGoalManager
   /// (Re)Loads all goals from the database
   ///
   void reload() async {
-    QuerySnapshot<Object?> private = await _goalsCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .get();
+    QuerySnapshot<Object?> private = await _goalsCollection.get();
 
     List<String> changed = <String>[];
     _goals.clear();

@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
@@ -101,6 +102,8 @@ class Frederic extends StatelessWidget {
             value: FredericBackend.instance.activityManager),
         BlocProvider<FredericWorkoutManager>.value(
             value: FredericBackend.instance.workoutManager),
+        BlocProvider<FredericGoalManager>.value(
+            value: FredericBackend.instance.goalManager),
       ],
       child: MaterialApp(
         navigatorObservers: [
