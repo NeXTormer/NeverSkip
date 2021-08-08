@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 import 'frederic_goal.dart';
 
@@ -29,7 +30,7 @@ class FredericGoalManager
     return _goals[value];
   }
 
-  Iterable<FredericGoal> get goals => _goals.values;
+  // Iterable<FredericGoal> get goals => _goals.values;
 
   ///
   /// (Re)Loads all goals from the database
@@ -71,6 +72,22 @@ class FredericGoalManager
       Transition<FredericGoalEvent, FredericGoalListData> transition) {
     super.onTransition(transition);
   }
+
+  void deleteGoal(String goalID) {
+    if (goalID == '') return;
+    _goalsCollection.doc(goalID).delete();
+  }
+
+  set goals(List<String> value) {
+    if (FirebaseAuth.instance.currentUser?.uid == '') return;
+    for (String temp in value) {
+      print(temp);
+    }
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(FirebaseAuth.instance.currentUser?.uid)
+    //     .update({'goals': value});
+  }
 }
 
 class FredericGoalEvent {
@@ -85,7 +102,7 @@ class FredericGoalUpdateEvent extends FredericGoalEvent {
 }
 
 class FredericGoalCreateEvent extends FredericGoalEvent {
-  FredericGoalCreateEvent(this.newGoal) : super(<String>[newGoal.activityID]);
+  FredericGoalCreateEvent(this.newGoal) : super(<String>[newGoal.goalID]);
 
   FredericGoal newGoal;
 }

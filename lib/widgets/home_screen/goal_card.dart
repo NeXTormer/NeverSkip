@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
-import 'package:frederic/main.dart';
+import 'package:frederic/screens/edit_goal_data_screen.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class GoalCard extends StatelessWidget {
   GoalCard(this.goal);
@@ -16,6 +19,12 @@ class GoalCard extends StatelessWidget {
     final num currentStateNormalized = (goal.currentState - goal.startState) /
         (goal.endState - goal.startState);
     return FredericCard(
+      onLongPress: () {
+        handleLongClick(context);
+      },
+      onTap: () {
+        handleClick(context);
+      },
       width: 260,
       padding: EdgeInsets.all(10),
       child: Row(
@@ -58,42 +67,11 @@ class GoalCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: '${goal.startState} ',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(text: 'kg'),
-                                  ],
-                                ),
-                              ),
+                              child:
+                                  buildProgressBarText(goal.startState, 'kg'),
                             ),
                             Flexible(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: '${goal.endState} ',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(text: 'kg'),
-                                  ],
-                                ),
-                              ),
+                              child: buildProgressBarText(goal.endState, 'kg'),
                             ),
                           ],
                         ),
@@ -108,5 +86,51 @@ class GoalCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget buildProgressBarText(var text, String unit) {
+    return RichText(
+      text: TextSpan(
+          style: const TextStyle(
+            fontSize: 13,
+            color: Colors.black,
+          ),
+          children: [
+            TextSpan(
+              text: '$text',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+            TextSpan(text: ' '),
+            TextSpan(text: '$unit')
+          ]),
+    );
+  }
+
+  void handleClick(BuildContext context) {
+    CupertinoScaffold.showCupertinoModalBottomSheet(
+        context: context,
+        builder: (c) => Scaffold(body: EditGoalDataScreen(goal)));
+  }
+
+  void handleLongClick(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => FredericActionDialog(
+              onConfirm: () {
+                FredericBackend.instance.goalManager.deleteGoal(goal.goalID);
+                Navigator.of(context).pop();
+              },
+              destructiveAction: true,
+              title: 'Confirm deletion',
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                    "Do you want to delete your personal goal? '${goal.title}' This cannot be undone!",
+                    textAlign: TextAlign.center),
+              ),
+            ));
   }
 }

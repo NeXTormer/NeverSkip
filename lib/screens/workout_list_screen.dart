@@ -24,7 +24,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kScaffoldBackgroundColor,
-      floatingActionButton: buildAddExerciseButton(context),
+      floatingActionButton: buildAddWorkoutButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: ChangeNotifierProvider<WorkoutSearchTerm>(
@@ -55,7 +55,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
     );
   }
 
-  Widget buildAddExerciseButton(BuildContext context) {
+  Widget buildAddWorkoutButton(BuildContext context) {
     return Container(
       height: 44,
       width: MediaQuery.of(context).size.width,
