@@ -19,6 +19,10 @@ class FredericBackend {
     _setManager = FredericSetManager();
     _workoutManager = FredericWorkoutManager();
     _goalManager = FredericGoalManager();
+
+    // Timer.periodic(Duration(seconds: 10), (timer) {
+    //   FredericProfiler.evaluate();
+    // });
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();

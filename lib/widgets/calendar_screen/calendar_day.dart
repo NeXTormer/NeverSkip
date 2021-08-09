@@ -25,22 +25,25 @@ class CalendarDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //var profiler = FredericProfiler.track('build calendar day');
     DateTime day = DateTime.now().add(Duration(days: index));
-    List<FredericActivity> activities = <FredericActivity>[];
-    for (String workout in user.activeWorkouts) {
-      if (workoutListData.workouts[workout] != null)
-        activities
-            .addAll(workoutListData.workouts[workout]!.activities.getDay(day));
+    List<FredericActivity> activitiesDueToday = <FredericActivity>[];
+    for (String workoutID in user.activeWorkouts) {
+      if (workoutListData.workouts[workoutID] != null)
+        activitiesDueToday.addAll(
+            workoutListData.workouts[workoutID]!.activities.getDay(day));
     }
     bool dayFinished = true;
-    List<bool> finished =
-        currentDayIsToday ? List.filled(activities.length, false) : <bool>[];
+    List<bool> completedActivityToday = currentDayIsToday
+        ? List.filled(activitiesDueToday.length, false)
+        : <bool>[];
     if (currentDayIsToday) {
       if (setListData != null) {
-        for (int i = 0; i < activities.length; i++) {
-          FredericSetList setList = setListData![activities[i].activityID];
+        for (int i = 0; i < activitiesDueToday.length; i++) {
+          FredericSetList setList =
+              setListData![activitiesDueToday[i].activityID];
           bool activityFinished = setList.wasActiveToday();
-          finished[i] = activityFinished;
+          completedActivityToday[i] = activityFinished;
           if (activityFinished == false) {
             dayFinished = false;
           }
@@ -49,14 +52,16 @@ class CalendarDay extends StatelessWidget {
 
       /// CalendarDay also manages user streak; bade code
       if (dayFinished) {
-        if (user.streakLatestDate?.isNotSameDay(DateTime.now()) ?? true) {
-          if (user.streakStartDate == null) {
+        if (user.currentStreak == 0 ||
+            (user.streakLatestDate?.isNotSameDay(DateTime.now()) ?? true)) {
+          if (user.streakStartDate == null || user.currentStreak == 0) {
             user.streakStartDate = DateTime.now();
           }
           user.streakLatestDate = DateTime.now();
         }
       }
     }
+    //profiler.stop();
 
     return Container(
         padding:
@@ -71,10 +76,12 @@ class CalendarDay extends StatelessWidget {
                 _CalendarDayCard(day, dayFinished && currentDayIsToday),
                 Expanded(
                   child: Column(
-                    children: List<Widget>.generate(activities.length, (i) {
-                      return _CalendarActivityCard(activities[i],
+                    children:
+                        List<Widget>.generate(activitiesDueToday.length, (i) {
+                      return _CalendarActivityCard(activitiesDueToday[i],
                           indicator: index == 0,
-                          completed: finished.isNotEmpty && finished[i]);
+                          completed: completedActivityToday.isNotEmpty &&
+                              completedActivityToday[i]);
                     }),
                   ),
                 )
