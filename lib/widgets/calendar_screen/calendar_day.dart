@@ -4,7 +4,6 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
-import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -50,15 +49,9 @@ class CalendarDay extends StatelessWidget {
         }
       }
 
-      /// CalendarDay also manages user streak; bade code
+      /// CalendarDay also manages user streak; bad code -> use event queue
       if (dayFinished) {
-        if (user.currentStreak == 0 ||
-            (user.streakLatestDate?.isNotSameDay(DateTime.now()) ?? true)) {
-          if (user.streakStartDate == null || user.currentStreak == 0) {
-            user.streakStartDate = DateTime.now();
-          }
-          user.streakLatestDate = DateTime.now();
-        }
+        FredericBackend.instance.userManager.streakManager.handleCompleteDay();
       }
     }
     //profiler.stop();

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +15,10 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
         add(FredericRestoreLoginStatusEvent(userdata.uid));
       }
     });
+    streakManager = StreakManager(this);
   }
+
+  late final StreakManager streakManager;
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
       _userStreamSubscription;
@@ -26,15 +30,15 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
     if (event is FredericUserDataChangedEvent) {
-      yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
-          snapshot: event.snapshot);
       if (!hasLoaded) {
         hasLoaded = true;
         onLoadData?.call();
       }
+      yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
+          snapshot: event.snapshot);
     } else if (event is FredericRestoreLoginStatusEvent) {
       if (state.waiting == true) {
-        yield FredericUser(event.uid, waiting: false, shouldUpdateStreak: true);
+        yield FredericUser(event.uid, waiting: false);
       }
     } else if (event is FredericLoginEvent) {
       try {
@@ -42,8 +46,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
             email: event.email, password: event.password);
         SharedPreferences.getInstance()
             .then((value) => value.setBool('wasLoggedIn', true));
-        yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
-            shouldUpdateStreak: true);
+        yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           yield FredericUser('', statusMessage: 'The email does not exist.');
@@ -82,6 +85,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
             statusMessage: 'Sign up error. Please contact support.');
       }
     }
+    streakManager.update();
   }
 
   @override
@@ -110,59 +114,11 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     throw UnimplementedError('change password not implemented');
   }
 
-  ///
-  /// Also updates the name in the database
-  ///
-  set name(String value) {
-    if (super.state.uid == '') return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(super.state.uid)
-          .update({'name': value});
-    }
-  }
-
-  ///
-  /// Also updates the progressMonitors in the database
-  ///
-  set progressMonitors(List<String> value) {
-    if (super.state.uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(super.state.uid)
-        .update({'progressmonitors': value});
-  }
-
-  ///
-  /// Also updates the activeWorkouts in the database
-  ///
-  set activeWorkouts(List<String> value) {
-    if (super.state.uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(super.state.uid)
-        .update({'activeworkouts': value});
-  }
-
-  ///
-  /// Also updates the image in the database
-  ///
-  set image(String value) {
-    if (super.state.uid == '') return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(super.state.uid)
-          .update({'image': value});
-    }
-  }
-
   void addActiveWorkout(String workoutID) {
     List<String> activeWorkoutsList = state.activeWorkouts;
     if (!activeWorkoutsList.contains(workoutID)) {
       activeWorkoutsList.add(workoutID);
-      activeWorkouts = activeWorkoutsList;
+      state.activeWorkouts = activeWorkoutsList;
     }
   }
 
@@ -170,7 +126,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     List<String> activeWorkoutsList = state.activeWorkouts;
     if (activeWorkoutsList.contains(workoutID)) {
       activeWorkoutsList.remove(workoutID);
-      activeWorkouts = activeWorkoutsList;
+      state.activeWorkouts = activeWorkoutsList;
     }
   }
 

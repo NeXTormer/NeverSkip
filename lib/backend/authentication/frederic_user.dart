@@ -4,6 +4,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
 
 ///
+/// Ephemeral state
 /// Represents the user of the app
 /// Not mutable, managed by FredericUserManager Bloc
 ///
@@ -11,9 +12,9 @@ class FredericUser {
   FredericUser(this._uid,
       {DocumentSnapshot<Map<String, dynamic>>? snapshot,
       this.statusMessage = '',
-      this.waiting = false,
-      this.shouldUpdateStreak = false}) {
-    insertDocumentSnapshot(snapshot);
+      this.waiting = false}) {
+    _insertDocumentSnapshot(snapshot);
+    _calculateDerivedAttributes();
   }
 
   final String _uid;
@@ -23,10 +24,8 @@ class FredericUser {
   String? _image;
   int? _weight;
   int? _height;
-  int _currentStreak = 0;
+  int? _currentStreak;
   bool waiting;
-  bool shouldUpdateStreak;
-  bool? _hasStreak;
   bool? _hasCompletedStreakToday;
   DateTime? _birthday;
   DateTime? _streakStartDate;
@@ -36,7 +35,7 @@ class FredericUser {
 
   bool get authenticated => _uid != '';
   bool get finishedLoading => _name != null;
-  bool get hasStreak => _hasStreak ?? false;
+  bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
   String get uid => _uid;
   String get email => _email ?? '';
@@ -45,7 +44,7 @@ class FredericUser {
       _image ?? 'https://via.placeholder.com/300x300?text=profile';
   int get weight => _weight ?? -1;
   int get height => _height ?? -1;
-  int get currentStreak => _currentStreak;
+  int get streak => _currentStreak ?? 0;
   DateTime get birthday => _birthday ?? DateTime.now();
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
@@ -105,7 +104,29 @@ class FredericUser {
         {'streaklatest': value == null ? null : Timestamp.fromDate(value)});
   }
 
-  void insertDocumentSnapshot(
+  bool streakLatestDateWasTodayOrYesterday() {
+    return !streakLatestDateWasNotTodayOrYesterday();
+  }
+
+  bool streakLatestDateWasNotTodayOrYesterday() {
+    var now = DateTime.now();
+    return (streakLatestDate?.isNotSameDay(now) ?? true) &&
+        (streakLatestDate?.isNotSameDay(now.subtract(Duration(days: 1))) ??
+            true);
+  }
+
+  Future<bool> hasActivitiesOnDay(DateTime day) async {
+    await FredericBackend.instance.workoutManager.waitForFirstReload();
+    for (var workoutID in activeWorkouts) {
+      FredericWorkout? workout =
+          FredericBackend.instance.workoutManager.workouts[workoutID];
+      if (workout == null) continue;
+      if (workout.activities.getDay(day).isNotEmpty) return true;
+    }
+    return false;
+  }
+
+  void _insertDocumentSnapshot(
       DocumentSnapshot<Map<String, dynamic>>? snapshot) {
     if (snapshot?.data() == null) return;
     Map<String, dynamic>? data = snapshot!.data();
@@ -123,74 +144,17 @@ class FredericUser {
         data?['activeworkouts']?.cast<String>() ?? const <String>[];
     _streakStartDate = data?['streakstart']?.toDate();
     _streakLatestDate = data?['streaklatest']?.toDate();
-
-    if (_streakLatestDate != null) {
-      if (_streakStartDate == null) {
-        streakStartDate = _streakLatestDate;
-      }
-    }
-
-    if (shouldUpdateStreak) {
-      _updateStreak();
-    }
-    if (_streakStartDate?.isSameDay(_streakLatestDate) ?? false) {
-      _currentStreak = 1;
-    }
   }
 
-  /// Called once when the user logs in (i.e. every app start)
-  void _updateStreak() async {
-    if (_checkIfStreakNeedsUpdating()) {
-      var lastCompletion = _streakLatestDate;
-      var now = DateTime.now();
-      bool streakBroken = false;
-      for (int i = 0;
-          now.subtract(Duration(days: i)).isNotSameDay(lastCompletion);
-          i++) {
-        bool calendarDayIsEmpty =
-            await hasActivitiesOnDay(now.subtract(Duration(days: i)));
-        if (!calendarDayIsEmpty) {
-          streakBroken = true;
-          break;
-        }
-      }
-      if (streakBroken) {
-        streakStartDate = null;
-        streakLatestDate = null;
-        _currentStreak = 0;
-      } else {
-        streakLatestDate = DateTime.now();
-        _currentStreak =
-            _streakStartDate!.difference(_streakLatestDate!).inDays;
-      }
-    }
+  void _calculateDerivedAttributes() {
+    _calculateStreak();
   }
 
-  Future<bool> hasActivitiesOnDay(DateTime day) async {
-    await FredericBackend.instance.workoutManager.waitForFirstReload();
-    for (var workoutID in activeWorkouts) {
-      FredericWorkout? workout =
-          FredericBackend.instance.workoutManager.workouts[workoutID];
-      if (workout == null) continue;
-      if (workout.activities.getDay(day).isNotEmpty) return true;
-    }
-    return false;
-  }
-
-  /// when this returns true, both _streakStartDate and _streakLatestDate are
-  /// not null
-  bool _checkIfStreakNeedsUpdating() {
-    if (_streakStartDate == null) {
-      return false;
-    }
-    if (_streakLatestDate != null) {
-      if (_streakLatestDate!.isSameDay(DateTime.now())) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
+  void _calculateStreak() {
+    if (_streakStartDate == null) return;
+    if (streakLatestDateWasTodayOrYesterday()) {
+      _currentStreak =
+          _streakLatestDate!.difference(_streakStartDate!).inDays + 1;
     }
   }
 

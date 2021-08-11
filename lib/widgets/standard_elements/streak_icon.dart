@@ -18,7 +18,7 @@ class StreakIcon extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 2),
             child: Text(
-              '${user.currentStreak}',
+              '${user.streak}',
               style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
             ),
           ),

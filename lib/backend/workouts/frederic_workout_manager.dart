@@ -83,7 +83,8 @@ class FredericWorkoutManager
         List<String> activeWorkouts =
             FredericBackend.instance.userManager.state.activeWorkouts;
         activeWorkouts.remove(event.workout.workoutID);
-        FredericBackend.instance.userManager.activeWorkouts = activeWorkouts;
+        FredericBackend.instance.userManager.state.activeWorkouts =
+            activeWorkouts;
       }
       _workouts[event.workout.workoutID]?.delete();
       _workouts.remove(event.workout.workoutID);

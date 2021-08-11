@@ -162,7 +162,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
               }
               isSelected = false;
             }
-            FredericBackend.instance.userManager.activeWorkouts =
+            FredericBackend.instance.userManager.state.activeWorkouts =
                 activeWorkouts;
           }),
         ));
