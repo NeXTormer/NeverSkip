@@ -14,6 +14,20 @@ class FredericSetList {
     loadData(2);
   }
 
+  ///
+  /// Creates a new FredericSetList from a Document Snapshot. Behaves just like
+  /// when using the normal constructor, except that no event is pushed to the
+  /// [FredericSetManager]
+  ///
+  FredericSetList.fromDocumentSnapshot(
+      this.activityID,
+      QuerySnapshot<Map<String, dynamic>> snapshot,
+      FredericSetManager setManager)
+      : _setManager = setManager {
+    _insertQuerySnapshot(snapshot);
+    _calculateBestProgress();
+  }
+
   final String activityID;
   final FredericSetManager _setManager;
 
@@ -62,7 +76,7 @@ class FredericSetList {
 
   void deleteSet(FredericSet set) {
     if (_setDocuments
-        .where((element) => element.month == set.month)
+        .where((element) => element.month == set.monthID)
         .first
         .deleteSet(set)) {
       if (set.weight >= _bestWeight) {
@@ -77,11 +91,13 @@ class FredericSetList {
 
   void addSet(FredericSet set) {
     if (_setDocuments.isEmpty ||
-        _setDocuments.where((element) => element.month == set.month).isEmpty) {
+        _setDocuments
+            .where((element) => element.month == set.monthID)
+            .isEmpty) {
       _createDocumentWith(set);
     } else {
       if (_setDocuments
-          .where((element) => element.month == set.month)
+          .where((element) => element.month == set.monthID)
           .first
           .addSet(set)) _setManager.add(FredericSetEvent(<String>[activityID]));
     }
@@ -92,11 +108,11 @@ class FredericSetList {
   void _createDocumentWith(FredericSet set) async {
     var doc = await _setManager.setsCollection.add({
       'activityid': activityID,
-      'month': set.month,
+      'month': set.monthID,
       'sets': <Map<String, dynamic>>[set.asMap()]
     });
-    _setDocuments.add(
-        FredericSetDocument(doc.id, set.month, activityID, <FredericSet>[set]));
+    _setDocuments.add(FredericSetDocument(
+        doc.id, set.monthID, activityID, <FredericSet>[set]));
     _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 
@@ -109,7 +125,14 @@ class FredericSetList {
         .get();
 
     _setDocuments.clear();
+    _insertQuerySnapshot(snapshot);
+    _calculateBestProgress();
+    _setManager.add(FredericSetEvent(<String>[activityID]));
+  }
+
+  void _insertQuerySnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
     for (DocumentSnapshot<Map<String, dynamic>> document in snapshot.docs) {
+      if (document.data()?['activityid'] != activityID) continue;
       int? month = document.data()?['month'];
       if (month == null) continue;
 
@@ -124,7 +147,5 @@ class FredericSetList {
       _setDocuments
           .add(FredericSetDocument(document.id, month, activityID, sets));
     }
-    _calculateBestProgress();
-    _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 }

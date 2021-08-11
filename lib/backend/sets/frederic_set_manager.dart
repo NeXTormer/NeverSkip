@@ -13,6 +13,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
             <String>[], HashMap<String, FredericSetList>())) {
     setsCollection = FirebaseFirestore.instance
         .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
+    loadAllSets(2);
   }
 
   late final CollectionReference<Map<String, dynamic>> setsCollection;
@@ -25,13 +26,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     if (!_sets.containsKey(value))
       _sets[value] = FredericSetList(value, this)..loadData(2);
     return _sets[value]!;
-  }
-
-  void _loadOrAddNewSet(String id) {
-    if (!_sets.containsKey(id)) {
-      _sets[id] = FredericSetList(id, this)..loadData(2);
-    }
-    add(FredericSetEvent(<String>[id]));
   }
 
   @override
@@ -47,6 +41,30 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
     yield FredericSetListData(event.changedActivities, _sets);
   }
+
+  void loadAllSets(int monthsToLoad) async {
+    int lastMonth = currentMonth - (monthsToLoad - 1);
+    QuerySnapshot<Map<String, dynamic>> snapshot = await setsCollection
+        .where('month', isGreaterThanOrEqualTo: lastMonth)
+        .get();
+    List<String> changedActivities = <String>[];
+    _sets.clear();
+    var docs = snapshot.docs;
+    docs.sort((a, b) => a.id.compareTo(b.id));
+    for (var doc in snapshot.docs) {
+      String currentActivityID = doc.data()['activityid'];
+
+    }
+
+    //_setManager.add(FredericSetEvent(<String>[activityID]));
+  }
+
+  void _loadOrAddNewSet(String id) {
+    if (!_sets.containsKey(id)) {
+      _sets[id] = FredericSetList(id, this)..loadData(2);
+    }
+    add(FredericSetEvent(<String>[id]));
+  }
 }
 
 class FredericSetListData {
@@ -57,7 +75,6 @@ class FredericSetListData {
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {
       FredericBackend.instance.setManager._loadOrAddNewSet(value);
-      //TODO: find a better solution
       return FredericSetList(value, FredericBackend.instance.setManager);
     }
     return sets[value]!;

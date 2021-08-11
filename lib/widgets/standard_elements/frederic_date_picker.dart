@@ -15,6 +15,9 @@ class FredericDatePicker extends StatefulWidget {
 }
 
 class _FredericDatePickerState extends State<FredericDatePicker> {
+  int selectedMonthIndex = 1;
+  DateTime today = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,17 +28,20 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
             height: 36,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Padding(
                       padding: EdgeInsets.only(left: index == 0 ? 12 : 0),
-                      child: buildMonth(DateTime.now(), index % 2 == 1));
+                      child: buildMonth(today, -index + 1, index,
+                          index == selectedMonthIndex));
                 },
-                itemCount: 10),
+                itemCount: 13),
           ),
           SizedBox(height: 16),
           Container(
             height: 50,
             child: InfiniteListView.builder(
+              physics: BouncingScrollPhysics(),
               controller: InfiniteScrollController(initialScrollOffset: -12),
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
@@ -57,22 +63,34 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
     );
   }
 
-  Widget buildMonth(DateTime month, bool selected) {
-    String string = widget.df.format(month);
+  Widget buildMonth(DateTime today, int monthOffset, int index, bool selected) {
+    int newMonth = today.month - monthOffset;
+    int yearOffset = 0;
+    if (newMonth < 1) {
+      newMonth = newMonth % DateTime.monthsPerYear;
+      yearOffset = -1;
+    } else if (newMonth > 12) {
+      newMonth = newMonth % DateTime.monthsPerYear;
+      yearOffset = 1;
+    }
+    String string = widget.df.format(DateTime(today.year, newMonth, 1));
     return Padding(
       padding: const EdgeInsets.only(right: 12),
-      child: Container(
-        decoration: BoxDecoration(
-            color: selected ? kMainColorLight : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kCardBorderColor)),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-        child: Center(
-          child: Text(string,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: selected ? kMainColor : Colors.black)),
+      child: GestureDetector(
+        onTap: () => setState(() => selectedMonthIndex = index),
+        child: Container(
+          decoration: BoxDecoration(
+              color: selected ? kMainColorLight : Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: kCardBorderColor)),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          child: Center(
+            child: Text(string,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: selected ? kMainColor : Colors.black)),
+          ),
         ),
       ),
     );
