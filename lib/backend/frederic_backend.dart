@@ -2,6 +2,7 @@ import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/util/event_bus/frederic_event_bus.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
@@ -13,8 +14,10 @@ import 'backend.dart';
 ///
 class FredericBackend {
   FredericBackend() {
-    _userManager =
-        FredericUserManager(onLoadData: loadData, logTransition: false);
+    _eventBus = FredericEventBus();
+
+    _userManager = FredericUserManager(
+        onLoadData: loadData, logTransition: false, backend: this);
     _activityManager = FredericActivityManager();
     _setManager = FredericSetManager();
     _workoutManager = FredericWorkoutManager();
@@ -41,6 +44,9 @@ class FredericBackend {
 
   late final FredericGoalManager _goalManager;
   FredericGoalManager get goalManager => _goalManager;
+
+  late final FredericEventBus _eventBus;
+  FredericEventBus get eventBus => _eventBus;
 
   void loadData() {
     //TODO: wait until data loaded to complete

@@ -8,16 +8,21 @@ import 'package:frederic/backend/backend.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
-  FredericUserManager({this.onLoadData, this.logTransition = false})
-      : super(FredericUser('', waiting: true)) {
+  FredericUserManager(
+      {this.onLoadData,
+      this.logTransition = false,
+      required FredericBackend backend})
+      : _backend = backend,
+        super(FredericUser('', waiting: true)) {
     FirebaseAuth.instance.authStateChanges().listen((userdata) {
       if (userdata != null) {
         add(FredericRestoreLoginStatusEvent(userdata.uid));
       }
     });
-    streakManager = StreakManager(this);
+    streakManager = StreakManager(this, _backend);
   }
 
+  final FredericBackend _backend;
   late final StreakManager streakManager;
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
