@@ -9,15 +9,43 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class GoalCard extends StatelessWidget {
-  GoalCard(this.goal);
+class GoalCard extends StatefulWidget {
+  const GoalCard(this.goal,
+      {this.title,
+      this.startState,
+      this.currentState,
+      this.endState,
+      this.startDate,
+      this.endDate});
+  const GoalCard.dummy(this.goal,
+      {this.title,
+      this.startState,
+      this.currentState,
+      this.endState,
+      this.startDate,
+      this.endDate});
 
   final FredericGoal goal;
 
+  final String? title;
+  final num? startState;
+  final num? currentState;
+  final num? endState;
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  @override
+  _GoalCardState createState() => _GoalCardState();
+}
+
+class _GoalCardState extends State<GoalCard> {
   @override
   Widget build(BuildContext context) {
-    final num currentStateNormalized = (goal.currentState - goal.startState) /
-        (goal.endState - goal.startState);
+    final num currentStateNormalized =
+        ((widget.currentState ?? widget.goal.currentState) -
+                (widget.startState ?? widget.goal.startState)) /
+            ((widget.endState ?? widget.goal.endState) -
+                (widget.startState ?? widget.goal.startState));
     return FredericCard(
       onLongPress: () {
         handleLongClick(context);
@@ -29,7 +57,7 @@ class GoalCard extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: Row(
         children: [
-          PictureIcon(goal.image),
+          PictureIcon(widget.goal.image),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 8),
@@ -45,7 +73,7 @@ class GoalCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           strutStyle: StrutStyle(fontSize: 10),
                           text: TextSpan(
-                            text: '${goal.title}',
+                            text: '${widget.title ?? widget.goal.title}',
                             style: const TextStyle(
                                 color: const Color(0x7A3A3A3A),
                                 fontSize: 10,
@@ -55,7 +83,7 @@ class GoalCard extends StatelessWidget {
                       ),
                       Flexible(
                         child: FredericChip(
-                            '${goal.endDate.difference(goal.startDate).inDays} days'),
+                            '${widget.goal.endDate.difference(widget.goal.startDate).inDays} days'),
                       ),
                     ],
                   ),
@@ -67,11 +95,12 @@ class GoalCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child:
-                                  buildProgressBarText(goal.startState, 'kg'),
+                              child: buildProgressBarText(
+                                  widget.goal.startState, 'kg'),
                             ),
                             Flexible(
-                              child: buildProgressBarText(goal.endState, 'kg'),
+                              child: buildProgressBarText(
+                                  widget.goal.endState, 'kg'),
                             ),
                           ],
                         ),
@@ -112,7 +141,7 @@ class GoalCard extends StatelessWidget {
   void handleClick(BuildContext context) {
     CupertinoScaffold.showCupertinoModalBottomSheet(
         context: context,
-        builder: (c) => Scaffold(body: EditGoalDataScreen(goal)));
+        builder: (c) => Scaffold(body: EditGoalDataScreen(widget.goal)));
   }
 
   void handleLongClick(BuildContext context) {
@@ -120,7 +149,8 @@ class GoalCard extends StatelessWidget {
         context: context,
         builder: (context) => FredericActionDialog(
               onConfirm: () {
-                FredericBackend.instance.goalManager.deleteGoal(goal.goalID);
+                FredericBackend.instance.goalManager
+                    .deleteGoal(widget.goal.goalID);
                 Navigator.of(context).pop();
               },
               destructiveAction: true,
@@ -128,7 +158,7 @@ class GoalCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                    "Do you want to delete your personal goal? '${goal.title}' This cannot be undone!",
+                    "Do you want to delete your personal goal? '${widget.goal.title}' This cannot be undone!",
                     textAlign: TextAlign.center),
               ),
             ));
