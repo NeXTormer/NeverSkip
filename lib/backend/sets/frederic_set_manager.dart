@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/storage/frederic_storage_document.dart';
 
 class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   FredericSetManager()
@@ -47,16 +48,23 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     QuerySnapshot<Map<String, dynamic>> snapshot = await setsCollection
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();
-    List<String> changedActivities = <String>[];
     _sets.clear();
-    var docs = snapshot.docs;
-    docs.sort((a, b) => a.id.compareTo(b.id));
+    HashMap<String, List<FredericStorageDocument>> documentMap =
+        HashMap<String, List<FredericStorageDocument>>();
     for (var doc in snapshot.docs) {
-      String currentActivityID = doc.data()['activityid'];
-
+      String activityID = doc.data()['activityid'];
+      if (!documentMap.containsKey(activityID)) {
+        documentMap[activityID] = <FredericStorageDocument>[];
+      }
+      documentMap[activityID]!.add(FredericStorageDocument(doc.id, doc.data()));
     }
 
-    //_setManager.add(FredericSetEvent(<String>[activityID]));
+    for (var entry in documentMap.entries) {
+      _sets[entry.key] =
+          FredericSetList.fromStorageDocumentList(entry.key, entry.value, this);
+    }
+
+    add(FredericSetEvent(documentMap.keys.toList()));
   }
 
   void _loadOrAddNewSet(String id) {
