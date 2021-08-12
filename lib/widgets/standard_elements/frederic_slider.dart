@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/standard_elements/number_slider.dart';
+
+enum SliderUnit { Weeks, Kilometers, Kilograms }
 
 class FredericSlider extends StatefulWidget {
   const FredericSlider(
@@ -8,16 +11,27 @@ class FredericSlider extends StatefulWidget {
       this.min = 0,
       this.max = 10,
       this.snap = false,
+      this.isInteractive = false,
       this.value = 5,
-      this.indicatorText = ''})
+      this.indicatorText = '',
+      this.unit = SliderUnit.Weeks,
+      this.startStateController,
+      this.endStateController})
       : super(key: key);
 
   final void Function(double) onChanged;
   final double min;
   final double max;
   final double value;
+
   final bool snap;
+  final bool isInteractive;
+
   final String indicatorText;
+  final SliderUnit unit;
+
+  final NumberSliderController? startStateController;
+  final NumberSliderController? endStateController;
 
   @override
   _FredericSliderState createState() => _FredericSliderState();
@@ -25,12 +39,29 @@ class FredericSlider extends StatefulWidget {
 
 class _FredericSliderState extends State<FredericSlider> {
   double value = 0;
+  double adaptiveMin = 0;
+  double adaptiveMax = 0;
   int divisions = 0;
 
   @override
   void initState() {
+    adaptiveMax = widget.value;
+    adaptiveMin = 0;
     value = widget.value;
     divisions = widget.max.toInt() - widget.min.toInt();
+    if (widget.startStateController != null &&
+        widget.endStateController != null) {
+      widget.startStateController!.addListener(() {
+        setState(() {
+          adaptiveMin = widget.startStateController!.value.toDouble();
+        });
+      });
+      widget.endStateController!.addListener(() {
+        setState(() {
+          adaptiveMax = widget.endStateController!.value.toDouble();
+        });
+      });
+    }
     super.initState();
   }
 
@@ -42,14 +73,14 @@ class _FredericSliderState extends State<FredericSlider> {
         data: SliderTheme.of(context).copyWith(
           trackHeight: 6,
           overlayShape: RoundSliderOverlayShape(overlayRadius: 11),
-          thumbShape: _FredericSliderThumb(widget.min, widget.max),
+          thumbShape: _FredericSliderThumb(widget.min, widget.max, widget.unit),
           tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
         ),
         child: Slider(
             value: value,
             divisions: divisions,
-            min: widget.min,
-            max: widget.max,
+            min: widget.isInteractive ? adaptiveMin : widget.min,
+            max: widget.isInteractive ? adaptiveMax : widget.max,
             activeColor: kMainColor,
             inactiveColor: kMainColorLight,
             onChanged: (newVal) {
@@ -64,9 +95,10 @@ class _FredericSliderState extends State<FredericSlider> {
 }
 
 class _FredericSliderThumb extends SliderComponentShape {
-  _FredericSliderThumb(this.min, this.max);
+  _FredericSliderThumb(this.min, this.max, this.unit);
   final double min;
   final double max;
+  final SliderUnit unit;
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
@@ -86,7 +118,7 @@ class _FredericSliderThumb extends SliderComponentShape {
       required double textScaleFactor,
       required Size sizeWithOverflow}) {
     final Canvas canvas = context.canvas;
-    final double val = value == 0 ? 1 : (value * max);
+    final double val = (min + (value) * (max - min));
 
     Paint paint = Paint()..color = kMainColor;
     Path path = Path();
@@ -99,7 +131,6 @@ class _FredericSliderThumb extends SliderComponentShape {
     canvas.drawCircle(center, 12, Paint()..color = kMainColorLight);
     canvas.drawCircle(center, 12, Paint()..color = kMainColorLight);
     canvas.drawCircle(center, 8, paint);
-
     double normalWidth = 80;
 
     double left = center.dx - 39;
@@ -131,11 +162,23 @@ class _FredericSliderThumb extends SliderComponentShape {
           ..strokeWidth = 1);
     TextSpan text = TextSpan(
         style: TextStyle(color: kBlack54Color, fontSize: 16),
-        text: '${val.ceil()} week${val.ceil() == 1 ? '' : 's'}');
+        text: handleLabelUnit(unit, val.ceil()));
     TextPainter textPainter =
         TextPainter(text: text, textDirection: textDirection);
-
     textPainter.layout();
     textPainter.paint(canvas, Offset(center.dx - 28 + offset, center.dy + 26));
+  }
+
+  String handleLabelUnit(SliderUnit unit, int value) {
+    switch (unit) {
+      case SliderUnit.Weeks:
+        return '$value week${value == 1 ? '' : 's'}';
+      case SliderUnit.Kilograms:
+        return '$value kg';
+      case SliderUnit.Kilometers:
+        return '$value km';
+      default:
+        return '$value';
+    }
   }
 }

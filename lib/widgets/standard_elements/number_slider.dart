@@ -104,6 +104,13 @@ class _NumberSliderElement extends StatelessWidget {
   }
 }
 
-class NumberSliderController {
-  num value = 0;
+class NumberSliderController with ChangeNotifier {
+  num _value = 0;
+
+  num get value => _value;
+
+  set value(num value) {
+    _value = value;
+    notifyListeners();
+  }
 }

@@ -26,8 +26,7 @@ class EditGoalDataScreen extends StatefulWidget {
 class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final TextEditingController titleController = TextEditingController();
   final NumberSliderController startStateController = NumberSliderController();
-  final NumberSliderController currentStateController =
-      NumberSliderController();
+  final NumberSliderController endStateController = NumberSliderController();
 
   String dateText = '';
   String dummyTitle = '';
@@ -76,36 +75,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         controller: ModalScrollController.of(context),
         slivers: [
           SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                children: [
-                  Icon(
-                    ExtraIcons.dumbbell,
-                    color: kMainColor,
-                  ),
-                  SizedBox(width: 32),
-                  Text(
-                    widget.isNewGoal ? 'Create Goal' : 'Edit Goal',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  Expanded(child: Container()),
-                  GestureDetector(
-                    onTap: () {
-                      // saveData();
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      widget.isNewGoal ? 'Create' : 'Save',
-                      style: TextStyle(
-                          color: kMainColor, fontWeight: FontWeight.w500),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+          buildHeaderRow(),
           SliverDivider(),
           // TODO Adapt Progressbar to goal card
           SliverToBoxAdapter(
@@ -115,6 +85,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               child: GoalCard.dummy(
                 widget.goal,
                 title: dummyTitle,
+                currentState: dummyCurrentState,
+                startStateController: startStateController,
+                endStateController: endStateController,
               ),
             ),
           ),
@@ -137,12 +110,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Activity'),
-            ),
-          ),
           // TODO Implement Activity picker
           SliverToBoxAdapter(
             child: Padding(
@@ -160,6 +127,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 border: Border.all(color: kCardBorderColor),
               ),
               // TODO Adapt NumberSlider to goal card
+              // TODO Live update start and end value
               child: Column(
                 children: [
                   buildSubHeading('Start', Icons.star_outline),
@@ -168,27 +136,44 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                     controller: startStateController,
                     itemWidth: 0.14,
                     numberOfItems: 100,
-                    startingIndex: dummyStartState.toInt(),
-                  ),
-                  SizedBox(height: 12),
-                  buildSubHeading('Current', Icons.star_outline),
-                  SizedBox(height: 12),
-                  NumberSlider(
-                    controller: currentStateController,
-                    itemWidth: 0.14,
-                    numberOfItems: (dummyEndState - dummyStartState).toInt(),
-                    startingIndex: dummyCurrentState.toInt(),
+                    startingIndex: dummyStartState.ceil() + 1, // TODO Warum +1?
                   ),
                   SizedBox(height: 12),
                   buildSubHeading('End', Icons.star_outline),
                   SizedBox(height: 12),
                   NumberSlider(
-                    controller: startStateController,
+                    controller: endStateController,
                     itemWidth: 0.14,
-                    numberOfItems: 100,
-                    startingIndex: dummyStartState.toInt(),
+                    numberOfItems: 200,
+                    startingIndex: dummyEndState.ceil() + 1,
                   ),
                 ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: FredericHeading('Current State'),
+            ),
+          ),
+          // TODO Slider in eigenes Stateful widget und rebuild bei änderung des start/endstatecontroller
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FredericSlider(
+                unit: SliderUnit.Kilograms,
+                min: dummyStartState.toDouble(),
+                max: dummyEndState.toDouble(),
+                value: dummyCurrentState.toDouble(),
+                startStateController: startStateController,
+                endStateController: endStateController,
+                isInteractive: true,
+                // TODO CurrentStateController verwendet und setState in FredericSliderKlasse verlagern.
+                onChanged: (double value) {
+                  dummyCurrentState = value.toDouble();
+                  // setState(() {});
+                },
               ),
             ),
           ),
@@ -268,8 +253,43 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
+  Widget buildHeaderRow() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Row(
+          children: [
+            Icon(
+              ExtraIcons.dumbbell,
+              color: kMainColor,
+            ),
+            SizedBox(width: 32),
+            Text(
+              widget.isNewGoal ? 'Create Goal' : 'Edit Goal',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () {
+                // saveData();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                widget.isNewGoal ? 'Create' : 'Save',
+                style:
+                    TextStyle(color: kMainColor, fontWeight: FontWeight.w500),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
+    startStateController.dispose();
+    endStateController.dispose();
     titleController.dispose();
     super.dispose();
   }

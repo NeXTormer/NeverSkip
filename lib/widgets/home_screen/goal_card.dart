@@ -5,6 +5,7 @@ import 'package:frederic/screens/edit_goal_data_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
+import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -12,40 +13,64 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class GoalCard extends StatefulWidget {
   const GoalCard(this.goal,
       {this.title,
-      this.startState,
       this.currentState,
-      this.endState,
       this.startDate,
-      this.endDate});
+      this.endDate,
+      this.startStateController,
+      this.endStateController});
   const GoalCard.dummy(this.goal,
       {this.title,
-      this.startState,
       this.currentState,
-      this.endState,
       this.startDate,
-      this.endDate});
+      this.endDate,
+      this.startStateController,
+      this.endStateController});
 
   final FredericGoal goal;
 
   final String? title;
-  final num? startState;
   final num? currentState;
-  final num? endState;
+
   final DateTime? startDate;
   final DateTime? endDate;
+
+  final NumberSliderController? startStateController;
+  final NumberSliderController? endStateController;
 
   @override
   _GoalCardState createState() => _GoalCardState();
 }
 
 class _GoalCardState extends State<GoalCard> {
+  num? startState;
+  num? endState;
+
+  @override
+  void initState() {
+    if (widget.startStateController != null &&
+        widget.startStateController != null) {
+      widget.startStateController!.addListener(() {
+        setState(() {
+          startState = widget.startStateController!.value;
+        });
+      });
+      widget.endStateController!.addListener(() {
+        setState(() {
+          endState = widget.endStateController!.value;
+        });
+      });
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // TODO If endstate is smaller/great then startState, also change startState
     final num currentStateNormalized =
         ((widget.currentState ?? widget.goal.currentState) -
-                (widget.startState ?? widget.goal.startState)) /
-            ((widget.endState ?? widget.goal.endState) -
-                (widget.startState ?? widget.goal.startState));
+                (startState ?? widget.goal.startState)) /
+            ((endState ?? widget.goal.endState) -
+                (startState ?? widget.goal.startState));
     return FredericCard(
       onLongPress: () {
         handleLongClick(context);
@@ -68,7 +93,6 @@ class _GoalCardState extends State<GoalCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        flex: 2,
                         child: RichText(
                           overflow: TextOverflow.ellipsis,
                           strutStyle: StrutStyle(fontSize: 10),
@@ -96,16 +120,22 @@ class _GoalCardState extends State<GoalCard> {
                           children: [
                             Expanded(
                               child: buildProgressBarText(
-                                  widget.goal.startState, 'kg'),
+                                  startState ?? widget.goal.startState, 'kg'),
                             ),
                             Flexible(
                               child: buildProgressBarText(
-                                  widget.goal.endState, 'kg'),
+                                  endState ?? widget.goal.endState, 'kg'),
                             ),
                           ],
                         ),
                       ),
-                      ProgressBar(currentStateNormalized.toDouble()),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: ProgressBar(
+                                  currentStateNormalized.toDouble())),
+                        ],
+                      ),
                     ],
                   ),
                 ],
