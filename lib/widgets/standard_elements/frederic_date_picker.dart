@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
-import 'package:infinite_listview/infinite_listview.dart';
 import 'package:intl/intl.dart';
 
 class FredericDatePicker extends StatefulWidget {
-  FredericDatePicker({Key? key, required this.initialDate}) : super(key: key);
+  FredericDatePicker({
+    Key? key,
+    required this.initialDate,
+    required this.onDateChanged,
+  }) : super(key: key);
 
   final DateFormat df = DateFormat('MMMM');
   final DateTime initialDate;
+  final void Function(DateTime) onDateChanged;
 
   @override
   _FredericDatePickerState createState() => _FredericDatePickerState();
@@ -16,10 +21,30 @@ class FredericDatePicker extends StatefulWidget {
 
 class _FredericDatePickerState extends State<FredericDatePicker> {
   int selectedMonthIndex = 1;
+  int selectedDayIndex = 0;
   DateTime today = DateTime.now();
+  late DateTime startingDate;
+  double dayWidth = 0;
+  double dayPadding = 12;
+  double dayTotalWidth = 0;
+
+  ScrollController dayController = ScrollController(initialScrollOffset: -12);
+  ScrollController monthController = ScrollController();
+
+  @override
+  void initState() {
+    DateTime oneMonthBefore = today.subtract(Duration(days: today.day + 1));
+    startingDate = DateTime(oneMonthBefore.year, oneMonthBefore.month, 1);
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      jumpToDay(widget.initialDate);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    dayWidth = (MediaQuery.of(context).size.width / 10);
+    dayTotalWidth = dayPadding + dayWidth;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Column(
@@ -28,11 +53,12 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
             height: 36,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                controller: monthController,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Padding(
                       padding: EdgeInsets.only(left: index == 0 ? 12 : 0),
-                      child: buildMonth(today, -index + 1, index,
+                      child: buildMonth(startingDate, -index, index,
                           index == selectedMonthIndex));
                 },
                 itemCount: 13),
@@ -40,20 +66,44 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
           SizedBox(height: 16),
           Container(
             height: 50,
-            child: InfiniteListView.builder(
+            child: ListView.builder(
               physics: BouncingScrollPhysics(),
-              controller: InfiniteScrollController(initialScrollOffset: -12),
+              controller: dayController,
               scrollDirection: Axis.horizontal,
+              itemCount: 365 + 30,
               itemBuilder: (context, index) {
+                int year = startingDate.year;
+                int month = startingDate.month;
+                int day = startingDate.day;
+
+                // Using this method instead of:
+                //    startingDate.add(Duration(days: index));
+                // because DateTime::add() takes daylight savings into
+                // consideration and we don't want that
+                DateTime date = DateTime(year, month, day + index);
                 return Container(
-                  margin: EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: kCardBorderColor, width: 0.6)),
-                  child: WeekDaysSliderDayButton(
-                      dayIndex: index,
-                      selectedDate: 10,
-                      date: widget.initialDate.add(Duration(days: index))),
+                  margin: EdgeInsets.only(left: index == 0 ? 12 : 0),
+                  width: dayTotalWidth,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedDayIndex = index;
+                        selectMonth(date);
+                        widget.onDateChanged.call(date);
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border:
+                              Border.all(color: kCardBorderColor, width: 0.6)),
+                      child: WeekDaysSliderDayButton(
+                          dayIndex: index,
+                          selectedDate: selectedDayIndex,
+                          date: date),
+                    ),
+                  ),
                 );
               },
             ),
@@ -61,6 +111,26 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         ],
       ),
     );
+  }
+
+  DateTime lastDayOfMonth(DateTime month) {
+    var beginningNextMonth = (month.month < 12)
+        ? new DateTime(month.year, month.month + 1, 1)
+        : new DateTime(month.year + 1, 1, 1);
+    return beginningNextMonth.subtract(new Duration(days: 1));
+  }
+
+  void selectMonth(DateTime day) {
+    int yearDiff = day.year - startingDate.year;
+    int monthDiff = day.month - startingDate.month;
+    int totalDiff = (yearDiff * 12) + monthDiff;
+    selectedMonthIndex = totalDiff;
+  }
+
+  void jumpToDay(DateTime day) {
+    int index = day.difference(startingDate).inDays;
+    dayController.jumpTo((dayTotalWidth) * index);
+    selectedDayIndex = index;
   }
 
   Widget buildMonth(DateTime today, int monthOffset, int index, bool selected) {
@@ -73,11 +143,16 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
       newMonth = newMonth % DateTime.monthsPerYear;
       yearOffset = 1;
     }
-    String string = widget.df.format(DateTime(today.year, newMonth, 1));
+    DateTime firstDayOfMonth = DateTime(today.year + yearOffset, newMonth, 1);
+    String string = widget.df.format(firstDayOfMonth);
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: GestureDetector(
-        onTap: () => setState(() => selectedMonthIndex = index),
+        onTap: () => setState(() {
+          jumpToDay(firstDayOfMonth);
+          selectedMonthIndex = index;
+          widget.onDateChanged.call(firstDayOfMonth);
+        }),
         child: Container(
           decoration: BoxDecoration(
               color: selected ? kMainColorLight : Colors.white,

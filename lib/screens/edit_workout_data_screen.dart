@@ -37,6 +37,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   bool isRepeating = false;
   bool datePickerOpen = false;
+  bool datePickerVisible = false;
 
   DateTime? selectedStartDate;
 
@@ -245,37 +246,28 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   ),
                   SizedBox(height: 8),
                   AnimatedContainer(
-                      height: datePickerOpen ? 150 : 0,
-                      duration: Duration(milliseconds: 200),
+                      height: datePickerOpen ? 128 : 0,
+                      duration: const Duration(milliseconds: 160),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                           border: Border.all(color: kCardBorderColor)),
                       child: true
-                          ? FredericDatePicker(initialDate: DateTime.now())
-                          : SingleChildScrollView(
-                              controller: ScrollController(),
-                              physics: NeverScrollableScrollPhysics(),
-                              child: Container(
-                                height: 150,
-                                child: CupertinoDatePicker(
-                                  minimumYear: DateTime.now().year - 1,
-                                  maximumYear: DateTime.now().year + 1,
-                                  mode: CupertinoDatePickerMode.date,
-                                  initialDateTime: widget.workout.startDate,
-                                  onDateTimeChanged: (date) {
-                                    selectedStartDate = date;
-                                    setState(() {
-                                      dateText = formatDateTime(date);
-                                    });
-                                  },
-                                ),
-                              ),
-                            )),
+                          ? FredericDatePicker(
+                              initialDate: widget.workout.startDate,
+                              onDateChanged: (date) {
+                                selectedStartDate = date;
+                                setState(() {
+                                  dateText = formatDateTime(date);
+                                });
+                              })
+                          : Container()),
                   SizedBox(
-                      height: (MediaQuery.of(context).size.height < 950
-                          ? 950 - MediaQuery.of(context).size.height
-                          : 16)),
+                      height: true
+                          ? 16
+                          : (MediaQuery.of(context).size.height < 950
+                              ? 950 - MediaQuery.of(context).size.height
+                              : 16)),
                   Row(
                     children: [
                       if (widget.workout.canEdit)

@@ -164,22 +164,23 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
 /// of the WeekDaysSliderDayButton.
 ///
 class WeekDaysSliderDayButton extends StatelessWidget {
-  WeekDaysSliderDayButton({
-    required this.dayIndex,
-    required this.selectedDate,
-    required this.date,
-  });
+  WeekDaysSliderDayButton(
+      {required this.dayIndex,
+      required this.selectedDate,
+      required this.date,
+      this.dayWidth});
 
   final int dayIndex;
   final int selectedDate;
   final DateTime date;
+  final double? dayWidth;
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
     return selectedDate == dayIndex
         ? Container(
-            width: width / 10,
+            width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color: kMainColor.withOpacity(0.1),
@@ -207,7 +208,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
             ),
           )
         : Container(
-            width: width / 10,
+            width: width,
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
