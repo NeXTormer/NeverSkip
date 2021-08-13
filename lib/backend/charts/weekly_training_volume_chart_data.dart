@@ -1,5 +1,6 @@
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 
 class WeeklyTrainingVolumeChartData {
   WeeklyTrainingVolumeChartData(this.setListData) {}
@@ -8,6 +9,7 @@ class WeeklyTrainingVolumeChartData {
   final int calisthenicsWeight = 50;
 
   List<int> getVolumeArray() {
+    var profiler = FredericProfiler.track('Calculate workout volume for Chart');
     DateTime now = DateTime.now();
     DateTime startOfWeek = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday));
@@ -31,6 +33,7 @@ class WeeklyTrainingVolumeChartData {
         }
       }
     }
+    profiler.stop();
     return weekVolume;
   }
 }
