@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/screens/user_settings_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
 class UserSettingsSegment extends StatelessWidget {
@@ -14,49 +16,57 @@ class UserSettingsSegment extends StatelessWidget {
     return SliverToBoxAdapter(
         child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: FredericCard(
-        onTap: () {},
-        height: 90,
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Row(
-            children: [
-              CircleAvatar(
-                foregroundImage: CachedNetworkImageProvider(user.image),
-                radius: 35,
-              ),
-              Expanded(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 22),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Manage your User Account',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14),
-                      )
-                    ],
+      child: OpenContainer(
+        transitionType: ContainerTransitionType.fadeThrough,
+        openElevation: 0,
+        closedElevation: 0,
+        closedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        tappable: false,
+        openBuilder: (context, closeContainer) => UserSettingsScreen(),
+        closedBuilder: (context, openContainer) => FredericCard(
+          onTap: openContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(6),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  foregroundImage: CachedNetworkImageProvider(user.image),
+                  radius: 35,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 22),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Manage your User Account',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Icon(Icons.arrow_forward_ios_rounded, color: kGreyColor)
-            ],
+                Icon(Icons.arrow_forward_ios_rounded, color: kGreyColor)
+              ],
+            ),
           ),
         ),
       ),

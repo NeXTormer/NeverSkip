@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
-import 'package:frederic/widgets/settings_screen/settings_screen_appbar.dart';
+import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/user_settings_segment.dart';
+import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -17,7 +18,11 @@ class SettingsScreen extends StatelessWidget {
         child: BlocBuilder<FredericUserManager, FredericUser>(
           builder: (context, user) => CustomScrollView(
             slivers: [
-              SettingsScreenAppbar(),
+              BasicAppBar(
+                title: 'Settings',
+                subtitle: 'Make it fit your needs perfectly',
+                icon: ExtraIcons.settings,
+              ),
               SliverDivider(),
               SliverPadding(padding: const EdgeInsets.symmetric(vertical: 5)),
               UserSettingsSegment(user),
