@@ -12,29 +12,22 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class GoalCard extends StatefulWidget {
   const GoalCard(this.goal,
-      {this.title,
-      this.currentState,
-      this.startDate,
+      {this.startDate,
       this.endDate,
+      this.titleController,
       this.startStateController,
-      this.endStateController});
-  const GoalCard.dummy(this.goal,
-      {this.title,
-      this.currentState,
-      this.startDate,
-      this.endDate,
-      this.startStateController,
+      this.currentStateController,
       this.endStateController});
 
   final FredericGoal goal;
 
-  final String? title;
-  final num? currentState;
-
   final DateTime? startDate;
   final DateTime? endDate;
 
+  final TextEditingController? titleController;
+
   final NumberSliderController? startStateController;
+  final NumberSliderController? currentStateController;
   final NumberSliderController? endStateController;
 
   @override
@@ -42,13 +35,17 @@ class GoalCard extends StatefulWidget {
 }
 
 class _GoalCardState extends State<GoalCard> {
+  String? title;
+
   num? startState;
+  num? currentState;
   num? endState;
 
   @override
   void initState() {
     if (widget.startStateController != null &&
-        widget.startStateController != null) {
+        widget.startStateController != null &&
+        widget.currentStateController != null) {
       widget.startStateController!.addListener(() {
         setState(() {
           startState = widget.startStateController!.value;
@@ -59,6 +56,16 @@ class _GoalCardState extends State<GoalCard> {
           endState = widget.endStateController!.value;
         });
       });
+      widget.currentStateController!.addListener(() {
+        setState(() {
+          currentState = widget.currentStateController!.value;
+        });
+      });
+      widget.titleController!.addListener(() {
+        setState(() {
+          title = widget.titleController!.text;
+        });
+      });
     }
     super.initState();
   }
@@ -67,7 +74,7 @@ class _GoalCardState extends State<GoalCard> {
   Widget build(BuildContext context) {
     // TODO If endstate is smaller/great then startState, also change startState
     final num currentStateNormalized =
-        ((widget.currentState ?? widget.goal.currentState) -
+        ((currentState ?? widget.goal.currentState) -
                 (startState ?? widget.goal.startState)) /
             ((endState ?? widget.goal.endState) -
                 (startState ?? widget.goal.startState));
@@ -97,7 +104,7 @@ class _GoalCardState extends State<GoalCard> {
                           overflow: TextOverflow.ellipsis,
                           strutStyle: StrutStyle(fontSize: 10),
                           text: TextSpan(
-                            text: '${widget.title ?? widget.goal.title}',
+                            text: '${title ?? widget.goal.title}',
                             style: const TextStyle(
                                 color: const Color(0x7A3A3A3A),
                                 fontSize: 10,

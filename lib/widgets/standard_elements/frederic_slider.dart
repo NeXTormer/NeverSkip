@@ -16,6 +16,7 @@ class FredericSlider extends StatefulWidget {
       this.indicatorText = '',
       this.unit = SliderUnit.Weeks,
       this.startStateController,
+      this.currentStateController,
       this.endStateController})
       : super(key: key);
 
@@ -31,6 +32,7 @@ class FredericSlider extends StatefulWidget {
   final SliderUnit unit;
 
   final NumberSliderController? startStateController;
+  final NumberSliderController? currentStateController;
   final NumberSliderController? endStateController;
 
   @override
@@ -40,6 +42,7 @@ class FredericSlider extends StatefulWidget {
 class _FredericSliderState extends State<FredericSlider> {
   double value = 0;
   double adaptiveMin = 0;
+  double adaptiveCurrent = 0;
   double adaptiveMax = 0;
   int divisions = 0;
 
@@ -47,18 +50,31 @@ class _FredericSliderState extends State<FredericSlider> {
   void initState() {
     adaptiveMax = widget.value;
     adaptiveMin = 0;
+    adaptiveCurrent = widget.value;
     value = widget.value;
     divisions = widget.max.toInt() - widget.min.toInt();
     if (widget.startStateController != null &&
-        widget.endStateController != null) {
+        widget.endStateController != null &&
+        widget.currentStateController != null) {
       widget.startStateController!.addListener(() {
         setState(() {
           adaptiveMin = widget.startStateController!.value.toDouble();
+          if (adaptiveMin.toInt() >= adaptiveCurrent.toInt()) {
+            widget.currentStateController!.value = adaptiveMin;
+          }
         });
       });
       widget.endStateController!.addListener(() {
         setState(() {
           adaptiveMax = widget.endStateController!.value.toDouble();
+          if (adaptiveMax.toInt() <= adaptiveCurrent.toInt()) {
+            widget.currentStateController!.value = adaptiveMax;
+          }
+        });
+      });
+      widget.currentStateController!.addListener(() {
+        setState(() {
+          adaptiveCurrent = widget.currentStateController!.value.toDouble();
         });
       });
     }
@@ -73,11 +89,12 @@ class _FredericSliderState extends State<FredericSlider> {
         data: SliderTheme.of(context).copyWith(
           trackHeight: 6,
           overlayShape: RoundSliderOverlayShape(overlayRadius: 11),
-          thumbShape: _FredericSliderThumb(widget.min, widget.max, widget.unit),
+          thumbShape: _FredericSliderThumb(widget.min, widget.max,
+              widget.isInteractive ? adaptiveCurrent : value, widget.unit),
           tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
         ),
         child: Slider(
-            value: value,
+            value: widget.isInteractive ? adaptiveCurrent : value,
             divisions: divisions,
             min: widget.isInteractive ? adaptiveMin : widget.min,
             max: widget.isInteractive ? adaptiveMax : widget.max,
@@ -85,7 +102,11 @@ class _FredericSliderState extends State<FredericSlider> {
             inactiveColor: kMainColorLight,
             onChanged: (newVal) {
               setState(() {
-                value = newVal;
+                if (widget.currentStateController != null) {
+                  widget.currentStateController!.value = newVal;
+                } else {
+                  value = newVal;
+                }
               });
               widget.onChanged(newVal);
             }),
@@ -95,9 +116,10 @@ class _FredericSliderState extends State<FredericSlider> {
 }
 
 class _FredericSliderThumb extends SliderComponentShape {
-  _FredericSliderThumb(this.min, this.max, this.unit);
+  _FredericSliderThumb(this.min, this.max, this.labelValue, this.unit);
   final double min;
   final double max;
+  final double labelValue;
   final SliderUnit unit;
 
   @override
@@ -174,7 +196,7 @@ class _FredericSliderThumb extends SliderComponentShape {
       case SliderUnit.Weeks:
         return '$value week${value == 1 ? '' : 's'}';
       case SliderUnit.Kilograms:
-        return '$value kg';
+        return '${labelValue.ceil()} kg';
       case SliderUnit.Kilometers:
         return '$value km';
       default:

@@ -25,11 +25,15 @@ class EditGoalDataScreen extends StatefulWidget {
 
 class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final TextEditingController titleController = TextEditingController();
+
   final NumberSliderController startStateController = NumberSliderController();
+  final NumberSliderController currentStateController =
+      NumberSliderController();
   final NumberSliderController endStateController = NumberSliderController();
 
   String dateText = '';
   String dummyTitle = '';
+
   num dummyStartState = 0;
   num dummyCurrentState = 0;
   num dummyEndState = 0;
@@ -49,13 +53,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     selectedStartDate = widget.goal.startDate;
     selectedEndDate = widget.goal.endDate;
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      titleController.addListener(() {
-        setState(() {
-          dummyTitle = titleController.text;
-        });
-      });
-    });
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {});
     super.initState();
   }
 
@@ -82,10 +80,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             child: Container(
               height: 70,
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: GoalCard.dummy(
+              child: GoalCard(
                 widget.goal,
-                title: dummyTitle,
-                currentState: dummyCurrentState,
+                titleController: titleController,
+                currentStateController: currentStateController,
                 startStateController: startStateController,
                 endStateController: endStateController,
               ),
@@ -126,8 +124,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 color: Colors.white,
                 border: Border.all(color: kCardBorderColor),
               ),
-              // TODO Adapt NumberSlider to goal card
-              // TODO Live update start and end value
               child: Column(
                 children: [
                   buildSubHeading('Start', Icons.star_outline),
@@ -135,8 +131,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                   NumberSlider(
                     controller: startStateController,
                     itemWidth: 0.14,
-                    numberOfItems: 100,
-                    startingIndex: dummyStartState.ceil() + 1, // TODO Warum +1?
+                    numberOfItems: dummyEndState.ceil() - 1,
+                    startingIndex: dummyStartState.ceil() + 1,
                   ),
                   SizedBox(height: 12),
                   buildSubHeading('End', Icons.star_outline),
@@ -157,7 +153,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               child: FredericHeading('Current State'),
             ),
           ),
-          // TODO Slider in eigenes Stateful widget und rebuild bei änderung des start/endstatecontroller
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -167,12 +162,11 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 max: dummyEndState.toDouble(),
                 value: dummyCurrentState.toDouble(),
                 startStateController: startStateController,
+                currentStateController: currentStateController,
                 endStateController: endStateController,
                 isInteractive: true,
-                // TODO CurrentStateController verwendet und setState in FredericSliderKlasse verlagern.
-                onChanged: (double value) {
-                  dummyCurrentState = value.toDouble();
-                  // setState(() {});
+                onChanged: (value) {
+                  dummyCurrentState = value;
                 },
               ),
             ),

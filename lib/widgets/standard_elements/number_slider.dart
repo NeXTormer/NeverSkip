@@ -10,7 +10,8 @@ import 'package:frederic/main.dart';
 ///
 class NumberSlider extends StatefulWidget {
   NumberSlider(
-      {required this.controller,
+      {this.constrainController,
+      required this.controller,
       this.numberOfItems = 400,
       this.startingIndex = 10,
       this.itemWidth = 0.2});
@@ -19,6 +20,7 @@ class NumberSlider extends StatefulWidget {
   final int numberOfItems;
   final double itemWidth;
   final NumberSliderController controller;
+  final NumberSliderController? constrainController;
 
   @override
   _NumberSliderState createState() => _NumberSliderState();
