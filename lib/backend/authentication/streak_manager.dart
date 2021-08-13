@@ -36,7 +36,8 @@ class StreakManager {
       userManager.state.streakLatestDate = null;
     } else {
       if (userManager.state.streakLatestDateWasNotTodayOrYesterday()) {
-        userManager.state.streakLatestDate = DateTime.now();
+        userManager.state.streakLatestDate =
+            DateTime.now().subtract(Duration(days: 1));
       }
     }
   }
