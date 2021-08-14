@@ -7,6 +7,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/misc/frederic_text_theme.dart';
 import 'package:frederic/screens/settings_screen.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
+import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
   HomeScreenAppbar(this.user);
@@ -45,14 +46,11 @@ class HomeScreenAppbar extends StatelessWidget {
                         style: FredericTextTheme.homeScreenAppBarSubTitle)
                   ],
                 ),
-                OpenContainer(
-                    closedElevation: 0,
-                    openElevation: 0,
-                    closedColor: kMainColor,
-                    closedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                FredericContainerTransition(
+                    tappable: true,
+                    closedBorderRadius: 8,
                     transitionType: ContainerTransitionType.fadeThrough,
-                    closedBuilder: (context, openContainer) {
+                    childBuilder: (context, openContainer) {
                       return Container(
                           height: 32,
                           width: 32,
@@ -63,9 +61,7 @@ class HomeScreenAppbar extends StatelessWidget {
                             size: 18,
                           ));
                     },
-                    openBuilder: (context, closedContainer) {
-                      return SettingsScreen();
-                    }),
+                    expandedChild: SettingsScreen())
               ],
             ),
             SizedBox(height: 8)

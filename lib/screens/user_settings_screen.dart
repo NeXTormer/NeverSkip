@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
+import 'package:frederic/widgets/settings_screen/datetime_attribute_changer.dart';
+import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
+import 'package:frederic/widgets/settings_screen/text_attribute_changer.dart';
 import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
@@ -34,15 +37,41 @@ class UserSettingsScreen extends StatelessWidget {
             ),
             SettingsSegment(title: 'Your Data', elements: <SettingsElement>[
               SettingsElement(
-                  text: 'Name',
-                  icon: Icons.drive_file_rename_outline,
-                  subText: user.name),
+                text: 'Name',
+                icon: Icons.drive_file_rename_outline,
+                subText: user.name,
+                changerTitle: 'Update your name',
+                infoText:
+                    'Your name will be visible to everyone when your profile is discoverable and to your friends.',
+                changeAttributeWidget: TextAttributeChanger(
+                  placeholder: 'Name',
+                  currentValue: () => user.name,
+                  updateValue: (newValue) => user.name = newValue,
+                ),
+              ),
               SettingsElement(
-                  text: 'Username',
-                  icon: Icons.supervised_user_circle_outlined),
+                text: 'Username',
+                subText: user.username,
+                icon: Icons.supervised_user_circle_outlined,
+                changerTitle: 'Update your username',
+                infoText:
+                    'Others can find your profile using your username if your profile is discoverable. You can change your username every month. It must be unique.',
+                changeAttributeWidget: TextAttributeChanger(
+                  placeholder: 'Username',
+                  currentValue: () => user.username,
+                  updateValue: (newValue) => user.username = newValue,
+                ),
+              ),
               SettingsElement(
                   text: 'Date of Birth',
-                  subText: '04.04.1995',
+                  subText: user.birthdayFormatted,
+                  infoText:
+                      'Your birthday is used to calculate your current age.',
+                  changerTitle: 'Update your birthday',
+                  changeAttributeWidget: DateTimeAttributeChanger(
+                    currentValue: () => user.birthday,
+                    updateValue: (newDate) => user.birthday = newDate,
+                  ),
                   icon: Icons.cake_outlined),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),

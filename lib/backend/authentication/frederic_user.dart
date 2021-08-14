@@ -21,6 +21,7 @@ class FredericUser {
   final String statusMessage;
   String? _email;
   String? _name;
+  String? _username;
   String? _image;
   int? _weight;
   int? _height;
@@ -40,24 +41,32 @@ class FredericUser {
   String get uid => _uid;
   String get email => _email ?? '';
   String get name => _name ?? '';
+  String get username => _username ?? '';
   String get image =>
       _image ?? 'https://via.placeholder.com/300x300?text=profile';
   int get weight => _weight ?? -1;
   int get height => _height ?? -1;
   int get streak => _currentStreak ?? 0;
-  DateTime get birthday => _birthday ?? DateTime.now();
+  DateTime? get birthday => _birthday;
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
   List<String> get progressMonitors => _progressMonitors ?? const <String>[];
   List<String> get activeWorkouts => _activeWorkouts ?? const <String>[];
 
   int get age {
-    var diff = birthday.difference(DateTime.now());
+    if (birthday == null) return -1;
+    var diff = birthday!.difference(DateTime.now());
     return diff.inDays ~/ 365;
+  }
+
+  String get birthdayFormatted {
+    if (_birthday == null) return 'Empty';
+    return _birthday!.formattedEuropean();
   }
 
   set name(String value) {
     if (uid == '') return;
+    if (value == name) return;
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('users')
@@ -66,8 +75,29 @@ class FredericUser {
     }
   }
 
+  set username(String value) {
+    if (uid == '') return;
+    if (value == username) return;
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'username': value});
+    }
+  }
+
+  set birthday(DateTime? value) {
+    if (uid == '') return;
+    if (value == birthday) return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'birthday': value == null ? null : Timestamp.fromDate(value)});
+  }
+
   set progressMonitors(List<String> value) {
     if (uid == '') return;
+    if (value == progressMonitors) return;
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -76,6 +106,7 @@ class FredericUser {
 
   set activeWorkouts(List<String> value) {
     if (uid == '') return;
+    if (value == activeWorkouts) return;
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -133,6 +164,7 @@ class FredericUser {
 
     _email = FirebaseAuth.instance.currentUser?.email ?? '';
     _name = data?['name'] ?? '';
+    _username = data?['username'] ?? '';
     _image =
         data?['image'] ?? 'https://via.placeholder.com/300x300?text=profile';
     _weight = data?['weight'];

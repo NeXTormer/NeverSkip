@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -51,7 +52,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   @override
   void initState() {
     isRepeating = widget.workout.repeating;
-    dateText = formatDateTime(widget.workout.startDate);
+    dateText = widget.workout.startDate.formattedEuropean();
     dummyDescription = widget.workout.description;
     dummyName = widget.workout.name;
     dummyRepeating = widget.workout.repeating;
@@ -75,14 +76,6 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     }
 
     super.initState();
-  }
-
-  String formatDateTime(DateTime date) {
-    String day = date.day.toString();
-    if (date.day < 10) day = day.padLeft(2, '0');
-    String month = date.month.toString();
-    if (date.month < 10) month = month.padLeft(2, '0');
-    return '$day.$month.${date.year}';
   }
 
   @override
@@ -258,7 +251,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                               onDateChanged: (date) {
                                 selectedStartDate = date;
                                 setState(() {
-                                  dateText = formatDateTime(date);
+                                  dateText = date.formattedEuropean();
                                 });
                               })
                           : Container()),

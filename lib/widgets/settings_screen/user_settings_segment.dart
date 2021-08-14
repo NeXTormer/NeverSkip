@@ -1,10 +1,10 @@
-import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/user_settings_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
 class UserSettingsSegment extends StatelessWidget {
   const UserSettingsSegment(this.user, {Key? key}) : super(key: key);
@@ -16,15 +16,9 @@ class UserSettingsSegment extends StatelessWidget {
     return SliverToBoxAdapter(
         child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: OpenContainer(
-        transitionType: ContainerTransitionType.fadeThrough,
-        openElevation: 0,
-        closedElevation: 0,
-        closedShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        tappable: false,
-        openBuilder: (context, closeContainer) => UserSettingsScreen(),
-        closedBuilder: (context, openContainer) => FredericCard(
+      child: FredericContainerTransition(
+        expandedChild: UserSettingsScreen(),
+        childBuilder: (context, openContainer) => FredericCard(
           onTap: openContainer,
           child: Padding(
             padding: const EdgeInsets.all(6),

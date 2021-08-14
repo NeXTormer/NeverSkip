@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/user_settings_segment.dart';
 import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
@@ -31,42 +32,42 @@ class SettingsScreen extends StatelessWidget {
                   title: 'App Settings',
                   elements: <SettingsElement>[
                     SettingsElement(
-                        text: 'Werner',
-                        subText: 'Enabled',
-                        icon: Icons.description,
-                        onTap: () {}),
+                      text: 'Werner',
+                      subText: 'Enabled',
+                      icon: Icons.description,
+                    ),
                     SettingsElement(
-                        text: 'Werner',
-                        subText: 'Enabled',
-                        icon: Icons.description,
-                        onTap: () {}),
+                      text: 'Werner',
+                      subText: 'Enabled',
+                      icon: Icons.description,
+                    ),
                     SettingsElement(
                         text: 'Reminder Notifications', hasSwitch: true),
                     SettingsElement(
-                        text: 'Werner',
-                        subText: 'Enabled',
-                        icon: Icons.description,
-                        onTap: () {}),
+                      text: 'Werner',
+                      subText: 'Enabled',
+                      icon: Icons.description,
+                    ),
                   ]),
               SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
               SettingsSegment(title: 'Preferences', elements: <SettingsElement>[
                 SettingsElement(
-                    text: 'Werner',
-                    subText: 'Enabled',
-                    icon: Icons.description,
-                    onTap: () {}),
+                  text: 'Werner',
+                  subText: 'Enabled',
+                  icon: Icons.description,
+                ),
                 SettingsElement(
-                    text: 'Werner',
-                    subText: 'Enabled',
-                    icon: Icons.description,
-                    onTap: () {}),
+                  text: 'Werner',
+                  subText: 'Enabled',
+                  icon: Icons.description,
+                ),
                 SettingsElement(
                     text: 'Reminder Notifications', hasSwitch: true),
                 SettingsElement(
-                    text: 'Werner',
-                    subText: 'Enabled',
-                    icon: Icons.description,
-                    onTap: () {}),
+                  text: 'Werner',
+                  subText: 'Enabled',
+                  icon: Icons.description,
+                ),
               ])
             ],
           ),
