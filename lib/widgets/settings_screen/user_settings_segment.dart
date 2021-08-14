@@ -25,6 +25,7 @@ class UserSettingsSegment extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
+                  backgroundColor: kMainColorLight,
                   foregroundImage: CachedNetworkImageProvider(user.image),
                   radius: 35,
                 ),

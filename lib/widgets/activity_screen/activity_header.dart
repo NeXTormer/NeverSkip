@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../misc/ExtraIcons.dart';
@@ -70,7 +69,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                   children: [
                     Text(
                       widget.subtitle,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: kTextColor,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.6,
@@ -84,7 +83,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                   children: [
                     Text(
                       widget.title,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: kTextColor,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.1,

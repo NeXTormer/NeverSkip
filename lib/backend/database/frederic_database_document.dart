@@ -1,5 +1,5 @@
-class FredericStorageDocument {
-  FredericStorageDocument(this.id, this.data);
+class FredericDatabaseDocument {
+  FredericDatabaseDocument(this.id, this.data);
 
   final String id;
   final Map<String, dynamic> data;

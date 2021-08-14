@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 enum Direction { left, right }
 
@@ -189,7 +188,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: kMainColor,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
@@ -197,7 +196,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                     )),
                 Text(
                   '${numToWeekday(date.weekday)}',
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     color: kMainColor.withOpacity(0.7),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
@@ -214,7 +213,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: kTextColor,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
@@ -222,7 +221,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                     )),
                 Text(
                   '${numToWeekday(date.weekday)}',
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     color: kTextColor.withOpacity(0.8),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,

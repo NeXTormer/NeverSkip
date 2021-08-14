@@ -8,7 +8,6 @@ import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CalendarDay extends StatelessWidget {
   CalendarDay(this.index, this.user, this.workoutListData, this.setListData) {
@@ -262,13 +261,13 @@ class _CalendarDayCard extends StatelessWidget {
           children: [
             Text(
               '${day.day}',
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: completed ? kGreenColor : kMainColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w500),
             ),
             Text('${getWeekdayName(day.weekday)}',
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     color: completed ? kGreenColor : kMainColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w300))

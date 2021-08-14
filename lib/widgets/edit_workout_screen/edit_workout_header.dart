@@ -4,7 +4,6 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/edit_workout_data_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
@@ -34,7 +33,7 @@ class EditWorkoutHeader extends StatelessWidget {
                       children: [
                         Text(
                           '$dateFormatString',
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             color: const Color(0xFF272727),
                             fontWeight: FontWeight.w400,
                             letterSpacing: 0.6,
@@ -48,7 +47,7 @@ class EditWorkoutHeader extends StatelessWidget {
                       '${workout.name}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: const Color(0xFF272727),
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.1,

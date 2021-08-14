@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_database_document.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
-import 'package:frederic/backend/storage/frederic_storage_document.dart';
 
 class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   FredericSetManager()
@@ -49,14 +49,15 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();
     _sets.clear();
-    HashMap<String, List<FredericStorageDocument>> documentMap =
-        HashMap<String, List<FredericStorageDocument>>();
+    HashMap<String, List<FredericDatabaseDocument>> documentMap =
+        HashMap<String, List<FredericDatabaseDocument>>();
     for (var doc in snapshot.docs) {
       String activityID = doc.data()['activityid'];
       if (!documentMap.containsKey(activityID)) {
-        documentMap[activityID] = <FredericStorageDocument>[];
+        documentMap[activityID] = <FredericDatabaseDocument>[];
       }
-      documentMap[activityID]!.add(FredericStorageDocument(doc.id, doc.data()));
+      documentMap[activityID]!
+          .add(FredericDatabaseDocument(doc.id, doc.data()));
     }
 
     for (var entry in documentMap.entries) {

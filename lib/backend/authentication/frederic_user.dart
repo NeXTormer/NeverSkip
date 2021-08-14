@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
+import 'package:image_picker/image_picker.dart';
 
 ///
 /// Ephemeral state
@@ -153,6 +154,16 @@ class FredericUser {
           FredericBackend.instance.workoutManager.workouts[workoutID];
       if (workout == null) continue;
       if (workout.activities.getDay(day).isNotEmpty) return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateProfilePicture(XFile imageFile) async {
+    String? url = await FredericBackend.instance.storageManager
+        .uploadXFileImageToStorage(imageFile, 'profilepicture.jpeg');
+    if (url != null) {
+      image = url;
+      return true;
     }
     return false;
   }

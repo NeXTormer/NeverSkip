@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_database_document.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
-import 'package:frederic/backend/storage/frederic_storage_document.dart';
 import 'package:frederic/extensions.dart';
 
 ///
@@ -34,8 +34,10 @@ class FredericSetList {
   /// when using the normal constructor, except that no extra data is loaded and
   /// therefore no event is pushed to the [FredericSetManager]
   ///
-  FredericSetList.fromStorageDocumentList(this.activityID,
-      List<FredericStorageDocument> documentList, FredericSetManager setManager)
+  FredericSetList.fromStorageDocumentList(
+      this.activityID,
+      List<FredericDatabaseDocument> documentList,
+      FredericSetManager setManager)
       : _setManager = setManager {
     _processDocumentList(documentList);
     _calculateBestProgress();
@@ -150,17 +152,17 @@ class FredericSetList {
       if (document.data() == null) continue;
       if (document.data()?['activityid'] != activityID) continue;
       _insertStorageDocument(
-          FredericStorageDocument(document.id, document.data()!));
+          FredericDatabaseDocument(document.id, document.data()!));
     }
   }
 
-  void _processDocumentList(List<FredericStorageDocument> docList) {
+  void _processDocumentList(List<FredericDatabaseDocument> docList) {
     for (var document in docList) {
       _insertStorageDocument(document);
     }
   }
 
-  void _insertStorageDocument(FredericStorageDocument document) {
+  void _insertStorageDocument(FredericDatabaseDocument document) {
     int? month = document['month'];
     if (month == null) return;
 

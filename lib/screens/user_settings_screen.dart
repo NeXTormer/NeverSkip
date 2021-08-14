@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/settings_screen/datetime_attribute_changer.dart';
+import 'package:frederic/widgets/settings_screen/image_attribute_changer.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/text_attribute_changer.dart';
@@ -29,6 +32,7 @@ class UserSettingsScreen extends StatelessWidget {
                 height: 150,
                 child: Center(
                   child: CircleAvatar(
+                    backgroundColor: kMainColorLight,
                     radius: 60,
                     backgroundImage: CachedNetworkImageProvider(user.image),
                   ),
@@ -61,6 +65,14 @@ class UserSettingsScreen extends StatelessWidget {
                   currentValue: () => user.username,
                   updateValue: (newValue) => user.username = newValue,
                 ),
+              ),
+              SettingsElement(
+                text: 'Profile Picture',
+                icon: Icons.person,
+                changeAttributeWidget: ImageAttributeChanger(
+                    currentValue: () => user.image,
+                    updateValue: (imageFile) =>
+                        user.updateProfilePicture(imageFile)),
               ),
               SettingsElement(
                   text: 'Date of Birth',

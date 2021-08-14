@@ -9,7 +9,6 @@ import 'package:frederic/widgets/edit_workout_screen/edit_activity_list_segment.
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
@@ -94,7 +93,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         ),
         child: Text(
           'Add Exercise',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
             fontSize: 15,
