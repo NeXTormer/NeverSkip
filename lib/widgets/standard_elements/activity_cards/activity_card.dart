@@ -5,7 +5,6 @@ import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
-import 'package:frederic/widgets/standard_elements/activity_cards/calendar_activity_card_content.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/normal_activity_card_content.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/small_activity_card_content.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -45,13 +44,6 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (type == ActivityCardType.Calendar)
-      return CalendarActivityCardContent(
-        activity,
-        () => handleClick(context),
-        key: key,
-        state: state,
-      );
     if (type == ActivityCardType.Small)
       return SmallActivityCardContent(
         activity,

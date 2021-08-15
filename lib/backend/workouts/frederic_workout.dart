@@ -201,7 +201,7 @@ class FredericWorkout {
       return false;
     }
     _activities.activities[activity.weekday].add(activity);
-    _updateActivitiesInDB();
+    updateActivitiesInDB();
     return true;
   }
 
@@ -212,7 +212,7 @@ class FredericWorkout {
   ///
   void removeActivity(FredericWorkoutActivity activity, int weekday) {
     _activities.activities[weekday].remove(activity);
-    _updateActivitiesInDB();
+    updateActivitiesInDB();
   }
 
   void switchActivities(int weekday, int firstIndex, int secondIndex) {
@@ -223,10 +223,10 @@ class FredericWorkout {
     second.order = firstIndex;
     _activities.activities[weekday][firstIndex] = second;
     _activities.activities[weekday][secondIndex] = first;
-    _updateActivitiesInDB();
+    updateActivitiesInDB();
   }
 
-  void _updateActivitiesInDB() {
+  void updateActivitiesInDB() {
     DocumentReference workoutReference =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 

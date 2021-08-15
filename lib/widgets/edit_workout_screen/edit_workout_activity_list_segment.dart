@@ -60,9 +60,9 @@ class EditWorkoutActivityListSegment extends StatelessWidget {
                     FredericWorkoutActivity activity =
                         workout.activities.activities[weekday + 1][index ~/ 2];
                     return EditWorkoutActivityCard(activity,
+                        workout: workout,
                         editable: workoutIsEditable,
-                        key: ValueKey(activity),
-                        onEdit: () {}, onDelete: () {
+                        key: ValueKey(activity), onDelete: () {
                       workout.removeActivity(activity, weekday + 1);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         duration: Duration(seconds: 4),

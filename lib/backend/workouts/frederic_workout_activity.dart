@@ -1,4 +1,5 @@
 import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/backend.dart';
 
 class FredericWorkoutActivity implements Comparable {
   FredericWorkoutActivity(
@@ -21,6 +22,14 @@ class FredericWorkoutActivity implements Comparable {
   int order;
   int? _sets;
   int? _reps;
+
+  set sets(int value) {
+    _sets = value;
+  }
+
+  set reps(int value) {
+    _reps = value;
+  }
 
   int get sets => _sets ?? activity.recommendedSets;
   int get reps => _reps ?? activity.recommendedReps;

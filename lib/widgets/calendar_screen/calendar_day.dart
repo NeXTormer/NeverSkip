@@ -8,6 +8,7 @@ import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
+import 'package:frederic/widgets/standard_elements/activity_cards/calendar_activity_card_content.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
 class CalendarDay extends StatelessWidget {
@@ -75,8 +76,7 @@ class CalendarDay extends StatelessWidget {
                   child: Column(
                     children:
                         List<Widget>.generate(activitiesDueToday.length, (i) {
-                      return _CalendarActivityCard(
-                          activitiesDueToday[i].activity,
+                      return _CalendarActivityCard(activitiesDueToday[i],
                           indicator: index == 0,
                           completed: completedActivityToday.isNotEmpty &&
                               completedActivityToday[i]);
@@ -159,7 +159,7 @@ class _CalendarActivityCard extends StatelessWidget {
   _CalendarActivityCard(this.activity,
       {this.completed = false, this.indicator = false});
 
-  final FredericActivity activity;
+  final FredericWorkoutActivity activity;
   final bool indicator;
   final bool completed;
 
@@ -177,8 +177,7 @@ class _CalendarActivityCard extends StatelessWidget {
           ),
           SizedBox(width: 8),
           Expanded(
-              child: ActivityCard(activity,
-                  type: ActivityCardType.Calendar,
+              child: CalendarActivityCardContent(activity,
                   state: completed
                       ? ActivityCardState.Green
                       : ActivityCardState.Normal))

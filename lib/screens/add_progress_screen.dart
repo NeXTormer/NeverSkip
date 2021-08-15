@@ -100,14 +100,6 @@ class AddProgressScreen extends StatelessWidget {
                         border: Border.all(color: kCardBorderColor)),
                     child: Column(
                       children: [
-                        buildSubHeading('Reps', Icons.repeat_outlined),
-                        SizedBox(height: 12),
-                        NumberSlider(
-                            controller: repsSliderController,
-                            itemWidth: 0.14,
-                            numberOfItems: 100,
-                            startingIndex: activity.recommendedReps + 1),
-                        SizedBox(height: 12),
                         buildSubHeading('Sets', Icons.account_tree_outlined),
                         SizedBox(height: 12),
                         NumberSlider(
@@ -116,6 +108,14 @@ class AddProgressScreen extends StatelessWidget {
                           numberOfItems: 10,
                           startingIndex: 1,
                         ),
+                        SizedBox(height: 12),
+                        buildSubHeading('Repetitions', Icons.repeat_outlined),
+                        SizedBox(height: 12),
+                        NumberSlider(
+                            controller: repsSliderController,
+                            itemWidth: 0.14,
+                            numberOfItems: 100,
+                            startingIndex: activity.recommendedReps + 1),
                         if (activity.type == FredericActivityType.Weighted) ...[
                           SizedBox(height: 12),
                           buildSubHeading('Weight', ExtraIcons.dumbbell),
