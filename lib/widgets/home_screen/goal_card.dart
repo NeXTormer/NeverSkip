@@ -45,7 +45,8 @@ class _GoalCardState extends State<GoalCard> {
   void initState() {
     if (widget.startStateController != null &&
         widget.startStateController != null &&
-        widget.currentStateController != null) {
+        widget.currentStateController != null &&
+        widget.endStateController != null) {
       widget.startStateController!.addListener(() {
         setState(() {
           startState = widget.startStateController!.value;

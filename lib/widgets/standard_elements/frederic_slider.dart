@@ -48,9 +48,9 @@ class _FredericSliderState extends State<FredericSlider> {
 
   @override
   void initState() {
-    adaptiveMax = widget.value;
     adaptiveMin = 0;
     adaptiveCurrent = widget.value;
+    adaptiveMax = widget.value;
     value = widget.value;
     divisions = widget.max.toInt() - widget.min.toInt();
     if (widget.startStateController != null &&
@@ -59,16 +59,23 @@ class _FredericSliderState extends State<FredericSlider> {
       widget.startStateController!.addListener(() {
         setState(() {
           adaptiveMin = widget.startStateController!.value.toDouble();
-          if (adaptiveMin.toInt() >= adaptiveCurrent.toInt()) {
-            widget.currentStateController!.value = adaptiveMin;
-          }
         });
       });
       widget.endStateController!.addListener(() {
         setState(() {
           adaptiveMax = widget.endStateController!.value.toDouble();
-          if (adaptiveMax.toInt() <= adaptiveCurrent.toInt()) {
+          if (adaptiveMin <= adaptiveMax) {
+            if (adaptiveCurrent.toInt() >= adaptiveMax) {
+              widget.currentStateController!.value = adaptiveMax;
+            }
+          } else {
+            if (adaptiveCurrent.toInt() <= adaptiveMax) {
+              widget.currentStateController!.value = adaptiveMax;
+            }
+          }
+          if (adaptiveMax.toInt() == adaptiveMin.toInt()) {
             widget.currentStateController!.value = adaptiveMax;
+            widget.endStateController!.value = adaptiveMax + 1;
           }
         });
       });
@@ -83,6 +90,9 @@ class _FredericSliderState extends State<FredericSlider> {
 
   @override
   Widget build(BuildContext context) {
+    print('Start: $adaptiveMin');
+    print('Current: $adaptiveCurrent');
+    print('End: $adaptiveMax');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SliderTheme(
@@ -90,14 +100,19 @@ class _FredericSliderState extends State<FredericSlider> {
           trackHeight: 6,
           overlayShape: RoundSliderOverlayShape(overlayRadius: 11),
           thumbShape: _FredericSliderThumb(widget.min, widget.max,
-              widget.isInteractive ? adaptiveCurrent : value, widget.unit),
+              widget.isInteractive ? adaptiveCurrent : value, widget.unit,
+              inverse: (adaptiveMin <= adaptiveMax) ? false : true),
           tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
         ),
         child: Slider(
             value: widget.isInteractive ? adaptiveCurrent : value,
             divisions: divisions,
-            min: widget.isInteractive ? adaptiveMin : widget.min,
-            max: widget.isInteractive ? adaptiveMax : widget.max,
+            min: widget.isInteractive
+                ? (adaptiveMin >= adaptiveMax ? adaptiveMax : adaptiveMin)
+                : widget.min,
+            max: widget.isInteractive
+                ? (adaptiveMax <= adaptiveMin ? adaptiveMin : adaptiveMax)
+                : widget.max,
             activeColor: kMainColor,
             inactiveColor: kMainColorLight,
             onChanged: (newVal) {
@@ -116,11 +131,13 @@ class _FredericSliderState extends State<FredericSlider> {
 }
 
 class _FredericSliderThumb extends SliderComponentShape {
-  _FredericSliderThumb(this.min, this.max, this.labelValue, this.unit);
+  _FredericSliderThumb(this.min, this.max, this.labelValue, this.unit,
+      {this.inverse = false});
   final double min;
   final double max;
   final double labelValue;
   final SliderUnit unit;
+  final bool inverse;
 
   @override
   Size getPreferredSize(bool isEnabled, bool isDiscrete) {
