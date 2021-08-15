@@ -71,6 +71,7 @@ class ActivityCard extends StatelessWidget {
         activity,
         () => handleClick(context),
         deleteButton: true,
+        editButton: true,
         key: key,
       );
 

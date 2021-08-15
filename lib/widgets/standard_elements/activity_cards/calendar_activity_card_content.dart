@@ -12,13 +12,21 @@ class CalendarActivityCardContent extends StatefulWidget {
   const CalendarActivityCardContent(this.activity, this.onClick,
       {Key? key,
       this.deleteButton = false,
+      this.editButton = false,
+      this.onEdit,
+      this.margin,
       this.state = ActivityCardState.Normal})
       : super(key: key);
 
   final FredericActivity activity;
   final ActivityCardState state;
+
+  final EdgeInsets? margin;
+
   final void Function()? onClick;
+  final void Function()? onEdit;
   final bool deleteButton;
+  final bool editButton;
 
   final Duration animationDuration = const Duration(milliseconds: 200);
 
@@ -35,6 +43,7 @@ class _CalendarActivityCardContentState
   Widget build(BuildContext context) {
     return FredericCard(
         animated: widget.deleteButton,
+        margin: widget.margin,
         onTap: widget.deleteButton ? null : widget.onClick,
         height: widget.deleteButton ? (deleted ? 0 : 70) : 90,
         padding: EdgeInsets.all(deleted ? 0 : 10),
@@ -117,6 +126,19 @@ class _CalendarActivityCardContentState
                       ],
                     ),
                   ),
+                  if (widget.editButton)
+                    GestureDetector(
+                      onTap: widget.onEdit,
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: kMainColor, width: 1.8)),
+                        child: Icon(CupertinoIcons.pencil,
+                            color: kMainColor, size: 24),
+                      ),
+                    ),
                   if (widget.deleteButton)
                     GestureDetector(
                       onTap: handleDelete,

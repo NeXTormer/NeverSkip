@@ -5,7 +5,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
-import 'package:frederic/widgets/edit_workout_screen/edit_activity_list_segment.dart';
+import 'package:frederic/widgets/edit_workout_screen/edit_workout_activity_list_segment.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
@@ -64,7 +64,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     weekdaysSliderController: weekdaysSliderController,
                     workout: workout),
                 Divider(color: kDividerColor),
-                EditActivityListSegment(
+                EditWorkoutActivityListSegment(
                     workout: workout,
                     pageController: pageController,
                     weekdaysSliderController: weekdaysSliderController),

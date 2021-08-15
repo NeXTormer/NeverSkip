@@ -68,6 +68,7 @@ class UserSettingsScreen extends StatelessWidget {
               ),
               SettingsElement(
                 text: 'Profile Picture',
+                changerTitle: 'Upload a new Profile Picture',
                 icon: Icons.person,
                 changeAttributeWidget: ImageAttributeChanger(
                     currentValue: () => user.image,
