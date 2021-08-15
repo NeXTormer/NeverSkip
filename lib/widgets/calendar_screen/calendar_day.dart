@@ -4,6 +4,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_system_events.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
@@ -26,7 +27,8 @@ class CalendarDay extends StatelessWidget {
   Widget build(BuildContext context) {
     //var profiler = FredericProfiler.track('build calendar day');
     DateTime day = DateTime.now().add(Duration(days: index));
-    List<FredericActivity> activitiesDueToday = <FredericActivity>[];
+    List<FredericWorkoutActivity> activitiesDueToday =
+        <FredericWorkoutActivity>[];
     for (String workoutID in user.activeWorkouts) {
       if (workoutListData.workouts[workoutID] != null)
         activitiesDueToday.addAll(
@@ -40,7 +42,7 @@ class CalendarDay extends StatelessWidget {
       if (setListData != null) {
         for (int i = 0; i < activitiesDueToday.length; i++) {
           FredericSetList setList =
-              setListData![activitiesDueToday[i].activityID];
+              setListData![activitiesDueToday[i].activity.activityID];
           bool activityFinished = setList.wasActiveToday();
           completedActivityToday[i] = activityFinished;
           if (activityFinished == false) {
@@ -73,7 +75,8 @@ class CalendarDay extends StatelessWidget {
                   child: Column(
                     children:
                         List<Widget>.generate(activitiesDueToday.length, (i) {
-                      return _CalendarActivityCard(activitiesDueToday[i],
+                      return _CalendarActivityCard(
+                          activitiesDueToday[i].activity,
                           indicator: index == 0,
                           completed: completedActivityToday.isNotEmpty &&
                               completedActivityToday[i]);

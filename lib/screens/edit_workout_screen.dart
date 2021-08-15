@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_activity_list_segment.dart';
@@ -106,17 +107,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   void handleAddActivity(FredericActivity activity) {
     bool success = FredericBackend
             .instance.workoutManager.state.workouts[widget.workoutID]
-            ?.addActivity(activity, pageController.page!.toInt() + 1) ??
+            ?.addActivity(FredericWorkoutActivity(
+                activity: activity,
+                weekday: pageController.page!.toInt() + 1)) ??
         false;
 
     if (success) {
       UserFeedbackToast().showAddedToast(context);
     }
-  }
-
-  void handleDeleteActivity(FredericActivity activity) {
-    FredericBackend.instance.workoutManager.state.workouts[widget.workoutID]
-        ?.removeActivity(activity, pageController.page!.toInt());
   }
 
   void showActivityList(BuildContext context) {

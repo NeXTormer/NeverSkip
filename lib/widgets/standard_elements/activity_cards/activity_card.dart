@@ -10,7 +10,7 @@ import 'package:frederic/widgets/standard_elements/activity_cards/normal_activit
 import 'package:frederic/widgets/standard_elements/activity_cards/small_activity_card_content.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-enum ActivityCardType { Calendar, Small, Normal, WorkoutEditor }
+enum ActivityCardType { Calendar, Small, Normal }
 
 enum ActivityCardState { Normal, Green }
 
@@ -64,14 +64,6 @@ class ActivityCard extends StatelessWidget {
         activity,
         () => handleClick(context),
         addButton: addButton,
-        key: key,
-      );
-    if (type == ActivityCardType.WorkoutEditor)
-      return CalendarActivityCardContent(
-        activity,
-        () => handleClick(context),
-        deleteButton: true,
-        editButton: true,
         key: key,
       );
 
