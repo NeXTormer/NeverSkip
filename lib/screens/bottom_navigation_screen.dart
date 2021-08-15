@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -41,14 +42,17 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       body: Scaffold(
         backgroundColor: kScaffoldBackgroundColor,
         extendBodyBehindAppBar: false,
-        body: PageView(
-          children: screens,
-          controller: pageController,
-          onPageChanged: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark,
+          child: PageView(
+            children: screens,
+            controller: pageController,
+            onPageChanged: (index) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
+          ),
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
