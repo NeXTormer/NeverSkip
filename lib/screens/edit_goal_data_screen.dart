@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/main.dart';
@@ -265,7 +266,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             Expanded(child: Container()),
             GestureDetector(
               onTap: () {
-                // saveData();
+                saveData();
                 Navigator.of(context).pop();
               },
               child: Text(
@@ -278,6 +279,31 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         ),
       ),
     );
+  }
+
+  void saveData() {
+    if (widget.isNewGoal) {
+      widget.goal.save(
+        title: dummyTitle,
+        image: '',
+        startState: startStateController.value,
+        currentState: currentStateController.value,
+        endState: endStateController.value,
+        startDate: Timestamp.fromDate(DateTime.now()),
+        endDate: Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
+        isComleted: false,
+        isDeleted: false,
+      );
+    } else {
+      // TODO Sinvoller Data check
+      if (true) {
+        widget.goal.title = titleController.text;
+        widget.goal.startState = startStateController.value;
+        widget.goal.currentState = currentStateController.value;
+        widget.goal.endState = endStateController.value;
+        // Daten ergänzen
+      }
+    }
   }
 
   @override

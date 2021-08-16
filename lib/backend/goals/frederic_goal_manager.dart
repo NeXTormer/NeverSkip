@@ -42,7 +42,7 @@ class FredericGoalManager
     _goals.clear();
 
     for (int i = 0; i < private.docs.length; i++) {
-      _goals[private.docs[i].id] = FredericGoal(private.docs[i]);
+      _goals[private.docs[i].id] = FredericGoal(private.docs[i], this);
       changed.add(private.docs[i].id);
     }
 
@@ -60,7 +60,7 @@ class FredericGoalManager
         // TODO Create new Goal
       });
       DocumentSnapshot<Object?> newGoalSnapshot = await newGoal.get();
-      _goals[newGoal.id] = FredericGoal(newGoalSnapshot);
+      _goals[newGoal.id] = FredericGoal(newGoalSnapshot, this);
       yield FredericGoalListData([newGoal.id], _goals);
     } else if (event is FredericGoalEvent) {
       yield FredericGoalListData(event.changed, _goals);
