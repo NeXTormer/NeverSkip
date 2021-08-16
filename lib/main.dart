@@ -11,12 +11,9 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
-import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/screens/activity_list_screen.dart';
-import 'package:frederic/screens/home_screen.dart';
-import 'package:frederic/screens/screens.dart';
+import 'package:frederic/frederic_admin_panel.dart';
+import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/screens/splash_screen.dart';
-import 'package:frederic/screens/workout_list_screen.dart';
 import 'package:get_it/get_it.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -68,7 +65,11 @@ class Frederic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ]);
 
     return FutureBuilder(
         future: app,
@@ -122,33 +123,13 @@ class Frederic extends StatelessWidget {
                   letterSpacing: 0.6,
                   fontSize: 13),
             )),
-        home: AuthenticationWrapper(
-          homePage: BottomNavigationScreen(
-            [
-              FredericScreen(
-                screen: HomeScreen(),
-                icon: ExtraIcons.person,
-                label: 'Home',
-              ),
-              FredericScreen(
-                screen: CalendarScreen(),
-                icon: ExtraIcons.calendar,
-                label: 'Calendar',
-              ),
-              FredericScreen(
-                screen: ActivityListScreen(),
-                icon: ExtraIcons.dumbbell,
-                label: 'Exercises',
-              ),
-              FredericScreen(
-                screen: WorkoutListScreen(),
-                icon: ExtraIcons.statistics,
-                label: 'Workouts',
-              ),
-            ],
-          ),
-          loginPage: LoginScreen(),
-          splashScreen: splashScreen,
+        home: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return FredericMainApp();
+            }
+            return FredericAdminPanel();
+          },
         ),
       ),
     );

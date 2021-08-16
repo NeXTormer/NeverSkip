@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/src/material/data_table.dart';
+import 'package:frederic/admin_panel/data_table_element.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/state/activity_filter_controller.dart';
+import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
 ///
 /// Represents a single Activity.
 /// Changes made using the classes properties are automatically updated in the
 /// database and on all listeners of the ActivityManagerBloc
 ///
-class FredericActivity {
+class FredericActivity implements DataTableElement<FredericActivity> {
   ///
   /// Construct FredericActivity using a DocumentSnapshot from the database
   ///
@@ -310,6 +314,72 @@ class FredericActivity {
 
   @override
   int get hashCode => activityID.hashCode;
+
+  @override
+  List<DataColumn> toDataColumn() {
+    return <DataColumn>[
+      DataColumn(
+        label: Text(
+          'Icon',
+          style: TextStyle(fontStyle: FontStyle.normal),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Name',
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Muscle Groups',
+          style: TextStyle(fontStyle: FontStyle.normal),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Type',
+          style: TextStyle(fontStyle: FontStyle.normal),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Owner',
+          style: TextStyle(fontStyle: FontStyle.normal),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Sets',
+          style: TextStyle(fontStyle: FontStyle.normal),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Reps',
+          style: TextStyle(fontStyle: FontStyle.normal),
+        ),
+      ),
+    ];
+  }
+
+  @override
+  DataRow toDataRow(void Function(FredericActivity)? onSelectElement) {
+    String muscleGroupsString = '';
+    for (var group in muscleGroups) {
+      muscleGroupsString += group.toString().split('.').last + ', ';
+    }
+
+    return DataRow(onSelectChanged: (x) => onSelectElement?.call(this), cells: [
+      DataCell(Container(width: 45, child: PictureIcon(image))),
+      DataCell(Text(name)),
+      DataCell(Text(muscleGroupsString)),
+      DataCell(Text(type.toString().split('.').last)),
+      DataCell(Text(owner)),
+      DataCell(Text('$recommendedSets')),
+      DataCell(Text('$recommendedReps')),
+    ]);
+  }
 }
 
 enum FredericActivityType { Weighted, Calisthenics, Stretch, None }

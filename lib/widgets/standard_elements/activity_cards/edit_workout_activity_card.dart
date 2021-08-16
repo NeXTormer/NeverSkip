@@ -156,7 +156,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
             widget.workout.updateActivitiesInDB();
             Navigator.of(context).pop();
           },
-          child: _SelectSetsAndRepsPopup(
+          child: SelectSetsAndRepsPopup(
             repsSliderController: repsSliderController,
             setsSliderController: setsSliderController,
           ),
@@ -173,38 +173,42 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
   }
 }
 
-class _SelectSetsAndRepsPopup extends StatefulWidget {
-  const _SelectSetsAndRepsPopup({
+class SelectSetsAndRepsPopup extends StatefulWidget {
+  const SelectSetsAndRepsPopup({
     required this.setsSliderController,
     required this.repsSliderController,
+    this.hideDescription = false,
     Key? key,
   }) : super(key: key);
 
   final NumberSliderController setsSliderController;
   final NumberSliderController repsSliderController;
+  final bool hideDescription;
 
   @override
-  __SelectSetsAndRepsPopupState createState() =>
-      __SelectSetsAndRepsPopupState();
+  _SelectSetsAndRepsPopupState createState() => _SelectSetsAndRepsPopupState();
 }
 
-class __SelectSetsAndRepsPopupState extends State<_SelectSetsAndRepsPopup> {
+class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 8),
-            child: Text(
-              'Set the desired number of sets and reps for this activity',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15),
+          if (!widget.hideDescription)
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 8),
+              child: Text(
+                'Set the desired number of sets and reps for this activity',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+              ),
             ),
-          ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            margin: widget.hideDescription
+                ? null
+                : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
