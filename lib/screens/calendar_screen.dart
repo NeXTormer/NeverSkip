@@ -22,7 +22,7 @@ class CalendarScreen extends StatelessWidget {
             return BlocBuilder<FredericSetManager, FredericSetListData>(
                 builder: (context, setListData) {
               return CustomScrollView(
-                physics: ClampingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 slivers: [
                   SliverToBoxAdapter(
                       child: Padding(

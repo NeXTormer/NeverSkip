@@ -212,15 +212,6 @@ class __SelectSetsAndRepsPopupState extends State<_SelectSetsAndRepsPopup> {
                 border: Border.all(color: kCardBorderColor)),
             child: Column(
               children: [
-                buildSubHeading('Repetitions', Icons.repeat_outlined),
-                SizedBox(height: 12),
-                NumberSlider(
-                    controller: widget.repsSliderController,
-                    itemWidth: 0.14,
-                    numberOfItems: 100,
-                    startingIndex:
-                        widget.repsSliderController.value.toInt() + 1),
-                SizedBox(height: 12),
                 buildSubHeading('Sets', Icons.account_tree_outlined),
                 SizedBox(height: 12),
                 NumberSlider(
@@ -229,6 +220,15 @@ class __SelectSetsAndRepsPopupState extends State<_SelectSetsAndRepsPopup> {
                   numberOfItems: 10,
                   startingIndex: widget.setsSliderController.value.toInt() + 1,
                 ),
+                SizedBox(height: 12),
+                buildSubHeading('Repetitions', Icons.repeat_outlined),
+                SizedBox(height: 12),
+                NumberSlider(
+                    controller: widget.repsSliderController,
+                    itemWidth: 0.14,
+                    numberOfItems: 100,
+                    startingIndex:
+                        widget.repsSliderController.value.toInt() + 1),
               ],
             ),
           ),
