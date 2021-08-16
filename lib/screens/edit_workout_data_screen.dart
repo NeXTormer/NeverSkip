@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -37,6 +39,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   bool isRepeating = false;
   bool datePickerOpen = false;
+  bool datePickerVisible = false;
 
   DateTime? selectedStartDate;
 
@@ -50,7 +53,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   @override
   void initState() {
     isRepeating = widget.workout.repeating;
-    dateText = formatDateTime(widget.workout.startDate);
+    dateText = widget.workout.startDate.formattedEuropean();
     dummyDescription = widget.workout.description;
     dummyName = widget.workout.name;
     dummyRepeating = widget.workout.repeating;
@@ -69,19 +72,12 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
       });
     });
 
-    for (List<FredericActivity> list in widget.workout.activities.activities) {
+    for (List<FredericWorkoutActivity> list
+        in widget.workout.activities.activities) {
       totalActivities += list.length;
     }
 
     super.initState();
-  }
-
-  String formatDateTime(DateTime date) {
-    String day = date.day.toString();
-    if (date.day < 10) day = day.padLeft(2, '0');
-    String month = date.month.toString();
-    if (date.month < 10) month = month.padLeft(2, '0');
-    return '$day.$month.${date.year}';
   }
 
   @override
@@ -245,37 +241,28 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   ),
                   SizedBox(height: 8),
                   AnimatedContainer(
-                      height: datePickerOpen ? 150 : 0,
-                      duration: Duration(milliseconds: 200),
+                      height: datePickerOpen ? 128 : 0,
+                      duration: const Duration(milliseconds: 160),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                           border: Border.all(color: kCardBorderColor)),
                       child: true
-                          ? FredericDatePicker(initialDate: DateTime.now())
-                          : SingleChildScrollView(
-                              controller: ScrollController(),
-                              physics: NeverScrollableScrollPhysics(),
-                              child: Container(
-                                height: 150,
-                                child: CupertinoDatePicker(
-                                  minimumYear: DateTime.now().year - 1,
-                                  maximumYear: DateTime.now().year + 1,
-                                  mode: CupertinoDatePickerMode.date,
-                                  initialDateTime: widget.workout.startDate,
-                                  onDateTimeChanged: (date) {
-                                    selectedStartDate = date;
-                                    setState(() {
-                                      dateText = formatDateTime(date);
-                                    });
-                                  },
-                                ),
-                              ),
-                            )),
+                          ? FredericDatePicker(
+                              initialDate: widget.workout.startDate,
+                              onDateChanged: (date) {
+                                selectedStartDate = date;
+                                setState(() {
+                                  dateText = date.formattedEuropean();
+                                });
+                              })
+                          : Container()),
                   SizedBox(
-                      height: (MediaQuery.of(context).size.height < 950
-                          ? 950 - MediaQuery.of(context).size.height
-                          : 16)),
+                      height: true
+                          ? 16
+                          : (MediaQuery.of(context).size.height < 950
+                              ? 950 - MediaQuery.of(context).size.height
+                              : 16)),
                   Row(
                     children: [
                       if (widget.workout.canEdit)

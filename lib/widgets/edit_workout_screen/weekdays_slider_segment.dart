@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 enum Direction { left, right }
 
@@ -164,22 +163,23 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
 /// of the WeekDaysSliderDayButton.
 ///
 class WeekDaysSliderDayButton extends StatelessWidget {
-  WeekDaysSliderDayButton({
-    required this.dayIndex,
-    required this.selectedDate,
-    required this.date,
-  });
+  WeekDaysSliderDayButton(
+      {required this.dayIndex,
+      required this.selectedDate,
+      required this.date,
+      this.dayWidth});
 
   final int dayIndex;
   final int selectedDate;
   final DateTime date;
+  final double? dayWidth;
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
     return selectedDate == dayIndex
         ? Container(
-            width: width / 10,
+            width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               color: kMainColor.withOpacity(0.1),
@@ -188,7 +188,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: kMainColor,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
@@ -196,7 +196,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                     )),
                 Text(
                   '${numToWeekday(date.weekday)}',
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     color: kMainColor.withOpacity(0.7),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
@@ -207,13 +207,13 @@ class WeekDaysSliderDayButton extends StatelessWidget {
             ),
           )
         : Container(
-            width: width / 10,
+            width: width,
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: kTextColor,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
@@ -221,7 +221,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                     )),
                 Text(
                   '${numToWeekday(date.weekday)}',
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     color: kTextColor.withOpacity(0.8),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,

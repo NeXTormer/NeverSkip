@@ -44,7 +44,7 @@ class ActivityListScreen extends StatelessWidget {
                     controller:
                         isSelector ? ModalScrollController.of(context) : null,
                     slivers: [
-                      ActivityHeader(title, subtitle),
+                      ActivityHeader(title, subtitle, user: user),
                       SliverDivider(),
                       FeaturedActivitySegment(
                         'Featured',

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_database_document.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 
@@ -13,6 +14,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
             <String>[], HashMap<String, FredericSetList>())) {
     setsCollection = FirebaseFirestore.instance
         .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
+    loadAllSets(2);
   }
 
   late final CollectionReference<Map<String, dynamic>> setsCollection;
@@ -25,13 +27,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     if (!_sets.containsKey(value))
       _sets[value] = FredericSetList(value, this)..loadData(2);
     return _sets[value]!;
-  }
-
-  void _loadOrAddNewSet(String id) {
-    if (!_sets.containsKey(id)) {
-      _sets[id] = FredericSetList(id, this)..loadData(2);
-    }
-    add(FredericSetEvent(<String>[id]));
   }
 
   @override
@@ -47,6 +42,38 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
     yield FredericSetListData(event.changedActivities, _sets);
   }
+
+  void loadAllSets(int monthsToLoad) async {
+    int lastMonth = currentMonth - (monthsToLoad - 1);
+    QuerySnapshot<Map<String, dynamic>> snapshot = await setsCollection
+        .where('month', isGreaterThanOrEqualTo: lastMonth)
+        .get();
+    _sets.clear();
+    HashMap<String, List<FredericDatabaseDocument>> documentMap =
+        HashMap<String, List<FredericDatabaseDocument>>();
+    for (var doc in snapshot.docs) {
+      String activityID = doc.data()['activityid'];
+      if (!documentMap.containsKey(activityID)) {
+        documentMap[activityID] = <FredericDatabaseDocument>[];
+      }
+      documentMap[activityID]!
+          .add(FredericDatabaseDocument(doc.id, doc.data()));
+    }
+
+    for (var entry in documentMap.entries) {
+      _sets[entry.key] =
+          FredericSetList.fromStorageDocumentList(entry.key, entry.value, this);
+    }
+
+    add(FredericSetEvent(documentMap.keys.toList()));
+  }
+
+  void _loadOrAddNewSet(String id) {
+    if (!_sets.containsKey(id)) {
+      _sets[id] = FredericSetList(id, this)..loadData(2);
+    }
+    add(FredericSetEvent(<String>[id]));
+  }
 }
 
 class FredericSetListData {
@@ -57,7 +84,6 @@ class FredericSetListData {
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {
       FredericBackend.instance.setManager._loadOrAddNewSet(value);
-      //TODO: find a better solution
       return FredericSetList(value, FredericBackend.instance.setManager);
     }
     return sets[value]!;

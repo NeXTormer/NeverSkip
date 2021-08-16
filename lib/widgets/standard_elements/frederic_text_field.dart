@@ -32,7 +32,7 @@ class FredericTextField extends StatefulWidget {
   final int maxLength;
   final String? text;
 
-  final Function? onSubmit;
+  final void Function(String)? onSubmit;
 
   @override
   _FredericTextFieldState createState() => _FredericTextFieldState();
@@ -55,6 +55,7 @@ class _FredericTextFieldState extends State<FredericTextField> {
     return Container(
       height: widget.height,
       child: TextField(
+        onSubmitted: widget.onSubmit,
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         style: TextStyle(

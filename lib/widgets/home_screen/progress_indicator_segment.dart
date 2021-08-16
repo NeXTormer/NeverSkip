@@ -80,7 +80,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
                     FredericBackend.instance.userManager.state.progressMonitors;
                 if (!monitors.contains(activity.activityID)) {
                   monitors.add(activity.activityID);
-                  FredericBackend.instance.userManager.progressMonitors =
+                  FredericBackend.instance.userManager.state.progressMonitors =
                       monitors;
                   Navigator.of(context).pop();
                 } else {

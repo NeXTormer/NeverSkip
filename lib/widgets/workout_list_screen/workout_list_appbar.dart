@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/state/workout_search_term.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
+import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 
 class WorkoutListAppbar extends StatefulWidget {
-  WorkoutListAppbar(this.searchTerm, {Key? key}) : super(key: key);
+  WorkoutListAppbar(this.searchTerm, {Key? key, required this.user})
+      : super(key: key);
 
   final WorkoutSearchTerm searchTerm;
+  final FredericUser user;
 
   @override
   _WorkoutListAppbarState createState() => _WorkoutListAppbarState();
@@ -68,10 +72,7 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
                   ),
                 ],
               ),
-              Icon(
-                ExtraIcons.bell_1,
-                color: Colors.grey,
-              )
+              StreakIcon(user: widget.user)
             ],
           ),
           SizedBox(height: 16),

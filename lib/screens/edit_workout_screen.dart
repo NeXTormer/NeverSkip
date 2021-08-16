@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
-import 'package:frederic/widgets/edit_workout_screen/edit_activity_list_segment.dart';
+import 'package:frederic/widgets/edit_workout_screen/edit_workout_activity_list_segment.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
@@ -65,7 +65,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     weekdaysSliderController: weekdaysSliderController,
                     workout: workout),
                 Divider(color: kDividerColor),
-                EditActivityListSegment(
+                EditWorkoutActivityListSegment(
                     workout: workout,
                     pageController: pageController,
                     weekdaysSliderController: weekdaysSliderController),
@@ -94,7 +94,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         ),
         child: Text(
           'Add Exercise',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
             fontSize: 15,
@@ -107,17 +107,14 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   void handleAddActivity(FredericActivity activity) {
     bool success = FredericBackend
             .instance.workoutManager.state.workouts[widget.workoutID]
-            ?.addActivity(activity, pageController.page!.toInt() + 1) ??
+            ?.addActivity(FredericWorkoutActivity(
+                activity: activity,
+                weekday: pageController.page!.toInt() + 1)) ??
         false;
 
     if (success) {
       UserFeedbackToast().showAddedToast(context);
     }
-  }
-
-  void handleDeleteActivity(FredericActivity activity) {
-    FredericBackend.instance.workoutManager.state.workouts[widget.workoutID]
-        ?.removeActivity(activity, pageController.page!.toInt());
   }
 
   void showActivityList(BuildContext context) {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_data_screen.dart';
@@ -31,7 +33,9 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
           create: (context) => searchTerm,
           child: CustomScrollView(
             slivers: [
-              WorkoutListAppbar(searchTerm),
+              BlocBuilder<FredericUserManager, FredericUser>(
+                  builder: (context, user) =>
+                      WorkoutListAppbar(searchTerm, user: user)),
               SliverDivider(),
               SliverToBoxAdapter(
                   child: Padding(

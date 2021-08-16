@@ -1,12 +1,13 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/misc/frederic_text_theme.dart';
+import 'package:frederic/screens/settings_screen.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
+import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
 class HomeScreenAppbar extends StatelessWidget {
   HomeScreenAppbar(this.user);
@@ -45,23 +46,22 @@ class HomeScreenAppbar extends StatelessWidget {
                         style: FredericTextTheme.homeScreenAppBarSubTitle)
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    Phoenix.rebirth(context);
-                  },
-                  child: Container(
-                      height: 32,
-                      width: 32,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: kMainColor),
-                      child: Icon(
-                        ExtraIcons.settings,
-                        color: Colors.white,
-                        size: 18,
-                      )),
-                )
+                FredericContainerTransition(
+                    tappable: true,
+                    closedBorderRadius: 8,
+                    transitionType: ContainerTransitionType.fadeThrough,
+                    childBuilder: (context, openContainer) {
+                      return Container(
+                          height: 32,
+                          width: 32,
+                          color: kMainColor,
+                          child: Icon(
+                            ExtraIcons.settings,
+                            color: Colors.white,
+                            size: 18,
+                          ));
+                    },
+                    expandedChild: SettingsScreen())
               ],
             ),
             SizedBox(height: 8)

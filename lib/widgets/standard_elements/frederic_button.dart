@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class FredericButton extends StatelessWidget {
   FredericButton(this.text,
@@ -35,12 +34,11 @@ class FredericButton extends StatelessWidget {
         child: Center(
             child: Text(
           text,
-          style: GoogleFonts.montserrat(
-              textStyle: TextStyle(
-                  letterSpacing: 0.2,
-                  color: inverted ? mainColor : textColor,
-                  fontWeight: fontWeight,
-                  fontSize: fontSize)),
+          style: TextStyle(
+              letterSpacing: 0.2,
+              color: inverted ? mainColor : textColor,
+              fontWeight: fontWeight,
+              fontSize: fontSize),
         )),
       ),
     );

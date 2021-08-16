@@ -5,9 +5,9 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/calendar_screen/calendar_day.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
+import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 
 class CalendarScreen extends StatelessWidget {
   @override
@@ -22,7 +22,7 @@ class CalendarScreen extends StatelessWidget {
             return BlocBuilder<FredericSetManager, FredericSetListData>(
                 builder: (context, setListData) {
               return CustomScrollView(
-                physics: ClampingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 slivers: [
                   SliverToBoxAdapter(
                       child: Padding(
@@ -67,10 +67,7 @@ class CalendarScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            Icon(
-                              ExtraIcons.bell_1,
-                              color: Colors.grey,
-                            )
+                            StreakIcon(user: user)
                           ],
                         ),
                       ],
