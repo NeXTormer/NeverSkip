@@ -30,6 +30,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final NumberSliderController startStateController = NumberSliderController();
   final NumberSliderController currentStateController =
       NumberSliderController();
+  final NumberSliderController currentStateCompensationController =
+      NumberSliderController();
   final NumberSliderController endStateController = NumberSliderController();
 
   String dateText = '';
@@ -132,7 +134,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                   NumberSlider(
                     controller: startStateController,
                     itemWidth: 0.14,
-                    numberOfItems: dummyEndState.ceil() - 1,
+                    numberOfItems: 200,
                     startingIndex: dummyStartState.ceil() + 1,
                   ),
                   SizedBox(height: 12),
@@ -298,9 +300,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
       // TODO Sinvoller Data check
       if (true) {
         widget.goal.title = titleController.text;
-        widget.goal.startState = startStateController.value;
-        widget.goal.currentState = currentStateController.value;
-        widget.goal.endState = endStateController.value;
+        // widget.goal.startState = startStateController.value;
+        // widget.goal.currentState = currentStateController.value;
+        // widget.goal.endState = endStateController.value;
         // Daten ergänzen
       }
     }

@@ -17,6 +17,7 @@ class FredericSlider extends StatefulWidget {
       this.unit = SliderUnit.Weeks,
       this.startStateController,
       this.currentStateController,
+      this.currentStateCompensationController,
       this.endStateController})
       : super(key: key);
 
@@ -33,6 +34,7 @@ class FredericSlider extends StatefulWidget {
 
   final NumberSliderController? startStateController;
   final NumberSliderController? currentStateController;
+  final NumberSliderController? currentStateCompensationController;
   final NumberSliderController? endStateController;
 
   @override
@@ -43,16 +45,17 @@ class _FredericSliderState extends State<FredericSlider> {
   double value = 0;
   double adaptiveMin = 0;
   double adaptiveCurrent = 0;
+  double adaptiveCurrentCompensation = 0;
   double adaptiveMax = 0;
   int divisions = 0;
 
   @override
   void initState() {
-    adaptiveMin = 0;
+    adaptiveMin = 1;
     adaptiveCurrent = widget.value;
     adaptiveMax = widget.value;
     value = widget.value;
-    divisions = widget.max.toInt() - widget.min.toInt();
+
     if (widget.startStateController != null &&
         widget.endStateController != null &&
         widget.currentStateController != null) {
@@ -72,16 +75,14 @@ class _FredericSliderState extends State<FredericSlider> {
             if (adaptiveCurrent.toInt() <= adaptiveMax) {
               widget.currentStateController!.value = adaptiveMax;
             }
-          }
-          if (adaptiveMax.toInt() == adaptiveMin.toInt()) {
-            widget.currentStateController!.value = adaptiveMax;
-            widget.endStateController!.value = adaptiveMax + 1;
+            adaptiveCurrentCompensation = (adaptiveMax - adaptiveMin).abs();
           }
         });
       });
       widget.currentStateController!.addListener(() {
         setState(() {
           adaptiveCurrent = widget.currentStateController!.value.toDouble();
+          print('dsdfssf: $adaptiveCurrent');
         });
       });
     }
@@ -90,9 +91,14 @@ class _FredericSliderState extends State<FredericSlider> {
 
   @override
   Widget build(BuildContext context) {
-    print('Start: $adaptiveMin');
+    print('==========');
+    print('Current Controller: ${widget.currentStateController!.value}');
     print('Current: $adaptiveCurrent');
-    print('End: $adaptiveMax');
+    print('Compensation: $adaptiveCurrentCompensation');
+    print('Calc: ${adaptiveCurrent - adaptiveCurrentCompensation}');
+    print('==========');
+
+    divisions = (adaptiveMax.toInt() - adaptiveMin.toInt()).abs();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SliderTheme(
@@ -105,8 +111,10 @@ class _FredericSliderState extends State<FredericSlider> {
           tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
         ),
         child: Slider(
-            value: widget.isInteractive ? adaptiveCurrent : value,
-            divisions: divisions,
+            value: widget.isInteractive
+                ? (adaptiveCurrent - adaptiveCurrentCompensation).abs()
+                : value,
+            divisions: divisions <= 0 ? 1 : divisions,
             min: widget.isInteractive
                 ? (adaptiveMin >= adaptiveMax ? adaptiveMax : adaptiveMin)
                 : widget.min,
@@ -118,7 +126,8 @@ class _FredericSliderState extends State<FredericSlider> {
             onChanged: (newVal) {
               setState(() {
                 if (widget.currentStateController != null) {
-                  widget.currentStateController!.value = newVal;
+                  widget.currentStateController!.value =
+                      newVal + adaptiveCurrentCompensation;
                 } else {
                   value = newVal;
                 }

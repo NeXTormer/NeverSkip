@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 
@@ -28,7 +29,7 @@ class FredericGoal {
   ///
   /// Constructs an empty Goal with an empty goalID
   ///
-  FredericGoal.empty(this._goalManager) : goalID = '';
+  FredericGoal.empty(this._goalManager) : goalID = 'new';
 
   ///
   /// Returns an existing Goal usin the provided ID. If the Goal
@@ -95,11 +96,13 @@ class FredericGoal {
   set title(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
           .update({'title': value});
       _title = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -113,7 +116,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'image': value});
       _image = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -127,7 +130,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'start': value});
       _startState = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -141,7 +144,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'end': value});
       _endState = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -155,7 +158,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'current': value});
       _currentState = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -170,7 +173,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'startDate': value});
       _startDate = Timestamp.fromDate(value);
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -184,7 +187,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'endDate': value});
       _endDate = Timestamp.fromDate(value);
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -198,7 +201,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'isCompleted': value});
       _isCompleted = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -212,7 +215,7 @@ class FredericGoal {
           .doc(goalID)
           .update({'isDeleted': value});
       _isDeleted = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(this));
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
@@ -241,7 +244,12 @@ class FredericGoal {
       'isDeleted': isDeleted,
     });
     var snapshot = await newGoal.get();
-    // _goalManager.
+    _goalManager
+        .add(FredericGoalCreateEvent(FredericGoal(snapshot, _goalManager)));
+  }
+
+  void delete() {
+    FirebaseFirestore.instance.collection('goals').doc(goalID).delete();
   }
 
   @override

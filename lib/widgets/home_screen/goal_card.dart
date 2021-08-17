@@ -74,8 +74,11 @@ class _GoalCardState extends State<GoalCard> {
   @override
   Widget build(BuildContext context) {
     // TODO If endstate is smaller/great then startState, also change startState
-    final num currentStateNormalized =
-        ((currentState ?? widget.goal.currentState) -
+    final num currentStateNormalized = ((endState ?? widget.goal.endState) -
+                (startState ?? widget.goal.startState)) ==
+            0
+        ? 0
+        : ((currentState ?? widget.goal.currentState) -
                 (startState ?? widget.goal.startState)) /
             ((endState ?? widget.goal.endState) -
                 (startState ?? widget.goal.startState));
@@ -140,8 +143,10 @@ class _GoalCardState extends State<GoalCard> {
                       Row(
                         children: [
                           Expanded(
-                              child: ProgressBar(
-                                  currentStateNormalized.toDouble())),
+                            child: ProgressBar(
+                              currentStateNormalized.toDouble(),
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -187,8 +192,7 @@ class _GoalCardState extends State<GoalCard> {
         context: context,
         builder: (context) => FredericActionDialog(
               onConfirm: () {
-                FredericBackend.instance.goalManager
-                    .deleteGoal(widget.goal.goalID);
+                FredericBackend.instance.goalManager.deleteGoal(widget.goal);
                 Navigator.of(context).pop();
               },
               destructiveAction: true,

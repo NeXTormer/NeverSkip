@@ -52,16 +52,13 @@ class FredericGoalManager
   @override
   Stream<FredericGoalListData> mapEventToState(FredericGoalEvent event) async* {
     if (event is FredericGoalUpdateEvent) {
-      _goals[event.updated.activityID] = event.updated;
-      yield FredericGoalListData([event.updated.activityID], _goals);
+      yield FredericGoalListData(event.changed, _goals);
     } else if (event is FredericGoalCreateEvent) {
-      DocumentReference newGoal = await _goalsCollection.add({
-        'title': event.newGoal.title,
-        // TODO Create new Goal
-      });
-      DocumentSnapshot<Object?> newGoalSnapshot = await newGoal.get();
-      _goals[newGoal.id] = FredericGoal(newGoalSnapshot, this);
-      yield FredericGoalListData([newGoal.id], _goals);
+      _goals[event.newGoal.goalID] = event.newGoal;
+      yield FredericGoalListData(event.changed, _goals);
+    } else if (event is FredericGoalDeleteEvent) {
+      _goalsCollection.doc(event.goal.goalID).delete();
+      _goals.remove(event.goal.goalID);
     } else if (event is FredericGoalEvent) {
       yield FredericGoalListData(event.changed, _goals);
     }
@@ -70,12 +67,15 @@ class FredericGoalManager
   @override
   void onTransition(
       Transition<FredericGoalEvent, FredericGoalListData> transition) {
+    print('============');
+    print(transition);
+    print('============');
     super.onTransition(transition);
   }
 
-  void deleteGoal(String goalID) {
-    if (goalID == '') return;
-    _goalsCollection.doc(goalID).delete();
+  void deleteGoal(FredericGoal goal) {
+    if (goal.goalID == '') return;
+    add(FredericGoalDeleteEvent(goal));
   }
 
   set goals(List<String> value) {
@@ -96,13 +96,15 @@ class FredericGoalEvent {
 }
 
 class FredericGoalUpdateEvent extends FredericGoalEvent {
-  FredericGoalUpdateEvent(this.updated) : super(<String>[updated.goalID]);
-
-  FredericGoal updated;
+  FredericGoalUpdateEvent(String updated) : super([updated]);
 }
 
 class FredericGoalCreateEvent extends FredericGoalEvent {
-  FredericGoalCreateEvent(this.newGoal) : super(<String>[newGoal.goalID]);
-
+  FredericGoalCreateEvent(this.newGoal) : super([newGoal.goalID]);
   FredericGoal newGoal;
+}
+
+class FredericGoalDeleteEvent extends FredericGoalEvent {
+  FredericGoalDeleteEvent(this.goal) : super([goal.goalID]);
+  FredericGoal goal;
 }
