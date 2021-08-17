@@ -30,8 +30,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final NumberSliderController startStateController = NumberSliderController();
   final NumberSliderController currentStateController =
       NumberSliderController();
-  final NumberSliderController currentStateCompensationController =
-      NumberSliderController();
   final NumberSliderController endStateController = NumberSliderController();
 
   String dateText = '';
@@ -45,6 +43,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   DateTime? selectedEndDate;
 
   bool datePickerOpen = false;
+  bool inverse = false;
 
   @override
   void initState() {
@@ -56,16 +55,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     selectedStartDate = widget.goal.startDate;
     selectedEndDate = widget.goal.endDate;
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {});
+    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {});
     super.initState();
-  }
-
-  String formatDateTime(DateTime date) {
-    String day = date.day.toString();
-    if (date.day < 10) day = day.padLeft(2, '0');
-    String month = date.month.toString();
-    if (date.month < 10) month = month.padLeft(2, '0');
-    return '$day.$month.${date.year}';
   }
 
   @override
@@ -78,7 +69,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
           buildHeaderRow(),
           SliverDivider(),
-          // TODO Adapt Progressbar to goal card
           SliverToBoxAdapter(
             child: Container(
               height: 70,
@@ -194,6 +184,14 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
+  String formatDateTime(DateTime date) {
+    String day = date.day.toString();
+    if (date.day < 10) day = day.padLeft(2, '0');
+    String month = date.month.toString();
+    if (date.month < 10) month = month.padLeft(2, '0');
+    return '$day.$month.${date.year}';
+  }
+
   Widget buildSubHeading(String title, IconData icon) {
     return Row(
       children: [
@@ -300,10 +298,11 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
       // TODO Sinvoller Data check
       if (true) {
         widget.goal.title = titleController.text;
-        // widget.goal.startState = startStateController.value;
-        // widget.goal.currentState = currentStateController.value;
-        // widget.goal.endState = endStateController.value;
-        // Daten ergänzen
+        widget.goal.startState = startStateController.value;
+        widget.goal.currentState = currentStateController.value;
+        widget.goal.endState = endStateController.value;
+        setState(() {});
+        // TODO Daten ergänzen
       }
     }
   }
@@ -312,6 +311,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   void dispose() {
     startStateController.dispose();
     endStateController.dispose();
+    currentStateController.dispose();
     titleController.dispose();
     super.dispose();
   }

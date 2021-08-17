@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 import 'frederic_goal.dart';
 
@@ -67,9 +66,9 @@ class FredericGoalManager
   @override
   void onTransition(
       Transition<FredericGoalEvent, FredericGoalListData> transition) {
-    print('============');
-    print(transition);
-    print('============');
+    // print('============');
+    // print(transition);
+    // print('============');
     super.onTransition(transition);
   }
 

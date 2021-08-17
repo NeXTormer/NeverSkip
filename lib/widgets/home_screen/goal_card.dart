@@ -40,6 +40,7 @@ class _GoalCardState extends State<GoalCard> {
   num? startState;
   num? currentState;
   num? endState;
+  bool inverse = false;
 
   @override
   void initState() {
@@ -55,6 +56,11 @@ class _GoalCardState extends State<GoalCard> {
       widget.endStateController!.addListener(() {
         setState(() {
           endState = widget.endStateController!.value;
+          if (widget.endStateController!.value <=
+              widget.startStateController!.value)
+            inverse = true;
+          else
+            inverse = false;
         });
       });
       widget.currentStateController!.addListener(() {
@@ -65,6 +71,11 @@ class _GoalCardState extends State<GoalCard> {
       widget.titleController!.addListener(() {
         setState(() {
           title = widget.titleController!.text;
+          if (widget.endStateController!.value <=
+              widget.startStateController!.value)
+            inverse = true;
+          else
+            inverse = false;
         });
       });
     }
@@ -73,15 +84,10 @@ class _GoalCardState extends State<GoalCard> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO If endstate is smaller/great then startState, also change startState
-    final num currentStateNormalized = ((endState ?? widget.goal.endState) -
-                (startState ?? widget.goal.startState)) ==
-            0
-        ? 0
-        : ((currentState ?? widget.goal.currentState) -
-                (startState ?? widget.goal.startState)) /
-            ((endState ?? widget.goal.endState) -
-                (startState ?? widget.goal.startState));
+    final double currentStateNormalized = normalizeValue(
+        (currentState ?? widget.goal.currentState),
+        (startState ?? widget.goal.startState),
+        (endState ?? widget.goal.endState));
     return FredericCard(
       onLongPress: () {
         handleLongClick(context);
@@ -144,7 +150,15 @@ class _GoalCardState extends State<GoalCard> {
                         children: [
                           Expanded(
                             child: ProgressBar(
-                              currentStateNormalized.toDouble(),
+                              inverse
+                                  ? (inverseValue(
+                                      widget.currentStateController!.value
+                                          .toDouble(),
+                                      widget.endStateController!.value
+                                          .toDouble(),
+                                      widget.startStateController!.value
+                                          .toDouble()))
+                                  : currentStateNormalized.toDouble(),
                             ),
                           ),
                         ],
@@ -158,6 +172,24 @@ class _GoalCardState extends State<GoalCard> {
         ],
       ),
     );
+  }
+
+  double inverseValue(double value, double start, double end,
+      {bool normalized = true}) {
+    if ((end - start) == 0) return start;
+    double startEndDifference = (end - start).abs();
+    double inverseTrueCurrentValue =
+        start + startEndDifference * (1 - normalizeValue(value, start, end));
+
+    if (normalized)
+      return normalizeValue(inverseTrueCurrentValue, start, end);
+    else
+      return inverseTrueCurrentValue;
+  }
+
+  double normalizeValue(num value, num start, num end) {
+    if ((end - start) == 0) return 1;
+    return (value - start) / (end - start);
   }
 
   Widget buildProgressBarText(var text, String unit) {

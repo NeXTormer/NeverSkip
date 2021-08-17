@@ -126,9 +126,11 @@ class FredericGoal {
   set startState(num value) {
     if (value >= 0) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
-          .update({'start': value});
+          .update({'startstate': value});
       _startState = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
@@ -140,9 +142,11 @@ class FredericGoal {
   set endState(num value) {
     if (value >= 0) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
-          .update({'end': value});
+          .update({'endstate': value});
       _endState = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
@@ -154,9 +158,11 @@ class FredericGoal {
   set currentState(num value) {
     if (value >= 0) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
-          .update({'current': value});
+          .update({'currentstate': value});
       _currentState = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }

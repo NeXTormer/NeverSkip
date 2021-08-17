@@ -17,7 +17,6 @@ class FredericSlider extends StatefulWidget {
       this.unit = SliderUnit.Weeks,
       this.startStateController,
       this.currentStateController,
-      this.currentStateCompensationController,
       this.endStateController})
       : super(key: key);
 
@@ -34,7 +33,6 @@ class FredericSlider extends StatefulWidget {
 
   final NumberSliderController? startStateController;
   final NumberSliderController? currentStateController;
-  final NumberSliderController? currentStateCompensationController;
   final NumberSliderController? endStateController;
 
   @override
@@ -45,9 +43,12 @@ class _FredericSliderState extends State<FredericSlider> {
   double value = 0;
   double adaptiveMin = 0;
   double adaptiveCurrent = 0;
-  double adaptiveCurrentCompensation = 0;
+  double inverseAdaptiveCurrent = 0;
   double adaptiveMax = 0;
+
   int divisions = 0;
+
+  bool inverse = false;
 
   @override
   void initState() {
@@ -62,27 +63,54 @@ class _FredericSliderState extends State<FredericSlider> {
       widget.startStateController!.addListener(() {
         setState(() {
           adaptiveMin = widget.startStateController!.value.toDouble();
+          if (adaptiveMax < adaptiveMin) {
+            if (adaptiveCurrent.toInt() >= adaptiveMin) {
+              widget.currentStateController!.value = adaptiveMin;
+            }
+            if (adaptiveCurrent < adaptiveMax ||
+                adaptiveCurrent > adaptiveMin) {
+              widget.currentStateController!.value = adaptiveMin;
+            }
+          } else if (adaptiveMax > adaptiveMin) {
+            if (adaptiveCurrent > adaptiveMax ||
+                adaptiveCurrent < adaptiveMin) {
+              widget.currentStateController!.value = adaptiveMax;
+            }
+            if (adaptiveCurrent.toInt() <= adaptiveMin) {
+              widget.currentStateController!.value = adaptiveMin;
+            }
+          } else {
+            widget.currentStateController!.value = adaptiveMin;
+          }
         });
       });
       widget.endStateController!.addListener(() {
         setState(() {
           adaptiveMax = widget.endStateController!.value.toDouble();
-          if (adaptiveMin <= adaptiveMax) {
+          if (adaptiveMin < adaptiveMax) {
             if (adaptiveCurrent.toInt() >= adaptiveMax) {
               widget.currentStateController!.value = adaptiveMax;
             }
-          } else {
+            if (adaptiveCurrent < adaptiveMin ||
+                adaptiveCurrent > adaptiveMax) {
+              widget.currentStateController!.value = adaptiveMax;
+            }
+          } else if (adaptiveMin > adaptiveMax) {
+            if (adaptiveCurrent > adaptiveMin ||
+                adaptiveCurrent < adaptiveMax) {
+              widget.currentStateController!.value = adaptiveMin;
+            }
             if (adaptiveCurrent.toInt() <= adaptiveMax) {
               widget.currentStateController!.value = adaptiveMax;
             }
-            adaptiveCurrentCompensation = (adaptiveMax - adaptiveMin).abs();
+          } else {
+            widget.currentStateController!.value = adaptiveMax;
           }
         });
       });
       widget.currentStateController!.addListener(() {
         setState(() {
           adaptiveCurrent = widget.currentStateController!.value.toDouble();
-          print('dsdfssf: $adaptiveCurrent');
         });
       });
     }
@@ -91,14 +119,14 @@ class _FredericSliderState extends State<FredericSlider> {
 
   @override
   Widget build(BuildContext context) {
-    print('==========');
-    print('Current Controller: ${widget.currentStateController!.value}');
-    print('Current: $adaptiveCurrent');
-    print('Compensation: $adaptiveCurrentCompensation');
-    print('Calc: ${adaptiveCurrent - adaptiveCurrentCompensation}');
-    print('==========');
-
     divisions = (adaptiveMax.toInt() - adaptiveMin.toInt()).abs();
+    if (adaptiveMin >= adaptiveMax) {
+      inverse = true;
+      inverseAdaptiveCurrent = inverseValue(
+          adaptiveCurrent, adaptiveMax, adaptiveMin,
+          normalized: false);
+    } else
+      inverse = false;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SliderTheme(
@@ -112,7 +140,7 @@ class _FredericSliderState extends State<FredericSlider> {
         ),
         child: Slider(
             value: widget.isInteractive
-                ? (adaptiveCurrent - adaptiveCurrentCompensation).abs()
+                ? (inverse ? inverseAdaptiveCurrent : adaptiveCurrent)
                 : value,
             divisions: divisions <= 0 ? 1 : divisions,
             min: widget.isInteractive
@@ -126,8 +154,12 @@ class _FredericSliderState extends State<FredericSlider> {
             onChanged: (newVal) {
               setState(() {
                 if (widget.currentStateController != null) {
-                  widget.currentStateController!.value =
-                      newVal + adaptiveCurrentCompensation;
+                  if (inverse) {
+                    widget.currentStateController!.value = inverseValue(
+                        newVal, adaptiveMax, adaptiveMin,
+                        normalized: false);
+                  } else
+                    widget.currentStateController!.value = newVal;
                 } else {
                   value = newVal;
                 }
@@ -136,6 +168,24 @@ class _FredericSliderState extends State<FredericSlider> {
             }),
       ),
     );
+  }
+
+  double inverseValue(double value, double start, double end,
+      {bool normalized = true}) {
+    if ((end - start) == 0) return start;
+    double startEndDifference = (end - start).abs();
+    double inverseTrueCurrentValue =
+        start + startEndDifference * (1 - normalizeValue(value, start, end));
+
+    if (normalized)
+      return normalizeValue(inverseTrueCurrentValue, start, end);
+    else
+      return inverseTrueCurrentValue;
+  }
+
+  double normalizeValue(num value, num start, num end) {
+    if ((end - start) == 0) return 1;
+    return (value - start) / (end - start);
   }
 }
 
