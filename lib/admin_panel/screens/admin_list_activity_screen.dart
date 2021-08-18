@@ -40,8 +40,8 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
                       }
                       if (activities.isEmpty) return Container();
                       return AdminDataTable<FredericActivity>(
+                          selectedElement: highlightedActivity,
                           onSelectElement: (activity) {
-                            print(activity);
                             setState(() {
                               if (highlightedActivity == null) {
                                 highlightedActivity = activity;

@@ -51,7 +51,8 @@ class AdminUserModel implements DataTableElement<AdminUserModel> {
   }
 
   @override
-  DataRow toDataRow(void Function(AdminUserModel)? onSelectElement) {
+  DataRow toDataRow(void Function(AdminUserModel)? onSelectElement,
+      [bool selected = false]) {
     return DataRow(
         onSelectChanged: (t) {
           onSelectElement?.call(this);

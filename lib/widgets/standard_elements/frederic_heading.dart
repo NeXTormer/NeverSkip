@@ -3,7 +3,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 
 class FredericHeading extends StatelessWidget {
-  FredericHeading(this.heading,
+  const FredericHeading(this.heading,
       {this.onPressed, this.subHeading, this.icon = ExtraIcons.dots});
 
   final Function? onPressed;

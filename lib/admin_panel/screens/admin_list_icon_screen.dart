@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/admin_panel/models/admin_icon_model.dart';
+import 'package:frederic/admin_panel/widgets/admin_edit_icon_view.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
@@ -19,8 +22,6 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: 500,
-      //color: Colors.yellow,
       child: FutureBuilder<List<AdminIconModel>>(
           future: getAllIcons('defaultimages'),
           builder: (context, snapshot) {
@@ -73,8 +74,15 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
                         }),
                   ),
                   AnimatedContainer(
+                    margin: const EdgeInsets.only(left: 16),
                     duration: const Duration(milliseconds: 200),
-                    width: expanded ? 350 : 0,
+                    width: expanded ? 400 : 0,
+                    child: expanded
+                        ? AdminEditIconView(
+                            selectedIcon!,
+                            key: ValueKey(selectedIcon!.url),
+                          )
+                        : null,
                   )
                 ],
               ),
@@ -86,11 +94,33 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
   Future<List<AdminIconModel>> getAllIcons(String folder) async {
     List<AdminIconModel> icons = <AdminIconModel>[];
     ListResult result = await FirebaseStorage.instance.ref(folder).listAll();
-    for (var ref in result.items) {
-      icons.add(AdminIconModel(
-          ref.name, await ref.getDownloadURL(), <String>[], ref));
-    }
 
-    return icons;
+    List<Future<AdminIconModel>> futures = <Future<AdminIconModel>>[];
+    Completer<List<AdminIconModel>> completer =
+        Completer<List<AdminIconModel>>();
+
+    for (var ref in result.items) {
+      futures.add(getAdminIconModelFromReference(ref));
+    }
+    Future.wait(futures).then((value) {
+      for (var icon in value) {
+        icons.add(icon);
+      }
+      completer.complete(icons);
+    });
+
+    return completer.future;
+  }
+
+  Future<AdminIconModel> getAdminIconModelFromReference(
+      Reference reference) async {
+    FullMetadata metadata = await reference.getMetadata();
+    String? tagString = metadata.customMetadata?['tags'];
+    List<String> tags = <String>[];
+    if (tagString != null) {
+      tags = tagString.split(',');
+    }
+    return AdminIconModel(
+        reference.name, await reference.getDownloadURL(), tags, reference);
   }
 }

@@ -125,6 +125,8 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
                     setsSliderController: setsController,
                     repsSliderController: repsController),
                 const SizedBox(height: 16),
+                FredericHeading('Save'),
+                const SizedBox(height: 8),
                 FredericButton('Save', onPressed: () {}),
                 const SizedBox(height: 16),
               ],

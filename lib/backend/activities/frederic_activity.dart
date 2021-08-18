@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/material/data_table.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/state/activity_filter_controller.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
@@ -364,14 +365,21 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   }
 
   @override
-  DataRow toDataRow(void Function(FredericActivity)? onSelectElement) {
+  DataRow toDataRow(void Function(FredericActivity)? onSelectElement,
+      [bool selected = false]) {
     String muscleGroupsString = '';
     for (var group in muscleGroups) {
       muscleGroupsString += group.toString().split('.').last + ', ';
     }
 
     return DataRow(onSelectChanged: (x) => onSelectElement?.call(this), cells: [
-      DataCell(Container(width: 45, child: PictureIcon(image))),
+      DataCell(Container(
+          width: 45,
+          child: PictureIcon(
+            image,
+            mainColor: selected ? kGreenColor : kMainColor,
+            accentColor: selected ? kGreenColorLight : kMainColorLight,
+          ))),
       DataCell(Text(name)),
       DataCell(Text(muscleGroupsString)),
       DataCell(Text(type.toString().split('.').last)),
