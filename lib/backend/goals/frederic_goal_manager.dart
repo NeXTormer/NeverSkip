@@ -29,8 +29,6 @@ class FredericGoalManager
     return _goals[value];
   }
 
-  // Iterable<FredericGoal> get goals => _goals.values;
-
   ///
   /// (Re)Loads all goals from the database
   ///
@@ -58,6 +56,7 @@ class FredericGoalManager
     } else if (event is FredericGoalDeleteEvent) {
       _goalsCollection.doc(event.goal.goalID).delete();
       _goals.remove(event.goal.goalID);
+      yield FredericGoalListData(event.changed, _goals);
     } else if (event is FredericGoalEvent) {
       yield FredericGoalListData(event.changed, _goals);
     }
@@ -72,20 +71,12 @@ class FredericGoalManager
     super.onTransition(transition);
   }
 
-  void deleteGoal(FredericGoal goal) {
-    if (goal.goalID == '') return;
-    add(FredericGoalDeleteEvent(goal));
-  }
-
   set goals(List<String> value) {
     if (FirebaseAuth.instance.currentUser?.uid == '') return;
-    for (String temp in value) {
-      print(temp);
-    }
-    // FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc(FirebaseAuth.instance.currentUser?.uid)
-    //     .update({'goals': value});
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .update({'goals': value});
   }
 }
 

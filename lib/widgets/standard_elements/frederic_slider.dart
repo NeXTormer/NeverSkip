@@ -72,12 +72,11 @@ class _FredericSliderState extends State<FredericSlider> {
               widget.currentStateController!.value = adaptiveMin;
             }
           } else if (adaptiveMax > adaptiveMin) {
-            if (adaptiveCurrent > adaptiveMax ||
-                adaptiveCurrent < adaptiveMin) {
-              widget.currentStateController!.value = adaptiveMax;
-            }
             if (adaptiveCurrent.toInt() <= adaptiveMin) {
               widget.currentStateController!.value = adaptiveMin;
+            } else if (adaptiveCurrent > adaptiveMax ||
+                adaptiveCurrent < adaptiveMin) {
+              widget.currentStateController!.value = adaptiveMax;
             }
           } else {
             widget.currentStateController!.value = adaptiveMin;
@@ -96,12 +95,11 @@ class _FredericSliderState extends State<FredericSlider> {
               widget.currentStateController!.value = adaptiveMax;
             }
           } else if (adaptiveMin > adaptiveMax) {
-            if (adaptiveCurrent > adaptiveMin ||
-                adaptiveCurrent < adaptiveMax) {
-              widget.currentStateController!.value = adaptiveMin;
-            }
             if (adaptiveCurrent.toInt() <= adaptiveMax) {
               widget.currentStateController!.value = adaptiveMax;
+            } else if (adaptiveCurrent > adaptiveMin ||
+                adaptiveCurrent < adaptiveMax) {
+              widget.currentStateController!.value = adaptiveMin;
             }
           } else {
             widget.currentStateController!.value = adaptiveMax;

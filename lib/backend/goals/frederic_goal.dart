@@ -112,6 +112,8 @@ class FredericGoal {
   set image(String value) {
     if (value.isNotEmpty) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
           .update({'image': value});
@@ -175,6 +177,8 @@ class FredericGoal {
     if (true) {
       // TODO sinnvoller check
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
           .update({'startDate': value});
@@ -189,6 +193,8 @@ class FredericGoal {
   set endDate(DateTime value) {
     if (true) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
           .update({'endDate': value});
@@ -203,6 +209,8 @@ class FredericGoal {
   set isCompleted(bool value) {
     if (value != _isCompleted) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
           .update({'isCompleted': value});
@@ -217,6 +225,8 @@ class FredericGoal {
   set isDeleted(bool value) {
     if (value != _isDeleted) {
       FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
           .update({'isDeleted': value});
@@ -237,17 +247,20 @@ class FredericGoal {
     required bool isDeleted,
   }) async {
     if (goalID != 'new') return;
-    CollectionReference goals = FirebaseFirestore.instance.collection('goals');
+    CollectionReference goals = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('goals');
     var newGoal = await goals.add({
       'title': title,
       'image': image,
-      'startState': startState,
-      'endState': endState,
-      'currentState': currentState,
-      'startDate': startDate,
-      'endDate': endDate,
-      'isCompledet': isCompleted,
-      'isDeleted': isDeleted,
+      'startstate': startState,
+      'endstate': endState,
+      'currentstate': currentState,
+      'startdate': startDate,
+      'enddate': endDate,
+      'iscompleted': isCompleted,
+      'isdeleted': isDeleted,
     });
     var snapshot = await newGoal.get();
     _goalManager
@@ -255,7 +268,7 @@ class FredericGoal {
   }
 
   void delete() {
-    FirebaseFirestore.instance.collection('goals').doc(goalID).delete();
+    _goalManager.add(FredericGoalDeleteEvent(this));
   }
 
   @override

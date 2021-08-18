@@ -4,6 +4,8 @@ import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/home_screen/goal_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
+import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
@@ -11,6 +13,7 @@ import 'package:frederic/widgets/standard_elements/frederic_slider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
+import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EditGoalDataScreen extends StatefulWidget {
@@ -31,6 +34,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final NumberSliderController currentStateController =
       NumberSliderController();
   final NumberSliderController endStateController = NumberSliderController();
+
+  final UnitSliderController unitSliderController = UnitSliderController();
 
   String dateText = '';
   String dummyTitle = '';
@@ -79,6 +84,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 currentStateController: currentStateController,
                 startStateController: startStateController,
                 endStateController: endStateController,
+                unitSliderController: unitSliderController,
+                interactable: false,
               ),
             ),
           ),
@@ -136,6 +143,12 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                     numberOfItems: 200,
                     startingIndex: dummyEndState.ceil() + 1,
                   ),
+                  SizedBox(height: 12),
+                  buildSubHeading('Unit', Icons.alarm),
+                  UnitSlider(
+                    controller: unitSliderController,
+                    itemWidth: 0.15,
+                  ),
                 ],
               ),
             ),
@@ -179,6 +192,46 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               ),
             ),
           ),
+          // SliverToBoxAdapter(
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //     child: Row(
+          //       children: [
+          //         Expanded(
+          //             flex: 1,
+          //             child: FredericButton(
+          //               'Delete',
+          //               mainColor: Colors.red,
+          //               onPressed: () {
+          //                 showDialog(
+          //                     context: context,
+          //                     builder: (ctx) => FredericActionDialog(
+          //                           onConfirm: () {
+          //                             widget.goal.delete();
+          //                             Navigator.of(context).pop();
+          //                             Navigator.of(context).pop();
+          //                           },
+          //                           title: 'Confirm deletion',
+          //                           destructiveAction: true,
+          //                           child: Text(
+          //                               'Do you want to delete your goal? This cannot be undone!',
+          //                               textAlign: TextAlign.center),
+          //                         ));
+          //               },
+          //               inverted: true,
+          //             )),
+          //         SizedBox(width: 16),
+          //         Expanded(
+          //             flex: 2,
+          //             child: FredericButton(
+          //                 widget.isNewGoal ? 'Create' : 'Save', onPressed: () {
+          //               saveData();
+          //               Navigator.of(context).pop();
+          //             }))
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -284,8 +337,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   void saveData() {
     if (widget.isNewGoal) {
       widget.goal.save(
-        title: dummyTitle,
-        image: '',
+        title: titleController.text,
+        image:
+            'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
         startState: startStateController.value,
         currentState: currentStateController.value,
         endState: endStateController.value,
@@ -299,9 +353,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
       if (true) {
         widget.goal.title = titleController.text;
         widget.goal.startState = startStateController.value;
-        widget.goal.currentState = currentStateController.value;
+        widget.goal.currentState = currentStateController.value == 0
+            ? dummyCurrentState
+            : currentStateController.value;
         widget.goal.endState = endStateController.value;
-        setState(() {});
         // TODO Daten ergänzen
       }
     }

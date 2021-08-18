@@ -8,6 +8,7 @@ import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
+import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class GoalCard extends StatefulWidget {
@@ -17,7 +18,9 @@ class GoalCard extends StatefulWidget {
       this.titleController,
       this.startStateController,
       this.currentStateController,
-      this.endStateController});
+      this.endStateController,
+      this.unitSliderController,
+      this.interactable = true});
 
   final FredericGoal goal;
 
@@ -30,12 +33,17 @@ class GoalCard extends StatefulWidget {
   final NumberSliderController? currentStateController;
   final NumberSliderController? endStateController;
 
+  final UnitSliderController? unitSliderController;
+
+  final bool interactable;
+
   @override
   _GoalCardState createState() => _GoalCardState();
 }
 
 class _GoalCardState extends State<GoalCard> {
   String? title;
+  String? unit;
 
   num? startState;
   num? currentState;
@@ -48,6 +56,11 @@ class _GoalCardState extends State<GoalCard> {
         widget.startStateController != null &&
         widget.currentStateController != null &&
         widget.endStateController != null) {
+      widget.unitSliderController!.addListener(() {
+        setState(() {
+          unit = widget.unitSliderController!.value;
+        });
+      });
       widget.startStateController!.addListener(() {
         setState(() {
           startState = widget.startStateController!.value;
@@ -90,10 +103,10 @@ class _GoalCardState extends State<GoalCard> {
         (endState ?? widget.goal.endState));
     return FredericCard(
       onLongPress: () {
-        handleLongClick(context);
+        if (widget.interactable) handleLongClick(context);
       },
       onTap: () {
-        handleClick(context);
+        if (widget.interactable) handleClick(context);
       },
       width: 260,
       padding: EdgeInsets.all(10),
@@ -137,11 +150,13 @@ class _GoalCardState extends State<GoalCard> {
                           children: [
                             Expanded(
                               child: buildProgressBarText(
-                                  startState ?? widget.goal.startState, 'kg'),
+                                  startState ?? widget.goal.startState,
+                                  '${unit ?? "kg"}'),
                             ),
                             Flexible(
                               child: buildProgressBarText(
-                                  endState ?? widget.goal.endState, 'kg'),
+                                  endState ?? widget.goal.endState,
+                                  '${unit ?? "kg"}'),
                             ),
                           ],
                         ),
@@ -188,7 +203,7 @@ class _GoalCardState extends State<GoalCard> {
   }
 
   double normalizeValue(num value, num start, num end) {
-    if ((end - start) == 0) return 1;
+    if ((end - start) == 0) return 0;
     return (value - start) / (end - start);
   }
 
@@ -224,7 +239,8 @@ class _GoalCardState extends State<GoalCard> {
         context: context,
         builder: (context) => FredericActionDialog(
               onConfirm: () {
-                FredericBackend.instance.goalManager.deleteGoal(widget.goal);
+                // FredericBackend.instance.goalManager.deleteGoal(widget.goal);
+                widget.goal.delete();
                 Navigator.of(context).pop();
               },
               destructiveAction: true,
