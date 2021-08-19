@@ -1,8 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/admin_panel/widgets/admin_data_table.dart';
 import 'package:frederic/admin_panel/widgets/admin_edit_activity_view.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
+import 'package:frederic/backend/activities/frederic_activity_manager.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 
 class AdminListActivityScreen extends StatefulWidget {
@@ -25,42 +28,34 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
         children: [
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () async => setState(() {}),
+              onRefresh: () async =>
+                  FredericBackend.instance.activityManager.reload(),
               child: SingleChildScrollView(
-                child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                    future: FirebaseFirestore.instance
-                        .collection('activities')
-                        .get(),
-                    builder: (context, data) {
-                      if (!data.hasData) return Container();
-                      List<FredericActivity> activities = <FredericActivity>[];
-                      for (var doc in data.data?.docs ??
-                          <QueryDocumentSnapshot<Map<String, dynamic>>>[]) {
-                        activities.add(FredericActivity(doc));
-                      }
-                      if (activities.isEmpty) return Container();
-                      return AdminDataTable<FredericActivity>(
-                          selectedElement: highlightedActivity,
-                          onSelectElement: (activity) {
-                            setState(() {
-                              if (highlightedActivity == null) {
-                                highlightedActivity = activity;
-                                expanded = true;
-                                return;
-                              }
-                              if (highlightedActivity == activity) {
-                                highlightedActivity = null;
-                                expanded = false;
-                                return;
-                              } else {
-                                highlightedActivity = activity;
-                                expanded = true;
-                                return;
-                              }
-                            });
-                          },
-                          elements: activities);
-                    }),
+                child: BlocBuilder<FredericActivityManager,
+                    FredericActivityListData>(builder: (context, activities) {
+                  if (activities.activities.isEmpty) return Container();
+                  return AdminDataTable<FredericActivity>(
+                      selectedElement: highlightedActivity,
+                      onSelectElement: (activity) {
+                        setState(() {
+                          if (highlightedActivity == null) {
+                            highlightedActivity = activity;
+                            expanded = true;
+                            return;
+                          }
+                          if (highlightedActivity == activity) {
+                            highlightedActivity = null;
+                            expanded = false;
+                            return;
+                          } else {
+                            highlightedActivity = activity;
+                            expanded = true;
+                            return;
+                          }
+                        });
+                      },
+                      elements: activities.activities.values.toList());
+                }),
               ),
             ),
           ),

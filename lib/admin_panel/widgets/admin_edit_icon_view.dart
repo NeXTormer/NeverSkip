@@ -104,7 +104,9 @@ class _AdminEditIconViewState extends State<AdminEditIconView> {
     String tagsString = '';
     for (String tag in tags) tagsString += (tag + ',');
     //remove last comma
-    tagsString = tagsString.substring(0, tagsString.length - 2);
+    if (tagsString.endsWith(',')) {
+      tagsString = tagsString.substring(0, tagsString.length - 1);
+    }
     SettableMetadata metadata =
         SettableMetadata(customMetadata: <String, String>{'tags': tagsString});
     await ref.updateMetadata(metadata);

@@ -1,15 +1,20 @@
-import 'dart:async';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
 import 'package:frederic/admin_panel/models/admin_icon_model.dart';
 import 'package:frederic/admin_panel/widgets/admin_edit_icon_view.dart';
+import 'package:frederic/admin_panel/widgets/admin_select_filter_type.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
+import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AdminListIconScreen extends StatefulWidget {
-  const AdminListIconScreen({Key? key}) : super(key: key);
+  const AdminListIconScreen({this.onSelect, Key? key}) : super(key: key);
+
+  final void Function(AdminIconModel)? onSelect;
 
   @override
   _AdminListIconScreenState createState() => _AdminListIconScreenState();
@@ -19,108 +24,143 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
   bool expanded = false;
   AdminIconModel? selectedIcon;
 
+  TextEditingController searchController = TextEditingController();
+
+  // matchAll = false: matchAny
+  bool matchAll = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder<List<AdminIconModel>>(
-          future: getAllIcons('defaultimages'),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return Container();
-            return Padding(
-              padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 16, bottom: 0),
               child: Row(
                 children: [
                   Expanded(
-                    child: GridView.builder(
-                        scrollDirection: Axis.vertical,
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 120,
-                          childAspectRatio: 1,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: snapshot.data?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          AdminIconModel? icon = snapshot.data?[index];
-                          if (icon == null) return Container();
-                          bool selected = false;
-                          if (selectedIcon != null) {
-                            selected = selectedIcon!.url == icon.url;
-                          }
-                          return FredericCard(
-                            onTap: () => setState(() {
-                              if (selectedIcon == null) {
-                                selectedIcon = icon;
-                                expanded = true;
-                                return;
-                              }
-                              if (selectedIcon == icon) {
-                                selectedIcon = null;
-                                expanded = false;
-                                return;
-                              } else {
-                                selectedIcon = icon;
-                                expanded = true;
-                                return;
-                              }
-                            }),
-                            child: PictureIcon(
-                              icon.url,
-                              mainColor: selected ? kGreenColor : kMainColor,
-                              accentColor:
-                                  selected ? kGreenColorLight : kMainColorLight,
-                            ),
-                          );
-                        }),
+                      child: FredericTextField(
+                          'Search for tags, separated by commas.',
+                          controller: searchController,
+                          onSubmit: (text) => setState(() {}),
+                          icon: Icons.image_search)),
+                  SizedBox(width: 16),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        searchController.text = '';
+                      });
+                    },
+                    child: Icon(
+                      Icons.highlight_remove_outlined,
+                      color: kMainColor,
+                    ),
                   ),
-                  AnimatedContainer(
-                    margin: const EdgeInsets.only(left: 16),
-                    duration: const Duration(milliseconds: 200),
-                    width: expanded ? 400 : 0,
-                    child: expanded
-                        ? AdminEditIconView(
-                            selectedIcon!,
-                            key: ValueKey(selectedIcon!.url),
-                          )
-                        : null,
-                  )
+                  SizedBox(width: 16),
+                  AdminSelectFilterType(
+                      matchAny: !matchAll,
+                      onChange: (matchAny) {
+                        setState(() {
+                          matchAll = !matchAny;
+                        });
+                      }),
+                  SizedBox(width: 16),
+                  FredericVerticalDivider(
+                    length: 44,
+                  ),
+                  SizedBox(width: 16),
+                  Icon(
+                    Icons.add_photo_alternate_outlined,
+                    color: kMainColor,
+                    size: 26,
+                  ),
                 ],
               ),
-            );
-          }),
+            ),
+          ),
+          Divider(),
+          Expanded(
+            child: BlocBuilder<AdminIconManager, AdminIconListData>(
+                builder: (context, iconListData) {
+              List<AdminIconModel> icons =
+                  iconListData.filtered(searchController.text, matchAll);
+              return Padding(
+                padding: const EdgeInsets.only(left: 16, top: 12, bottom: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                          scrollDirection: Axis.vertical,
+                          controller: widget.onSelect != null
+                              ? ModalScrollController.of(context)
+                              : null,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 120,
+                            childAspectRatio: 1,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemCount: icons.length,
+                          itemBuilder: (context, index) {
+                            AdminIconModel icon = icons[index];
+                            bool selected = false;
+                            if (selectedIcon != null) {
+                              selected = selectedIcon!.url == icon.url;
+                            }
+                            return FredericCard(
+                              onTap: () {
+                                if (widget.onSelect != null) {
+                                  widget.onSelect!(icon);
+                                  return;
+                                }
+                                setState(() {
+                                  if (selectedIcon == null) {
+                                    selectedIcon = icon;
+                                    expanded = true;
+                                    return;
+                                  }
+                                  if (selectedIcon == icon) {
+                                    selectedIcon = null;
+                                    expanded = false;
+                                    return;
+                                  } else {
+                                    selectedIcon = icon;
+                                    expanded = true;
+                                    return;
+                                  }
+                                });
+                              },
+                              child: PictureIcon(
+                                icon.url,
+                                mainColor: selected ? kGreenColor : kMainColor,
+                                accentColor: selected
+                                    ? kGreenColorLight
+                                    : kMainColorLight,
+                              ),
+                            );
+                          }),
+                    ),
+                    AnimatedContainer(
+                      margin: const EdgeInsets.only(left: 16),
+                      duration: const Duration(milliseconds: 200),
+                      width: expanded ? 400 : 0,
+                      child: expanded
+                          ? AdminEditIconView(
+                              selectedIcon!,
+                              key: ValueKey(selectedIcon!.url),
+                            )
+                          : null,
+                    )
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
     );
-  }
-
-  Future<List<AdminIconModel>> getAllIcons(String folder) async {
-    List<AdminIconModel> icons = <AdminIconModel>[];
-    ListResult result = await FirebaseStorage.instance.ref(folder).listAll();
-
-    List<Future<AdminIconModel>> futures = <Future<AdminIconModel>>[];
-    Completer<List<AdminIconModel>> completer =
-        Completer<List<AdminIconModel>>();
-
-    for (var ref in result.items) {
-      futures.add(getAdminIconModelFromReference(ref));
-    }
-    Future.wait(futures).then((value) {
-      for (var icon in value) {
-        icons.add(icon);
-      }
-      completer.complete(icons);
-    });
-
-    return completer.future;
-  }
-
-  Future<AdminIconModel> getAdminIconModelFromReference(
-      Reference reference) async {
-    FullMetadata metadata = await reference.getMetadata();
-    String? tagString = metadata.customMetadata?['tags'];
-    List<String> tags = <String>[];
-    if (tagString != null) {
-      tags = tagString.split(',');
-    }
-    return AdminIconModel(
-        reference.name, await reference.getDownloadURL(), tags, reference);
   }
 }

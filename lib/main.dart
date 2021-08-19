@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:frederic/admin_panel/backend/admin_backend.dart';
+import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
@@ -128,7 +130,13 @@ class Frederic extends StatelessWidget {
             if (orientation == Orientation.portrait) {
               return FredericMainApp();
             }
-            return FredericAdminPanel();
+
+            if (getIt.isRegistered<AdminBackend>())
+              getIt.unregister<AdminBackend>();
+            getIt.registerSingleton<AdminBackend>(AdminBackend());
+            return BlocProvider<AdminIconManager>.value(
+                value: AdminBackend.instance.iconManager,
+                child: FredericAdminPanel());
           },
         ),
       ),
