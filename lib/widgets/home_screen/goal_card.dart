@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -10,10 +12,13 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:shimmer/shimmer.dart';
 
 class GoalCard extends StatefulWidget {
   const GoalCard(this.goal,
-      {this.startDate,
+      {this.sets,
+      this.activity,
+      this.startDate,
       this.endDate,
       this.titleController,
       this.startStateController,
@@ -23,6 +28,9 @@ class GoalCard extends StatefulWidget {
       this.interactable = true});
 
   final FredericGoal goal;
+
+  final FredericSetListData? sets;
+  final FredericActivity? activity;
 
   final DateTime? startDate;
   final DateTime? endDate;
@@ -84,11 +92,6 @@ class _GoalCardState extends State<GoalCard> {
       widget.titleController!.addListener(() {
         setState(() {
           title = widget.titleController!.text;
-          if (widget.endStateController!.value <=
-              widget.startStateController!.value)
-            inverse = true;
-          else
-            inverse = false;
         });
       });
     }
@@ -97,7 +100,7 @@ class _GoalCardState extends State<GoalCard> {
 
   @override
   Widget build(BuildContext context) {
-    final double currentStateNormalized = normalizeValue(
+    double currentStateNormalized = normalizeValue(
         (currentState ?? widget.goal.currentState),
         (startState ?? widget.goal.startState),
         (endState ?? widget.goal.endState));
@@ -231,7 +234,12 @@ class _GoalCardState extends State<GoalCard> {
   void handleClick(BuildContext context) {
     CupertinoScaffold.showCupertinoModalBottomSheet(
         context: context,
-        builder: (c) => Scaffold(body: EditGoalDataScreen(widget.goal)));
+        builder: (c) => Scaffold(
+                body: EditGoalDataScreen(
+              widget.goal,
+              sets: widget.sets,
+              activity: widget.activity,
+            )));
   }
 
   void handleLongClick(BuildContext context) {

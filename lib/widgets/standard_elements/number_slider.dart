@@ -36,6 +36,15 @@ class _NumberSliderState extends State<NumberSlider> {
         initialPage: widget.startingIndex,
         keepPage: false);
 
+    if (widget.constrainController != null) {
+      widget.constrainController!.addListener(() {
+        setState(() {
+          print(widget.constrainController!.value);
+          widget.controller.value = widget.constrainController!.value;
+        });
+      });
+    }
+
     super.initState();
   }
 
@@ -57,7 +66,6 @@ class _NumberSliderState extends State<NumberSlider> {
               bottom: -8.5,
               child: Container(
                 width: 50,
-                //height: double.infinity,
                 child: Container(
                   child: RotatedBox(
                     quarterTurns: 3,

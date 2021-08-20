@@ -1,8 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
+import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/home_screen/goal_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
@@ -17,10 +23,14 @@ import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EditGoalDataScreen extends StatefulWidget {
-  EditGoalDataScreen(this.goal, {Key? key}) : super(key: key) {
+  EditGoalDataScreen(this.goal, {this.sets, this.activity}) {
     isNewGoal = goal.goalID == 'new';
   }
   final FredericGoal goal;
+
+  final FredericSetListData? sets;
+  final FredericActivity? activity;
+
   late final bool isNewGoal;
 
   @override
@@ -34,10 +44,15 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final NumberSliderController currentStateController =
       NumberSliderController();
   final NumberSliderController endStateController = NumberSliderController();
+  final NumberSliderController updateStartSliderController =
+      NumberSliderController();
+  final NumberSliderController updateEndSliderController =
+      NumberSliderController();
 
   final UnitSliderController unitSliderController = UnitSliderController();
 
   String dateText = '';
+  String dummyActivityID = '';
   String dummyTitle = '';
 
   num dummyStartState = 0;
@@ -48,7 +63,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   DateTime? selectedEndDate;
 
   bool datePickerOpen = false;
-  bool inverse = false;
 
   @override
   void initState() {
@@ -91,6 +105,17 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           ),
           SliverDivider(),
           SliverToBoxAdapter(
+            child: Container(
+                height: 44,
+                width: 80,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: FredericButton(
+                  '+',
+                  onPressed: () => addNewActivityTracker(context),
+                  fontSize: 20,
+                )),
+          ),
+          SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: FredericHeading('Title'),
@@ -98,7 +123,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: FredericTextField(
                 widget.goal.title,
                 maxLength: 30,
@@ -129,6 +154,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                   buildSubHeading('Start', Icons.star_outline),
                   SizedBox(height: 12),
                   NumberSlider(
+                    constrainController: updateStartSliderController,
                     controller: startStateController,
                     itemWidth: 0.14,
                     numberOfItems: 200,
@@ -138,6 +164,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                   buildSubHeading('End', Icons.star_outline),
                   SizedBox(height: 12),
                   NumberSlider(
+                    constrainController: updateEndSliderController,
                     controller: endStateController,
                     itemWidth: 0.14,
                     numberOfItems: 200,
@@ -335,19 +362,51 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   }
 
   void saveData() {
+    bool _checkEquality(num first, num second) {
+      return first.ceil() != second.ceil();
+    }
+
+    bool _checkCompleteness(num value, num target) {
+      return value.ceil() == target.ceil();
+    }
+
+    Future<void> _showErrorMessage(String text) async {
+      await showDialog<bool>(
+          context: context,
+          builder: (ctx) {
+            return Container();
+          });
+      await showDialog(
+          context: context,
+          builder: (ctx) {
+            return FredericActionDialog(
+                title: text,
+                infoOnly: true,
+                onConfirm: () => Navigator.of(ctx).pop());
+          });
+    }
+
     if (widget.isNewGoal) {
-      widget.goal.save(
-        title: titleController.text,
-        image:
-            'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
-        startState: startStateController.value,
-        currentState: currentStateController.value,
-        endState: endStateController.value,
-        startDate: Timestamp.fromDate(DateTime.now()),
-        endDate: Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
-        isComleted: false,
-        isDeleted: false,
-      );
+      if (_checkEquality(
+          startStateController.value, endStateController.value)) {
+        if (!_checkCompleteness(
+            currentStateController.value, endStateController.value)) {
+          widget.goal.save(
+            title: titleController.text,
+            image:
+                'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
+            startState: startStateController.value,
+            currentState: currentStateController.value,
+            endState: endStateController.value,
+            startDate: Timestamp.fromDate(DateTime.now()),
+            endDate: Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
+            isComleted: false,
+            isDeleted: false,
+          );
+        } else
+          _showErrorMessage('The current state must not match the end state!');
+      } else
+        _showErrorMessage('The start state must not match the end state!');
     } else {
       // TODO Sinvoller Data check
       if (true) {
@@ -357,7 +416,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             ? dummyCurrentState
             : currentStateController.value;
         widget.goal.endState = endStateController.value;
-        // TODO Daten ergänzen
       }
     }
   }
@@ -369,5 +427,46 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     currentStateController.dispose();
     titleController.dispose();
     super.dispose();
+  }
+
+  void addNewActivityTracker(BuildContext context) {
+    showCupertinoModalBottomSheet(
+        context: context,
+        builder: (ctx) => BlocProvider.value(
+              value: BlocProvider.of<FredericSetManager>(context),
+              child: ActivityListScreen(
+                isSelector: true,
+                onSelect: (activity) {
+                  if (widget.isNewGoal) {
+                    dummyActivityID = activity.activityID;
+                    titleController.text = activity.name;
+                  } else {
+                    int value = widget.sets![activity.activityID].bestWeight;
+                    dummyActivityID = activity.activityID;
+                    titleController.text = activity.name;
+                    if (dummyStartState < dummyEndState) {
+                      if (currentStateController.value > dummyEndState) {
+                        updateEndSliderController.value = value;
+                        endStateController.value = value;
+                      } else if (currentStateController.value <
+                          startStateController.value) {
+                        startStateController.value = value;
+                        updateStartSliderController.value = value;
+                      }
+                    } else {
+                      if (currentStateController.value > dummyStartState) {
+                        startStateController.value = value;
+                        updateEndSliderController.value = value;
+                      } else if (currentStateController.value < dummyEndState) {
+                        endStateController.value = value;
+                        updateStartSliderController.value = value;
+                      }
+                    }
+                    currentStateController.value = value;
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ));
   }
 }

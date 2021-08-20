@@ -42,6 +42,7 @@ class FredericGoal {
 
   FredericGoal.create({
     required String title,
+    required String activity,
     required String image,
     required num startState,
     required num endState,
@@ -52,6 +53,7 @@ class FredericGoal {
     required bool isDeleted,
   })   : goalID = 'new',
         _title = title,
+        _activityID = activity,
         _image = image,
         _startState = startState,
         _endState = endState,
@@ -64,7 +66,7 @@ class FredericGoal {
 
   final FredericGoalManager _goalManager;
   final String goalID;
-  late String _activityID;
+  String? _activityID;
 
   String? _title;
   String? _image;
@@ -79,7 +81,7 @@ class FredericGoal {
 
   String get title => _title ?? 'Goal';
   String get image => _image ?? 'https://via.placeholder.com/400x400?text=Goal';
-  String get activityID => _activityID;
+  String get activityID => _activityID ?? '';
   num get startState => _startState ?? 0;
   num get endState => _endState ?? 0;
   num get currentState => _currentState ?? -1;
@@ -102,6 +104,19 @@ class FredericGoal {
           .doc(goalID)
           .update({'title': value});
       _title = value;
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
+    }
+  }
+
+  set activityID(String value) {
+    if (value != '') {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('goals')
+          .doc(goalID)
+          .update({'activity': value});
+      _activityID = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
