@@ -29,6 +29,7 @@ dependencies:
   cloud_firestore: ^2.4.0
   firebase_storage: ^10.0.1
   firebase_analytics: ^8.0.3
+  firebase_app_check: ^0.0.2
   firebase_performance: ^0.7.0+2
 
 

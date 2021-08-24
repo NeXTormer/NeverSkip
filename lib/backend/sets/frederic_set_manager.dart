@@ -1,3 +1,5 @@
+library frederic_sets;
+
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,6 +43,14 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
     yield FredericSetListData(event.changedActivities, _sets);
+  }
+
+  void addSet(String activityID, FredericSet set) {
+    state[activityID]._addSet(set);
+  }
+
+  void deleteSet(String activityID, FredericSet set) {
+    state[activityID].deleteSet(set);
   }
 
   void loadAllSets(int monthsToLoad) async {

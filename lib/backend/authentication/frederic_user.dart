@@ -98,7 +98,6 @@ class FredericUser {
 
   set progressMonitors(List<String> value) {
     if (uid == '') return;
-    if (value == progressMonitors) return;
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -107,7 +106,6 @@ class FredericUser {
 
   set activeWorkouts(List<String> value) {
     if (uid == '') return;
-    if (value == activeWorkouts) return;
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)

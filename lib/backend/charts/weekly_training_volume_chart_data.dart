@@ -12,7 +12,7 @@ class WeeklyTrainingVolumeChartData {
     var profiler = FredericProfiler.track('Calculate workout volume for Chart');
     DateTime now = DateTime.now();
     DateTime startOfWeek = DateTime(now.year, now.month, now.day)
-        .subtract(Duration(days: now.weekday));
+        .subtract(Duration(days: now.weekday - 1));
 
     bool needsPreviousMonth = now.month != startOfWeek.month;
     int currentMonth = FredericSetDocument.calculateMonth(now);

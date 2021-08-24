@@ -120,12 +120,12 @@ class FredericSetList {
     }
   }
 
-  void addSet(FredericSet set) {
+  void _addSet(FredericSet set) {
     if (_setDocuments.isEmpty ||
         _setDocuments
             .where((element) => element.month == set.monthID)
             .isEmpty) {
-      _createDocumentWith(set);
+      _createDocumentWithSet(set);
     } else {
       if (_setDocuments
           .where((element) => element.month == set.monthID)
@@ -136,7 +136,7 @@ class FredericSetList {
     if (set.reps > _bestReps) _bestReps = set.reps;
   }
 
-  void _createDocumentWith(FredericSet set) async {
+  void _createDocumentWithSet(FredericSet set) async {
     var doc = await _setManager.setsCollection.add({
       'activityid': activityID,
       'month': set.monthID,

@@ -9,13 +9,6 @@ import 'screens/screens.dart';
 class FredericMainApp extends StatelessWidget {
   FredericMainApp({Key? key}) : super(key: key);
 
-  final SplashScreen splashScreen = SplashScreen(
-    onComplete: () {
-      //print('complete');
-      //xFinishedLoading = true;
-    },
-  );
-
   @override
   Widget build(BuildContext context) {
     return AuthenticationWrapper(
@@ -44,7 +37,6 @@ class FredericMainApp extends StatelessWidget {
         ],
       ),
       loginPage: LoginScreen(),
-      splashScreen: splashScreen,
     );
   }
 }

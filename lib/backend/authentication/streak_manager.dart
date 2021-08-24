@@ -25,6 +25,9 @@ class StreakManager {
           true) {
         userManager.state.streakLatestDate = DateTime.now();
       }
+    } else {
+      userManager.state.streakLatestDate = DateTime.now();
+      userManager.state.streakStartDate = DateTime.now();
     }
   }
 

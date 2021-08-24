@@ -58,12 +58,7 @@ void main() {
 class Frederic extends StatelessWidget {
   Frederic({Key? key}) : super(key: key);
 
-  final SplashScreen splashScreen = SplashScreen(
-    onComplete: () {
-      //print('complete');
-      //xFinishedLoading = true;
-    },
-  );
+  final SplashScreen splashScreen = SplashScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +85,6 @@ class Frederic extends StatelessWidget {
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
-
-    //SystemChrome.setSystemUIOverlayStyle(
-    //    SystemUiOverlayStyle(statusBarColor: Colors.blue));
 
     return MultiBlocProvider(
       providers: [
