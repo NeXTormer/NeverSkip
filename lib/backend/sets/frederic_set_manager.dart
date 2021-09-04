@@ -1,5 +1,3 @@
-library frederic_sets;
-
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,11 +44,11 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   }
 
   void addSet(String activityID, FredericSet set) {
-    state[activityID]._addSet(set);
+    state[activityID].addSetLocally(set);
   }
 
   void deleteSet(String activityID, FredericSet set) {
-    state[activityID].deleteSet(set);
+    state[activityID].deleteSetLocally(set);
   }
 
   void loadAllSets(int monthsToLoad) async {

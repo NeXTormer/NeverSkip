@@ -105,7 +105,10 @@ class FredericSetList {
     }
   }
 
-  void deleteSet(FredericSet set) {
+  ///
+  /// Don't use this, use the method in [FredericSetManager]
+  ///
+  void deleteSetLocally(FredericSet set) {
     if (_setDocuments
         .where((element) => element.month == set.monthID)
         .first
@@ -120,7 +123,10 @@ class FredericSetList {
     }
   }
 
-  void _addSet(FredericSet set) {
+  ///
+  /// Don't use this, use the method in [FredericSetManager]
+  ///
+  void addSetLocally(FredericSet set) {
     if (_setDocuments.isEmpty ||
         _setDocuments
             .where((element) => element.month == set.monthID)

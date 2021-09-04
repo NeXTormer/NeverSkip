@@ -133,10 +133,9 @@ class AddProgressScreen extends StatelessWidget {
                             int reps = repsSliderController.value.toInt();
                             int weight = weightSliderController.value.toInt();
                             for (int i = 0; i < sets; i++) {
-                              FredericBackend.instance.setManager
-                                  .state[activity.activityID]
-                                  .addSet(FredericSet(
-                                      reps, weight, DateTime.now()));
+                              FredericBackend.instance.setManager.addSet(
+                                  activity.activityID,
+                                  FredericSet(reps, weight, DateTime.now()));
                             }
                             Navigator.of(context).pop();
                           }),
