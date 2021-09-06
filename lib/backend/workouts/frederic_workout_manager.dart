@@ -32,7 +32,7 @@ class FredericWorkoutManager
 
   HashMap<String, FredericWorkout> get workouts => state.workouts;
 
-  void reload() async {
+  Future<void> reload() async {
     QuerySnapshot<Object?> global =
         await _workoutsCollection.where('owner', isEqualTo: 'global').get();
     QuerySnapshot<Object?> private = await _workoutsCollection
@@ -43,11 +43,16 @@ class FredericWorkoutManager
     _workouts.clear();
 
     for (int i = 0; i < global.docs.length; i++) {
-      _workouts[global.docs[i].id] = FredericWorkout(global.docs[i], this);
+      FredericWorkout workout = FredericWorkout(global.docs[i], this);
+      await workout.loadActivities();
+      _workouts[global.docs[i].id] = workout;
+
       changed.add(global.docs[i].id);
     }
     for (int i = 0; i < private.docs.length; i++) {
-      _workouts[private.docs[i].id] = FredericWorkout(private.docs[i], this);
+      FredericWorkout workout = FredericWorkout(private.docs[i], this);
+      await workout.loadActivities();
+      _workouts[private.docs[i].id] = workout;
       changed.add(private.docs[i].id);
     }
 
@@ -59,6 +64,7 @@ class FredericWorkoutManager
         completer.complete();
       }
     }
+    return;
   }
 
   /// Future gets completed when workouts have been loaded one time

@@ -41,6 +41,10 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       }
       yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
           snapshot: event.snapshot);
+      FredericBackend.instance.waitUntilDataIsLoaded().then((value) {
+        var backend = FredericBackend.instance;
+        streakManager.handleUserDataChange();
+      });
     } else if (event is FredericRestoreLoginStatusEvent) {
       if (state.waiting == true) {
         yield FredericUser(event.uid, waiting: false);
@@ -90,7 +94,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
             statusMessage: 'Sign up error. Please contact support.');
       }
     }
-    streakManager.update();
   }
 
   @override

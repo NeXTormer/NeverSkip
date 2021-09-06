@@ -4,11 +4,14 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 ///
-/// Contains all the data for a workout
+/// Contains all the data for a workout.
 ///
-/// Setters also change the values in the database
+/// Setters also change the values in the database.
 ///
-/// The period of a workout is represented in weeks
+/// The period of a workout is represented in weeks.
+///
+/// Must call loadActivities to load the activities.
+///
 ///
 class FredericWorkout {
   FredericWorkout(DocumentSnapshot<Object?> snapshot, this._workoutManager)
@@ -24,10 +27,9 @@ class FredericWorkout {
     _period = data['period'];
     _repeating = data['repeating'];
     _startDate = data['startdate']?.toDate();
-    List<dynamic>? activitiesList = data['activities'];
+    _activitiesList = data['activities'];
 
     _activities = FredericWorkoutActivities(this);
-    _loadActivities(activitiesList);
   }
 
   FredericWorkout.create()
@@ -40,6 +42,7 @@ class FredericWorkout {
   final FredericWorkoutManager _workoutManager;
 
   late FredericWorkoutActivities _activities;
+  List<dynamic>? _activitiesList;
 
   DateTime? _startDate;
   String? _name;
@@ -134,13 +137,14 @@ class FredericWorkout {
     }
   }
 
-  void _loadActivities(List<dynamic>? activitiesList) async {
-    if (activitiesList == null) return;
-    for (dynamic activityMap in activitiesList) {
+  Future<void> loadActivities() async {
+    if (_activitiesList == null) return;
+    for (dynamic activityMap in _activitiesList!) {
       String? id = activityMap['activityid'];
       num? weekdayRaw = activityMap['weekday'];
       int weekday =
           weekdayRaw?.toInt() ?? period * 100; // to make the if fail when null
+
       if (weekday <= period * 7 && id != null) {
         _activities.activities[weekday].add(FredericWorkoutActivity.fromMap(
             await FredericBackend.instance.activityManager.getActivity(id),
@@ -151,6 +155,7 @@ class FredericWorkout {
     for (var list in _activities.activities) list.sort();
 
     _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
+    return;
   }
 
   //============================================================================

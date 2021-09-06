@@ -149,7 +149,7 @@ class FredericUser {
     await FredericBackend.instance.workoutManager.waitForFirstReload();
     for (var workoutID in activeWorkouts) {
       FredericWorkout? workout =
-          FredericBackend.instance.workoutManager.workouts[workoutID];
+          FredericBackend.instance.workoutManager.state.workouts[workoutID];
       if (workout == null) continue;
       if (workout.activities.getDay(day).isNotEmpty) return true;
     }

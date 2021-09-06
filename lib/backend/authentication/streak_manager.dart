@@ -7,19 +7,19 @@ class StreakManager {
   StreakManager(this.userManager, FredericBackend backend) {
     backend.eventBus.subscribe((event) {
       if (event.type == FredericSystemEventType.CalendarDayCompleted) {
-        handleCompleteDay();
+        _handleCompleteDay();
       }
     });
   }
   final FredericUserManager userManager;
 
-  void update() {
+  void handleUserDataChange() {
     if (_checkIfStreakNeedsUpdating()) {
       _updateStreak();
     }
   }
 
-  void handleCompleteDay() {
+  void _handleCompleteDay() {
     if (userManager.state.hasStreak) {
       if (userManager.state.streakLatestDate?.isNotSameDay(DateTime.now()) ??
           true) {
@@ -46,6 +46,11 @@ class StreakManager {
   }
 
   Future<bool> _calculateIsStreakBroken() async {
+    DateTime day = DateTime.now().subtract(Duration(days: 1));
+    bool xx = await userManager.state.hasActivitiesOnDay(day);
+    print('===========================$xx');
+
+    /////////
     var lastCompletion = userManager.state.streakLatestDate;
     var now = DateTime.now();
     bool streakBroken = false;
@@ -61,9 +66,9 @@ class StreakManager {
         streakBroken = true;
         break;
       }
-      bool calendarDayIsNotEmpty = await userManager.state
+      bool dayHasActivities = await userManager.state
           .hasActivitiesOnDay(now.subtract(Duration(days: i)));
-      if (calendarDayIsNotEmpty) {
+      if (dayHasActivities) {
         streakBroken = true;
         break;
       }

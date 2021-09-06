@@ -34,7 +34,7 @@ class FredericActivityManager
   ///
   /// (Re)Loads all activities from the database
   ///
-  void reload() async {
+  Future<void> reload() async {
     QuerySnapshot<Object?> global =
         await _activitiesCollection.where('owner', isEqualTo: 'global').get();
     QuerySnapshot<Object?> private = await _activitiesCollection
@@ -54,6 +54,7 @@ class FredericActivityManager
     }
 
     add(FredericActivityEvent(changed));
+    return;
   }
 
   ///

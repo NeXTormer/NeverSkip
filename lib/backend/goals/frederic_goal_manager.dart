@@ -26,7 +26,7 @@ class FredericGoalManager with ChangeNotifier {
   ///
   /// Called once in [FredericBackend]
   ///
-  void loadData() {
+  Future<void> loadData() async {
     if (_snapshots != null) return;
     if (FirebaseAuth.instance.currentUser == null) return;
     CollectionReference<Map<String, dynamic>> goalsCollection =
