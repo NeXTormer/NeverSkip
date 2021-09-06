@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frederic/backend/charts/weekly_training_volume_chart_data.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
@@ -24,8 +23,7 @@ class TrainingVolumeChartSegment extends StatelessWidget {
           padding: EdgeInsets.only(left: 16, right: 16),
           child: BlocBuilder<FredericSetManager, FredericSetListData>(
               builder: (context, setListData) {
-            List<int> volume =
-                WeeklyTrainingVolumeChartData(setListData).getVolumeArray();
+            List<int> volume = setListData.weeklyTrainingVolume;
 
             double highest = 0;
             double lowest = 0;

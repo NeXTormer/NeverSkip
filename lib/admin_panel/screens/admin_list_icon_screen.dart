@@ -7,7 +7,6 @@ import 'package:frederic/admin_panel/widgets/admin_select_filter_type.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
-import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -66,10 +65,6 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
                           matchAll = !matchAny;
                         });
                       }),
-                  SizedBox(width: 16),
-                  FredericVerticalDivider(
-                    length: 44,
-                  ),
                   SizedBox(width: 16),
                   Icon(
                     Icons.add_photo_alternate_outlined,

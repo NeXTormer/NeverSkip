@@ -18,7 +18,7 @@ class AdminIconModel {
 
   bool _matchAllTags(List<String> searchTags) {
     if (searchTags.isEmpty) return true;
-    if (tags.isEmpty) return true;
+    if (tags.isEmpty) return _matchName(searchTags);
 
     for (String searchTag in searchTags) {
       if (!tags.any((element) => element.contains(searchTag))) {
@@ -30,10 +30,17 @@ class AdminIconModel {
 
   bool _matchAnyTags(List<String> searchTags) {
     if (searchTags.isEmpty) return true;
-    if (tags.isEmpty) return true;
+    if (tags.isEmpty) return _matchName(searchTags);
 
     for (String tag in tags) {
       if (searchTags.any((element) => tag.contains(element))) return true;
+    }
+    return false;
+  }
+
+  bool _matchName(List<String> tags) {
+    for (String tag in tags) {
+      if (name.split('.').first.contains(tag)) return true;
     }
     return false;
   }
