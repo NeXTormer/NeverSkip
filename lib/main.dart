@@ -1,7 +1,4 @@
-import 'dart:async';
-
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +15,7 @@ import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/screens/splash_screen.dart';
 import 'package:get_it/get_it.dart';
 
-FirebaseAnalytics analytics = FirebaseAnalytics();
-final Future<FirebaseApp> app = Firebase.initializeApp();
+//FirebaseAnalytics analytics = FirebaseAnalytics();
 final getIt = GetIt.instance;
 
 const Color kMainColor = const Color(0xFF3E4FD8);
@@ -43,12 +39,16 @@ const Color kBrightTextColor = Colors.white;
 const Color kCardBorderColor = const Color(0xFFE2E2E2);
 const List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
-void main() {
+void main() async {
   LicenseRegistry.addLicense(() async* {
     final license =
         await rootBundle.loadString('assets/fonts/Montserrat/OFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '');
 
   runApp(Phoenix(
     child: Frederic(),
@@ -68,17 +68,18 @@ class Frederic extends StatelessWidget {
       DeviceOrientation.landscapeRight
     ]);
 
-    return FutureBuilder(
-        future: app,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return _errorScreen(snapshot.error);
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            return _loadApp(context);
-          }
-          return splashScreen;
-        });
+    return _loadApp(context);
+    // return FutureBuilder(
+    //     future: app,
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) {
+    //         return _errorScreen(snapshot.error);
+    //       }
+    //       if (snapshot.connectionState == ConnectionState.done) {
+    //         return _loadApp(context);
+    //       }
+    //       return splashScreen;
+    //     });
   }
 
   Widget _loadApp(BuildContext context) {
@@ -98,9 +99,9 @@ class Frederic extends StatelessWidget {
             value: FredericBackend.instance.workoutManager),
       ],
       child: MaterialApp(
-        navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics),
-        ],
+        // navigatorObservers: [
+        //   FirebaseAnalyticsObserver(analytics: analytics),
+        // ],
         showPerformanceOverlay: false,
         title: 'Frederic',
         debugShowCheckedModeBanner: false,

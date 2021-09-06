@@ -7,6 +7,7 @@ import 'package:frederic/admin_panel/widgets/admin_select_muscle_group.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/activities/frederic_activity_manager.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/edit_workout_activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
@@ -31,6 +32,8 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
 
   NumberSliderController repsController = NumberSliderController();
   NumberSliderController setsController = NumberSliderController();
+
+  String? selectedIcon;
 
   FredericActivityType type = FredericActivityType.None;
   List<FredericActivityMuscleGroup> muscleGroups =
@@ -72,7 +75,7 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
                       height: 88,
                       child: Row(
                         children: [
-                          PictureIcon(widget.activity.image),
+                          PictureIcon(selectedIcon ?? widget.activity.image),
                           Expanded(
                             child: Padding(
                               padding:
@@ -98,6 +101,9 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
                                                 Navigator.of(ctx).pop();
                                                 widget.activity.image =
                                                     icon.url;
+                                                setState(() {
+                                                  selectedIcon = icon.url;
+                                                });
                                               },
                                             ),
                                           ),
@@ -159,7 +165,7 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
                   const SizedBox(height: 16),
                   FredericHeading('Save'),
                   const SizedBox(height: 8),
-                  FredericButton('Save', onPressed: () {}),
+                  FredericButton('Save', onPressed: saveData),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -168,5 +174,29 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
         ),
       ),
     );
+  }
+
+  void saveData() {
+    if (widget.activity.isEmpty) {
+      var activity = FredericActivity.create(
+          name: nameController.text,
+          description: descriptionController.text,
+          image: selectedIcon ??
+              'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe',
+          recommendedreps: repsController.value.toInt(),
+          recommendedsets: setsController.value.toInt(),
+          muscleGroups: muscleGroups,
+          type: type);
+      FredericBackend.instance.activityManager
+          .add(FredericActivityCreateEvent(activity));
+    } else {
+      var activity = widget.activity;
+      activity.name = nameController.text;
+      activity.description = descriptionController.text;
+      activity.type = type;
+      activity.muscleGroups = muscleGroups;
+      activity.recommendedReps = repsController.value.toInt();
+      activity.recommendedSets = setsController.value.toInt();
+    }
   }
 }

@@ -38,7 +38,19 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   ///
   /// Constructs an empty Activity with an empty activity ID
   ///
-  FredericActivity.empty() : activityID = '';
+  FredericActivity.empty()
+      : activityID = '',
+        _name = 'Empty activity',
+        _image =
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe';
+
+  ///
+  /// Constructs an Activity Template for creating a new Activity
+  ///
+  FredericActivity.template()
+      : activityID = 'template',
+        _image =
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe';
 
   ///
   /// Returns an existing Activity using the provided ID. If the activity
@@ -84,7 +96,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   List<FredericActivityMuscleGroup> _muscleGroups =
       <FredericActivityMuscleGroup>[];
 
-  String get name => _name ?? 'Empty activity';
+  String get name => _name ?? '';
   String get description => _description ?? '';
   String get image =>
       _image ?? 'https://via.placeholder.com/400x400?text=noimage';
@@ -92,10 +104,10 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   int get recommendedReps => _recommendedReps ?? 1;
   int get recommendedSets => _recommendedSets ?? 1;
   bool get isNotLoaded => _name == null;
+  bool get isEmpty => activityID == '';
+  bool get isProper => activityID.length > 16;
 
-  bool get isGlobalActivity {
-    return _owner == 'global';
-  }
+  bool get isGlobalActivity => _owner == 'global';
 
   String get progressUnit {
     if (_type == FredericActivityType.Weighted) return 'kg';
@@ -111,7 +123,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   /// Also updates the name on the Database
   ///
   set name(String value) {
-    if (value.isNotEmpty) {
+    if (isProper && value.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('activities')
           .doc(activityID)
@@ -126,7 +138,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   /// Also updates the description on the Database
   ///
   set description(String value) {
-    if (value.isNotEmpty) {
+    if (isProper && value.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('activities')
           .doc(activityID)
@@ -141,7 +153,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   /// Also updates the image on the Database
   ///
   set image(String value) {
-    if (value.isNotEmpty) {
+    if (isProper && value.isNotEmpty) {
       FirebaseFirestore.instance
           .collection('activities')
           .doc(activityID)
@@ -152,11 +164,35 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
+  set type(FredericActivityType value) {
+    if (isProper) {
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'type': parseTypeToString(type)});
+      _type = value;
+      FredericBackend.instance.activityManager
+          .add(FredericActivityUpdateEvent(this));
+    }
+  }
+
+  set muscleGroups(List<FredericActivityMuscleGroup> value) {
+    if (isProper) {
+      FirebaseFirestore.instance
+          .collection('activities')
+          .doc(activityID)
+          .update({'musclegroup': parseMuscleGroupListToStringList(value)});
+      _muscleGroups = value;
+      FredericBackend.instance.activityManager
+          .add(FredericActivityUpdateEvent(this));
+    }
+  }
+
   ///
   /// Also updates the recommended reps on the Database
   ///
   set recommendedReps(int value) {
-    if (value >= 0) {
+    if (isProper && value >= 0) {
       FirebaseFirestore.instance
           .collection('activities')
           .doc(activityID)
@@ -171,7 +207,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   /// Also updates the recommended sets on the Database
   ///
   set recommendedSets(int value) {
-    if (value >= 0) {
+    if (isProper && value >= 0) {
       FirebaseFirestore.instance
           .collection('activities')
           .doc(activityID)
@@ -219,6 +255,19 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     if (typeString == 'cali') return FredericActivityType.Calisthenics;
     if (typeString == 'stretch') return FredericActivityType.Stretch;
     return FredericActivityType.Weighted;
+  }
+
+  static String parseTypeToString(FredericActivityType type) {
+    switch (type) {
+      case FredericActivityType.Weighted:
+        return 'weighted';
+      case FredericActivityType.Calisthenics:
+        return 'cali';
+      case FredericActivityType.Stretch:
+        return 'stretch';
+      default:
+        return '';
+    }
   }
 
   //============================================================================
