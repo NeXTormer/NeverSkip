@@ -146,7 +146,6 @@ class FredericUser {
   }
 
   Future<bool> hasActivitiesOnDay(DateTime day) async {
-    await FredericBackend.instance.workoutManager.waitForFirstReload();
     for (var workoutID in activeWorkouts) {
       FredericWorkout? workout =
           FredericBackend.instance.workoutManager.state.workouts[workoutID];
@@ -158,7 +157,7 @@ class FredericUser {
 
   Future<bool> updateProfilePicture(XFile imageFile) async {
     String? url = await FredericBackend.instance.storageManager
-        .uploadXFileImageToStorage(imageFile, 'profilepicture.jpeg');
+        .uploadXFileImageToUserStorage(imageFile, 'profilepicture.jpeg');
     if (url != null) {
       image = url;
       return true;

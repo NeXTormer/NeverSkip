@@ -10,12 +10,10 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 ///
 /// Represents a single Activity.
 /// Changes made using the classes properties are automatically updated in the
-/// database and on all listeners of the ActivityManagerBloc
+/// database and on all listeners of the ActivityManager-Bloc.
+/// Setters only work on Proper activities.
 ///
 class FredericActivity implements DataTableElement<FredericActivity> {
-  ///
-  /// Construct FredericActivity using a DocumentSnapshot from the database
-  ///
   FredericActivity(DocumentSnapshot<Object?> snapshot)
       : activityID = snapshot.id {
     var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
@@ -27,11 +25,12 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     _owner = data['owner'];
     _recommendedReps = data['recommendedreps'];
     _recommendedSets = data['recommendedsets'];
-    _type = parseType(data['type']);
+    _type = parseTypeFromString(data['type']);
 
     List<dynamic> muscleGroups = data['musclegroup'];
     muscleGroups.forEach((element) {
-      if (element is String) _muscleGroups.add(parseSingleMuscleGroup(element));
+      if (element is String)
+        _muscleGroups.add(parseSingleMuscleGroupFromString(element));
     });
   }
 
@@ -45,7 +44,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe';
 
   ///
-  /// Constructs an Activity Template for creating a new Activity
+  /// Constructs an Activity Template, used for creating a new Activity
   ///
   FredericActivity.template()
       : activityID = 'template',
@@ -70,16 +69,16 @@ class FredericActivity implements DataTableElement<FredericActivity> {
       {required String name,
       required String description,
       required String image,
-      required int recommendedreps,
-      required int recommendedsets,
+      required int recommendedReps,
+      required int recommendedSets,
       required List<FredericActivityMuscleGroup> muscleGroups,
       required FredericActivityType type})
       : activityID = 'new-activity',
         _name = name,
         _description = description,
         _image = image,
-        _recommendedReps = recommendedreps,
-        _recommendedSets = recommendedsets,
+        _recommendedReps = recommendedReps,
+        _recommendedSets = recommendedSets,
         _muscleGroups = muscleGroups,
         _type = type;
 
@@ -93,21 +92,26 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   int? _recommendedReps;
 
   FredericActivityType _type = FredericActivityType.None;
+
   List<FredericActivityMuscleGroup> _muscleGroups =
       <FredericActivityMuscleGroup>[];
 
   String get name => _name ?? '';
   String get description => _description ?? '';
-  String get image =>
-      _image ?? 'https://via.placeholder.com/400x400?text=noimage';
+  String get image => _image ?? 'https://via.placeholder.com/64x64?text=x';
   String get owner => _owner ?? 'No owner';
   int get recommendedReps => _recommendedReps ?? 1;
   int get recommendedSets => _recommendedSets ?? 1;
   bool get isNotLoaded => _name == null;
   bool get isEmpty => activityID == '';
+
+  /// A proper activity is stored in the DB and has a valid [activityID]
   bool get isProper => activityID.length > 16;
 
   bool get isGlobalActivity => _owner == 'global';
+
+  List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
+  FredericActivityType get type => _type;
 
   String get progressUnit {
     if (_type == FredericActivityType.Weighted) return 'kg';
@@ -116,12 +120,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     return '';
   }
 
-  List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
-  FredericActivityType get type => _type;
-
-  ///
-  /// Also updates the name on the Database
-  ///
   set name(String value) {
     if (isProper && value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -134,9 +132,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  ///
-  /// Also updates the description on the Database
-  ///
   set description(String value) {
     if (isProper && value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -149,9 +144,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  ///
-  /// Also updates the image on the Database
-  ///
   set image(String value) {
     if (isProper && value.isNotEmpty) {
       FirebaseFirestore.instance
@@ -188,9 +180,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  ///
-  /// Also updates the recommended reps on the Database
-  ///
   set recommendedReps(int value) {
     if (isProper && value >= 0) {
       FirebaseFirestore.instance
@@ -203,9 +192,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  ///
-  /// Also updates the recommended sets on the Database
-  ///
   set recommendedSets(int value) {
     if (isProper && value >= 0) {
       FirebaseFirestore.instance
@@ -218,9 +204,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  //============================================================================
-  /// returns true if the activity matches the provided Filter Controller
-  ///
   bool matchFilterController(ActivityFilterController controller) {
     bool match = false;
     if (!controller.types[_type]!) return false;
@@ -242,14 +225,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     return false;
   }
 
-  //============================================================================
-  /// Parses the type String from the DB to the [FredericActivityType] object.
-  /// The String can be:
-  ///   - weighted
-  ///   - cali
-  ///   - stretch
-  ///
-  static FredericActivityType parseType(String? typeString) {
+  static FredericActivityType parseTypeFromString(String? typeString) {
     if (typeString == 'weighted') return FredericActivityType.Weighted;
     if (typeString == null) return FredericActivityType.Weighted;
     if (typeString == 'cali') return FredericActivityType.Calisthenics;
@@ -270,36 +246,25 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  //============================================================================
-  /// Parses a muscle groups list from the DB to the [List<FredericActivityMuscleGroup>] object.
-  /// The String can be:
-  ///   - arms
-  ///   - chest
-  ///   - back
-  ///   - legs
-  ///   - abs
-  ///   - '' or none
-  ///
-  static List<FredericActivityMuscleGroup> parseMuscleGroups(
+  static List<FredericActivityMuscleGroup> parseMuscleGroupListFromStringList(
       List<String> muscleGroupsStrings) {
-    List<FredericActivityMuscleGroup> l = <FredericActivityMuscleGroup>[];
+    List<FredericActivityMuscleGroup> list = <FredericActivityMuscleGroup>[];
     for (int i = 0; i < muscleGroupsStrings.length; i++) {
-      l.add(parseSingleMuscleGroup(muscleGroupsStrings[i]));
+      list.add(parseSingleMuscleGroupFromString(muscleGroupsStrings[i]));
     }
-    return l;
+    return list;
   }
 
-  //============================================================================
-  /// Parses the muscle groups from the DB to the [FredericActivityMuscleGroup] object.
-  /// The String can be:
-  ///   - arms
-  ///   - chest
-  ///   - back
-  ///   - legs
-  ///   - abs
-  ///   - '' or none
-  ///
-  static FredericActivityMuscleGroup parseSingleMuscleGroup(
+  static List<String> parseMuscleGroupListToStringList(
+      List<FredericActivityMuscleGroup> groupList) {
+    List<String> strings = <String>[];
+    for (int i = 0; i < groupList.length; i++) {
+      strings.add(parseSingleMuscleGroupToString(groupList[i]));
+    }
+    return strings;
+  }
+
+  static FredericActivityMuscleGroup parseSingleMuscleGroupFromString(
       String muscleGroup) {
     switch (muscleGroup) {
       case 'arms':
@@ -317,9 +282,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     }
   }
 
-  //============================================================================
-  /// Parses the [FredericActivityMuscleGroup] back to a string for the DB
-  ///
   static String parseSingleMuscleGroupToString(
       FredericActivityMuscleGroup group) {
     switch (group) {
@@ -336,19 +298,6 @@ class FredericActivity implements DataTableElement<FredericActivity> {
       default:
         return 'none';
     }
-  }
-
-  //============================================================================
-  /// Parses a [List<FredericActivityMuscleGroup>] back to a [List<String>] for
-  /// the DB
-  ///
-  static List<String> parseMuscleGroupListToStringList(
-      List<FredericActivityMuscleGroup> groupList) {
-    List<String> strings = <String>[];
-    for (int i = 0; i < groupList.length; i++) {
-      strings.add(parseSingleMuscleGroupToString(groupList[i]));
-    }
-    return strings;
   }
 
   @override

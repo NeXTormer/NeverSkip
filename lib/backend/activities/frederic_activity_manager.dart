@@ -8,10 +8,6 @@ import 'package:frederic/backend/backend.dart';
 
 ///
 /// Manages all Activities using the Bloc Pattern
-/// Access activities either with bloc builder or with
-/// ```
-/// FredericBackend.instance.activityManager.state
-/// ```
 ///
 class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
@@ -26,10 +22,10 @@ class FredericActivityManager
       HashMap<String, FredericActivity>();
 
   FredericActivity? operator [](String value) {
-    return _activities[value];
+    return state.activities[value];
   }
 
-  Iterable<FredericActivity> get activities => _activities.values;
+  Iterable<FredericActivity> get allActivities => state.activities.values;
 
   ///
   /// (Re)Loads all activities from the database

@@ -6,6 +6,7 @@ import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_event_bus.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
@@ -66,6 +67,7 @@ class FredericBackend {
   }
 
   void loadData() async {
+    var profiler = FredericProfiler.track('[Backend] load all data');
     await _activityManager.reload();
     await _workoutManager.reload();
     await _goalManager.loadData();
@@ -73,6 +75,7 @@ class FredericBackend {
     for (Completer completer in _dataLoadedCompleters) {
       completer.complete();
     }
+    profiler.stop();
   }
 
   void dispose() {

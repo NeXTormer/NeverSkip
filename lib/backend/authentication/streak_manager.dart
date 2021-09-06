@@ -46,11 +46,6 @@ class StreakManager {
   }
 
   Future<bool> _calculateIsStreakBroken() async {
-    DateTime day = DateTime.now().subtract(Duration(days: 1));
-    bool xx = await userManager.state.hasActivitiesOnDay(day);
-    print('===========================$xx');
-
-    /////////
     var lastCompletion = userManager.state.streakLatestDate;
     var now = DateTime.now();
     bool streakBroken = false;

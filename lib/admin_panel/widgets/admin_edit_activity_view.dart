@@ -183,8 +183,8 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
           description: descriptionController.text,
           image: selectedIcon ??
               'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe',
-          recommendedreps: repsController.value.toInt(),
-          recommendedsets: setsController.value.toInt(),
+          recommendedReps: repsController.value.toInt(),
+          recommendedSets: setsController.value.toInt(),
           muscleGroups: muscleGroups,
           type: type);
       FredericBackend.instance.activityManager

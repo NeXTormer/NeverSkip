@@ -10,7 +10,8 @@ class FredericStorageManager {
   FredericStorageManager(this.backend);
   final FredericBackend backend;
 
-  Future<String?> uploadXFileImageToStorage(XFile image, String name) async {
+  Future<String?> uploadXFileImageToUserStorage(
+      XFile image, String name) async {
     try {
       Uint8List? imageData = await _convertXFileToRawJPEG(image);
       if (imageData == null) return null;
