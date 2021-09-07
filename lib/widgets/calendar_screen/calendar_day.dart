@@ -257,7 +257,11 @@ class _CalendarDayCard extends StatelessWidget {
       width: 56,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: completed ? theme.positiveColorLight : theme.mainColorLight),
+          color: completed
+              ? theme.positiveColorLight
+              : (theme.isDark
+                  ? theme.cardBackgroundColor
+                  : theme.mainColorLight)),
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -266,13 +270,14 @@ class _CalendarDayCard extends StatelessWidget {
             Text(
               '${day.day}',
               style: TextStyle(
-                  color: completed ? theme.positiveColor : theme.mainColor,
+                  color: completed ? theme.positiveColor : theme.textColorMain,
                   fontSize: 20,
                   fontWeight: FontWeight.w500),
             ),
             Text('${getWeekdayName(day.weekday)}',
                 style: TextStyle(
-                    color: completed ? theme.positiveColor : theme.mainColor,
+                    color:
+                        completed ? theme.positiveColor : theme.textColorMain,
                     fontSize: 12,
                     fontWeight: FontWeight.w300))
           ]),

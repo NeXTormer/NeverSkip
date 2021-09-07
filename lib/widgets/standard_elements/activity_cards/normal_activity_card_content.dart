@@ -27,7 +27,11 @@ class NormalActivityCardContent extends StatelessWidget {
               width: 40,
               height: 40,
               child: AspectRatio(
-                  aspectRatio: 1, child: PictureIcon(activity.image))),
+                  aspectRatio: 1,
+                  child: PictureIcon(
+                    activity.image,
+                    mainColor: theme.textColorMain,
+                  ))),
           SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -47,7 +51,7 @@ class NormalActivityCardContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                       style: TextStyle(
-                          color: const Color(0xC03A3A3A),
+                          color: theme.greyTextColor,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.2,
                           fontSize: 12),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SliverDivider extends StatelessWidget {
+class FredericDivider extends StatelessWidget {
+  const FredericDivider({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-        child: Container(
+    return Container(
       color: const Color(0xFFC9C9C9),
       height: 0.5,
-    ));
+    );
   }
 }

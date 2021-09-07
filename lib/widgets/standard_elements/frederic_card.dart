@@ -32,7 +32,7 @@ class FredericCard extends StatelessWidget {
   Widget build(BuildContext context) {
     BoxDecoration decoration = BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        color: color,
+        color: color ?? theme.cardBackgroundColor,
         border: Border.all(color: theme.cardBorderColor));
 
     Container container = Container(

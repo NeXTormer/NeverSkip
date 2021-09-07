@@ -31,60 +31,64 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-        child: Padding(
-      padding: const EdgeInsets.only(right: 16, left: 16, top: 16, bottom: 0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Find your perfect workout plan',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: theme.textColor,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.6,
-                          fontSize: 13,
+        child: Container(
+      color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 16, left: 16, top: 16, bottom: 0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Find your perfect workout plan',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: theme.textColor,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0.6,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        'All workout plans',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: theme.textColor,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.1,
-                          fontSize: 17,
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          'All workout plans',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: theme.textColor,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.1,
+                            fontSize: 17,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              StreakIcon(user: widget.user)
-            ],
-          ),
-          SizedBox(height: 16),
-          FredericTextField(
-            'Search...',
-            controller: textEditingController,
-            icon: Icons.search,
-            size: 20,
-            suffixIcon: ExtraIcons.settings,
-          ),
-          SizedBox(height: 8),
-        ],
+                      ],
+                    ),
+                  ],
+                ),
+                StreakIcon(user: widget.user)
+              ],
+            ),
+            SizedBox(height: 16),
+            FredericTextField(
+              'Search...',
+              brightContents: true,
+              controller: textEditingController,
+              icon: Icons.search,
+              size: 20,
+              suffixIcon: ExtraIcons.settings,
+            ),
+            SizedBox(height: 16),
+          ],
+        ),
       ),
     ));
   }

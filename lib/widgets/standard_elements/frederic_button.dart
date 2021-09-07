@@ -33,7 +33,7 @@ class FredericButton extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: inverted ? Border.all(color: mainColor) : null,
-            color: inverted ? Colors.white : mainColor),
+            color: inverted ? (theme.backgroundColor) : mainColor),
         child: Center(
             child: Text(
           text,

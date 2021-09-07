@@ -19,13 +19,16 @@ class StreakIcon extends StatelessWidget {
             padding: const EdgeInsets.only(top: 2),
             child: Text(
               '${user.streak}',
-              style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
+              style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 16,
+                  color: theme.textColor),
             ),
           ),
           SizedBox(width: 6),
           Icon(
             Icons.local_fire_department_outlined,
-            color: theme.mainColor,
+            color: theme.isDark ? theme.textColor : theme.mainColor,
           )
         ],
       ),

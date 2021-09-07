@@ -20,6 +20,7 @@ class EditWorkoutHeader extends StatelessWidget {
     final String dateFormatString =
         formatDate(workout.startDate, const [dd, ' ', M, ' ', yyyy]);
     return Container(
+      color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Column(
         children: [
@@ -34,7 +35,7 @@ class EditWorkoutHeader extends StatelessWidget {
                         Text(
                           '$dateFormatString',
                           style: TextStyle(
-                            color: const Color(0xFF272727),
+                            color: theme.textColor,
                             fontWeight: FontWeight.w400,
                             letterSpacing: 0.6,
                             fontSize: 13,
@@ -48,7 +49,7 @@ class EditWorkoutHeader extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: const Color(0xFF272727),
+                        color: theme.textColor,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.1,
                         fontSize: 17,
@@ -68,7 +69,8 @@ class EditWorkoutHeader extends StatelessWidget {
                                     body: EditWorkoutDataScreen(workout))),
                         child: Icon(
                           ExtraIcons.settings,
-                          color: theme.mainColor,
+                          color:
+                              theme.isColorful ? Colors.white : theme.mainColor,
                         ),
                       )
                     : null,

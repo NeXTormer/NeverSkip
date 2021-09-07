@@ -20,10 +20,10 @@ final getIt = GetIt.instance;
 
 // const Color theme.mainColor = const Color(0xFF3E4FD8);
 // const Color kAccentColor = const Color(0xFF4791FF);
-// // const Color theme.mainColor = const Color(0xFFD8903E);
-// // const Color kAccentColor = const Color(0xFFFFEA47);
-// // const Color theme.mainColorLight = const Color(0x1AD8903E);
-// // const Color kAccentColorLight = const Color(0xFFFFEA47);
+// const Color theme.mainColor = const Color(0xFFD8903E);
+// const Color kAccentColor = const Color(0xFFFFEA47);
+// const Color theme.mainColorLight = const Color(0x1AD8903E);
+// const Color kAccentColorLight = const Color(0xFFFFEA47);
 // const Color kDividerColor = const Color(0xFFC9C9C9);
 // const Color theme.backgroundColor = Colors.white;
 // const Color theme.mainColorLight = const Color(0x1A3E4FD8);
@@ -38,7 +38,7 @@ final getIt = GetIt.instance;
 // const Color kBrightTextColor = Colors.white;
 // const Color kCardBorderColor = const Color(0xFFE2E2E2);
 
-FredericColorTheme theme = FredericColorTheme.blue();
+FredericColorTheme theme = FredericColorTheme.blueDark();
 
 void main() async {
   LicenseRegistry.addLicense(() async* {
@@ -97,8 +97,7 @@ class _FredericState extends State<Frederic> {
         theme: ThemeData(
             primaryColor: theme.mainColor,
             accentColor: theme.accentColor,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
+            brightness: theme.isBright ? Brightness.light : Brightness.dark,
             fontFamily: 'Montserrat',
             textTheme: TextTheme(
               headline1: TextStyle(

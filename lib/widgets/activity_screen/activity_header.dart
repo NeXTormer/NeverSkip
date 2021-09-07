@@ -18,13 +18,16 @@ class ActivityHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-        child: Consumer<ActivityFilterController>(
-          builder: (context, filter, child) {
-            return ActivityHeaderContent(title, subtitle,
-                filterController: filter, user: user);
-          },
+      child: Container(
+        color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+          child: Consumer<ActivityFilterController>(
+            builder: (context, filter, child) {
+              return ActivityHeaderContent(title, subtitle,
+                  filterController: filter, user: user);
+            },
+          ),
         ),
       ),
     );
@@ -101,12 +104,12 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
         FredericTextField(
           'Search...',
           controller: textController,
+          brightContents: true,
           icon: Icons.search,
           size: 20,
-          suffixIcon:
-              ExtraIcons.settings, // TODO? similar style as in homescreen
+          suffixIcon: ExtraIcons.settings,
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
       ],
     );
   }

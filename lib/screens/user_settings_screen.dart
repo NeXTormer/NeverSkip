@@ -26,15 +26,18 @@ class UserSettingsScreen extends StatelessWidget {
               title: 'User Settings',
               subtitle: 'Manage your User Account',
             ),
-            SliverDivider(),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 150,
-                child: Center(
-                  child: CircleAvatar(
-                    backgroundColor: theme.mainColorLight,
-                    radius: 60,
-                    backgroundImage: CachedNetworkImageProvider(user.image),
+            if (theme.isBright) SliverDivider(),
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 8),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  height: 150,
+                  child: Center(
+                    child: CircleAvatar(
+                      backgroundColor: theme.mainColorLight,
+                      radius: 60,
+                      backgroundImage: CachedNetworkImageProvider(user.image),
+                    ),
                   ),
                 ),
               ),

@@ -17,6 +17,7 @@ class UserSettingsSegment extends StatelessWidget {
         child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: FredericContainerTransition(
+        closedBorderRadius: 14,
         expandedChild: UserSettingsScreen(),
         childBuilder: (context, openContainer) => FredericCard(
           onTap: openContainer,

@@ -18,6 +18,7 @@ class HomeScreenAppbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
+        color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
           child: Column(
@@ -55,10 +56,14 @@ class HomeScreenAppbar extends StatelessWidget {
                         return Container(
                             height: 32,
                             width: 32,
-                            color: theme.mainColor,
+                            color: theme.isColorful
+                                ? Colors.white
+                                : theme.mainColor,
                             child: Icon(
                               ExtraIcons.settings,
-                              color: Colors.white,
+                              color: theme.isColorful
+                                  ? theme.mainColor
+                                  : Colors.white,
                               size: 18,
                             ));
                       },

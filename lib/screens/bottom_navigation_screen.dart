@@ -43,7 +43,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         backgroundColor: theme.backgroundColor,
         extendBodyBehindAppBar: false,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.dark,
+          value: theme.isDark || theme.isColorful
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
           child: PageView(
             children: screens,
             controller: pageController,
@@ -69,9 +71,12 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             child: BottomNavigationBar(
               items: items,
               elevation: 0,
-              backgroundColor: theme.backgroundColor,
-              selectedItemColor: theme.accentColor,
-              unselectedItemColor: theme.mainColor,
+              backgroundColor:
+                  theme.isColorful ? theme.mainColor : theme.backgroundColor,
+              selectedItemColor:
+                  theme.isColorful ? Colors.white : theme.accentColor,
+              unselectedItemColor:
+                  theme.isColorful ? Colors.white : theme.mainColor,
               showUnselectedLabels: true,
               type: BottomNavigationBarType.fixed,
               currentIndex: currentIndex,

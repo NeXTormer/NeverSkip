@@ -18,25 +18,22 @@ class ActivityMuscleGroupButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: GestureDetector(
-          onTap: onPressed,
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding:
-                  EdgeInsets.only(right: rightPadding, top: 10, bottom: 10),
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: isActive ? theme.mainColor : theme.greyColor,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                  fontSize: 12,
-                ),
+    return GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          color: theme.backgroundColor,
+          child: Padding(
+            padding: EdgeInsets.only(right: rightPadding, top: 10, bottom: 10),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isActive ? theme.mainColor : theme.greyColor,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+                fontSize: 12,
               ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

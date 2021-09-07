@@ -18,6 +18,6 @@ class FredericTextTheme {
       letterSpacing: 0.1,
       fontSize: 17);
 
-  static const TextStyle cardTitleSmall =
-      const TextStyle(color: greyTextColor, fontSize: 10, letterSpacing: 0.3);
+  static TextStyle cardTitleSmall =
+      TextStyle(color: theme.greyColor, fontSize: 10, letterSpacing: 0.3);
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/misc/frederic_text_theme.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -81,7 +82,9 @@ class ProgressIndicatorCard extends StatelessWidget {
             : Row(
                 children: [
                   AspectRatio(
-                      aspectRatio: 1, child: PictureIcon(activity!.image)),
+                      aspectRatio: 1,
+                      child: PictureIcon(activity!.image,
+                          mainColor: theme.textColorMain)),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10),

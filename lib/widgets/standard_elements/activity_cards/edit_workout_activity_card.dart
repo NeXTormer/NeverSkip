@@ -52,7 +52,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                 children: [
                   AspectRatio(
                     child: PictureIcon(widget.activity.activity.image,
-                        mainColor: theme.mainColor,
+                        mainColor: theme.textColorMain,
                         accentColor: theme.mainColorLight),
                     aspectRatio: 1,
                   ),

@@ -43,7 +43,7 @@ class _CalendarActivityCardContentState
                   AspectRatio(
                     child: PictureIcon(widget.activity.activity.image,
                         mainColor: widget.state == ActivityCardState.Normal
-                            ? theme.mainColor
+                            ? theme.textColorMain
                             : theme.positiveColor,
                         accentColor: widget.state == ActivityCardState.Normal
                             ? theme.mainColorLight

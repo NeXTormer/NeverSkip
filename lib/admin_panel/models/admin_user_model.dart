@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/data_table.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
 
 class AdminUserModel implements DataTableElement<AdminUserModel> {

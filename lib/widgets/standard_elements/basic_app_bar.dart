@@ -13,27 +13,29 @@ class BasicAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-        child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(subtitle ?? '',
-                          style: FredericTextTheme.homeScreenAppBarTitle),
-                      SizedBox(height: 8),
-                      Text(title,
-                          style: FredericTextTheme.homeScreenAppBarSubTitle),
-                      SizedBox(height: 4),
-                    ],
-                  ),
-                  if (icon != null)
-                    Icon(
-                      icon!,
-                      color: theme.mainColor,
-                    )
-                ])));
+        child: Container(
+      color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+      child: Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 8),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(subtitle ?? '',
+                    style: FredericTextTheme.homeScreenAppBarTitle),
+                SizedBox(height: 8),
+                Text(title, style: FredericTextTheme.homeScreenAppBarSubTitle),
+                SizedBox(height: 4),
+              ],
+            ),
+            if (icon != null)
+              Icon(
+                icon!,
+                color: theme.isColorful ? Colors.white : theme.mainColor,
+              )
+          ])),
+    ));
   }
 }

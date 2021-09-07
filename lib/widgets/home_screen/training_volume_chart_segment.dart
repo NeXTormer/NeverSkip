@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
@@ -83,8 +84,8 @@ class TrainingVolumeChartSegment extends StatelessWidget {
   Widget buildIndexText(double index) {
     return Text(
       '${index.truncate()}',
-      style: const TextStyle(
-          color: const Color(0x7A3A3A3A), fontSize: 11, letterSpacing: 0.3),
+      style: TextStyle(
+          color: theme.greyTextColor, fontSize: 11, letterSpacing: 0.3),
     );
   }
 
@@ -102,10 +103,8 @@ class TrainingVolumeChartSegment extends StatelessWidget {
           SizedBox(height: 10),
           Text(
             day,
-            style: const TextStyle(
-                color: const Color(0x7A3A3A3A),
-                fontSize: 10,
-                letterSpacing: 0.4),
+            style: TextStyle(
+                color: theme.greyTextColor, fontSize: 10, letterSpacing: 0.4),
           )
         ],
       ),

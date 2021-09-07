@@ -132,8 +132,14 @@ class _WorkoutCardState extends State<WorkoutCard> {
             Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.only(right: 9),
-              child: Text(widget.description ?? widget.workout.description,
-                  maxLines: 2, overflow: TextOverflow.ellipsis),
+              child: Text(
+                widget.description ?? widget.workout.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color:
+                        theme.isBright ? theme.textColor : theme.greyTextColor),
+              ),
             )
           ],
         ));

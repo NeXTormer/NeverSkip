@@ -56,6 +56,7 @@ class _SettingsElementState extends State<SettingsElement> {
   @override
   Widget build(BuildContext context) {
     Widget container = Container(
+        color: theme.cardBackgroundColor,
         padding: EdgeInsets.only(left: widget.icon != null ? 0 : 6, right: 8),
         height: 46,
         child: Row(
