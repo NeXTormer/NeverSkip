@@ -23,7 +23,7 @@ class FredericHeading extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
-                    color: kTextColor,
+                    color: theme.textColor,
                     letterSpacing: 0.6)),
             if (showSubHeading) SizedBox(width: 8),
             if (showSubHeading)

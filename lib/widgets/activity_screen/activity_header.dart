@@ -70,7 +70,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                     Text(
                       widget.subtitle,
                       style: TextStyle(
-                        color: kTextColor,
+                        color: theme.textColor,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.6,
                         fontSize: 13,
@@ -84,7 +84,7 @@ class _ActivityHeaderContentState extends State<ActivityHeaderContent> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                        color: kTextColor,
+                        color: theme.textColor,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.1,
                         fontSize: 17,

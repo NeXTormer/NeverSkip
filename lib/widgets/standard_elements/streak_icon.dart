@@ -25,7 +25,7 @@ class StreakIcon extends StatelessWidget {
           SizedBox(width: 6),
           Icon(
             Icons.local_fire_department_outlined,
-            color: kMainColor,
+            color: theme.mainColor,
           )
         ],
       ),

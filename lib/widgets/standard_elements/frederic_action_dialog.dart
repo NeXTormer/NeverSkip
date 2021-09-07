@@ -93,8 +93,9 @@ class FredericActionDialog extends StatelessWidget {
                                     Navigator.of(context).pop();
                                   }
                                 },
-                                mainColor:
-                                    destructiveAction ? Colors.red : kMainColor,
+                                mainColor: destructiveAction
+                                    ? Colors.red
+                                    : theme.mainColor,
                               )),
                         ),
                       ],

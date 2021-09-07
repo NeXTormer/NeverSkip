@@ -54,7 +54,7 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
                     },
                     child: Icon(
                       Icons.highlight_remove_outlined,
-                      color: kMainColor,
+                      color: theme.mainColor,
                     ),
                   ),
                   SizedBox(width: 16),
@@ -68,7 +68,7 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
                   SizedBox(width: 16),
                   Icon(
                     Icons.add_photo_alternate_outlined,
-                    color: kMainColor,
+                    color: theme.mainColor,
                     size: 26,
                   ),
                 ],
@@ -130,10 +130,12 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
                               },
                               child: PictureIcon(
                                 icon.url,
-                                mainColor: selected ? kGreenColor : kMainColor,
+                                mainColor: selected
+                                    ? theme.positiveColor
+                                    : theme.mainColor,
                                 accentColor: selected
-                                    ? kGreenColorLight
-                                    : kMainColorLight,
+                                    ? theme.positiveColorLight
+                                    : theme.mainColorLight,
                               ),
                             );
                           }),

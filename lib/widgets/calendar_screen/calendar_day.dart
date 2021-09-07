@@ -104,17 +104,17 @@ class _CalendarMonthCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text('${getMonthName(day)}',
-              style: const TextStyle(
+              style: TextStyle(
                   fontFamily: 'Montserrat',
-                  color: kTextColor,
+                  color: theme.textColor,
                   fontWeight: FontWeight.w400,
                   letterSpacing: 0.6,
                   fontSize: 15)),
           SizedBox(width: 8),
           Text('${day.year}',
-              style: const TextStyle(
+              style: TextStyle(
                   fontFamily: 'Montserrat',
-                  color: kTextColor,
+                  color: theme.textColor,
                   fontWeight: FontWeight.w300,
                   letterSpacing: 0.6,
                   fontSize: 13)),
@@ -173,7 +173,7 @@ class _CalendarActivityCard extends StatelessWidget {
         children: [
           _CalendarTimeLine(
             isActive: indicator,
-            activeColor: completed ? kGreenColor : kMainColor,
+            activeColor: completed ? theme.positiveColor : theme.mainColor,
           ),
           SizedBox(width: 8),
           Expanded(
@@ -188,13 +188,15 @@ class _CalendarActivityCard extends StatelessWidget {
 }
 
 class _CalendarTimeLine extends StatelessWidget {
-  const _CalendarTimeLine(
-      {this.isActive = false, this.activeColor = kMainColor});
+  _CalendarTimeLine({this.isActive = false, Color? activeColor}) {
+    this.activeColor = activeColor ?? theme.mainColor;
+    disabledColor = theme.disabledGreyColor;
+  }
 
   final bool isActive;
 
-  final Color activeColor;
-  final Color disabledColor = kCalendarDisabledColor;
+  late final Color activeColor;
+  late final Color disabledColor;
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +257,7 @@ class _CalendarDayCard extends StatelessWidget {
       width: 56,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: completed ? kGreenColorLight : kMainColorLight),
+          color: completed ? theme.positiveColorLight : theme.mainColorLight),
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -264,13 +266,13 @@ class _CalendarDayCard extends StatelessWidget {
             Text(
               '${day.day}',
               style: TextStyle(
-                  color: completed ? kGreenColor : kMainColor,
+                  color: completed ? theme.positiveColor : theme.mainColor,
                   fontSize: 20,
                   fontWeight: FontWeight.w500),
             ),
             Text('${getWeekdayName(day.weekday)}',
                 style: TextStyle(
-                    color: completed ? kGreenColor : kMainColor,
+                    color: completed ? theme.positiveColor : theme.mainColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w300))
           ]),

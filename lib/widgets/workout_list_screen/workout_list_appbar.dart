@@ -47,7 +47,7 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
                         'Find your perfect workout plan',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: kTextColor,
+                          color: theme.textColor,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.6,
                           fontSize: 13,
@@ -62,7 +62,7 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
                         'All workout plans',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: kTextColor,
+                          color: theme.textColor,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.1,
                           fontSize: 17,

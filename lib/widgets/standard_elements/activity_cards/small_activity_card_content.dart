@@ -49,7 +49,7 @@ class SmallActivityCardContent extends StatelessWidget {
                     Text(
                       '$bestProgress',
                       style: TextStyle(
-                          color: kTextColor,
+                          color: theme.textColor,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
                           fontSize: 16),
@@ -57,7 +57,7 @@ class SmallActivityCardContent extends StatelessWidget {
                     SizedBox(width: 2),
                     Text(activity.progressUnit,
                         style: TextStyle(
-                            color: kTextColor,
+                            color: theme.textColor,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 0.5,
                             fontSize: 14))

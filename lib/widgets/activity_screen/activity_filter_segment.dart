@@ -121,7 +121,7 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                   child: Icon(
                     Icons.circle,
                     size: 8,
-                    color: kMainColor,
+                    color: theme.mainColor,
                   ),
                 ),
               ],

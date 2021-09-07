@@ -25,7 +25,7 @@ class UserSettingsSegment extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: kMainColorLight,
+                  backgroundColor: theme.mainColorLight,
                   foregroundImage: CachedNetworkImageProvider(user.image),
                   radius: 35,
                 ),
@@ -59,7 +59,7 @@ class UserSettingsSegment extends StatelessWidget {
                     ),
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios_rounded, color: kGreyColor)
+                Icon(Icons.arrow_forward_ios_rounded, color: theme.greyColor)
               ],
             ),
           ),

@@ -52,7 +52,7 @@ class GoalCard extends StatelessWidget {
                 //       Text(
                 //         '${goal.startState}',
                 //         style: TextStyle(
-                //             color: kTextColor,
+                //             color: theme.textColor,
                 //             fontWeight: FontWeight.w600,
                 //             letterSpacing: 0.5,
                 //             fontSize: 13),
@@ -60,7 +60,7 @@ class GoalCard extends StatelessWidget {
                 //       SizedBox(width: 2),
                 //       Text('${goal.activity?.bestProgressType}',
                 //           style: TextStyle(
-                //               color: kTextColor,
+                //               color: theme.textColor,
                 //               fontWeight: FontWeight.w500,
                 //               letterSpacing: 0.5,
                 //               fontSize: 11)),
@@ -68,7 +68,7 @@ class GoalCard extends StatelessWidget {
                 //       Text(
                 //         '${goal.endState}',
                 //         style: TextStyle(
-                //             color: kTextColor,
+                //             color: theme.textColor,
                 //             fontWeight: FontWeight.w600,
                 //             letterSpacing: 0.5,
                 //             fontSize: 13),
@@ -76,7 +76,7 @@ class GoalCard extends StatelessWidget {
                 //       SizedBox(width: 2),
                 //       Text('${goal.activity?.bestProgressType}',
                 //           style: TextStyle(
-                //               color: kTextColor,
+                //               color: theme.textColor,
                 //               fontWeight: FontWeight.w500,
                 //               letterSpacing: 0.5,
                 //               fontSize: 11))

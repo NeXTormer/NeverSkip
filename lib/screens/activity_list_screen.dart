@@ -32,7 +32,7 @@ class ActivityListScreen extends StatelessWidget {
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
       child: Scaffold(
-        backgroundColor: kScaffoldBackgroundColor,
+        backgroundColor: theme.backgroundColor,
         body: SafeArea(
           child: BlocBuilder<FredericUserManager, FredericUser>(
             buildWhen: (last, next) =>

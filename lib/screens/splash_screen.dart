@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return MaterialApp(
       home: Scaffold(
           body: Center(child: CupertinoActivityIndicator()),
-          backgroundColor: kScaffoldBackgroundColor),
+          backgroundColor: theme.backgroundColor),
     );
   }
 }

@@ -68,7 +68,7 @@ class EditWorkoutHeader extends StatelessWidget {
                                     body: EditWorkoutDataScreen(workout))),
                         child: Icon(
                           ExtraIcons.settings,
-                          color: kMainColor,
+                          color: theme.mainColor,
                         ),
                       )
                     : null,

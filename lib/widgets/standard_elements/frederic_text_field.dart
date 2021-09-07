@@ -72,14 +72,14 @@ class _FredericTextFieldState extends State<FredericTextField> {
               : Icon(
                   widget.icon,
                   size: widget.size,
-                  color: kMainColor,
+                  color: theme.mainColor,
                 ),
           suffixIcon: widget.suffixIcon == null
               ? null
               : Icon(
                   widget.suffixIcon,
                   size: widget.size,
-                  color: kMainColor,
+                  color: theme.mainColor,
                 ),
           suffix: widget.isPasswordField
               ? Padding(
@@ -106,7 +106,7 @@ class _FredericTextFieldState extends State<FredericTextField> {
           floatingLabelBehavior: FloatingLabelBehavior.never,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(width: 0.6, color: kMainColor),
+            borderSide: BorderSide(width: 0.6, color: theme.mainColor),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),

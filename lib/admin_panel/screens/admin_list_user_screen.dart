@@ -15,7 +15,7 @@ class _AdminListUserScreenState extends State<AdminListUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: RefreshIndicator(
         onRefresh: () async => setState(() {}),
         child: SingleChildScrollView(

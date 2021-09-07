@@ -19,13 +19,13 @@ class _FredericAdminPanelState extends State<FredericAdminPanel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
             Container(
               height: 40,
-              color: kMainColor,
+              color: theme.mainColor,
               child: Row(children: [
                 SizedBox(width: 8),
                 GestureDetector(

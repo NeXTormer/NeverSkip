@@ -375,8 +375,9 @@ class FredericActivity implements DataTableElement<FredericActivity> {
           width: 45,
           child: PictureIcon(
             image,
-            mainColor: selected ? kGreenColor : kMainColor,
-            accentColor: selected ? kGreenColorLight : kMainColorLight,
+            mainColor: selected ? theme.positiveColor : theme.mainColor,
+            accentColor:
+                selected ? theme.positiveColorLight : theme.mainColorLight,
           ))),
       DataCell(Text(name)),
       DataCell(Text(muscleGroupsString)),

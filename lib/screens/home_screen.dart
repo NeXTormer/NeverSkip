@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/home_screen/goal_segment.dart';
 import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
@@ -12,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.backgroundColor,
       body: SafeArea(
           child: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) {
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
               GoalSegment(),
               TrainingVolumeChartSegment(),
               SliverToBoxAdapter(
-                child: Container(height: 2000, color: Colors.white),
+                child: Container(height: 2000, color: theme.backgroundColor),
               ),
             ],
           );

@@ -83,7 +83,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
         controller: ModalScrollController.of(context),
         slivers: [
@@ -95,7 +95,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
               children: [
                 Icon(
                   ExtraIcons.settings,
-                  color: kMainColor,
+                  color: theme.mainColor,
                 ),
                 SizedBox(width: 32),
                 Text(
@@ -111,7 +111,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   child: Text(
                     widget.isNewWorkout ? 'Create' : 'Save',
                     style: TextStyle(
-                        color: kMainColor, fontWeight: FontWeight.w500),
+                        color: theme.mainColor, fontWeight: FontWeight.w500),
                   ),
                 )
               ],
@@ -205,7 +205,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                               dummyRepeating = value;
                             });
                           },
-                          activeColor: kMainColor)
+                          activeColor: theme.mainColor)
                     ],
                   ),
                   SizedBox(height: 12),
@@ -246,7 +246,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
-                          border: Border.all(color: kCardBorderColor)),
+                          border: Border.all(color: theme.cardBorderColor)),
                       child: true
                           ? FredericDatePicker(
                               initialDate: widget.workout.startDate,

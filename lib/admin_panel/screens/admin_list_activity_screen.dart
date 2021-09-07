@@ -26,7 +26,7 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: Row(
         children: [
           Expanded(
@@ -58,7 +58,7 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
                               },
                               child: Icon(
                                 Icons.highlight_remove_outlined,
-                                color: kMainColor,
+                                color: theme.mainColor,
                               ),
                             ),
                             SizedBox(width: 16),
@@ -72,7 +72,7 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
                               },
                               child: Icon(
                                 Icons.add_chart,
-                                color: kMainColor,
+                                color: theme.mainColor,
                                 size: 26,
                               ),
                             ),

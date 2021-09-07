@@ -20,6 +20,7 @@ class StreakManager {
   }
 
   void _handleCompleteDay() {
+    if (!userManager.state.finishedLoading) return;
     if (userManager.state.hasStreak) {
       if (userManager.state.streakLatestDate?.isNotSameDay(DateTime.now()) ??
           true) {

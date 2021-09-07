@@ -96,8 +96,8 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
                       margin: EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          border:
-                              Border.all(color: kCardBorderColor, width: 0.6)),
+                          border: Border.all(
+                              color: theme.cardBorderColor, width: 0.6)),
                       child: WeekDaysSliderDayButton(
                           dayIndex: index,
                           selectedDate: selectedDayIndex,
@@ -155,16 +155,16 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         }),
         child: Container(
           decoration: BoxDecoration(
-              color: selected ? kMainColorLight : Colors.white,
+              color: selected ? theme.mainColorLight : Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: kCardBorderColor)),
+              border: Border.all(color: theme.cardBorderColor)),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           child: Center(
             child: Text(string,
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: selected ? kMainColor : Colors.black)),
+                    color: selected ? theme.mainColor : Colors.black)),
           ),
         ),
       ),
@@ -178,7 +178,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kCardBorderColor)),
+            border: Border.all(color: theme.cardBorderColor)),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         child: Center(
           child: Text(year,

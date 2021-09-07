@@ -26,7 +26,7 @@ class AddProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: Column(
         children: [
           Padding(
@@ -37,7 +37,7 @@ class AddProgressScreen extends StatelessWidget {
               children: [
                 Icon(
                   ExtraIcons.statistics,
-                  color: kMainColor,
+                  color: theme.mainColor,
                   size: 20,
                 ),
                 SizedBox(width: 12),
@@ -45,9 +45,9 @@ class AddProgressScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 2),
                   child: Text(
                     'Exercise Progress',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontFamily: 'Montserrat',
-                        color: kTextColor,
+                        color: theme.textColor,
                         fontWeight: FontWeight.w500,
                         fontSize: 17),
                   ),
@@ -62,9 +62,9 @@ class AddProgressScreen extends StatelessWidget {
                       },
                       child: Text(
                         'Save',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontFamily: 'Montserrat',
-                            color: kMainColor,
+                            color: theme.mainColor,
                             fontSize: 16),
                       ),
                     ),
@@ -97,7 +97,7 @@ class AddProgressScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
-                        border: Border.all(color: kCardBorderColor)),
+                        border: Border.all(color: theme.cardBorderColor)),
                     child: Column(
                       children: [
                         buildSubHeading('Sets', Icons.account_tree_outlined),
@@ -180,7 +180,7 @@ class AddProgressScreen extends StatelessWidget {
           title,
           style: TextStyle(
               fontFamily: 'Montserrat',
-              color: kTextColor,
+              color: theme.textColor,
               fontSize: 12,
               fontWeight: FontWeight.w500),
         )
@@ -236,9 +236,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                 Text(widget.activity.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontFamily: 'Montserrat',
-                        color: kMainColor,
+                        color: theme.mainColor,
                         fontWeight: FontWeight.w500,
                         fontSize: 17)),
                 SizedBox(height: 4),
@@ -246,9 +246,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                   child: Text(widget.activity.description,
                       maxLines: expanded ? 6 : 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: kTextColor,
+                          color: theme.mainColor,
                           letterSpacing: 0.2,
                           fontWeight: FontWeight.w400,
                           fontSize: 13)),

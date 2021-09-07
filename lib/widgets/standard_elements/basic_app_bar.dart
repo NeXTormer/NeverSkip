@@ -32,7 +32,7 @@ class BasicAppBar extends StatelessWidget {
                   if (icon != null)
                     Icon(
                       icon!,
-                      color: kMainColor,
+                      color: theme.mainColor,
                     )
                 ])));
   }

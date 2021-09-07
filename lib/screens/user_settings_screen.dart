@@ -32,7 +32,7 @@ class UserSettingsScreen extends StatelessWidget {
                 height: 150,
                 child: Center(
                   child: CircleAvatar(
-                    backgroundColor: kMainColorLight,
+                    backgroundColor: theme.mainColorLight,
                     radius: 60,
                     backgroundImage: CachedNetworkImageProvider(user.image),
                   ),

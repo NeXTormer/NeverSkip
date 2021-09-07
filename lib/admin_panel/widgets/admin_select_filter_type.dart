@@ -29,7 +29,7 @@ class AdminSelectFilterType extends StatelessWidget {
       height: 44,
       onTap: () => onChange(matchAny),
       padding: const EdgeInsets.all(6),
-      color: selected ? kMainColor : Colors.white,
+      color: selected ? theme.mainColorLight : Colors.white,
       child: Center(
         child: Text(
           name,

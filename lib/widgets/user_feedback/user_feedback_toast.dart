@@ -11,7 +11,7 @@ class UserFeedbackToast {
   );
   final boxDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: kMainColor.withAlpha(220) // Colors.black.withAlpha(50),
+      color: theme.mainColor.withAlpha(220) // Colors.black.withAlpha(50),
       );
 
   showAddedToast(BuildContext context) {

@@ -42,7 +42,7 @@ class AdminSelectMuscleGroup extends StatelessWidget {
     return FredericCard(
       onTap: () => selected ? removeMuscleGroup(group) : addMuscleGroup(group),
       padding: const EdgeInsets.all(6),
-      color: selected ? kMainColor : Colors.white,
+      color: selected ? theme.mainColor : Colors.white,
       child: Text(
         name,
         style: TextStyle(

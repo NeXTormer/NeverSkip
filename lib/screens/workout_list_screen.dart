@@ -25,7 +25,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       floatingActionButton: buildAddExerciseButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
@@ -67,7 +67,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
       child: FloatingActionButton(
         elevation: 0,
         highlightElevation: 0,
-        backgroundColor: kMainColor,
+        backgroundColor: theme.mainColor,
         onPressed: () => CupertinoScaffold.showCupertinoModalBottomSheet(
             context: context,
             builder: (c) => Scaffold(

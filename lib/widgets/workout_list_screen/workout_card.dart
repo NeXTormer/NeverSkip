@@ -86,7 +86,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                   style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontSize: 14,
-                                      color: kTextColor,
+                                      color: theme.textColor,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
@@ -97,7 +97,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                   child: CupertinoSwitch(
                                     key: ValueKey(widget.workout.workoutID),
                                     value: isSelected,
-                                    activeColor: kMainColor,
+                                    activeColor: theme.mainColor,
                                     onChanged: widget.workout.workoutID == 'new'
                                         ? null
                                         : (value) =>

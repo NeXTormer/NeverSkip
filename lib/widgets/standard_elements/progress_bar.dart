@@ -25,10 +25,11 @@ class ProgressBar extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(100)),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor:
-                  alternateColor ? kAccentColorLight : kMainColorLight,
+              backgroundColor: alternateColor
+                  ? theme.accentColorLight
+                  : theme.mainColorLight,
               valueColor: AlwaysStoppedAnimation<Color>(
-                  alternateColor ? kAccentColor : kMainColor),
+                  alternateColor ? theme.accentColor : theme.mainColor),
             ),
           )),
     );

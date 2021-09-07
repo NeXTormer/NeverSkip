@@ -36,7 +36,7 @@ class NormalActivityCardContent extends StatelessWidget {
                 Text(
                   '${activity.name}',
                   style: TextStyle(
-                    color: kTextColor,
+                    color: theme.textColor,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0,
                     fontSize: 13,

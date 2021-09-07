@@ -8,13 +8,13 @@ class UnitText extends StatelessWidget {
       this.unitSize = 14,
       this.valueSize = 16}) {
     valueStyle = TextStyle(
-        color: kTextColor,
+        color: theme.textColor,
         fontWeight: valueWeight,
         letterSpacing: 0.5,
         fontSize: valueSize);
 
     unitStyle = TextStyle(
-        color: kTextColor,
+        color: theme.textColor,
         fontWeight: unitWeight,
         letterSpacing: 0.5,
         fontSize: unitSize);

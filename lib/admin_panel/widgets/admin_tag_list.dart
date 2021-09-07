@@ -21,7 +21,7 @@ class AdminTagList extends StatelessWidget {
                     Icons.highlight_remove_outlined,
                     color: Colors.white,
                   ),
-                  backgroundColor: kMainColor,
+                  backgroundColor: theme.mainColor,
                   label: Text(
                     tags[index],
                     style: TextStyle(

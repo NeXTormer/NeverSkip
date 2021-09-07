@@ -62,7 +62,7 @@ class _NumberSliderState extends State<NumberSlider> {
                     child: Container(
                       child: Icon(
                         Icons.play_arrow,
-                        color: kMainColor,
+                        color: theme.mainColor,
                       ),
                     ),
                   ),

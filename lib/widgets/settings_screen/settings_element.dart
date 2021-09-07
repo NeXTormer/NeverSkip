@@ -19,9 +19,11 @@ class SettingsElement extends StatefulWidget {
       this.changeAttributeWidget,
       this.onChanged,
       this.defaultSwitchPosition = false,
-      this.iconBackgroundColor = kMainColor,
+      Color? iconBackgroundColor,
       Key? key})
-      : super(key: key);
+      : super(key: key) {
+    this.iconBackgroundColor = iconBackgroundColor ?? theme.mainColor;
+  }
 
   final String text;
   final String? subText;
@@ -35,7 +37,7 @@ class SettingsElement extends StatefulWidget {
   bool isLastItem;
   final void Function()? onTap;
   final void Function(bool state)? onChanged;
-  final Color iconBackgroundColor;
+  late final Color iconBackgroundColor;
   final Widget? changeAttributeWidget;
 
   @override
@@ -68,7 +70,7 @@ class _SettingsElementState extends State<SettingsElement> {
                   child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: kMainColor),
+                          color: theme.mainColor),
                       child: Icon(
                         widget.icon!,
                         color: Colors.white,
@@ -81,7 +83,7 @@ class _SettingsElementState extends State<SettingsElement> {
                   fontFamily: 'Montserrat',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: kTextColor),
+                  color: theme.textColor),
             ),
             Expanded(child: Container()),
             if (widget.subText != null) Text(widget.subText!),
@@ -94,11 +96,11 @@ class _SettingsElementState extends State<SettingsElement> {
                       switchState = state;
                     });
                   },
-                  activeColor: kMainColor),
+                  activeColor: theme.mainColor),
             if (!widget.hasSwitch)
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: kGreyColor,
+                color: theme.greyColor,
               )
           ],
         ));

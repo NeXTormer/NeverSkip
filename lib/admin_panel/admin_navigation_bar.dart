@@ -85,7 +85,7 @@ class _SideNavigationBarItem extends StatelessWidget {
       onTap: onTap,
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      color: selected ? kGreyColor : kScaffoldBackgroundColor,
+      color: selected ? theme.greyColor : theme.backgroundColor,
       child: Row(
         children: [
           Icon(screenData.icon),

@@ -52,7 +52,8 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                 children: [
                   AspectRatio(
                     child: PictureIcon(widget.activity.activity.image,
-                        mainColor: kMainColor, accentColor: kMainColorLight),
+                        mainColor: theme.mainColor,
+                        accentColor: theme.mainColorLight),
                     aspectRatio: 1,
                   ),
                   SizedBox(width: 12),
@@ -67,7 +68,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                                   fontFamily: 'Montserrat',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: kTextColor)),
+                                  color: theme.textColor)),
                           Expanded(child: Container()),
                         ]),
                         Row(
@@ -75,7 +76,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                             Text(
                               '${widget.activity.sets}',
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
                                   fontSize: 14),
@@ -84,7 +85,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                             Text(
                                 '${widget.activity.sets == 1 ? 'set' : 'sets'}',
                                 style: TextStyle(
-                                    color: kTextColor,
+                                    color: theme.textColor,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 0.5,
                                     fontSize: 12)),
@@ -94,7 +95,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                             Text(
                               '${widget.activity.reps}',
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
                                   fontSize: 14),
@@ -103,7 +104,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                             Text(
                                 '${widget.activity.reps == 1 ? 'repetition' : 'repetitions'}',
                                 style: TextStyle(
-                                    color: kTextColor,
+                                    color: theme.textColor,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 0.5,
                                     fontSize: 12)),
@@ -122,9 +123,10 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: kMainColor, width: 1.8)),
+                            border:
+                                Border.all(color: theme.mainColor, width: 1.8)),
                         child: Icon(CupertinoIcons.pencil,
-                            color: kMainColor, size: 24),
+                            color: theme.mainColor, size: 24),
                       ),
                     ),
                   if (widget.editable)
@@ -135,9 +137,10 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: kMainColor, width: 1.8)),
+                            border:
+                                Border.all(color: theme.mainColor, width: 1.8)),
                         child: Icon(CupertinoIcons.delete,
-                            color: kMainColor, size: 24),
+                            color: theme.mainColor, size: 24),
                       ),
                     ),
                 ],
@@ -213,7 +216,7 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
-                border: Border.all(color: kCardBorderColor)),
+                border: Border.all(color: theme.cardBorderColor)),
             child: Column(
               children: [
                 buildSubHeading('Sets', Icons.account_tree_outlined),
@@ -250,7 +253,7 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
           title,
           style: TextStyle(
               fontFamily: 'Montserrat',
-              color: kTextColor,
+              color: theme.textColor,
               fontSize: 12,
               fontWeight: FontWeight.w500),
         )

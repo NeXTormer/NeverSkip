@@ -40,7 +40,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   Widget build(BuildContext context) {
     return CupertinoScaffold(
       body: Scaffold(
-        backgroundColor: kScaffoldBackgroundColor,
+        backgroundColor: theme.backgroundColor,
         extendBodyBehindAppBar: false,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.dark,
@@ -69,9 +69,9 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             child: BottomNavigationBar(
               items: items,
               elevation: 0,
-              backgroundColor: Colors.white,
-              selectedItemColor: kAccentColor,
-              unselectedItemColor: kMainColor,
+              backgroundColor: theme.backgroundColor,
+              selectedItemColor: theme.accentColor,
+              unselectedItemColor: theme.mainColor,
               showUnselectedLabels: true,
               type: BottomNavigationBarType.fixed,
               currentIndex: currentIndex,

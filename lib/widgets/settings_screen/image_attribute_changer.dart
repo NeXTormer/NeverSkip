@@ -33,7 +33,7 @@ class _ImageAttributeChangerState extends State<ImageAttributeChanger> {
           if (currentImage != null)
             CircleAvatar(
               radius: 80,
-              backgroundColor: kMainColorLight,
+              backgroundColor: theme.mainColorLight,
               backgroundImage:
                   loading ? null : CachedNetworkImageProvider(currentImage),
               child: loading
@@ -45,7 +45,7 @@ class _ImageAttributeChangerState extends State<ImageAttributeChanger> {
           if (currentImage == null)
             CircleAvatar(
               radius: 80,
-              backgroundColor: kMainColor,
+              backgroundColor: theme.mainColor,
               child: Center(
                 child: Text('No Image'),
               ),

@@ -58,7 +58,7 @@ class WeekdaysSliderSegment extends StatelessWidget {
                 ? Icons.arrow_back_ios
                 : Icons.arrow_forward_ios,
             size: 15,
-            color: kTextColor.withOpacity(0.8),
+            color: theme.textColor.withOpacity(0.8),
           ),
         ),
       ),
@@ -182,14 +182,14 @@ class WeekDaysSliderDayButton extends StatelessWidget {
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: kMainColor.withOpacity(0.1),
+              color: theme.mainColor.withOpacity(0.1),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('${date.day}',
                     style: TextStyle(
-                      color: kMainColor,
+                      color: theme.mainColor,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
                       fontSize: 17,
@@ -197,7 +197,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                 Text(
                   '${numToWeekday(date.weekday)}',
                   style: TextStyle(
-                    color: kMainColor.withOpacity(0.7),
+                    color: theme.mainColor.withOpacity(0.7),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
                     fontSize: 13,
@@ -214,7 +214,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
               children: [
                 Text('${date.day}',
                     style: TextStyle(
-                      color: kTextColor,
+                      color: theme.textColor,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
                       fontSize: 17,
@@ -222,7 +222,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                 Text(
                   '${numToWeekday(date.weekday)}',
                   style: TextStyle(
-                    color: kTextColor.withOpacity(0.8),
+                    color: theme.textColor.withOpacity(0.8),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
                     fontSize: 13,

@@ -13,7 +13,7 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: SafeArea(
         child: BlocBuilder<FredericUserManager, FredericUser>(
             builder: (context, user) {

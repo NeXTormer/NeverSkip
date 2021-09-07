@@ -34,7 +34,7 @@ class AdminSelectActivityType extends StatelessWidget {
     return FredericCard(
       onTap: () => onChange(type),
       padding: const EdgeInsets.all(6),
-      color: selected ? kMainColor : Colors.white,
+      color: selected ? theme.mainColor : Colors.white,
       child: Text(
         name,
         style: TextStyle(

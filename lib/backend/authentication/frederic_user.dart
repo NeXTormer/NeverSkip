@@ -124,14 +124,20 @@ class FredericUser {
 
   set streakStartDate(DateTime? value) {
     if (uid == '') return;
-    FirebaseFirestore.instance.collection('users').doc(uid).update(
-        {'streakstart': value == null ? null : Timestamp.fromDate(value)});
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'streakstart': value == null
+          ? null
+          : Timestamp.fromDate(DateTime(value.year, value.month, value.day))
+    });
   }
 
   set streakLatestDate(DateTime? value) {
     if (uid == '') return;
-    FirebaseFirestore.instance.collection('users').doc(uid).update(
-        {'streaklatest': value == null ? null : Timestamp.fromDate(value)});
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'streaklatest': value == null
+          ? null
+          : Timestamp.fromDate(DateTime(value.year, value.month, value.day))
+    });
   }
 
   bool streakLatestDateWasTodayOrYesterday() {
