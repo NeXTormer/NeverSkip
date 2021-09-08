@@ -32,16 +32,16 @@ class _ColorThemeChangerState extends State<ColorThemeChanger> {
           SizedBox(height: 24),
           FredericButton('Dark Orange', onPressed: () {
             FredericBase.setColorTheme(
-                context, FredericColorTheme.blueColorful());
+                context, FredericColorTheme.orangeDark());
           }),
           SizedBox(height: 24),
           FredericButton('Light Orange', onPressed: () {
-            FredericBase.setColorTheme(
-                context, FredericColorTheme.blueColorful());
+            FredericBase.setColorTheme(context, FredericColorTheme.orange());
           }),
+          SizedBox(height: 24),
           FredericButton('Colorful Light Orange', onPressed: () {
             FredericBase.setColorTheme(
-                context, FredericColorTheme.blueColorful());
+                context, FredericColorTheme.orangeColorful());
           }),
         ],
       ),
