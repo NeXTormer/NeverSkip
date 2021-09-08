@@ -16,10 +16,11 @@ class HomeScreenAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String userName = user.name.split(' ').first;
     return FredericSliverAppBar(
       height: 124,
       title: 'Let\'s find you a Workout',
-      subtitle: 'Good Morning, ${user.name.split(' ').first}',
+      subtitle: 'Good Morning, $userName',
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -27,7 +28,10 @@ class HomeScreenAppbar extends StatelessWidget {
             radius: 20,
             backgroundImage: CachedNetworkImageProvider(user.image),
           ),
-          StreakIcon(user: user),
+          StreakIcon(
+            user: user,
+            onColorfulBackground: theme.isColorful,
+          ),
         ],
       ),
       icon: FredericContainerTransition(

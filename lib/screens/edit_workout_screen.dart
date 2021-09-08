@@ -45,9 +45,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
         if (workout == null) {
           Navigator.of(context).pop();
-          return Scaffold(
+          return FredericScaffold(
             body: Center(
-              child: Text('Workout does not exist'),
+              child: Text('Error: workout doesn\'t exist'),
             ),
           );
         }

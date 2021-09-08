@@ -66,7 +66,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 children: [
                   AspectRatio(
                     aspectRatio: 1,
-                    child: PictureIcon(widget.workout.image),
+                    child: PictureIcon(widget.workout.image,
+                        mainColor: theme.mainColorInText),
                   ),
                   SizedBox(width: 10),
                   Expanded(

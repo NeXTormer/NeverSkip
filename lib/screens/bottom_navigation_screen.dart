@@ -95,21 +95,13 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 }
 
 class FredericScreen {
-  FredericScreen(
-      {required this.screen,
-      required this.icon,
-      required this.label,
-      this.appbar});
+  FredericScreen({
+    required this.screen,
+    required this.icon,
+    required this.label,
+  });
 
-  FredericAppBar? appbar;
   Widget screen;
   IconData icon;
   String label;
-}
-
-class FredericAppBar {
-  FredericAppBar({required this.title, this.leading, this.actions});
-  Widget title;
-  Widget? leading;
-  List<Widget>? actions;
 }

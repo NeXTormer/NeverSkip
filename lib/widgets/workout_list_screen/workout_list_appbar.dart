@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
-import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/state/workout_search_term.dart';
 import 'package:frederic/widgets/standard_elements/frederic_sliver_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
@@ -34,16 +34,23 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
       height: 140,
       title: 'All Workout Plans',
       subtitle: 'Find your perfect Workout Plan',
-      icon: StreakIcon(user: widget.user),
+      icon:
+          StreakIcon(user: widget.user, onColorfulBackground: theme.isColorful),
       trailing: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FredericTextField(
           'Search...',
-          brightContents: true,
+          onColorfulBackground: theme.isColorful,
+          brightContents: theme.isColorful,
+          onSuffixIconTap: () {
+            setState(() {
+              textEditingController.text = '';
+            });
+          },
           controller: textEditingController,
           icon: Icons.search,
           size: 20,
-          suffixIcon: ExtraIcons.settings,
+          suffixIcon: Icons.highlight_remove_outlined,
         ),
       ),
     );

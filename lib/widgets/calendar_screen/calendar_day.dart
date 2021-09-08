@@ -270,14 +270,15 @@ class _CalendarDayCard extends StatelessWidget {
             Text(
               '${day.day}',
               style: TextStyle(
-                  color: completed ? theme.positiveColor : theme.textColorMain,
+                  color:
+                      completed ? theme.positiveColor : theme.mainColorInText,
                   fontSize: 20,
                   fontWeight: FontWeight.w500),
             ),
             Text('${getWeekdayName(day.weekday)}',
                 style: TextStyle(
                     color:
-                        completed ? theme.positiveColor : theme.textColorMain,
+                        completed ? theme.positiveColor : theme.mainColorInText,
                     fontSize: 12,
                     fontWeight: FontWeight.w300))
           ]),

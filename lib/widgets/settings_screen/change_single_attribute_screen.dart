@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
 class ChangeSingleAttributeScreen extends StatefulWidget {
@@ -26,7 +26,9 @@ class _ChangeSingleAttributeScreenState
         color: theme.backgroundColor,
         child: CustomScrollView(
           slivers: [
-            BasicAppBar(title: widget.title, subtitle: widget.subtitle),
+            SliverToBoxAdapter(
+                child: FredericBasicAppBar(
+                    title: widget.title, subtitle: widget.subtitle)),
             if (theme.isBright) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
             if (widget.infoText != null)

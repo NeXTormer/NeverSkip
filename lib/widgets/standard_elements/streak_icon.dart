@@ -3,9 +3,12 @@ import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
 
 class StreakIcon extends StatelessWidget {
-  const StreakIcon({Key? key, required this.user}) : super(key: key);
+  const StreakIcon(
+      {Key? key, this.onColorfulBackground = false, required this.user})
+      : super(key: key);
 
   final FredericUser user;
+  final bool onColorfulBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +25,19 @@ class StreakIcon extends StatelessWidget {
               style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 16,
-                  color: theme.textColor),
+                  color: onColorfulBackground
+                      ? theme.textColorColorfulBackground
+                      : theme.textColor),
             ),
           ),
           SizedBox(width: 6),
           Icon(
             Icons.local_fire_department_outlined,
-            color: theme.isDark ? theme.textColor : theme.mainColor,
+            color: theme.isDark
+                ? theme.textColor
+                : (onColorfulBackground
+                    ? theme.textColorColorfulBackground
+                    : theme.mainColor),
           )
         ],
       ),

@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             slivers: [
               HomeScreenAppbar(user),
-              if (theme.isBright) SliverDivider(),
+              if (theme.isMonotone) SliverDivider(),
               ProgressIndicatorSegment(),
               GoalSegment(),
               TrainingVolumeChartSegment(),
@@ -28,6 +28,7 @@ class HomeScreen extends StatelessWidget {
           );
         },
         buildWhen: (previous, current) {
+          return true;
           return current.finishedLoading;
         },
       ),

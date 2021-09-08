@@ -10,7 +10,7 @@ import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/specific_settings/color_theme_changer.dart';
 import 'package:frederic/widgets/settings_screen/user_settings_segment.dart';
-import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
@@ -23,10 +23,12 @@ class SettingsScreen extends StatelessWidget {
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) => CustomScrollView(
           slivers: [
-            BasicAppBar(
-              title: 'Settings',
-              subtitle: 'Make it fit your needs perfectly',
-              icon: ExtraIcons.settings,
+            SliverToBoxAdapter(
+              child: FredericBasicAppBar(
+                title: 'Settings',
+                subtitle: 'Make it fit your needs perfectly',
+                icon: FredericAppBarIcon(ExtraIcons.settings),
+              ),
             ),
             if (theme.isBright) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 10)),

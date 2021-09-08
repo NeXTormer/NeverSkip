@@ -30,8 +30,8 @@ class SmallActivityCardContent extends StatelessWidget {
         children: [
           AspectRatio(
               aspectRatio: 1,
-              child:
-                  PictureIcon(activity.image, mainColor: theme.textColorMain)),
+              child: PictureIcon(activity.image,
+                  mainColor: theme.mainColorInText)),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Column(

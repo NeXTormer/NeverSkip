@@ -65,7 +65,7 @@ class _SetCardState extends State<SetCard> {
                           color: theme.mainColorLight),
                       child: Icon(
                         ExtraIcons.statistics,
-                        color: theme.mainColor,
+                        color: theme.mainColorInText,
                         size: 18,
                       ),
                     ),
@@ -132,7 +132,8 @@ class _SetCardState extends State<SetCard> {
                           fontSize: 14),
                     ),
                     SizedBox(width: 12),
-                    Icon(ExtraIcons.calendar, color: theme.mainColor, size: 22),
+                    Icon(ExtraIcons.calendar,
+                        color: theme.mainColorInText, size: 22),
                   ],
                 )),
     );

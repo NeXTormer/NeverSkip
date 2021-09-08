@@ -6,7 +6,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_segment.dart';
-import 'package:frederic/widgets/activity_screen/activity_header.dart';
+import 'package:frederic/widgets/activity_screen/activity_list_screen_app_bar.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_segment.dart';
 import 'package:frederic/widgets/activity_screen/featured_activity_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
@@ -44,13 +44,13 @@ class ActivityListScreen extends StatelessWidget {
                   controller:
                       isSelector ? ModalScrollController.of(context) : null,
                   slivers: [
-                    ActivityHeader(
+                    ActivityListScreenAppBar(
                       title,
                       subtitle,
                       user: user,
                       filterController: filter,
                     ),
-                    if (theme.isBright) SliverDivider(),
+                    if (theme.isMonotone) SliverDivider(),
                     FeaturedActivitySegment(
                       'Featured',
                       user.progressMonitors,

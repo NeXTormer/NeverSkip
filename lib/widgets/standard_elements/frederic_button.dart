@@ -10,7 +10,7 @@ class FredericButton extends StatelessWidget {
       this.fontSize = 15,
       this.fontWeight = FontWeight.w600}) {
     this.mainColor = mainColor ?? theme.mainColor;
-    this.textColor = textColor ?? theme.textColor;
+    this.textColor = textColor ?? theme.textColorColorfulBackground;
   }
   late final Color mainColor;
   late final Color textColor;
@@ -33,7 +33,7 @@ class FredericButton extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: inverted ? Border.all(color: mainColor) : null,
-            color: inverted ? (theme.backgroundColor) : mainColor),
+            color: inverted ? (theme.cardBackgroundColor) : mainColor),
         child: Center(
             child: Text(
           text,

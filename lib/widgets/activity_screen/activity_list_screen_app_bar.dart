@@ -7,8 +7,8 @@ import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 import '../../state/activity_filter_controller.dart';
 import '../standard_elements/frederic_text_field.dart';
 
-class ActivityHeader extends StatefulWidget {
-  ActivityHeader(this.title, this.subtitle,
+class ActivityListScreenAppBar extends StatefulWidget {
+  ActivityListScreenAppBar(this.title, this.subtitle,
       {required this.user, required this.filterController});
 
   final String title;
@@ -17,10 +17,11 @@ class ActivityHeader extends StatefulWidget {
   final ActivityFilterController filterController;
 
   @override
-  _ActivityHeaderState createState() => _ActivityHeaderState();
+  _ActivityListScreenAppBarState createState() =>
+      _ActivityListScreenAppBarState();
 }
 
-class _ActivityHeaderState extends State<ActivityHeader> {
+class _ActivityListScreenAppBarState extends State<ActivityListScreenAppBar> {
   final textController = TextEditingController();
 
   @override
@@ -37,7 +38,8 @@ class _ActivityHeaderState extends State<ActivityHeader> {
       title: widget.title,
       subtitle: widget.subtitle,
       height: 140,
-      icon: StreakIcon(user: widget.user),
+      icon:
+          StreakIcon(user: widget.user, onColorfulBackground: theme.isColorful),
       trailing: Container(
         color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
         child: Column(
@@ -49,8 +51,9 @@ class _ActivityHeaderState extends State<ActivityHeader> {
                   textController.text = '';
                 });
               },
+              onColorfulBackground: theme.isColorful,
               controller: textController,
-              brightContents: true,
+              brightContents: theme.isColorful,
               icon: Icons.search,
               size: 20,
               suffixIcon: Icons.highlight_remove_outlined,

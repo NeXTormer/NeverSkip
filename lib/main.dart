@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:frederic/admin_panel/backend/admin_backend.dart';
 import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -38,7 +37,8 @@ final getIt = GetIt.instance;
 // const Color kBrightTextColor = Colors.white;
 // const Color kCardBorderColor = const Color(0xFFE2E2E2);
 
-FredericColorTheme theme = FredericColorTheme.blueDark();
+FredericColorTheme _colorTheme = FredericColorTheme.blueDark();
+FredericColorTheme get theme => _colorTheme;
 
 void main() async {
   LicenseRegistry.addLicense(() async* {
@@ -52,20 +52,28 @@ void main() async {
   //await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '');
   await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 
-  /// implement Phoenix in FredericApp Widget
-  runApp(Phoenix(
-    child: Frederic(),
-  ));
+  runApp(FredericBase());
 }
 
-class Frederic extends StatefulWidget {
-  Frederic({Key? key}) : super(key: key);
+class FredericBase extends StatefulWidget {
+  FredericBase({Key? key}) : super(key: key);
 
   @override
-  _FredericState createState() => _FredericState();
+  _FredericBaseState createState() => _FredericBaseState();
+
+  static void forceFullRestart(BuildContext context) {
+    context.findAncestorStateOfType<_FredericBaseState>()!.forceRestart();
+  }
+
+  static void setColorTheme(BuildContext context, FredericColorTheme theme) {
+    _colorTheme = theme;
+    context.findAncestorStateOfType<_FredericBaseState>()!.forceRestart();
+  }
 }
 
-class _FredericState extends State<Frederic> {
+class _FredericBaseState extends State<FredericBase> {
+  Key _key = UniqueKey();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -77,50 +85,63 @@ class _FredericState extends State<Frederic> {
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<FredericUserManager>.value(
-            value: FredericBackend.instance.userManager),
-        BlocProvider<FredericSetManager>.value(
-            value: FredericBackend.instance.setManager),
-        BlocProvider<FredericActivityManager>.value(
-            value: FredericBackend.instance.activityManager),
-        BlocProvider<FredericWorkoutManager>.value(
-            value: FredericBackend.instance.workoutManager),
-      ],
-      child: MaterialApp(
-        // navigatorObservers: [
-        //   FirebaseAnalyticsObserver(analytics: analytics),
-        // ],
-        showPerformanceOverlay: false,
-        title: 'Frederic',
-        theme: ThemeData(
-            primaryColor: theme.mainColor,
-            accentColor: theme.accentColor,
-            brightness: theme.isBright ? Brightness.light : Brightness.dark,
-            fontFamily: 'Montserrat',
-            textTheme: TextTheme(
-              headline1: TextStyle(
-                  color: const Color(0xFF272727),
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.6,
-                  fontSize: 13),
-            )),
-        home: OrientationBuilder(
-          builder: (context, orientation) {
-            if (orientation == Orientation.portrait) {
-              return FredericMainApp();
-            }
+    return Container(
+      key: _key,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<FredericUserManager>.value(
+              value: FredericBackend.instance.userManager),
+          BlocProvider<FredericSetManager>.value(
+              value: FredericBackend.instance.setManager),
+          BlocProvider<FredericActivityManager>.value(
+              value: FredericBackend.instance.activityManager),
+          BlocProvider<FredericWorkoutManager>.value(
+              value: FredericBackend.instance.workoutManager),
+        ],
+        child: MaterialApp(
+          // navigatorObservers: [
+          //   FirebaseAnalyticsObserver(analytics: analytics),
+          // ],
+          showPerformanceOverlay: false,
+          title: 'Frederic',
+          theme: ThemeData(
+              primaryColor: theme.mainColor,
+              accentColor: theme.accentColor,
+              brightness: theme.isBright ? Brightness.light : Brightness.dark,
+              fontFamily: 'Montserrat',
+              textTheme: TextTheme(
+                headline1: TextStyle(
+                    color: const Color(0xFF272727),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.6,
+                    fontSize: 13),
+              )),
+          home: OrientationBuilder(
+            builder: (context, orientation) {
+              if (orientation == Orientation.portrait) {
+                return FredericMainApp();
+              }
 
-            if (getIt.isRegistered<AdminBackend>())
-              getIt.unregister<AdminBackend>();
-            getIt.registerSingleton<AdminBackend>(AdminBackend());
-            return BlocProvider<AdminIconManager>.value(
-                value: AdminBackend.instance.iconManager,
-                child: FredericAdminPanel());
-          },
+              if (getIt.isRegistered<AdminBackend>())
+                getIt.unregister<AdminBackend>();
+              getIt.registerSingleton<AdminBackend>(AdminBackend());
+              return BlocProvider<AdminIconManager>.value(
+                  value: AdminBackend.instance.iconManager,
+                  child: FredericAdminPanel());
+            },
+          ),
         ),
       ),
     );
+  }
+
+  void forceRestart() {
+    setState(() {
+      _key = UniqueKey();
+    });
+  }
+
+  void forceRebuild() {
+    setState(() {});
   }
 }

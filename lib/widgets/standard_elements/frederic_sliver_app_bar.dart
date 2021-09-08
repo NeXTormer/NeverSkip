@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/misc/frederic_text_theme.dart';
 
 class FredericSliverAppBar extends StatelessWidget {
   FredericSliverAppBar({
@@ -10,9 +9,10 @@ class FredericSliverAppBar extends StatelessWidget {
     this.icon,
     this.trailing,
     this.leading,
+    bool? rounded,
     Key? key,
   }) : super(key: key) {
-    rounded = theme.isColorful;
+    this.rounded = rounded ?? theme.isColorful;
   }
 
   final String title;
@@ -87,19 +87,24 @@ class _FredericSliverAppBarHeaderDelegate
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(subtitle ?? '',
-                              style: FredericTextTheme.homeScreenAppBarTitle),
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: theme.textColorColorfulBackground,
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 0.6,
+                                  fontSize: 13)),
                           SizedBox(height: 8),
                           Text(title,
-                              style:
-                                  FredericTextTheme.homeScreenAppBarSubTitle),
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: theme.textColorColorfulBackground,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 0.1,
+                                  fontSize: 17)),
                           SizedBox(height: 4),
                         ],
                       ),
                       if (icon != null) icon!
-                      // Icon(
-                      //   icon!,
-                      //   color: theme.isColorful ? Colors.white : theme.mainColor,
-                      // )
                     ]),
               ),
               if (trailing != null) trailing!,
@@ -117,6 +122,6 @@ class _FredericSliverAppBarHeaderDelegate
   @override
   bool shouldRebuild(
       covariant _FredericSliverAppBarHeaderDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }

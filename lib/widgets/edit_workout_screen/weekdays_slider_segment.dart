@@ -189,7 +189,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
               children: [
                 Text('${date.day}',
                     style: TextStyle(
-                      color: theme.mainColor,
+                      color: theme.mainColorInText,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.1,
                       fontSize: 17,
@@ -197,7 +197,7 @@ class WeekDaysSliderDayButton extends StatelessWidget {
                 Text(
                   '${numToWeekday(date.weekday)}',
                   style: TextStyle(
-                    color: theme.mainColor.withOpacity(0.7),
+                    color: theme.mainColorInText.withOpacity(0.7),
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
                     fontSize: 13,

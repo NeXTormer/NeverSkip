@@ -40,7 +40,8 @@ class FredericActionDialog extends StatelessWidget {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12), color: Colors.white),
+                borderRadius: BorderRadius.circular(12),
+                color: theme.cardBackgroundColor),
             child: Container(
               child: Column(
                 children: [

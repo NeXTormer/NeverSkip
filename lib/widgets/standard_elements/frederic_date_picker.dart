@@ -172,7 +172,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: selected ? theme.mainColor : theme.textColor)),
+                    color: selected ? theme.mainColorInText : theme.textColor)),
           ),
         ),
       ),

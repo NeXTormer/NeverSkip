@@ -126,11 +126,11 @@ class _FredericSliderThumb extends SliderComponentShape {
     canvas.drawRRect(
         rect,
         Paint()
-          ..color = theme.cardBorderColor
+          ..color = theme.textColor
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1);
     TextSpan text = TextSpan(
-        style: TextStyle(color: Colors.black54, fontSize: 16),
+        style: TextStyle(color: theme.textColor, fontSize: 16),
         text: '${val.ceil()} week${val.ceil() == 1 ? '' : 's'}');
     TextPainter textPainter =
         TextPainter(text: text, textDirection: textDirection);

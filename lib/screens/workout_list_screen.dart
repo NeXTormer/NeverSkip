@@ -36,7 +36,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
             BlocBuilder<FredericUserManager, FredericUser>(
                 builder: (context, user) =>
                     WorkoutListAppbar(searchTerm, user: user)),
-            if (theme.isBright) SliverDivider(),
+            if (theme.isMonotone) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.only(top: 8)),
             SliverToBoxAdapter(
                 child: Padding(

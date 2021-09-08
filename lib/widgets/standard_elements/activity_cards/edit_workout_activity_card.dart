@@ -52,7 +52,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                 children: [
                   AspectRatio(
                     child: PictureIcon(widget.activity.activity.image,
-                        mainColor: theme.textColorMain,
+                        mainColor: theme.mainColorInText,
                         accentColor: theme.mainColorLight),
                     aspectRatio: 1,
                   ),
@@ -123,10 +123,10 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            border:
-                                Border.all(color: theme.mainColor, width: 1.8)),
+                            border: Border.all(
+                                color: theme.mainColorInText, width: 1.8)),
                         child: Icon(CupertinoIcons.pencil,
-                            color: theme.mainColor, size: 24),
+                            color: theme.mainColorInText, size: 24),
                       ),
                     ),
                   if (widget.editable)
@@ -137,10 +137,10 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            border:
-                                Border.all(color: theme.mainColor, width: 1.8)),
+                            border: Border.all(
+                                color: theme.mainColorInText, width: 1.8)),
                         child: Icon(CupertinoIcons.delete,
-                            color: theme.mainColor, size: 24),
+                            color: theme.mainColorInText, size: 24),
                       ),
                     ),
                 ],
@@ -215,7 +215,9 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+                color: theme.isDark
+                    ? theme.mainColorLight
+                    : theme.cardBackgroundColor,
                 border: Border.all(color: theme.cardBorderColor)),
             child: Column(
               children: [

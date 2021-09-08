@@ -30,7 +30,7 @@ class NormalActivityCardContent extends StatelessWidget {
                   aspectRatio: 1,
                   child: PictureIcon(
                     activity.image,
-                    mainColor: theme.textColorMain,
+                    mainColor: theme.mainColorInText,
                   ))),
           SizedBox(width: 12),
           Expanded(

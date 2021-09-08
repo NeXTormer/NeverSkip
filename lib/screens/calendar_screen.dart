@@ -27,9 +27,10 @@ class CalendarScreen extends StatelessWidget {
                 FredericSliverAppBar(
                   title: 'Upcoming Exercises',
                   subtitle: 'Let\'s get to Work',
-                  icon: StreakIcon(user: user),
+                  icon: StreakIcon(
+                      user: user, onColorfulBackground: theme.isColorful),
                 ),
-                if (theme.isBright) SliverDivider(),
+                if (theme.isMonotone) SliverDivider(),
                 SliverPadding(padding: const EdgeInsets.only(bottom: 8)),
                 //if (false)
                 SliverList(

@@ -14,6 +14,7 @@ class FredericTextField extends StatefulWidget {
       this.height = 44,
       this.maxLines = 1,
       this.suffixIcon,
+      this.onColorfulBackground = false,
       this.isPasswordField = false,
       this.onSuffixIconTap,
       this.verticalContentPadding = 0,
@@ -28,6 +29,7 @@ class FredericTextField extends StatefulWidget {
   final double size;
   final bool isPasswordField;
   final bool brightContents;
+  final bool onColorfulBackground;
   final TextEditingController? controller;
   final double height;
   final int maxLines;
@@ -64,14 +66,19 @@ class _FredericTextFieldState extends State<FredericTextField> {
         keyboardType: widget.keyboardType,
         style: TextStyle(
           fontSize: 12,
-          color: theme.greyTextColor,
+          color: widget.onColorfulBackground
+              ? theme.textColorColorfulBackground
+              : theme.greyTextColor,
           letterSpacing: 0.2,
         ),
         maxLines: widget.maxLines,
         inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
         obscureText: widget.isPasswordField && !showPassword,
         decoration: InputDecoration(
-          hintStyle: TextStyle(color: theme.greyTextColor),
+          hintStyle: TextStyle(
+              color: widget.onColorfulBackground
+                  ? theme.textColorColorfulBackground
+                  : theme.greyTextColor),
           prefixIcon: widget.icon == null
               ? null
               : Icon(
