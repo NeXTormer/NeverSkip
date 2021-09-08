@@ -17,15 +17,13 @@ class HomeScreen extends StatelessWidget {
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) {
           return CustomScrollView(
+            physics: BouncingScrollPhysics(),
             slivers: [
               HomeScreenAppbar(user),
               if (theme.isBright) SliverDivider(),
               ProgressIndicatorSegment(),
               GoalSegment(),
               TrainingVolumeChartSegment(),
-              SliverToBoxAdapter(
-                child: Container(height: 2000, color: theme.backgroundColor),
-              ),
             ],
           );
         },

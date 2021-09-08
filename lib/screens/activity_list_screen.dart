@@ -40,10 +40,16 @@ class ActivityListScreen extends StatelessWidget {
             return Consumer<ActivityFilterController>(
               builder: (context, filter, child) {
                 return CustomScrollView(
+                  physics: BouncingScrollPhysics(),
                   controller:
                       isSelector ? ModalScrollController.of(context) : null,
                   slivers: [
-                    ActivityHeader(title, subtitle, user: user),
+                    ActivityHeader(
+                      title,
+                      subtitle,
+                      user: user,
+                      filterController: filter,
+                    ),
                     if (theme.isBright) SliverDivider(),
                     FeaturedActivitySegment(
                       'Featured',
@@ -57,9 +63,7 @@ class ActivityListScreen extends StatelessWidget {
                       onTap: onSelect,
                       isSelector: isSelector,
                     ),
-                    ActivityFilterSegment(
-                        filterController:
-                            filter), // TODO Update Muscle Buttons to Radio Buttons
+                    ActivityFilterSegment(filterController: filter),
                     ActivityListSegment(
                       filterController: filter,
                       onTap: onSelect,

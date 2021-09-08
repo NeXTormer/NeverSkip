@@ -59,7 +59,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+                topRight: Radius.circular(12), topLeft: Radius.circular(12)),
             boxShadow: [
               BoxShadow(
                   color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
@@ -67,7 +67,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             child: BottomNavigationBar(
               items: items,
               elevation: 0,

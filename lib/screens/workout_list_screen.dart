@@ -31,6 +31,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
       body: ChangeNotifierProvider<WorkoutSearchTerm>(
         create: (context) => searchTerm,
         child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
           slivers: [
             BlocBuilder<FredericUserManager, FredericUser>(
                 builder: (context, user) =>

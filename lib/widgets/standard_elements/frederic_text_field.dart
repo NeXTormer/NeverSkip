@@ -15,6 +15,7 @@ class FredericTextField extends StatefulWidget {
       this.maxLines = 1,
       this.suffixIcon,
       this.isPasswordField = false,
+      this.onSuffixIconTap,
       this.verticalContentPadding = 0,
       this.text,
       this.brightContents = false,
@@ -35,6 +36,7 @@ class FredericTextField extends StatefulWidget {
   final String? text;
 
   final void Function(String)? onSubmit;
+  final void Function()? onSuffixIconTap;
 
   @override
   _FredericTextFieldState createState() => _FredericTextFieldState();
@@ -79,10 +81,14 @@ class _FredericTextFieldState extends State<FredericTextField> {
                 ),
           suffixIcon: widget.suffixIcon == null
               ? null
-              : Icon(
-                  widget.suffixIcon,
-                  size: widget.size,
-                  color: widget.brightContents ? Colors.white : theme.mainColor,
+              : GestureDetector(
+                  onTap: widget.onSuffixIconTap,
+                  child: Icon(
+                    widget.suffixIcon,
+                    size: widget.size,
+                    color:
+                        widget.brightContents ? Colors.white : theme.mainColor,
+                  ),
                 ),
           suffix: widget.isPasswordField
               ? Padding(

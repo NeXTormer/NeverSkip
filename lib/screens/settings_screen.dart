@@ -8,6 +8,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
+import 'package:frederic/widgets/settings_screen/specific_settings/color_theme_changer.dart';
 import 'package:frederic/widgets/settings_screen/user_settings_segment.dart';
 import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
@@ -33,9 +34,11 @@ class SettingsScreen extends StatelessWidget {
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(title: 'App Settings', elements: <SettingsElement>[
               SettingsElement(
-                text: 'Werner',
-                subText: 'Enabled',
-                icon: Icons.description,
+                text: 'Color Theme',
+                subText: 'Dark Blue',
+                changeAttributeWidget: ColorThemeChanger(),
+                changerTitle: 'Change the Color Theme',
+                icon: Icons.color_lens_outlined,
               ),
               SettingsElement(
                 text: 'Werner',
