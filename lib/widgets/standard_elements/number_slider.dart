@@ -9,18 +9,17 @@ import 'package:frederic/main.dart';
 /// the percentage of the screen width which one item takes up.
 ///
 class NumberSlider extends StatefulWidget {
-  NumberSlider(
-      {this.constrainController,
-      required this.controller,
-      this.numberOfItems = 400,
-      this.startingIndex = 10,
-      this.itemWidth = 0.2});
+  NumberSlider({
+    required this.controller,
+    this.numberOfItems = 400,
+    this.startingIndex = 10,
+    this.itemWidth = 0.2,
+  });
 
   final int startingIndex;
   final int numberOfItems;
   final double itemWidth;
   final NumberSliderController controller;
-  final NumberSliderController? constrainController;
 
   @override
   _NumberSliderState createState() => _NumberSliderState();
@@ -35,15 +34,6 @@ class _NumberSliderState extends State<NumberSlider> {
         viewportFraction: widget.itemWidth,
         initialPage: widget.startingIndex,
         keepPage: false);
-
-    if (widget.constrainController != null) {
-      widget.constrainController!.addListener(() {
-        setState(() {
-          print(widget.constrainController!.value);
-          widget.controller.value = widget.constrainController!.value;
-        });
-      });
-    }
 
     super.initState();
   }

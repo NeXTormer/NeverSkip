@@ -10,6 +10,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/home_screen/goal_card.dart';
+import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -44,15 +45,12 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final NumberSliderController currentStateController =
       NumberSliderController();
   final NumberSliderController endStateController = NumberSliderController();
-  final NumberSliderController updateStartSliderController =
-      NumberSliderController();
-  final NumberSliderController updateEndSliderController =
-      NumberSliderController();
 
   final UnitSliderController unitSliderController = UnitSliderController();
 
+  PageController? endPageController;
+
   String dateText = '';
-  String dummyActivityID = '';
   String dummyTitle = '';
 
   num dummyStartState = 0;
@@ -63,6 +61,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   DateTime? selectedEndDate;
 
   bool datePickerOpen = false;
+  bool trackActivity = false;
+
+  FredericActivity? dummyActivity;
 
   @override
   void initState() {
@@ -110,7 +111,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 width: 80,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: FredericButton(
-                  '+',
+                  'Link Activity',
                   onPressed: () => addNewActivityTracker(context),
                   fontSize: 20,
                 )),
@@ -154,7 +155,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                   buildSubHeading('Start', Icons.star_outline),
                   SizedBox(height: 12),
                   NumberSlider(
-                    constrainController: updateStartSliderController,
                     controller: startStateController,
                     itemWidth: 0.14,
                     numberOfItems: 200,
@@ -164,7 +164,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                   buildSubHeading('End', Icons.star_outline),
                   SizedBox(height: 12),
                   NumberSlider(
-                    constrainController: updateEndSliderController,
                     controller: endStateController,
                     itemWidth: 0.14,
                     numberOfItems: 200,
@@ -186,24 +185,32 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               child: FredericHeading('Current State'),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: FredericSlider(
-                unit: SliderUnit.Kilograms,
-                min: dummyStartState.toDouble(),
-                max: dummyEndState.toDouble(),
-                value: dummyCurrentState.toDouble(),
-                startStateController: startStateController,
-                currentStateController: currentStateController,
-                endStateController: endStateController,
-                isInteractive: true,
-                onChanged: (value) {
-                  dummyCurrentState = value;
-                },
-              ),
-            ),
-          ),
+          trackActivity
+              ? SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ProgressIndicatorCard(
+                        widget.sets![dummyActivity!.activityID], dummyActivity),
+                  ),
+                )
+              : SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: FredericSlider(
+                      unit: SliderUnit.Kilograms,
+                      min: dummyStartState.toDouble(),
+                      max: dummyEndState.toDouble(),
+                      value: dummyCurrentState.toDouble(),
+                      startStateController: startStateController,
+                      currentStateController: currentStateController,
+                      endStateController: endStateController,
+                      isInteractive: true,
+                      onChanged: (value) {
+                        dummyCurrentState = value;
+                      },
+                    ),
+                  ),
+                ),
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 42),
           ),
@@ -219,46 +226,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               ),
             ),
           ),
-          // SliverToBoxAdapter(
-          //   child: Padding(
-          //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          //     child: Row(
-          //       children: [
-          //         Expanded(
-          //             flex: 1,
-          //             child: FredericButton(
-          //               'Delete',
-          //               mainColor: Colors.red,
-          //               onPressed: () {
-          //                 showDialog(
-          //                     context: context,
-          //                     builder: (ctx) => FredericActionDialog(
-          //                           onConfirm: () {
-          //                             widget.goal.delete();
-          //                             Navigator.of(context).pop();
-          //                             Navigator.of(context).pop();
-          //                           },
-          //                           title: 'Confirm deletion',
-          //                           destructiveAction: true,
-          //                           child: Text(
-          //                               'Do you want to delete your goal? This cannot be undone!',
-          //                               textAlign: TextAlign.center),
-          //                         ));
-          //               },
-          //               inverted: true,
-          //             )),
-          //         SizedBox(width: 16),
-          //         Expanded(
-          //             flex: 2,
-          //             child: FredericButton(
-          //                 widget.isNewGoal ? 'Create' : 'Save', onPressed: () {
-          //               saveData();
-          //               Navigator.of(context).pop();
-          //             }))
-          //       ],
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -420,15 +387,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    startStateController.dispose();
-    endStateController.dispose();
-    currentStateController.dispose();
-    titleController.dispose();
-    super.dispose();
-  }
-
   void addNewActivityTracker(BuildContext context) {
     showCupertinoModalBottomSheet(
         context: context,
@@ -437,36 +395,30 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               child: ActivityListScreen(
                 isSelector: true,
                 onSelect: (activity) {
-                  if (widget.isNewGoal) {
-                    dummyActivityID = activity.activityID;
-                    titleController.text = activity.name;
-                  } else {
-                    int value = widget.sets![activity.activityID].bestWeight;
-                    dummyActivityID = activity.activityID;
-                    titleController.text = activity.name;
-                    if (dummyStartState < dummyEndState) {
-                      if (currentStateController.value > dummyEndState) {
-                        updateEndSliderController.value = value;
-                        endStateController.value = value;
-                      } else if (currentStateController.value <
-                          startStateController.value) {
-                        startStateController.value = value;
-                        updateStartSliderController.value = value;
-                      }
-                    } else {
-                      if (currentStateController.value > dummyStartState) {
-                        startStateController.value = value;
-                        updateEndSliderController.value = value;
-                      } else if (currentStateController.value < dummyEndState) {
-                        endStateController.value = value;
-                        updateStartSliderController.value = value;
-                      }
+                  setState(() {
+                    if (widget.isNewGoal) {
+                      dummyActivity = activity;
+                      titleController.text = activity.name;
+                      currentStateController.value =
+                          widget.sets![activity.activityID].bestReps;
+                      endStateController.value =
+                          widget.sets![activity.activityID].bestReps;
+
+                      trackActivity = true;
                     }
-                    currentStateController.value = value;
-                  }
-                  Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  });
                 },
               ),
             ));
+  }
+
+  @override
+  void dispose() {
+    startStateController.dispose();
+    endStateController.dispose();
+    currentStateController.dispose();
+    titleController.dispose();
+    super.dispose();
   }
 }

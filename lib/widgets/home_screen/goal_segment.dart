@@ -67,9 +67,16 @@ class GoalSegment extends StatelessWidget {
 
   void handleClick(BuildContext context) {
     CupertinoScaffold.showCupertinoModalBottomSheet(
-        context: context,
-        builder: (c) => Scaffold(
-            body: EditGoalDataScreen(
-                FredericGoal.empty(FredericBackend.instance.goalManager))));
+      context: context,
+      builder: (c) => Scaffold(
+        body: BlocBuilder<FredericSetManager, FredericSetListData>(
+            builder: (context, setData) {
+          return EditGoalDataScreen(
+            FredericGoal.empty(FredericBackend.instance.goalManager),
+            sets: setData,
+          );
+        }),
+      ),
+    );
   }
 }
