@@ -6,7 +6,6 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
-import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
 import 'package:frederic/widgets/home_screen/goal_card.dart';
@@ -16,67 +15,58 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class GoalSegment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 22, bottom: 8),
-            child: FredericHeading(
-              'MyGoals',
-              onPressed: () => handleClick(context),
-              icon: Icons.add,
+    return SliverToBoxAdapter(child:
+        BlocBuilder<FredericGoalManager, FredericGoalListData>(
+            builder: (context, goalListData) {
+      List<FredericGoal> goals = goalListData.getGoals();
+      return BlocBuilder<FredericSetManager, FredericSetListData>(
+          builder: (context, setData) {
+        return BlocBuilder<FredericActivityManager, FredericActivityListData>(
+            builder: (context, activityListData) {
+          return Column(children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 22, bottom: 8),
+              child: FredericHeading(
+                'MyGoals',
+                onPressed: () => handleClick(context, setData),
+                icon: Icons.add,
+              ),
             ),
-          ),
-          // TODO Allow permission on database
-          BlocBuilder<FredericGoalManager, FredericGoalListData>(
-              builder: (context, goalListData) {
-            List<FredericGoal> goals = goalListData.getGoals();
-            return BlocBuilder<FredericSetManager, FredericSetListData>(
-                builder: (context, setData) {
-              return BlocBuilder<FredericActivityManager,
-                      FredericActivityListData>(
-                  builder: (context, activityListData) {
-                return Container(
-                  height: 70,
-                  child: ListView.builder(
-                    shrinkWrap: false,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: goals.length,
-                    physics: BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            left: index == 0 ? 16 : 12,
-                            right: index == ([1].length - 1) ? 16 : 0),
-                        child: GoalCard(goals[index],
-                            sets: setData,
-                            activity: activityListData
-                                .activities[goals[index].activityID]),
-                      );
-                    },
-                  ),
-                );
-              });
-            });
-          })
-        ],
-      ),
-    );
+            Container(
+              height: 70,
+              child: ListView.builder(
+                shrinkWrap: false,
+                scrollDirection: Axis.horizontal,
+                itemCount: goals.length,
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        left: index == 0 ? 16 : 12,
+                        right: index == ([1].length - 1) ? 16 : 0),
+                    child: GoalCard(goals[index],
+                        sets: setData,
+                        activity: activityListData
+                            .activities[goals[index].activityID]),
+                  );
+                },
+              ),
+            ),
+          ]);
+        });
+      });
+    }));
   }
 
-  void handleClick(BuildContext context) {
+  void handleClick(BuildContext context, FredericSetListData setData) {
     CupertinoScaffold.showCupertinoModalBottomSheet(
       context: context,
       builder: (c) => Scaffold(
-        body: BlocBuilder<FredericSetManager, FredericSetListData>(
-            builder: (context, setData) {
-          return EditGoalDataScreen(
-            FredericGoal.empty(FredericBackend.instance.goalManager),
-            sets: setData,
-          );
-        }),
-      ),
+          body: EditGoalDataScreen(
+        FredericGoal.empty(FredericBackend.instance.goalManager),
+        sets: setData,
+      )),
     );
   }
 }

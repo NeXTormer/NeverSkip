@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
-import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -12,7 +11,6 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:shimmer/shimmer.dart';
 
 class GoalCard extends StatefulWidget {
   const GoalCard(this.goal,
@@ -95,11 +93,19 @@ class _GoalCardState extends State<GoalCard> {
         });
       });
     }
+    // WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    //   checkIfGoalIsCompleted();
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.sets != null && widget.goal.activityID != '') {
+      currentState = widget.sets![widget.goal.activityID].bestWeight == 0
+          ? widget.sets![widget.goal.activityID].bestReps
+          : widget.sets![widget.goal.activityID].bestWeight;
+    }
     double currentStateNormalized = normalizeValue(
         (currentState ?? widget.goal.currentState),
         (startState ?? widget.goal.startState),
@@ -115,7 +121,9 @@ class _GoalCardState extends State<GoalCard> {
       padding: EdgeInsets.all(10),
       child: Row(
         children: [
-          PictureIcon(widget.goal.image),
+          PictureIcon(widget.activity == null
+              ? widget.goal.image
+              : widget.activity!.image),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 8),
@@ -260,5 +268,32 @@ class _GoalCardState extends State<GoalCard> {
                     textAlign: TextAlign.center),
               ),
             ));
+  }
+
+  void checkIfGoalIsCompleted() {
+    double state = normalizeValue(
+        (currentState ?? widget.goal.currentState),
+        (startState ?? widget.goal.startState),
+        (endState ?? widget.goal.endState));
+    if (state >= 1) {
+      widget.goal.isCompleted = true;
+      showDialog(
+        context: context,
+        builder: (context) => FredericActionDialog(
+          onConfirm: () {
+            setState(() {
+              widget.goal.isCompleted = true;
+              Navigator.of(context).pop();
+            });
+          },
+          destructiveAction: true,
+          title: 'Supa',
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text('Huhrensohn'),
+          ),
+        ),
+      );
+    }
   }
 }

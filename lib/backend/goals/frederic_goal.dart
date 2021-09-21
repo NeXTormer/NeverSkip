@@ -14,7 +14,7 @@ class FredericGoal {
       : goalID = snapshot.id {
     var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
     if (data == null) return;
-
+    _activityID = data['activity'];
     _title = data['title'];
     _image = data['image'];
     _startState = data['startstate'];
@@ -228,7 +228,7 @@ class FredericGoal {
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
-          .update({'isCompleted': value});
+          .update({'iscompleted': value});
       _isCompleted = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
@@ -244,13 +244,14 @@ class FredericGoal {
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .collection('goals')
           .doc(goalID)
-          .update({'isDeleted': value});
+          .update({'isdeleted': value});
       _isDeleted = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
 
   void save({
+    required String activityID,
     required String title,
     required String image,
     required num startState,
@@ -267,6 +268,7 @@ class FredericGoal {
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection('goals');
     var newGoal = await goals.add({
+      'activity': activityID,
       'title': title,
       'image': image,
       'startstate': startState,

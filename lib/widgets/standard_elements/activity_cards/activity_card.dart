@@ -27,7 +27,8 @@ class ActivityCard extends StatelessWidget {
       this.state = ActivityCardState.Normal,
       this.addButton = false,
       this.mainColor = kMainColor,
-      this.accentColor = kAccentColor})
+      this.accentColor = kAccentColor,
+      this.contextTest})
       : super(key: key);
 
   final FredericActivity activity;
@@ -42,6 +43,7 @@ class ActivityCard extends StatelessWidget {
   final bool addButton;
 
   final Function? onClick;
+  final BuildContext? contextTest;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class ActivityCard extends StatelessWidget {
     if (type == ActivityCardType.Normal)
       return NormalActivityCardContent(
         activity,
-        () => handleClick(context),
+        () => handleClick(contextTest ?? context),
         addButton: addButton,
         key: key,
       );
@@ -83,7 +85,6 @@ class ActivityCard extends StatelessWidget {
 
   void handleClick(BuildContext context) {
     if (onClick != null) return onClick!();
-
     CupertinoScaffold.showCupertinoModalBottomSheet(
         enableDrag: true,
         context: context,

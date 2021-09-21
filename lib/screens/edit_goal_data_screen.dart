@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
-import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
+import 'package:frederic/screens/add_progress_screen.dart';
+import 'package:frederic/screens/screens.dart';
 import 'package:frederic/widgets/home_screen/goal_card.dart';
-import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
+import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
-import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
@@ -51,11 +51,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   PageController? endPageController;
 
   String dateText = '';
-  String dummyTitle = '';
 
-  num dummyStartState = 0;
   num dummyCurrentState = 0;
-  num dummyEndState = 0;
+  FredericActivity? dummyActivity;
 
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
@@ -63,19 +61,22 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   bool datePickerOpen = false;
   bool trackActivity = false;
 
-  FredericActivity? dummyActivity;
-
   @override
   void initState() {
     dateText = formatDateTime(widget.goal.startDate);
-    dummyTitle = widget.goal.title;
-    dummyStartState = widget.goal.startState;
-    dummyCurrentState = widget.goal.currentState;
-    dummyEndState = widget.goal.endState;
+    titleController.text = widget.goal.title;
+    startStateController.value = widget.goal.startState;
+    currentStateController.value = widget.goal.currentState;
+    endStateController.value = widget.goal.endState;
     selectedStartDate = widget.goal.startDate;
     selectedEndDate = widget.goal.endDate;
+    dummyCurrentState = widget.goal.currentState;
 
-    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {});
+    if (widget.goal.activityID != '') {
+      trackActivity = true;
+      dummyActivity = widget.activity;
+    }
+
     super.initState();
   }
 
@@ -87,130 +88,26 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         controller: ModalScrollController.of(context),
         slivers: [
           SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
-          buildHeaderRow(),
+          buildHeaderSegment(),
           SliverDivider(),
-          SliverToBoxAdapter(
-            child: Container(
-              height: 70,
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: GoalCard(
-                widget.goal,
-                titleController: titleController,
-                currentStateController: currentStateController,
-                startStateController: startStateController,
-                endStateController: endStateController,
-                unitSliderController: unitSliderController,
-                interactable: false,
-              ),
-            ),
-          ),
+          buildGoalCard(),
           SliverDivider(),
-          SliverToBoxAdapter(
-            child: Container(
-                height: 44,
-                width: 80,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: FredericButton(
-                  'Link Activity',
-                  onPressed: () => addNewActivityTracker(context),
-                  fontSize: 20,
-                )),
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: FredericHeading('Title'),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: FredericTextField(
-                widget.goal.title,
-                maxLength: 30,
-                text: widget.goal.title,
-                icon: null,
-                controller: titleController,
-              ),
-            ),
-          ),
-          // TODO Implement Activity picker
+          buildTitleSegment(),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: FredericHeading('Goal State'),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(color: kCardBorderColor),
-              ),
-              child: Column(
-                children: [
-                  buildSubHeading('Start', Icons.star_outline),
-                  SizedBox(height: 12),
-                  NumberSlider(
-                    controller: startStateController,
-                    itemWidth: 0.14,
-                    numberOfItems: 200,
-                    startingIndex: dummyStartState.ceil() + 1,
-                  ),
-                  SizedBox(height: 12),
-                  buildSubHeading('End', Icons.star_outline),
-                  SizedBox(height: 12),
-                  NumberSlider(
-                    controller: endStateController,
-                    itemWidth: 0.14,
-                    numberOfItems: 200,
-                    startingIndex: dummyEndState.ceil() + 1,
-                  ),
-                  SizedBox(height: 12),
-                  buildSubHeading('Unit', Icons.alarm),
-                  UnitSlider(
-                    controller: unitSliderController,
-                    itemWidth: 0.15,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Current State'),
-            ),
-          ),
-          trackActivity
-              ? SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ProgressIndicatorCard(
-                        widget.sets![dummyActivity!.activityID], dummyActivity),
-                  ),
-                )
-              : SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: FredericSlider(
-                      unit: SliderUnit.Kilograms,
-                      min: dummyStartState.toDouble(),
-                      max: dummyEndState.toDouble(),
-                      value: dummyCurrentState.toDouble(),
-                      startStateController: startStateController,
-                      currentStateController: currentStateController,
-                      endStateController: endStateController,
-                      isInteractive: true,
-                      onChanged: (value) {
-                        dummyCurrentState = value;
-                      },
-                    ),
-                  ),
-                ),
+          buildGoalStateSegment(),
+          buildCurrentStateHeadingAndLinkActivity(),
+          buildCurrentStateSegment(),
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 42),
           ),
@@ -231,12 +128,331 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
+  void saveData() {
+    bool _checkEquality(num first, num second) {
+      return first.ceil() != second.ceil();
+    }
+
+    bool _checkCompleteness(num value, num target) {
+      return value.ceil() == target.ceil();
+    }
+
+    Future<void> _showErrorMessage(String text) async {
+      await showDialog<bool>(
+        context: context,
+        builder: (ctx) {
+          return Container();
+        },
+      );
+      await showDialog(
+        context: context,
+        builder: (ctx) {
+          return FredericActionDialog(
+              title: text,
+              infoOnly: true,
+              onConfirm: () => Navigator.of(ctx).pop());
+        },
+      );
+    }
+
+    if (widget.isNewGoal) {
+      if (_checkEquality(
+          startStateController.value, endStateController.value)) {
+        if (!_checkCompleteness(
+            currentStateController.value, endStateController.value)) {
+          widget.goal.save(
+            activityID: dummyActivity == null ? '' : dummyActivity!.activityID,
+            title: titleController.text,
+            image: dummyActivity != null
+                ? dummyActivity!.image
+                : 'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
+            startState: startStateController.value,
+            currentState: currentStateController.value,
+            endState: endStateController.value,
+            startDate: Timestamp.fromDate(DateTime.now()),
+            endDate: Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
+            isComleted: false,
+            isDeleted: false,
+          );
+        } else
+          _showErrorMessage('The current state must not match the end state!');
+      } else
+        _showErrorMessage('The start state must not match the end state!');
+    } else {
+      widget.goal.title = titleController.text;
+      widget.goal.startState = startStateController.value;
+      widget.goal.currentState = currentStateController.value == 0
+          ? dummyCurrentState
+          : currentStateController.value;
+      widget.goal.endState = endStateController.value;
+    }
+  }
+
+  void addNewActivityTracker(BuildContext context) {
+    showCupertinoModalBottomSheet(
+      context: context,
+      builder: (ctx) => BlocProvider.value(
+        value: BlocProvider.of<FredericSetManager>(context),
+        child: ActivityListScreen(
+          isSelector: true,
+          onSelect: (activity) {
+            if (mounted) {
+              setState(() {
+                if (widget.isNewGoal) {
+                  dummyActivity = activity;
+                  titleController.text = activity.name;
+                  currentStateController.value =
+                      widget.sets![dummyActivity!.activityID].bestWeight == 0
+                          ? widget.sets![dummyActivity!.activityID].bestReps
+                          : widget.sets![dummyActivity!.activityID].bestWeight;
+                  dummyCurrentState = currentStateController.value;
+                  startStateController.value = currentStateController.value;
+
+                  trackActivity = true;
+                }
+                Navigator.of(context).pop();
+              });
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  void showAddProgressScreen(BuildContext context, FredericActivity activity) {
+    showCupertinoModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return BlocProvider.value(
+            value: BlocProvider.of<FredericSetManager>(context),
+            child: AddProgressScreen(activity),
+          );
+        });
+  }
+
   String formatDateTime(DateTime date) {
     String day = date.day.toString();
     if (date.day < 10) day = day.padLeft(2, '0');
     String month = date.month.toString();
     if (date.month < 10) month = month.padLeft(2, '0');
     return '$day.$month.${date.year}';
+  }
+
+  Widget buildHeaderSegment() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Row(
+          children: [
+            Icon(
+              ExtraIcons.dumbbell,
+              color: kMainColor,
+            ),
+            SizedBox(width: 32),
+            Text(
+              widget.isNewGoal ? 'Create Goal' : 'Edit Goal',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () {
+                saveData();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                widget.isNewGoal ? 'Create' : 'Save',
+                style:
+                    TextStyle(color: kMainColor, fontWeight: FontWeight.w500),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildGoalCard() {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 70,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: GoalCard(
+          widget.goal,
+          sets: widget.sets ?? null,
+          titleController: titleController,
+          currentStateController: currentStateController,
+          startStateController: startStateController,
+          endStateController: endStateController,
+          unitSliderController: unitSliderController,
+          interactable: false,
+          activity: dummyActivity != null ? dummyActivity! : null,
+        ),
+      ),
+    );
+  }
+
+  Widget buildTitleSegment() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: FredericTextField(
+          widget.goal.title,
+          maxLength: 30,
+          text: widget.goal.title,
+          icon: null,
+          controller: titleController,
+        ),
+      ),
+    );
+  }
+
+  Widget buildGoalStateSegment() {
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          border: Border.all(color: kCardBorderColor),
+        ),
+        child: Column(
+          children: [
+            buildSubHeading('Start', Icons.star_outline),
+            SizedBox(height: 12),
+            NumberSlider(
+              controller: startStateController,
+              itemWidth: 0.14,
+              numberOfItems: 200,
+              startingIndex: startStateController.value.ceil() + 1,
+            ),
+            SizedBox(height: 12),
+            buildSubHeading('End', Icons.star_outline),
+            SizedBox(height: 12),
+            NumberSlider(
+              controller: endStateController,
+              itemWidth: 0.14,
+              numberOfItems: 200,
+              startingIndex: endStateController.value.ceil() + 1,
+            ),
+            SizedBox(height: 12),
+            if (!trackActivity) buildSubHeading('Unit', Icons.alarm),
+            if (!trackActivity)
+              UnitSlider(
+                controller: unitSliderController,
+                itemWidth: 0.15,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildCurrentStateSegment() {
+    return trackActivity
+        ? SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Stack(
+                fit: StackFit.passthrough,
+                children: [
+                  ActivityCard(
+                    dummyActivity!,
+                    setList: widget.sets![dummyActivity!.activityID],
+                    onClick: () {},
+                    contextTest: context,
+                    type: ActivityCardType.Small,
+                  ),
+                  if (widget.isNewGoal)
+                    Positioned(
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () => addNewActivityTracker(context),
+                              child: Container(
+                                padding: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        color: kMainColor, width: 1.8)),
+                                child: Icon(Icons.edit_outlined,
+                                    color: kMainColor, size: 28),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  trackActivity = false;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        color: kMainColor, width: 1.8)),
+                                child: Icon(CupertinoIcons.delete,
+                                    color: kMainColor, size: 28),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                          ],
+                        ))
+                ],
+              ),
+            ),
+          )
+        : SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FredericSlider(
+                unit: SliderUnit.Kilograms,
+                min: startStateController.value.toDouble(),
+                max: endStateController.value.toDouble(),
+                value: dummyCurrentState.toDouble(),
+                startStateController: startStateController,
+                currentStateController: currentStateController,
+                endStateController: endStateController,
+                isInteractive: true,
+                onChanged: (value) {
+                  dummyCurrentState = value;
+                },
+              ),
+            ),
+          );
+  }
+
+  Widget buildCurrentStateHeadingAndLinkActivity() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            FredericHeading('Current State'),
+            if (!trackActivity && widget.isNewGoal)
+              Positioned(
+                right: 0,
+                top: 2,
+                child: FredericCard(
+                  onTap: () => addNewActivityTracker(context),
+                  color: kAccentColor,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+                  child: Text(
+                    'Link Activity',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildSubHeading(String title, IconData icon) {
@@ -293,124 +509,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         ),
       ],
     );
-  }
-
-  Widget buildHeaderRow() {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Row(
-          children: [
-            Icon(
-              ExtraIcons.dumbbell,
-              color: kMainColor,
-            ),
-            SizedBox(width: 32),
-            Text(
-              widget.isNewGoal ? 'Create Goal' : 'Edit Goal',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            Expanded(child: Container()),
-            GestureDetector(
-              onTap: () {
-                saveData();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                widget.isNewGoal ? 'Create' : 'Save',
-                style:
-                    TextStyle(color: kMainColor, fontWeight: FontWeight.w500),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  void saveData() {
-    bool _checkEquality(num first, num second) {
-      return first.ceil() != second.ceil();
-    }
-
-    bool _checkCompleteness(num value, num target) {
-      return value.ceil() == target.ceil();
-    }
-
-    Future<void> _showErrorMessage(String text) async {
-      await showDialog<bool>(
-          context: context,
-          builder: (ctx) {
-            return Container();
-          });
-      await showDialog(
-          context: context,
-          builder: (ctx) {
-            return FredericActionDialog(
-                title: text,
-                infoOnly: true,
-                onConfirm: () => Navigator.of(ctx).pop());
-          });
-    }
-
-    if (widget.isNewGoal) {
-      if (_checkEquality(
-          startStateController.value, endStateController.value)) {
-        if (!_checkCompleteness(
-            currentStateController.value, endStateController.value)) {
-          widget.goal.save(
-            title: titleController.text,
-            image:
-                'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
-            startState: startStateController.value,
-            currentState: currentStateController.value,
-            endState: endStateController.value,
-            startDate: Timestamp.fromDate(DateTime.now()),
-            endDate: Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
-            isComleted: false,
-            isDeleted: false,
-          );
-        } else
-          _showErrorMessage('The current state must not match the end state!');
-      } else
-        _showErrorMessage('The start state must not match the end state!');
-    } else {
-      // TODO Sinvoller Data check
-      if (true) {
-        widget.goal.title = titleController.text;
-        widget.goal.startState = startStateController.value;
-        widget.goal.currentState = currentStateController.value == 0
-            ? dummyCurrentState
-            : currentStateController.value;
-        widget.goal.endState = endStateController.value;
-      }
-    }
-  }
-
-  void addNewActivityTracker(BuildContext context) {
-    showCupertinoModalBottomSheet(
-        context: context,
-        builder: (ctx) => BlocProvider.value(
-              value: BlocProvider.of<FredericSetManager>(context),
-              child: ActivityListScreen(
-                isSelector: true,
-                onSelect: (activity) {
-                  setState(() {
-                    if (widget.isNewGoal) {
-                      dummyActivity = activity;
-                      titleController.text = activity.name;
-                      currentStateController.value =
-                          widget.sets![activity.activityID].bestReps;
-                      endStateController.value =
-                          widget.sets![activity.activityID].bestReps;
-
-                      trackActivity = true;
-                    }
-                    Navigator.of(context).pop();
-                  });
-                },
-              ),
-            ));
   }
 
   @override

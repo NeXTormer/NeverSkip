@@ -61,55 +61,58 @@ class _FredericSliderState extends State<FredericSlider> {
         widget.endStateController != null &&
         widget.currentStateController != null) {
       widget.startStateController!.addListener(() {
-        setState(() {
-          adaptiveMin = widget.startStateController!.value.toDouble();
-          if (adaptiveMax < adaptiveMin) {
-            if (adaptiveCurrent.toInt() >= adaptiveMin) {
+        if (mounted)
+          setState(() {
+            adaptiveMin = widget.startStateController!.value.toDouble();
+            if (adaptiveMax < adaptiveMin) {
+              if (adaptiveCurrent.toInt() >= adaptiveMin) {
+                widget.currentStateController!.value = adaptiveMin;
+              }
+              if (adaptiveCurrent < adaptiveMax ||
+                  adaptiveCurrent > adaptiveMin) {
+                widget.currentStateController!.value = adaptiveMin;
+              }
+            } else if (adaptiveMax > adaptiveMin) {
+              if (adaptiveCurrent.toInt() <= adaptiveMin) {
+                widget.currentStateController!.value = adaptiveMin;
+              } else if (adaptiveCurrent > adaptiveMax ||
+                  adaptiveCurrent < adaptiveMin) {
+                widget.currentStateController!.value = adaptiveMax;
+              }
+            } else {
               widget.currentStateController!.value = adaptiveMin;
             }
-            if (adaptiveCurrent < adaptiveMax ||
-                adaptiveCurrent > adaptiveMin) {
-              widget.currentStateController!.value = adaptiveMin;
-            }
-          } else if (adaptiveMax > adaptiveMin) {
-            if (adaptiveCurrent.toInt() <= adaptiveMin) {
-              widget.currentStateController!.value = adaptiveMin;
-            } else if (adaptiveCurrent > adaptiveMax ||
-                adaptiveCurrent < adaptiveMin) {
-              widget.currentStateController!.value = adaptiveMax;
-            }
-          } else {
-            widget.currentStateController!.value = adaptiveMin;
-          }
-        });
+          });
       });
       widget.endStateController!.addListener(() {
-        setState(() {
-          adaptiveMax = widget.endStateController!.value.toDouble();
-          if (adaptiveMin < adaptiveMax) {
-            if (adaptiveCurrent.toInt() >= adaptiveMax) {
+        if (mounted)
+          setState(() {
+            adaptiveMax = widget.endStateController!.value.toDouble();
+            if (adaptiveMin < adaptiveMax) {
+              if (adaptiveCurrent.toInt() >= adaptiveMax) {
+                widget.currentStateController!.value = adaptiveMax;
+              }
+              if (adaptiveCurrent < adaptiveMin ||
+                  adaptiveCurrent > adaptiveMax) {
+                widget.currentStateController!.value = adaptiveMax;
+              }
+            } else if (adaptiveMin > adaptiveMax) {
+              if (adaptiveCurrent.toInt() <= adaptiveMax) {
+                widget.currentStateController!.value = adaptiveMax;
+              } else if (adaptiveCurrent > adaptiveMin ||
+                  adaptiveCurrent < adaptiveMax) {
+                widget.currentStateController!.value = adaptiveMin;
+              }
+            } else {
               widget.currentStateController!.value = adaptiveMax;
             }
-            if (adaptiveCurrent < adaptiveMin ||
-                adaptiveCurrent > adaptiveMax) {
-              widget.currentStateController!.value = adaptiveMax;
-            }
-          } else if (adaptiveMin > adaptiveMax) {
-            if (adaptiveCurrent.toInt() <= adaptiveMax) {
-              widget.currentStateController!.value = adaptiveMax;
-            } else if (adaptiveCurrent > adaptiveMin ||
-                adaptiveCurrent < adaptiveMax) {
-              widget.currentStateController!.value = adaptiveMin;
-            }
-          } else {
-            widget.currentStateController!.value = adaptiveMax;
-          }
-        });
+          });
       });
       widget.currentStateController!.addListener(() {
-        setState(() {
-          adaptiveCurrent = widget.currentStateController!.value.toDouble();
-        });
+        if (mounted)
+          setState(() {
+            adaptiveCurrent = widget.currentStateController!.value.toDouble();
+          });
       });
     }
     super.initState();
