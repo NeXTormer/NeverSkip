@@ -150,8 +150,8 @@ class _FredericSliderState extends State<FredericSlider> {
             max: widget.isInteractive
                 ? (adaptiveMax <= adaptiveMin ? adaptiveMin : adaptiveMax)
                 : widget.max,
-            activeColor: kMainColor,
-            inactiveColor: kMainColorLight,
+            activeColor: theme.mainColor,
+            inactiveColor: theme.mainColorLight,
             onChanged: (newVal) {
               setState(() {
                 if (widget.currentStateController != null) {

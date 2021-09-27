@@ -89,7 +89,7 @@ class AchievementGoalCard extends StatelessWidget {
                   FredericChip(
                     'Duration: $usedDays days',
                     fontSize: 14,
-                    color: index.isOdd ? kMainColor : kAccentColor,
+                    color: index.isOdd ? theme.mainColor : theme.accentColor,
                   ),
                   Text(
                     '$startDateFormatted',

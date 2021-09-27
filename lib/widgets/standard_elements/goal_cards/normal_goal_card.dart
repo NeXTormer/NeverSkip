@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -144,8 +145,9 @@ class _NormalGoalCard extends State<NormalGoalCard> {
                           strutStyle: StrutStyle(fontSize: 10),
                           text: TextSpan(
                             text: '${title ?? widget.goal.title}',
-                            style: const TextStyle(
-                                color: const Color(0x7A3A3A3A),
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: theme.greyTextColor,
                                 fontSize: 10,
                                 letterSpacing: 0.3),
                           ),
@@ -233,8 +235,10 @@ class _NormalGoalCard extends State<NormalGoalCard> {
           children: [
             TextSpan(
               text: '$text',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: theme.textColor,
+                fontWeight: FontWeight.w600,
                 fontSize: 13,
               ),
             ),

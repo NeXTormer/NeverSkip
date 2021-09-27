@@ -52,7 +52,7 @@ class _UnitSliderState extends State<UnitSlider> {
                   child: Container(
                     child: Icon(
                       Icons.play_arrow,
-                      color: kMainColor,
+                      color: theme.mainColor,
                     ),
                   ),
                 ),

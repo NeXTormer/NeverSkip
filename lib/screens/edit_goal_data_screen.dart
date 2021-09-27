@@ -10,7 +10,6 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/screens/screens.dart';
-import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -18,6 +17,7 @@ import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_slider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
 import 'package:frederic/widgets/standard_elements/number_slider.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
@@ -83,7 +83,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
         controller: ModalScrollController.of(context),
         slivers: [
@@ -247,7 +247,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           children: [
             Icon(
               ExtraIcons.dumbbell,
-              color: kMainColor,
+              color: theme.mainColor,
             ),
             SizedBox(width: 32),
             Text(
@@ -262,8 +262,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               },
               child: Text(
                 widget.isNewGoal ? 'Create' : 'Save',
-                style:
-                    TextStyle(color: kMainColor, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: theme.mainColor, fontWeight: FontWeight.w500),
               ),
             )
           ],
@@ -276,7 +276,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     return SliverToBoxAdapter(
       child: Container(
         height: 70,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: GoalCard(
           widget.goal,
           sets: widget.sets ?? null,
@@ -314,8 +314,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(color: kCardBorderColor),
+          color: theme.cardBackgroundColor,
+          border: Border.all(color: theme.cardBorderColor),
         ),
         child: Column(
           children: [
@@ -361,7 +361,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                     dummyActivity!,
                     setList: widget.sets![dummyActivity!.activityID],
                     onClick: () {},
-                    contextTest: context,
                     type: ActivityCardType.Small,
                   ),
                   if (widget.isNewGoal)
@@ -378,9 +377,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                        color: kMainColor, width: 1.8)),
+                                        color: theme.mainColor, width: 1.8)),
                                 child: Icon(Icons.edit_outlined,
-                                    color: kMainColor, size: 28),
+                                    color: theme.mainColor, size: 28),
                               ),
                             ),
                             SizedBox(width: 12),
@@ -395,9 +394,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                        color: kMainColor, width: 1.8)),
+                                        color: theme.mainColor, width: 1.8)),
                                 child: Icon(CupertinoIcons.delete,
-                                    color: kMainColor, size: 28),
+                                    color: theme.mainColor, size: 28),
                               ),
                             ),
                             SizedBox(width: 12),
@@ -441,7 +440,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 top: 2,
                 child: FredericCard(
                   onTap: () => addNewActivityTracker(context),
-                  color: kAccentColor,
+                  color: theme.accentColor,
                   padding:
                       const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
                   child: Text(
@@ -465,7 +464,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           title,
           style: TextStyle(
               fontFamily: 'Montserrat',
-              color: kTextColor,
+              color: theme.textColor,
               fontSize: 12,
               fontWeight: FontWeight.w500),
         )
@@ -504,9 +503,12 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
-            border: Border.all(color: kCardBorderColor),
+            border: Border.all(color: theme.cardBorderColor),
           ),
-          child: FredericDatePicker(initialDate: DateTime.now()),
+          child: FredericDatePicker(
+            initialDate: DateTime.now(),
+            onDateChanged: (date) {},
+          ),
         ),
       ],
     );

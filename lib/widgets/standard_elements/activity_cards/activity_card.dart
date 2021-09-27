@@ -44,7 +44,6 @@ class ActivityCard extends StatelessWidget {
   final bool addButton;
 
   final Function? onClick;
-  final BuildContext? contextTest;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +57,7 @@ class ActivityCard extends StatelessWidget {
     if (type == ActivityCardType.Normal)
       return NormalActivityCardContent(
         activity,
-        () => handleClick(contextTest ?? context),
+        () => handleClick(context),
         addButton: addButton,
         key: key,
       );

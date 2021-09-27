@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
+
 import 'frederic_goal.dart';
 
 /// Manages all Goals using the Bloc Pattern
@@ -32,7 +33,7 @@ class FredericGoalManager
   ///
   /// (Re)Loads all goals from the database
   ///
-  void reload() async {
+  Future<void> reload() async {
     QuerySnapshot<Object?> private = await _goalsCollection.get();
 
     List<String> changed = <String>[];

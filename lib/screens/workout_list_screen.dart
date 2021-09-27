@@ -26,7 +26,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   @override
   Widget build(BuildContext context) {
     return FredericScaffold(
-      floatingActionButton: buildAddExerciseButton(context),
+      floatingActionButton: buildAddWorkoutButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: ChangeNotifierProvider<WorkoutSearchTerm>(
         create: (context) => searchTerm,

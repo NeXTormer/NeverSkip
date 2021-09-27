@@ -27,10 +27,6 @@ class FredericBackend {
     _workoutManager = FredericWorkoutManager();
     _goalManager = FredericGoalManager();
     _storageManager = FredericStorageManager(this);
-
-    // Timer.periodic(Duration(seconds: 10), (timer) {
-    //   FredericProfiler.evaluate();
-    // });
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -70,7 +66,7 @@ class FredericBackend {
     var profiler = FredericProfiler.track('[Backend] load all data');
     await _activityManager.reload();
     await _workoutManager.reload();
-    await _goalManager.loadData();
+    await _goalManager.reload();
     _hasDataLoaded = true;
     for (Completer completer in _dataLoadedCompleters) {
       completer.complete();
@@ -78,7 +74,5 @@ class FredericBackend {
     profiler.stop();
   }
 
-  void dispose() {
-    _goalManager.dispose();
-  }
+  void dispose() {}
 }
