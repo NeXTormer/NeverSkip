@@ -13,7 +13,9 @@ class FredericGoalListData {
   }
 
   List<FredericGoal> getAchievements() {
-    return goals.values.where((element) => element.isCompleted).toList();
+    return goals.values
+        .where((element) => element.isCompleted && !element.isDeleted)
+        .toList();
   }
 
   @override

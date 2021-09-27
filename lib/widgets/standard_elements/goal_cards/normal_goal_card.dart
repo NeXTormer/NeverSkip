@@ -12,8 +12,8 @@ import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class GoalCard extends StatefulWidget {
-  const GoalCard(this.goal,
+class NormalGoalCard extends StatefulWidget {
+  const NormalGoalCard(this.goal,
       {this.sets,
       this.activity,
       this.startDate,
@@ -44,17 +44,18 @@ class GoalCard extends StatefulWidget {
   final bool interactable;
 
   @override
-  _GoalCardState createState() => _GoalCardState();
+  _NormalGoalCard createState() => _NormalGoalCard();
 }
 
-class _GoalCardState extends State<GoalCard> {
+class _NormalGoalCard extends State<NormalGoalCard> {
   String? title;
-  String? unit;
+  String unit = 'kg';
 
   num? startState;
   num? currentState;
   num? endState;
   bool inverse = false;
+  bool isCompleted = false;
 
   @override
   void initState() {
@@ -110,7 +111,10 @@ class _GoalCardState extends State<GoalCard> {
         (currentState ?? widget.goal.currentState),
         (startState ?? widget.goal.startState),
         (endState ?? widget.goal.endState));
+    isCompleted = false;
+    if (mounted && widget.interactable) checkIfGoalIsCompleted();
     return FredericCard(
+      shimmer: isCompleted ? true : false,
       onLongPress: () {
         if (widget.interactable) handleLongClick(context);
       },
@@ -133,7 +137,8 @@ class _GoalCardState extends State<GoalCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
+                      Container(
+                        width: 120,
                         child: RichText(
                           overflow: TextOverflow.ellipsis,
                           strutStyle: StrutStyle(fontSize: 10),
@@ -162,12 +167,12 @@ class _GoalCardState extends State<GoalCard> {
                             Expanded(
                               child: buildProgressBarText(
                                   startState ?? widget.goal.startState,
-                                  '${unit ?? "kg"}'),
+                                  '${widget.goal.unit}'),
                             ),
                             Flexible(
                               child: buildProgressBarText(
                                   endState ?? widget.goal.endState,
-                                  '${unit ?? "kg"}'),
+                                  '${widget.goal.unit}'),
                             ),
                           ],
                         ),
@@ -240,14 +245,39 @@ class _GoalCardState extends State<GoalCard> {
   }
 
   void handleClick(BuildContext context) {
-    CupertinoScaffold.showCupertinoModalBottomSheet(
-        context: context,
-        builder: (c) => Scaffold(
-                body: EditGoalDataScreen(
-              widget.goal,
-              sets: widget.sets,
-              activity: widget.activity,
-            )));
+    isCompleted
+        ? showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Congratulations'),
+                  actionsOverflowButtonSpacing: 20,
+                  content: Text(
+                      'Do you want to save your goal to your achievements?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          widget.goal.isCompleted = true;
+                          widget.goal.isDeleted = true;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Delete')),
+                    ElevatedButton(
+                        onPressed: () {
+                          widget.goal.isCompleted = true;
+                          widget.goal.isDeleted = false;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Save')),
+                  ],
+                ))
+        : CupertinoScaffold.showCupertinoModalBottomSheet(
+            context: context,
+            builder: (c) => Scaffold(
+                    body: EditGoalDataScreen(
+                  widget.goal,
+                  sets: widget.sets,
+                  activity: widget.activity,
+                )));
   }
 
   void handleLongClick(BuildContext context) {
@@ -256,7 +286,7 @@ class _GoalCardState extends State<GoalCard> {
         builder: (context) => FredericActionDialog(
               onConfirm: () {
                 // FredericBackend.instance.goalManager.deleteGoal(widget.goal);
-                widget.goal.delete();
+                widget.goal.isDeleted = true;
                 Navigator.of(context).pop();
               },
               destructiveAction: true,
@@ -276,24 +306,8 @@ class _GoalCardState extends State<GoalCard> {
         (startState ?? widget.goal.startState),
         (endState ?? widget.goal.endState));
     if (state >= 1) {
-      widget.goal.isCompleted = true;
-      showDialog(
-        context: context,
-        builder: (context) => FredericActionDialog(
-          onConfirm: () {
-            setState(() {
-              widget.goal.isCompleted = true;
-              Navigator.of(context).pop();
-            });
-          },
-          destructiveAction: true,
-          title: 'Supa',
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text('Huhrensohn'),
-          ),
-        ),
-      );
+      // widget.goal.isCompleted = true;
+      isCompleted = true;
     }
   }
 }

@@ -17,6 +17,7 @@ class FredericGoal {
     _activityID = data['activity'];
     _title = data['title'];
     _image = data['image'];
+    _unit = data['unit'];
     _startState = data['startstate'];
     _endState = data['endstate'];
     _currentState = data['currentstate'];
@@ -44,6 +45,7 @@ class FredericGoal {
     required String title,
     required String activity,
     required String image,
+    required String unit,
     required num startState,
     required num endState,
     required num currentState,
@@ -51,10 +53,11 @@ class FredericGoal {
     required Timestamp endDate,
     required bool isComleted,
     required bool isDeleted,
-  })   : goalID = 'new',
+  })  : goalID = 'new',
         _title = title,
         _activityID = activity,
         _image = image,
+        _unit = unit,
         _startState = startState,
         _endState = endState,
         _currentState = currentState,
@@ -67,9 +70,9 @@ class FredericGoal {
   final FredericGoalManager _goalManager;
   final String goalID;
   String? _activityID;
-
   String? _title;
   String? _image;
+  String? _unit;
 
   num? _startState;
   num? _endState;
@@ -82,6 +85,7 @@ class FredericGoal {
   String get title => _title ?? 'Goal';
   String get image => _image ?? 'https://via.placeholder.com/400x400?text=Goal';
   String get activityID => _activityID ?? '';
+  String get unit => _unit ?? '';
   num get startState => _startState ?? 0;
   num get endState => _endState ?? 0;
   num get currentState => _currentState ?? -1;
@@ -133,6 +137,19 @@ class FredericGoal {
           .doc(goalID)
           .update({'image': value});
       _image = value;
+      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
+    }
+  }
+
+  set unit(String value) {
+    if (value.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('goals')
+          .doc(goalID)
+          .update({'unit': value});
+      _unit = value;
       FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
     }
   }
@@ -254,6 +271,7 @@ class FredericGoal {
     required String activityID,
     required String title,
     required String image,
+    required String unit,
     required num startState,
     required num endState,
     required num currentState,
@@ -271,6 +289,7 @@ class FredericGoal {
       'activity': activityID,
       'title': title,
       'image': image,
+      'unit': unit,
       'startstate': startState,
       'endstate': endState,
       'currentstate': currentState,

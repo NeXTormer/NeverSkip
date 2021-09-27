@@ -10,7 +10,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/screens/screens.dart';
-import 'package:frederic/widgets/home_screen/goal_card.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -166,6 +166,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             image: dummyActivity != null
                 ? dummyActivity!.image
                 : 'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
+            unit: unitSliderController.value,
             startState: startStateController.value,
             currentState: currentStateController.value,
             endState: endStateController.value,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
@@ -8,7 +7,7 @@ import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
-import 'package:frederic/widgets/home_screen/goal_card.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -28,7 +27,7 @@ class GoalSegment extends StatelessWidget {
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 22, bottom: 8),
               child: FredericHeading(
-                'MyGoals',
+                'My Goals',
                 onPressed: () => handleClick(context, setData),
                 icon: Icons.add,
               ),

@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:isolate';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:frederic/backend/analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
@@ -45,6 +47,8 @@ const Color kBrightTextColor = Colors.white;
 const Color kCardBorderColor = const Color(0xFFE2E2E2);
 const List<Color> kIconGradient = [Color(0xFF18BBDF), Color(0xFF175BD5)];
 
+const _kTestingCrashlytics = true;
+
 void main() {
   LicenseRegistry.addLicense(() async* {
     final license =
@@ -52,14 +56,33 @@ void main() {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  runApp(Phoenix(
-    child: Frederic(),
-  ));
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+    );
+  }).sendPort);
+
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+    if (_kTestingCrashlytics) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    } else {
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(!kDebugMode);
+    }
+
+    runApp(Phoenix(
+      child: Frederic(),
+    ));
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 class Frederic extends StatelessWidget {
-  Frederic({Key? key}) : super(key: key);
-
   final SplashScreen splashScreen = SplashScreen(
     onComplete: () {
       //print('complete');
@@ -70,7 +93,6 @@ class Frederic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     return FutureBuilder(
         future: app,
         builder: (context, snapshot) {
@@ -88,6 +110,9 @@ class Frederic extends StatelessWidget {
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
+    if (getIt.isRegistered<AnalyticsService>())
+      getIt.unregister<AnalyticsService>();
+    getIt.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
 
     //SystemChrome.setSystemUIOverlayStyle(
     //    SystemUiOverlayStyle(statusBarColor: Colors.blue));
@@ -107,7 +132,7 @@ class Frederic extends StatelessWidget {
       ],
       child: MaterialApp(
         navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics),
+          getIt<AnalyticsService>().getAnalyticsObserver(),
         ],
         showPerformanceOverlay: false,
         title: 'Frederic',
