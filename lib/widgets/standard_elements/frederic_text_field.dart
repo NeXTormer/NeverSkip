@@ -14,9 +14,12 @@ class FredericTextField extends StatefulWidget {
       this.height = 44,
       this.maxLines = 1,
       this.suffixIcon,
+      this.onColorfulBackground = false,
       this.isPasswordField = false,
+      this.onSuffixIconTap,
       this.verticalContentPadding = 0,
       this.text,
+      this.brightContents = false,
       this.maxLength = 200});
 
   final String placeholder;
@@ -25,6 +28,8 @@ class FredericTextField extends StatefulWidget {
   final IconData? suffixIcon;
   final double size;
   final bool isPasswordField;
+  final bool brightContents;
+  final bool onColorfulBackground;
   final TextEditingController? controller;
   final double height;
   final int maxLines;
@@ -32,7 +37,8 @@ class FredericTextField extends StatefulWidget {
   final int maxLength;
   final String? text;
 
-  final Function? onSubmit;
+  final void Function(String)? onSubmit;
+  final void Function()? onSuffixIconTap;
 
   @override
   _FredericTextFieldState createState() => _FredericTextFieldState();
@@ -55,30 +61,41 @@ class _FredericTextFieldState extends State<FredericTextField> {
     return Container(
       height: widget.height,
       child: TextField(
+        onSubmitted: widget.onSubmit,
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         style: TextStyle(
           fontSize: 12,
+          color: widget.onColorfulBackground
+              ? theme.textColorColorfulBackground
+              : theme.greyTextColor,
           letterSpacing: 0.2,
         ),
         maxLines: widget.maxLines,
         inputFormatters: [LengthLimitingTextInputFormatter(widget.maxLength)],
         obscureText: widget.isPasswordField && !showPassword,
         decoration: InputDecoration(
-          hintStyle: TextStyle(color: const Color(0xFFA5A5A5)),
+          hintStyle: TextStyle(
+              color: widget.onColorfulBackground
+                  ? theme.textColorColorfulBackground
+                  : theme.greyTextColor),
           prefixIcon: widget.icon == null
               ? null
               : Icon(
                   widget.icon,
                   size: widget.size,
-                  color: kMainColor,
+                  color: widget.brightContents ? Colors.white : theme.mainColor,
                 ),
           suffixIcon: widget.suffixIcon == null
               ? null
-              : Icon(
-                  widget.suffixIcon,
-                  size: widget.size,
-                  color: kMainColor,
+              : GestureDetector(
+                  onTap: widget.onSuffixIconTap,
+                  child: Icon(
+                    widget.suffixIcon,
+                    size: widget.size,
+                    color:
+                        widget.brightContents ? Colors.white : theme.mainColor,
+                  ),
                 ),
           suffix: widget.isPasswordField
               ? Padding(
@@ -105,7 +122,9 @@ class _FredericTextFieldState extends State<FredericTextField> {
           floatingLabelBehavior: FloatingLabelBehavior.never,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(width: 0.6, color: kMainColor),
+            borderSide: BorderSide(
+                width: 0.6,
+                color: widget.brightContents ? Colors.white : theme.mainColor),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),

@@ -4,7 +4,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/edit_workout_data_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
@@ -20,64 +20,20 @@ class EditWorkoutHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final String dateFormatString =
         formatDate(workout.startDate, const [dd, ' ', M, ' ', yyyy]);
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '$dateFormatString',
-                          style: GoogleFonts.montserrat(
-                            color: const Color(0xFF272727),
-                            fontWeight: FontWeight.w400,
-                            letterSpacing: 0.6,
-                            fontSize: 13,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '${workout.name}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.montserrat(
-                        color: const Color(0xFF272727),
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.1,
-                        fontSize: 17,
-                      ),
-                    ),
-                  ],
+    return FredericBasicAppBar(
+        title: workout.name,
+        subtitle: 'Starting Date: $dateFormatString',
+        icon: workout.canEdit
+            ? InkWell(
+                onTap: () => CupertinoScaffold.showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (c) =>
+                        Scaffold(body: EditWorkoutDataScreen(workout))),
+                child: Icon(
+                  ExtraIcons.settings,
+                  color: theme.isColorful ? Colors.white : theme.mainColor,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 10, top: 8),
-                child: workout.canEdit
-                    ? InkWell(
-                        onTap: () =>
-                            CupertinoScaffold.showCupertinoModalBottomSheet(
-                                context: context,
-                                builder: (c) => Scaffold(
-                                    body: EditWorkoutDataScreen(workout))),
-                        child: Icon(
-                          ExtraIcons.settings,
-                          color: kMainColor,
-                        ),
-                      )
-                    : null,
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+              )
+            : null);
   }
 }

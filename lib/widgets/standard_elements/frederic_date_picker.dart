@@ -1,78 +1,179 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
-import 'package:infinite_listview/infinite_listview.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:intl/intl.dart';
 
 class FredericDatePicker extends StatefulWidget {
-  FredericDatePicker({Key? key, required this.initialDate}) : super(key: key);
+  FredericDatePicker({
+    Key? key,
+    required this.initialDate,
+    required this.onDateChanged,
+  }) : super(key: key);
 
   final DateFormat df = DateFormat('MMMM');
   final DateTime initialDate;
+  final void Function(DateTime) onDateChanged;
 
   @override
   _FredericDatePickerState createState() => _FredericDatePickerState();
 }
 
 class _FredericDatePickerState extends State<FredericDatePicker> {
+  int selectedMonthIndex = 1;
+  int selectedDayIndex = 0;
+  DateTime today = DateTime.now();
+  late DateTime startingDate;
+  double dayWidth = 0;
+  double dayPadding = 12;
+  double dayTotalWidth = 0;
+
+  ScrollController dayController = ScrollController(initialScrollOffset: -12);
+  ScrollController monthController = ScrollController();
+
+  @override
+  void initState() {
+    DateTime oneMonthBefore = today.subtract(Duration(days: today.day + 1));
+    startingDate = DateTime(oneMonthBefore.year, oneMonthBefore.month, 1);
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      jumpToDay(widget.initialDate);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        children: [
-          Container(
-            height: 36,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Padding(
-                      padding: EdgeInsets.only(left: index == 0 ? 12 : 0),
-                      child: buildMonth(DateTime.now(), index % 2 == 1));
-                },
-                itemCount: 10),
-          ),
-          SizedBox(height: 16),
-          Container(
-            height: 50,
-            child: InfiniteListView.builder(
-              controller: InfiniteScrollController(initialScrollOffset: -12),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: kCardBorderColor, width: 0.6)),
-                  child: WeekDaysSliderDayButton(
-                      dayIndex: index,
-                      selectedDate: 10,
-                      date: widget.initialDate.add(Duration(days: index))),
-                );
-              },
+    dayWidth = (MediaQuery.of(context).size.width / 10);
+    dayTotalWidth = dayPadding + dayWidth;
+    return Container(
+      color: theme.backgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          children: [
+            Container(
+              height: 36,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: monthController,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                        padding: EdgeInsets.only(left: index == 0 ? 12 : 0),
+                        child: buildMonth(startingDate, -index, index,
+                            index == selectedMonthIndex));
+                  },
+                  itemCount: 13),
             ),
-          ),
-        ],
+            SizedBox(height: 16),
+            Container(
+              height: 50,
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                controller: dayController,
+                scrollDirection: Axis.horizontal,
+                itemCount: 365 + 30,
+                itemBuilder: (context, index) {
+                  int year = startingDate.year;
+                  int month = startingDate.month;
+                  int day = startingDate.day;
+
+                  // Using this method instead of:
+                  //    startingDate.add(Duration(days: index));
+                  // because DateTime::add() takes daylight savings into
+                  // consideration and we don't want that
+                  DateTime date = DateTime(year, month, day + index);
+                  return Container(
+                    margin: EdgeInsets.only(left: index == 0 ? 12 : 0),
+                    width: dayTotalWidth,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedDayIndex = index;
+                          selectMonth(date);
+                          widget.onDateChanged.call(date);
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: theme.cardBorderColor, width: 0.6)),
+                        child: FredericCard(
+                          child: WeekDaysSliderDayButton(
+                              dayIndex: index,
+                              selectedDate: selectedDayIndex,
+                              date: date),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildMonth(DateTime month, bool selected) {
-    String string = widget.df.format(month);
+  DateTime lastDayOfMonth(DateTime month) {
+    var beginningNextMonth = (month.month < 12)
+        ? new DateTime(month.year, month.month + 1, 1)
+        : new DateTime(month.year + 1, 1, 1);
+    return beginningNextMonth.subtract(new Duration(days: 1));
+  }
+
+  void selectMonth(DateTime day) {
+    int yearDiff = day.year - startingDate.year;
+    int monthDiff = day.month - startingDate.month;
+    int totalDiff = (yearDiff * 12) + monthDiff;
+    selectedMonthIndex = totalDiff;
+  }
+
+  void jumpToDay(DateTime day) {
+    int index = day.difference(startingDate).inDays;
+    dayController.jumpTo((dayTotalWidth) * index);
+    selectedDayIndex = index;
+  }
+
+  Widget buildMonth(DateTime today, int monthOffset, int index, bool selected) {
+    int newMonth = today.month - monthOffset;
+    int yearOffset = 0;
+    if (newMonth < 1) {
+      newMonth = newMonth % DateTime.monthsPerYear;
+      yearOffset = -1;
+    } else if (newMonth > 12) {
+      newMonth = newMonth % DateTime.monthsPerYear;
+      yearOffset = 1;
+    }
+    DateTime firstDayOfMonth = DateTime(today.year + yearOffset, newMonth, 1);
+    String string = widget.df.format(firstDayOfMonth);
     return Padding(
       padding: const EdgeInsets.only(right: 12),
-      child: Container(
-        decoration: BoxDecoration(
-            color: selected ? kMainColorLight : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kCardBorderColor)),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-        child: Center(
-          child: Text(string,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: selected ? kMainColor : Colors.black)),
+      child: GestureDetector(
+        onTap: () => setState(() {
+          jumpToDay(firstDayOfMonth);
+          selectedMonthIndex = index;
+          widget.onDateChanged.call(firstDayOfMonth);
+        }),
+        child: Container(
+          decoration: BoxDecoration(
+              color: selected
+                  ? theme.mainColorLight
+                  : (theme.isDark ? theme.cardBackgroundColor : Colors.white),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: theme.cardBorderColor)),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          child: Center(
+            child: Text(string,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: selected ? theme.mainColorInText : theme.textColor)),
+          ),
         ),
       ),
     );
@@ -85,7 +186,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kCardBorderColor)),
+            border: Border.all(color: theme.cardBorderColor)),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         child: Center(
           child: Text(year,

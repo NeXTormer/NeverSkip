@@ -1,26 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CalendarActivityCardContent extends StatefulWidget {
-  const CalendarActivityCardContent(this.activity, this.onClick,
-      {Key? key,
-      this.deleteButton = false,
-      this.state = ActivityCardState.Normal})
+  const CalendarActivityCardContent(this.activity,
+      {Key? key, this.state = ActivityCardState.Normal, this.onClick})
       : super(key: key);
 
-  final FredericActivity activity;
+  final FredericWorkoutActivity activity;
   final ActivityCardState state;
-  final void Function()? onClick;
-  final bool deleteButton;
 
-  final Duration animationDuration = const Duration(milliseconds: 200);
+  final void Function()? onClick;
 
   @override
   _CalendarActivityCardContentState createState() =>
@@ -34,23 +33,21 @@ class _CalendarActivityCardContentState
   @override
   Widget build(BuildContext context) {
     return FredericCard(
-        animated: widget.deleteButton,
-        onTap: widget.deleteButton ? null : widget.onClick,
-        height: widget.deleteButton ? (deleted ? 0 : 70) : 90,
+        onTap: () => handleClick(context),
+        height: 90,
         padding: EdgeInsets.all(deleted ? 0 : 10),
-        duration: widget.animationDuration,
         child: deleted
             ? null
             : Row(
                 children: [
                   AspectRatio(
-                    child: PictureIcon(widget.activity.image,
+                    child: PictureIcon(widget.activity.activity.image,
                         mainColor: widget.state == ActivityCardState.Normal
-                            ? kMainColor
-                            : kGreenColor,
+                            ? theme.mainColorInText
+                            : theme.positiveColor,
                         accentColor: widget.state == ActivityCardState.Normal
-                            ? kMainColorLight
-                            : kGreenColorLight),
+                            ? theme.mainColorLight
+                            : theme.positiveColorLight),
                     aspectRatio: 1,
                   ),
                   SizedBox(width: 12),
@@ -59,33 +56,30 @@ class _CalendarActivityCardContentState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          Text(widget.activity.name,
+                          Text(widget.activity.activity.name,
                               style: TextStyle(
                                   //textBaseline: TextBaseline.alphabetic,
                                   fontFamily: 'Montserrat',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: kTextColor)),
+                                  color: theme.textColor)),
                           Expanded(child: Container()),
-                          // if (activity.type == FredericActivityType.Weighted &&
-                          //     !deleteButton)
-                          //   Icon(ExtraIcons.dumbbell, color: kMainColor, size: 16),
-                          // SizedBox(width: 6),
                         ]),
                         Row(
                           children: [
                             Text(
-                              '${widget.activity.recommendedReps}',
+                              '${widget.activity.sets}',
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
                                   fontSize: 14),
                             ),
                             SizedBox(width: 2),
-                            Text('reps',
+                            Text(
+                                '${widget.activity.sets == 1 ? 'set' : 'sets'}',
                                 style: TextStyle(
-                                    color: kTextColor,
+                                    color: theme.textColor,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 0.5,
                                     fontSize: 12)),
@@ -93,52 +87,41 @@ class _CalendarActivityCardContentState
                             FredericVerticalDivider(length: 16),
                             SizedBox(width: 6),
                             Text(
-                              '${widget.activity.recommendedSets}',
+                              '${widget.activity.reps}',
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
                                   fontSize: 14),
                             ),
                             SizedBox(width: 2),
-                            Text('sets',
+                            Text(
+                                '${widget.activity.reps == 1 ? 'repetition' : 'repetitions'}',
                                 style: TextStyle(
-                                    color: kTextColor,
+                                    color: theme.textColor,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 0.5,
                                     fontSize: 12)),
                             Expanded(child: Container()),
-                            if (!widget.deleteButton)
-                              Icon(ExtraIcons.dots,
-                                  color: kGreyColor, size: 20),
-                            SizedBox(width: 4)
                           ],
                         )
                       ],
                     ),
                   ),
-                  if (widget.deleteButton)
-                    GestureDetector(
-                      onTap: handleDelete,
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: kMainColor, width: 1.8)),
-                        child: Icon(CupertinoIcons.delete,
-                            color: kMainColor, size: 24),
-                      ),
-                    ),
                 ],
               ));
   }
 
-  void handleDelete() {
-    setState(() {
-      deleted = true;
-    });
-    Future.delayed(widget.animationDuration)
-        .then((value) => widget.onClick?.call());
+  void handleClick(BuildContext context) {
+    if (widget.onClick != null) return widget.onClick!();
+
+    CupertinoScaffold.showCupertinoModalBottomSheet(
+        enableDrag: true,
+        context: context,
+        builder: (newContext) {
+          return BlocProvider.value(
+              value: BlocProvider.of<FredericSetManager>(context),
+              child: AddProgressScreen(widget.activity.activity));
+        });
   }
 }

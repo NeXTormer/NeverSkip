@@ -28,7 +28,10 @@ class SmallActivityCardContent extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          AspectRatio(aspectRatio: 1, child: PictureIcon(activity.image)),
+          AspectRatio(
+              aspectRatio: 1,
+              child: PictureIcon(activity.image,
+                  mainColor: theme.mainColorInText)),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Column(
@@ -38,8 +41,8 @@ class SmallActivityCardContent extends StatelessWidget {
                 Flexible(
                   child: Text(
                     activity.name,
-                    style: const TextStyle(
-                        color: const Color(0xBE3A3A3A),
+                    style: TextStyle(
+                        color: theme.greyTextColor,
                         fontSize: 10,
                         letterSpacing: 0.3),
                   ),
@@ -49,7 +52,7 @@ class SmallActivityCardContent extends StatelessWidget {
                     Text(
                       '$bestProgress',
                       style: TextStyle(
-                          color: kTextColor,
+                          color: theme.textColor,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
                           fontSize: 16),
@@ -57,7 +60,7 @@ class SmallActivityCardContent extends StatelessWidget {
                     SizedBox(width: 2),
                     Text(activity.progressUnit,
                         style: TextStyle(
-                            color: kTextColor,
+                            color: theme.textColor,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 0.5,
                             fontSize: 14))

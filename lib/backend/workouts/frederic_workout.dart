@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 ///
-/// Contains all the data for a workout
+/// Contains all the data for a workout.
 ///
-/// Setters also change the values in the database
+/// Setters also change the values in the database.
 ///
-/// The period of a workout is represented in weeks
+/// The period of a workout is represented in weeks.
+///
+/// Must call loadActivities to load the activities.
+///
 ///
 class FredericWorkout {
   FredericWorkout(DocumentSnapshot<Object?> snapshot, this._workoutManager)
@@ -24,10 +27,9 @@ class FredericWorkout {
     _period = data['period'];
     _repeating = data['repeating'];
     _startDate = data['startdate']?.toDate();
-    List<dynamic>? activitiesList = data['activities'];
+    _activitiesList = data['activities'];
 
     _activities = FredericWorkoutActivities(this);
-    _loadActivities(activitiesList);
   }
 
   FredericWorkout.create()
@@ -40,6 +42,7 @@ class FredericWorkout {
   final FredericWorkoutManager _workoutManager;
 
   late FredericWorkoutActivities _activities;
+  List<dynamic>? _activitiesList;
 
   DateTime? _startDate;
   String? _name;
@@ -134,18 +137,25 @@ class FredericWorkout {
     }
   }
 
-  void _loadActivities(List<dynamic>? activitiesList) async {
-    if (activitiesList == null) return;
-    for (dynamic activity in activitiesList) {
-      String? id = activity['activityid'];
-      num? weekday = activity['weekday'];
-      int wd = weekday?.toInt() ?? period * 10; // to make the if fail when null
-      if (wd <= period * 7 && id != null) {
-        _activities.activities[wd].add(
-            await FredericBackend.instance.activityManager.getActivity(id));
+  Future<void> loadActivities() async {
+    if (_activitiesList == null) return;
+    for (dynamic activityMap in _activitiesList!) {
+      String? id = activityMap['activityid'];
+      num? weekdayRaw = activityMap['weekday'];
+      int weekday =
+          weekdayRaw?.toInt() ?? period * 100; // to make the if fail when null
+
+      if (weekday <= period * 7 && id != null) {
+        _activities.activities[weekday].add(FredericWorkoutActivity.fromMap(
+            await FredericBackend.instance.activityManager.getActivity(id),
+            activityMap));
       }
     }
+
+    for (var list in _activities.activities) list.sort();
+
     _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
+    return;
   }
 
   //============================================================================
@@ -188,15 +198,15 @@ class FredericWorkout {
   /// Use this to add an activity instead of using activities.add() because
   /// this also adds it to the DB
   ///
-  bool addActivity(FredericActivity activity, int weekday) {
-    if (_activities.activities[weekday].contains(activity)) {
+  bool addActivity(FredericWorkoutActivity activity) {
+    if (_activities.activities[activity.weekday].contains(activity)) {
       return false;
     }
     if (_activities.everyday.contains(activity)) {
       return false;
     }
-    _activities.activities[weekday].add(activity);
-    _updateActivitiesInDB();
+    _activities.activities[activity.weekday].add(activity);
+    updateActivitiesInDB();
     return true;
   }
 
@@ -205,12 +215,23 @@ class FredericWorkout {
   /// Use this to remove an activity instead of using activities.remove() because
   /// this also removes it on the DB
   ///
-  void removeActivity(FredericActivity activity, int weekday) {
+  void removeActivity(FredericWorkoutActivity activity, int weekday) {
     _activities.activities[weekday].remove(activity);
-    _updateActivitiesInDB();
+    updateActivitiesInDB();
   }
 
-  void _updateActivitiesInDB() {
+  void switchActivities(int weekday, int firstIndex, int secondIndex) {
+    FredericWorkoutActivity first = _activities.activities[weekday][firstIndex];
+    FredericWorkoutActivity second =
+        _activities.activities[weekday][secondIndex];
+    first.order = secondIndex;
+    second.order = firstIndex;
+    _activities.activities[weekday][firstIndex] = second;
+    _activities.activities[weekday][secondIndex] = first;
+    updateActivitiesInDB();
+  }
+
+  void updateActivitiesInDB() {
     DocumentReference workoutReference =
         FirebaseFirestore.instance.collection('workouts').doc(workoutID);
 
@@ -227,11 +248,11 @@ class FredericWorkout {
 
 class FredericWorkoutActivities {
   FredericWorkoutActivities(this.workout)
-      : _activities = <List<FredericActivity>>[] {
-    _activities.add(<FredericActivity>[]);
+      : _activities = <List<FredericWorkoutActivity>>[] {
+    _activities.add(<FredericWorkoutActivity>[]);
 
     while (_activities.length <= ((workout.period * 7) + 1)) {
-      _activities.add(<FredericActivity>[]);
+      _activities.add(<FredericWorkoutActivity>[]);
     }
   }
 
@@ -240,22 +261,22 @@ class FredericWorkoutActivities {
   int get period => workout.period;
   bool get repeating => workout.repeating;
 
-  List<List<FredericActivity>> _activities;
+  List<List<FredericWorkoutActivity>> _activities;
 
-  List<List<FredericActivity>> get activities => _activities;
-  List<FredericActivity> get everyday => activities[0];
+  List<List<FredericWorkoutActivity>> get activities => _activities;
+  List<FredericWorkoutActivity> get everyday => activities[0];
 
   void resizeForPeriod(int value) {
     while (_activities.length <= ((value * 7))) {
-      _activities.add(<FredericActivity>[]);
+      _activities.add(<FredericWorkoutActivity>[]);
     }
   }
 
-  List<FredericActivity> getDay(DateTime day) {
+  List<FredericWorkoutActivity> getDay(DateTime day) {
     DateTime start = workout.startDate;
     DateTime end = workout.startDate.add(Duration(days: period * 7));
     if (day.isAfter(end) && workout.repeating == false)
-      return <FredericActivity>[];
+      return <FredericWorkoutActivity>[];
     int daysDiff = day.difference(start).inDays % (period * 7);
     return activities[daysDiff + 1] + activities[0];
   }
@@ -263,8 +284,8 @@ class FredericWorkoutActivities {
   List<Map<String, dynamic>> toList() {
     List<Map<String, dynamic>> list = <Map<String, dynamic>>[];
     for (int weekday = 0; weekday <= period * 7; weekday++) {
-      for (FredericActivity activityInList in _activities[weekday]) {
-        list.add({'weekday': weekday, 'activityid': activityInList.activityID});
+      for (FredericWorkoutActivity activityInList in _activities[weekday]) {
+        list.add(activityInList.toMap());
       }
     }
     return list;
@@ -272,7 +293,7 @@ class FredericWorkoutActivities {
 
   void clear() {
     for (int i = 0; i < _activities.length; i++) {
-      activities[i] = <FredericActivity>[];
+      activities[i] = <FredericWorkoutActivity>[];
     }
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_data_screen.dart';
 import 'package:frederic/state/workout_search_term.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
+import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_list_appbar.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_list_segment.dart';
@@ -22,34 +25,33 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
-      floatingActionButton: buildAddWorkoutButton(context),
+    return FredericScaffold(
+      floatingActionButton: buildAddExerciseButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SafeArea(
-        child: ChangeNotifierProvider<WorkoutSearchTerm>(
-          create: (context) => searchTerm,
-          child: CustomScrollView(
-            slivers: [
-              WorkoutListAppbar(searchTerm),
-              SliverDivider(),
-              SliverToBoxAdapter(
-                  child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: FredericHeading('Active'),
-              )),
-              WorkoutListSegment(true),
-              SliverToBoxAdapter(
-                  child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: FredericHeading('Other'),
-              )),
-              WorkoutListSegment(false),
-              SliverToBoxAdapter(child: Container(height: 100))
-            ],
-          ),
+      body: ChangeNotifierProvider<WorkoutSearchTerm>(
+        create: (context) => searchTerm,
+        child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            BlocBuilder<FredericUserManager, FredericUser>(
+                builder: (context, user) =>
+                    WorkoutListAppbar(searchTerm, user: user)),
+            if (theme.isMonotone) SliverDivider(),
+            SliverPadding(padding: const EdgeInsets.only(top: 8)),
+            SliverToBoxAdapter(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: FredericHeading('Active'),
+            )),
+            WorkoutListSegment(true),
+            SliverToBoxAdapter(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: FredericHeading('Other'),
+            )),
+            WorkoutListSegment(false),
+            SliverToBoxAdapter(child: Container(height: 100))
+          ],
         ),
       ),
     );
@@ -63,7 +65,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
       child: FloatingActionButton(
         elevation: 0,
         highlightElevation: 0,
-        backgroundColor: kMainColor,
+        backgroundColor: theme.mainColor,
         onPressed: () => CupertinoScaffold.showCupertinoModalBottomSheet(
             context: context,
             builder: (c) => Scaffold(

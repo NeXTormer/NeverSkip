@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,7 +28,7 @@ class FredericWorkoutManager
 
   HashMap<String, FredericWorkout> get workouts => state.workouts;
 
-  void reload() async {
+  Future<void> reload() async {
     QuerySnapshot<Object?> global =
         await _workoutsCollection.where('owner', isEqualTo: 'global').get();
     QuerySnapshot<Object?> private = await _workoutsCollection
@@ -38,15 +39,22 @@ class FredericWorkoutManager
     _workouts.clear();
 
     for (int i = 0; i < global.docs.length; i++) {
-      _workouts[global.docs[i].id] = FredericWorkout(global.docs[i], this);
+      FredericWorkout workout = FredericWorkout(global.docs[i], this);
+      await workout.loadActivities();
+      _workouts[global.docs[i].id] = workout;
+
       changed.add(global.docs[i].id);
     }
     for (int i = 0; i < private.docs.length; i++) {
-      _workouts[private.docs[i].id] = FredericWorkout(private.docs[i], this);
+      FredericWorkout workout = FredericWorkout(private.docs[i], this);
+      await workout.loadActivities();
+      _workouts[private.docs[i].id] = workout;
       changed.add(private.docs[i].id);
     }
 
     add(FredericWorkoutEvent(changed));
+
+    return;
   }
 
   @override
@@ -58,6 +66,14 @@ class FredericWorkoutManager
       _workouts[event.workout.workoutID] = event.workout;
       yield FredericWorkoutListData(_workouts, event.changed);
     } else if (event is FredericWorkoutDeleteEvent) {
+      if (FredericBackend.instance.userManager.state.activeWorkouts
+          .contains(event.workout.workoutID)) {
+        List<String> activeWorkouts =
+            FredericBackend.instance.userManager.state.activeWorkouts;
+        activeWorkouts.remove(event.workout.workoutID);
+        FredericBackend.instance.userManager.state.activeWorkouts =
+            activeWorkouts;
+      }
       _workouts[event.workout.workoutID]?.delete();
       _workouts.remove(event.workout.workoutID);
       yield FredericWorkoutListData(_workouts, event.changed);

@@ -46,7 +46,9 @@ class _NumberSliderState extends State<NumberSlider> {
         .then((value) => controller!.jumpToPage(start));
     return Container(
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black12),
+            border: Border.all(
+                color:
+                    theme.isDark ? theme.greyTextColor : theme.cardBorderColor),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         height: 40,
         child: Stack(
@@ -62,7 +64,7 @@ class _NumberSliderState extends State<NumberSlider> {
                     child: Container(
                       child: Icon(
                         Icons.play_arrow,
-                        color: kMainColor,
+                        color: theme.mainColor,
                       ),
                     ),
                   ),

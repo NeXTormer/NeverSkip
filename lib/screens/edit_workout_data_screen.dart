@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -37,6 +39,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   bool isRepeating = false;
   bool datePickerOpen = false;
+  bool datePickerVisible = false;
 
   DateTime? selectedStartDate;
 
@@ -50,7 +53,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   @override
   void initState() {
     isRepeating = widget.workout.repeating;
-    dateText = formatDateTime(widget.workout.startDate);
+    dateText = widget.workout.startDate.formattedEuropean();
     dummyDescription = widget.workout.description;
     dummyName = widget.workout.name;
     dummyRepeating = widget.workout.repeating;
@@ -69,62 +72,60 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
       });
     });
 
-    for (List<FredericActivity> list in widget.workout.activities.activities) {
+    for (List<FredericWorkoutActivity> list
+        in widget.workout.activities.activities) {
       totalActivities += list.length;
     }
 
     super.initState();
   }
 
-  String formatDateTime(DateTime date) {
-    String day = date.day.toString();
-    if (date.day < 10) day = day.padLeft(2, '0');
-    String month = date.month.toString();
-    if (date.month < 10) month = month.padLeft(2, '0');
-    return '$day.$month.${date.year}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
         controller: ModalScrollController.of(context),
         slivers: [
-          SliverPadding(padding: EdgeInsets.only(bottom: 12)),
           SliverToBoxAdapter(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Row(
-              children: [
-                Icon(
-                  ExtraIcons.settings,
-                  color: kMainColor,
-                ),
-                SizedBox(width: 32),
-                Text(
-                  widget.isNewWorkout ? 'Create workout' : 'Edit workout',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Expanded(child: Container()),
-                GestureDetector(
-                  onTap: () {
-                    saveData();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    widget.isNewWorkout ? 'Create' : 'Save',
-                    style: TextStyle(
-                        color: kMainColor, fontWeight: FontWeight.w500),
+              child: Container(
+            color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 24, bottom: 16),
+              child: Row(
+                children: [
+                  Icon(
+                    ExtraIcons.settings,
+                    color: theme.isColorful ? Colors.white : theme.mainColor,
                   ),
-                )
-              ],
+                  SizedBox(width: 32),
+                  Text(
+                    widget.isNewWorkout ? 'Create workout' : 'Edit workout',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  Expanded(child: Container()),
+                  GestureDetector(
+                    onTap: () {
+                      saveData();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      widget.isNewWorkout ? 'Create' : 'Save',
+                      style: TextStyle(
+                          color:
+                              theme.isColorful ? Colors.white : theme.mainColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )
+                ],
+              ),
             ),
           )),
-          SliverDivider(),
+          if (theme.isBright) SliverDivider(),
           SliverToBoxAdapter(
               child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: WorkoutCard.dummy(
               widget.workout,
               description: dummyDescription,
@@ -209,7 +210,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                               dummyRepeating = value;
                             });
                           },
-                          activeColor: kMainColor)
+                          activeColor: theme.mainColor)
                     ],
                   ),
                   SizedBox(height: 12),
@@ -245,37 +246,28 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   ),
                   SizedBox(height: 8),
                   AnimatedContainer(
-                      height: datePickerOpen ? 150 : 0,
-                      duration: Duration(milliseconds: 200),
+                      height: datePickerOpen ? 128 : 0,
+                      duration: const Duration(milliseconds: 160),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          border: Border.all(color: kCardBorderColor)),
+                          color: theme.backgroundColor,
+                          border: Border.all(color: theme.cardBorderColor)),
                       child: true
-                          ? FredericDatePicker(initialDate: DateTime.now())
-                          : SingleChildScrollView(
-                              controller: ScrollController(),
-                              physics: NeverScrollableScrollPhysics(),
-                              child: Container(
-                                height: 150,
-                                child: CupertinoDatePicker(
-                                  minimumYear: DateTime.now().year - 1,
-                                  maximumYear: DateTime.now().year + 1,
-                                  mode: CupertinoDatePickerMode.date,
-                                  initialDateTime: widget.workout.startDate,
-                                  onDateTimeChanged: (date) {
-                                    selectedStartDate = date;
-                                    setState(() {
-                                      dateText = formatDateTime(date);
-                                    });
-                                  },
-                                ),
-                              ),
-                            )),
+                          ? FredericDatePicker(
+                              initialDate: widget.workout.startDate,
+                              onDateChanged: (date) {
+                                selectedStartDate = date;
+                                setState(() {
+                                  dateText = date.formattedEuropean();
+                                });
+                              })
+                          : Container()),
                   SizedBox(
-                      height: (MediaQuery.of(context).size.height < 950
-                          ? 950 - MediaQuery.of(context).size.height
-                          : 16)),
+                      height: true
+                          ? 16
+                          : (MediaQuery.of(context).size.height < 950
+                              ? 950 - MediaQuery.of(context).size.height
+                              : 16)),
                   Row(
                     children: [
                       if (widget.workout.canEdit)
@@ -293,9 +285,14 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                                 .instance.workoutManager
                                                 .add(FredericWorkoutDeleteEvent(
                                                     widget.workout));
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
+
+                                            // Navigator.of(context).pop();
+                                            WidgetsBinding.instance
+                                                ?.addPostFrameCallback(
+                                                    (timeStamp) {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            });
                                           },
                                           title: 'Confirm deletion',
                                           destructiveAction: true,

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:frederic/main.dart';
 
 @deprecated
 class FredericCircularProgressIndicator extends StatefulWidget {
@@ -78,7 +77,8 @@ class _FredericCircularProgressIndicatorState
       ),
       ShaderMask(
         shaderCallback: (rect) {
-          return LinearGradient(colors: kIconGradient).createShader(rect);
+          return LinearGradient(colors: [Colors.red, Colors.orange])
+              .createShader(rect);
         },
         child: RotatedBox(
           quarterTurns: 3,

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_database_document.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/extensions.dart';
 
 ///
 /// Represents all loaded sets of a specific activity. Use this class to add
@@ -11,6 +13,34 @@ class FredericSetList {
   FredericSetList(this.activityID, FredericSetManager setManager)
       : _setManager = setManager {
     loadData(2);
+  }
+
+  ///
+  /// Creates a new FredericSetList from a Query Snapshot. Behaves just like
+  /// when using the normal constructor, except that no extra data is loaded and
+  /// therefore no event is pushed to the [FredericSetManager]
+  ///
+  FredericSetList.fromDocumentSnapshot(
+      this.activityID,
+      QuerySnapshot<Map<String, dynamic>> snapshot,
+      FredericSetManager setManager)
+      : _setManager = setManager {
+    _processQuerySnapshot(snapshot);
+    _calculateBestProgress();
+  }
+
+  ///
+  /// Creates a new FredericSetList from a List of [FredericStorageDocument]s. Behaves just like
+  /// when using the normal constructor, except that no extra data is loaded and
+  /// therefore no event is pushed to the [FredericSetManager]
+  ///
+  FredericSetList.fromStorageDocumentList(
+      this.activityID,
+      List<FredericDatabaseDocument> documentList,
+      FredericSetManager setManager)
+      : _setManager = setManager {
+    _processDocumentList(documentList);
+    _calculateBestProgress();
   }
 
   final String activityID;
@@ -24,10 +54,26 @@ class FredericSetList {
   int get bestWeight => _bestWeight;
   int get bestReps => _bestReps;
 
+  List<FredericSetDocument> get setDocuments => _setDocuments;
+
   bool wasActiveToday() {
     List<FredericSet> latest = getLatestSets(1);
     if (latest.isEmpty) return false;
-    return latest[0].timestamp.isSameDate(DateTime.now());
+    return latest[0].timestamp.isSameDay(DateTime.now());
+  }
+
+  void loadData(int monthsToLoad) async {
+    int lastMonth = _setManager.currentMonth - (monthsToLoad - 1);
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _setManager
+        .setsCollection
+        .where('activityid', isEqualTo: activityID)
+        .where('month', isGreaterThanOrEqualTo: lastMonth)
+        .get();
+
+    _setDocuments.clear();
+    _processQuerySnapshot(snapshot);
+    _calculateBestProgress();
+    _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 
   List<FredericSet> getLatestSets([int count = 6]) {
@@ -59,9 +105,12 @@ class FredericSetList {
     }
   }
 
-  void deleteSet(FredericSet set) {
+  ///
+  /// Don't use this, use the method in [FredericSetManager]
+  ///
+  void deleteSetLocally(FredericSet set) {
     if (_setDocuments
-        .where((element) => element.month == set.month)
+        .where((element) => element.month == set.monthID)
         .first
         .deleteSet(set)) {
       if (set.weight >= _bestWeight) {
@@ -74,13 +123,18 @@ class FredericSetList {
     }
   }
 
-  void addSet(FredericSet set) {
+  ///
+  /// Don't use this, use the method in [FredericSetManager]
+  ///
+  void addSetLocally(FredericSet set) {
     if (_setDocuments.isEmpty ||
-        _setDocuments.where((element) => element.month == set.month).isEmpty) {
-      _createDocumentWith(set);
+        _setDocuments
+            .where((element) => element.month == set.monthID)
+            .isEmpty) {
+      _createDocumentWithSet(set);
     } else {
       if (_setDocuments
-          .where((element) => element.month == set.month)
+          .where((element) => element.month == set.monthID)
           .first
           .addSet(set)) _setManager.add(FredericSetEvent(<String>[activityID]));
     }
@@ -88,50 +142,45 @@ class FredericSetList {
     if (set.reps > _bestReps) _bestReps = set.reps;
   }
 
-  void _createDocumentWith(FredericSet set) async {
+  void _createDocumentWithSet(FredericSet set) async {
     var doc = await _setManager.setsCollection.add({
       'activityid': activityID,
-      'month': set.month,
+      'month': set.monthID,
       'sets': <Map<String, dynamic>>[set.asMap()]
     });
-    _setDocuments.add(
-        FredericSetDocument(doc.id, set.month, activityID, <FredericSet>[set]));
+    _setDocuments.add(FredericSetDocument(
+        doc.id, set.monthID, activityID, <FredericSet>[set]));
     _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 
-  void loadData(int monthsToLoad) async {
-    int lastMonth = _setManager.currentMonth - (monthsToLoad - 1);
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _setManager
-        .setsCollection
-        .where('activityid', isEqualTo: activityID)
-        .where('month', isGreaterThanOrEqualTo: lastMonth)
-        .get();
-
-    _setDocuments.clear();
+  void _processQuerySnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
     for (DocumentSnapshot<Map<String, dynamic>> document in snapshot.docs) {
-      int? month = document.data()?['month'];
-      if (month == null) continue;
-
-      List<FredericSet> sets = <FredericSet>[];
-      List<dynamic>? setList = document.data()?['sets'];
-
-      if (setList == null) continue;
-
-      for (Map<String, dynamic> map in setList) {
-        sets.add(FredericSet.fromMap(map));
-      }
-      _setDocuments
-          .add(FredericSetDocument(document.id, month, activityID, sets));
+      if (document.data() == null) continue;
+      if (document.data()?['activityid'] != activityID) continue;
+      _insertStorageDocument(
+          FredericDatabaseDocument(document.id, document.data()!));
     }
-    _calculateBestProgress();
-    _setManager.add(FredericSetEvent(<String>[activityID]));
   }
-}
 
-extension DateOnlyCompare on DateTime {
-  bool isSameDate(DateTime other) {
-    return this.year == other.year &&
-        this.month == other.month &&
-        this.day == other.day;
+  void _processDocumentList(List<FredericDatabaseDocument> docList) {
+    for (var document in docList) {
+      _insertStorageDocument(document);
+    }
+  }
+
+  void _insertStorageDocument(FredericDatabaseDocument document) {
+    int? month = document['month'];
+    if (month == null) return;
+
+    List<FredericSet> sets = <FredericSet>[];
+    List<dynamic>? setList = document['sets'];
+
+    if (setList == null) return;
+
+    for (Map<String, dynamic> map in setList) {
+      sets.add(FredericSet.fromMap(map));
+    }
+    _setDocuments
+        .add(FredericSetDocument(document.id, month, activityID, sets));
   }
 }

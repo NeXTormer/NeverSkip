@@ -13,7 +13,7 @@ class CircularPlusIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius,
-      backgroundColor: kMainColor,
+      backgroundColor: theme.mainColor,
       child: CircleAvatar(
         radius: radius - width,
         backgroundColor: Colors.white,
@@ -21,7 +21,7 @@ class CircularPlusIcon extends StatelessWidget {
           child: Icon(
             Icons.add,
             size: iconSize == 0 ? radius * 2 - 5 : iconSize,
-            color: kMainColor,
+            color: theme.mainColor,
           ),
         ),
       ),

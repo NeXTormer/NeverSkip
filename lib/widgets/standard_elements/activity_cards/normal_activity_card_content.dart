@@ -27,7 +27,11 @@ class NormalActivityCardContent extends StatelessWidget {
               width: 40,
               height: 40,
               child: AspectRatio(
-                  aspectRatio: 1, child: PictureIcon(activity.image))),
+                  aspectRatio: 1,
+                  child: PictureIcon(
+                    activity.image,
+                    mainColor: theme.mainColorInText,
+                  ))),
           SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -36,7 +40,7 @@ class NormalActivityCardContent extends StatelessWidget {
                 Text(
                   '${activity.name}',
                   style: TextStyle(
-                    color: kTextColor,
+                    color: theme.textColor,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0,
                     fontSize: 13,
@@ -47,7 +51,7 @@ class NormalActivityCardContent extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                       style: TextStyle(
-                          color: const Color(0xC03A3A3A),
+                          color: theme.greyTextColor,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.2,
                           fontSize: 12),

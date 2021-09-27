@@ -11,6 +11,7 @@ import 'package:frederic/widgets/home_screen/goal_segment.dart';
 import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
 import 'package:frederic/widgets/home_screen/training_volume_chart_segment.dart';
+import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,15 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-          child: BlocBuilder<FredericUserManager, FredericUser>(
+    return FredericScaffold(
+      body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) {
           return CustomScrollView(
+            physics: BouncingScrollPhysics(),
             slivers: [
               HomeScreenAppbar(user),
-              SliverDivider(),
+              if (theme.isMonotone) SliverDivider(),
               ProgressIndicatorSegment(),
               GoalSegment(),
               TrainingVolumeChartSegment(),
@@ -47,9 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
         buildWhen: (previous, current) {
+          return true;
           return current.finishedLoading;
         },
-      )),
+      ),
     );
   }
 }

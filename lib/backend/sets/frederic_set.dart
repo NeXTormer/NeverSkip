@@ -22,7 +22,7 @@ class FredericSet implements Comparable {
   final int weight;
   late final DateTime timestamp;
 
-  int get month {
+  int get monthID {
     int yearDiff = timestamp.year - FredericSetManager.startingYear;
     return timestamp.month + (yearDiff * 12);
   }
