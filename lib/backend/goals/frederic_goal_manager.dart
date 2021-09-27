@@ -1,55 +1,101 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 
-import '../backend.dart';
+import 'frederic_goal.dart';
 
+/// Manages all Goals using the Bloc Pattern
+/// Access goals either with bloc builder or with
+/// ```
+/// FredericBackend.instance.goalManager.state
+/// ```
 ///
-/// Manages all goals. Only one instance of this should exist. Instantiated in
-/// [FredericBackend].
-///
-class FredericGoalManager with ChangeNotifier {
-  FredericGoalManager() {
-    _allGoals = <FredericGoal>[];
+class FredericGoalManager
+    extends Bloc<FredericGoalEvent, FredericGoalListData> {
+  FredericGoalManager()
+      : super(
+            FredericGoalListData(<String>[], HashMap<String, FredericGoal>()));
+
+  final CollectionReference _goalsCollection = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .collection('goals');
+
+  HashMap<String, FredericGoal> _goals = HashMap<String, FredericGoal>();
+
+  FredericGoal? operator [](String value) {
+    return _goals[value];
   }
-
-  Stream<QuerySnapshot<Map<String, dynamic>>>? _snapshots;
-
-  late List<FredericGoal> _allGoals;
-
-  List<FredericGoal> get achievements =>
-      _allGoals.where((element) => element.isCompleted).toList();
-
-  List<FredericGoal> get goals =>
-      _allGoals.where((element) => element.isNotCompleted).toList();
 
   ///
-  /// Called once in [FredericBackend]
+  /// (Re)Loads all goals from the database
   ///
-  Future<void> loadData() async {
-    if (_snapshots != null) return;
-    if (FirebaseAuth.instance.currentUser == null) return;
-    CollectionReference<Map<String, dynamic>> goalsCollection =
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(FirebaseAuth.instance.currentUser?.uid)
-            .collection('goals');
-    _snapshots = goalsCollection.snapshots();
-    _snapshots!.listen(_handleGoalSnapshot);
-  }
+  Future<void> reload() async {
+    QuerySnapshot<Object?> private = await _goalsCollection.get();
 
-  void updateData() {
-    notifyListeners();
-  }
+    List<String> changed = <String>[];
+    _goals.clear();
 
-  void _handleGoalSnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
-    _allGoals.clear();
-    for (var doc in snapshot.docs) {
-      FredericGoal goal = FredericGoal(doc.id);
-      goal.insertData(doc);
-      _allGoals.add(goal);
-      //load activity goal.activityID
+    for (int i = 0; i < private.docs.length; i++) {
+      _goals[private.docs[i].id] = FredericGoal(private.docs[i], this);
+      changed.add(private.docs[i].id);
     }
-    notifyListeners();
+
+    add(FredericGoalEvent(changed));
   }
+
+  @override
+  Stream<FredericGoalListData> mapEventToState(FredericGoalEvent event) async* {
+    if (event is FredericGoalUpdateEvent) {
+      yield FredericGoalListData(event.changed, _goals);
+    } else if (event is FredericGoalCreateEvent) {
+      _goals[event.newGoal.goalID] = event.newGoal;
+      yield FredericGoalListData(event.changed, _goals);
+    } else if (event is FredericGoalDeleteEvent) {
+      _goalsCollection.doc(event.goal.goalID).delete();
+      _goals.remove(event.goal.goalID);
+      yield FredericGoalListData(event.changed, _goals);
+    } else if (event is FredericGoalEvent) {
+      yield FredericGoalListData(event.changed, _goals);
+    }
+  }
+
+  @override
+  void onTransition(
+      Transition<FredericGoalEvent, FredericGoalListData> transition) {
+    // print('============');
+    // print(transition);
+    // print('============');
+    super.onTransition(transition);
+  }
+
+  set goals(List<String> value) {
+    if (FirebaseAuth.instance.currentUser?.uid == '') return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .update({'goals': value});
+  }
+}
+
+class FredericGoalEvent {
+  FredericGoalEvent(this.changed);
+  List<String> changed;
+}
+
+class FredericGoalUpdateEvent extends FredericGoalEvent {
+  FredericGoalUpdateEvent(String updated) : super([updated]);
+}
+
+class FredericGoalCreateEvent extends FredericGoalEvent {
+  FredericGoalCreateEvent(this.newGoal) : super([newGoal.goalID]);
+  FredericGoal newGoal;
+}
+
+class FredericGoalDeleteEvent extends FredericGoalEvent {
+  FredericGoalDeleteEvent(this.goal) : super([goal.goalID]);
+  FredericGoal goal;
 }

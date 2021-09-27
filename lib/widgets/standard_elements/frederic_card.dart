@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FredericCard extends StatelessWidget {
   const FredericCard(
@@ -12,6 +13,7 @@ class FredericCard extends StatelessWidget {
       this.child,
       this.color,
       this.animated = false,
+      this.shimmer = false,
       this.duration = const Duration(milliseconds: 200),
       this.onLongPress,
       this.onTap});
@@ -27,6 +29,7 @@ class FredericCard extends StatelessWidget {
   final void Function()? onLongPress;
   final Duration duration;
   final bool animated;
+  final bool shimmer;
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +70,32 @@ class FredericCard extends StatelessWidget {
           decoration: decoration,
           child: container);
     else
-      return Container(
-        width: width,
-        height: height,
-        margin: margin,
-        decoration: decoration,
-        child: container,
+      return Stack(
+        fit: StackFit.passthrough,
+        children: [
+          if (shimmer)
+            Shimmer.fromColors(
+              period: Duration(seconds: 1),
+              child: Container(
+                width: width,
+                height: height,
+                margin: margin,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  color: Colors.black,
+                ),
+              ),
+              baseColor: Colors.yellow.shade50,
+              highlightColor: Colors.white,
+            ),
+          Container(
+            width: width,
+            height: height,
+            margin: margin,
+            decoration: decoration,
+            child: container,
+          ),
+        ],
       );
   }
 }

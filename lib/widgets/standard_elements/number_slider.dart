@@ -9,11 +9,12 @@ import 'package:frederic/main.dart';
 /// the percentage of the screen width which one item takes up.
 ///
 class NumberSlider extends StatefulWidget {
-  NumberSlider(
-      {required this.controller,
-      this.numberOfItems = 400,
-      this.startingIndex = 10,
-      this.itemWidth = 0.2});
+  NumberSlider({
+    required this.controller,
+    this.numberOfItems = 400,
+    this.startingIndex = 10,
+    this.itemWidth = 0.2,
+  });
 
   final int startingIndex;
   final int numberOfItems;
@@ -57,7 +58,6 @@ class _NumberSliderState extends State<NumberSlider> {
               bottom: -8.5,
               child: Container(
                 width: 50,
-                //height: double.infinity,
                 child: Container(
                   child: RotatedBox(
                     quarterTurns: 3,
@@ -106,6 +106,13 @@ class _NumberSliderElement extends StatelessWidget {
   }
 }
 
-class NumberSliderController {
-  num value = 0;
+class NumberSliderController with ChangeNotifier {
+  num _value = 0;
+
+  num get value => _value;
+
+  set value(num value) {
+    _value = value;
+    notifyListeners();
+  }
 }
