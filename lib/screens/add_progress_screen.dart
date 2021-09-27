@@ -26,57 +26,67 @@ class AddProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 12, left: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  ExtraIcons.statistics,
-                  color: kMainColor,
-                  size: 20,
-                ),
-                SizedBox(width: 12),
-                Padding(
-                  padding: EdgeInsets.only(top: 2),
-                  child: Text(
-                    'Exercise Progress',
-                    style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: kTextColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17),
+          Container(
+            color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+            child: Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 12, left: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    ExtraIcons.statistics,
+                    color: theme.isColorful
+                        ? theme.textColorColorfulBackground
+                        : theme.mainColor,
+                    size: 20,
                   ),
-                ),
-                Expanded(child: Container()),
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Container(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Save',
-                        style: const TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: kMainColor,
-                            fontSize: 16),
-                      ),
+                  SizedBox(width: 12),
+                  Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      'Exercise Progress',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: theme.textColorColorfulBackground,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17),
                     ),
                   ),
-                )
-              ],
+                  Expanded(child: Container()),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Container(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: theme.isColorful
+                                  ? theme.textColorColorfulBackground
+                                  : theme.mainColor,
+                              fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFC9C9C9), width: 0.2)),
-          ),
+          if (theme.isMonotone)
+            Container(
+              decoration: BoxDecoration(
+                  border:
+                      Border.all(color: const Color(0xFFC9C9C9), width: 0.2)),
+            ),
+          const SizedBox(height: 8),
           Expanded(
             child: CustomScrollView(
               physics: ClampingScrollPhysics(),
@@ -96,8 +106,8 @@ class AddProgressScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(color: kCardBorderColor)),
+                        color: theme.cardBackgroundColor,
+                        border: Border.all(color: theme.cardBorderColor)),
                     child: Column(
                       children: [
                         buildSubHeading('Sets', Icons.account_tree_outlined),
@@ -133,10 +143,9 @@ class AddProgressScreen extends StatelessWidget {
                             int reps = repsSliderController.value.toInt();
                             int weight = weightSliderController.value.toInt();
                             for (int i = 0; i < sets; i++) {
-                              FredericBackend.instance.setManager
-                                  .state[activity.activityID]
-                                  .addSet(FredericSet(
-                                      reps, weight, DateTime.now()));
+                              FredericBackend.instance.setManager.addSet(
+                                  activity.activityID,
+                                  FredericSet(reps, weight, DateTime.now()));
                             }
                             Navigator.of(context).pop();
                           }),
@@ -181,7 +190,7 @@ class AddProgressScreen extends StatelessWidget {
           title,
           style: TextStyle(
               fontFamily: 'Montserrat',
-              color: kTextColor,
+              color: theme.textColor,
               fontSize: 12,
               fontWeight: FontWeight.w500),
         )
@@ -224,7 +233,8 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
               child: LayoutBuilder(builder: (context, constraints) {
                 return ConstrainedBox(
                     constraints: constraints,
-                    child: PictureIcon(widget.activity.image));
+                    child: PictureIcon(widget.activity.image,
+                        mainColor: theme.mainColorInText));
               })),
           AnimatedPadding(
               padding: EdgeInsets.symmetric(horizontal: expanded ? 0 : 6),
@@ -237,9 +247,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                 Text(widget.activity.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontFamily: 'Montserrat',
-                        color: kMainColor,
+                        color: theme.textColor,
                         fontWeight: FontWeight.w500,
                         fontSize: 17)),
                 SizedBox(height: 4),
@@ -247,9 +257,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                   child: Text(widget.activity.description,
                       maxLines: expanded ? 6 : 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: kTextColor,
+                          color: theme.textColor,
                           letterSpacing: 0.2,
                           fontWeight: FontWeight.w400,
                           fontSize: 13)),

@@ -20,10 +20,6 @@ class FredericWorkoutManager
   final CollectionReference _workoutsCollection =
       FirebaseFirestore.instance.collection('workouts');
 
-  bool _hasCompletedFirstReload = false;
-  bool get hasCompletedFirstReload => _hasCompletedFirstReload;
-  List<Completer<void>> _waitForFirstLoadCompleters = <Completer<void>>[];
-
   HashMap<String, FredericWorkout> _workouts;
 
   FredericWorkout? operator [](String value) {
@@ -32,7 +28,7 @@ class FredericWorkoutManager
 
   HashMap<String, FredericWorkout> get workouts => state.workouts;
 
-  void reload() async {
+  Future<void> reload() async {
     QuerySnapshot<Object?> global =
         await _workoutsCollection.where('owner', isEqualTo: 'global').get();
     QuerySnapshot<Object?> private = await _workoutsCollection
@@ -43,30 +39,22 @@ class FredericWorkoutManager
     _workouts.clear();
 
     for (int i = 0; i < global.docs.length; i++) {
-      _workouts[global.docs[i].id] = FredericWorkout(global.docs[i], this);
+      FredericWorkout workout = FredericWorkout(global.docs[i], this);
+      await workout.loadActivities();
+      _workouts[global.docs[i].id] = workout;
+
       changed.add(global.docs[i].id);
     }
     for (int i = 0; i < private.docs.length; i++) {
-      _workouts[private.docs[i].id] = FredericWorkout(private.docs[i], this);
+      FredericWorkout workout = FredericWorkout(private.docs[i], this);
+      await workout.loadActivities();
+      _workouts[private.docs[i].id] = workout;
       changed.add(private.docs[i].id);
     }
 
     add(FredericWorkoutEvent(changed));
 
-    if (!_hasCompletedFirstReload) {
-      _hasCompletedFirstReload = true;
-      for (var completer in _waitForFirstLoadCompleters) {
-        completer.complete();
-      }
-    }
-  }
-
-  /// Future gets completed when workouts have been loaded one time
-  Future<void> waitForFirstReload() async {
-    if (_hasCompletedFirstReload) return;
-    Completer<void> completer = Completer<void>();
-    _waitForFirstLoadCompleters.add(completer);
-    return completer.future;
+    return;
   }
 
   @override

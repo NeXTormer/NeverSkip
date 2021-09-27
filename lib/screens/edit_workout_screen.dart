@@ -9,6 +9,8 @@ import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_activity_list_segment.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
+import 'package:frederic/widgets/standard_elements/frederic_divider.dart';
+import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -43,34 +45,35 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
         if (workout == null) {
           Navigator.of(context).pop();
-          return Scaffold(
+          return FredericScaffold(
             body: Center(
-              child: Text('Workout does not exist'),
+              child: Text('Error: workout doesn\'t exist'),
             ),
           );
         }
-        return Scaffold(
-          backgroundColor: kScaffoldBackgroundColor,
+        return FredericScaffold(
           floatingActionButton:
               workout.canEdit ? buildAddExerciseButton(width, 44) : null,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          body: SafeArea(
-            child: Column(
-              children: [
-                EditWorkoutHeader(workout),
-                Divider(color: kDividerColor),
-                WeekdaysSliderSegment(
-                    pageController: pageController,
-                    weekdaysSliderController: weekdaysSliderController,
-                    workout: workout),
-                Divider(color: kDividerColor),
-                EditWorkoutActivityListSegment(
-                    workout: workout,
-                    pageController: pageController,
-                    weekdaysSliderController: weekdaysSliderController),
-              ],
-            ),
+          body: Column(
+            children: [
+              EditWorkoutHeader(workout),
+              if (theme.isBright) SizedBox(height: 8),
+              if (theme.isBright) FredericDivider(),
+              SizedBox(height: 8),
+              WeekdaysSliderSegment(
+                  pageController: pageController,
+                  weekdaysSliderController: weekdaysSliderController,
+                  workout: workout),
+              SizedBox(height: 8),
+              FredericDivider(),
+              SizedBox(height: 8),
+              EditWorkoutActivityListSegment(
+                  workout: workout,
+                  pageController: pageController,
+                  weekdaysSliderController: weekdaysSliderController),
+            ],
           ),
         );
       },
@@ -85,7 +88,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       child: FloatingActionButton(
         elevation: 0,
         highlightElevation: 0,
-        backgroundColor: kMainColor,
+        backgroundColor: theme.mainColor,
         onPressed: () => showActivityList(context),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(

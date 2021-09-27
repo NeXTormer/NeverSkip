@@ -62,10 +62,10 @@ class _SetCardState extends State<SetCard> {
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: kMainColorLight),
+                          color: theme.mainColorLight),
                       child: Icon(
                         ExtraIcons.statistics,
-                        color: kMainColor,
+                        color: theme.mainColorInText,
                         size: 18,
                       ),
                     ),
@@ -76,7 +76,7 @@ class _SetCardState extends State<SetCard> {
                         Text(
                           '${widget.set.reps}',
                           style: TextStyle(
-                              color: kTextColor,
+                              color: theme.textColor,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
                               fontSize: 14),
@@ -84,7 +84,7 @@ class _SetCardState extends State<SetCard> {
                         SizedBox(width: 3),
                         Text('reps',
                             style: TextStyle(
-                                color: kTextColor,
+                                color: theme.textColor,
                                 fontWeight: FontWeight.w500,
                                 letterSpacing: 0.5,
                                 fontSize: 12)),
@@ -96,7 +96,7 @@ class _SetCardState extends State<SetCard> {
                           Text(
                             '${widget.set.weight}',
                             style: TextStyle(
-                                color: kTextColor,
+                                color: theme.textColor,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.5,
                                 fontSize: 14),
@@ -104,7 +104,7 @@ class _SetCardState extends State<SetCard> {
                           SizedBox(width: 3),
                           Text(widget.activity.progressUnit,
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w500,
                                   letterSpacing: 0.5,
                                   fontSize: 12)),
@@ -117,7 +117,7 @@ class _SetCardState extends State<SetCard> {
                     Text(
                       '${DateFormat.yMMMd().format(widget.set.timestamp.toLocal())}',
                       style: TextStyle(
-                          color: kTextColor,
+                          color: theme.textColor,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
                           fontSize: 14),
@@ -126,13 +126,14 @@ class _SetCardState extends State<SetCard> {
                     Text(
                       '${DateFormat.Hm().format(widget.set.timestamp.toLocal())}',
                       style: TextStyle(
-                          color: kTextColor,
+                          color: theme.textColor,
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.3,
                           fontSize: 14),
                     ),
                     SizedBox(width: 12),
-                    Icon(ExtraIcons.calendar, color: kMainColor, size: 22),
+                    Icon(ExtraIcons.calendar,
+                        color: theme.mainColorInText, size: 22),
                   ],
                 )),
     );
@@ -143,8 +144,8 @@ class _SetCardState extends State<SetCard> {
       deleted = true;
     });
     Future.delayed(widget.animationDuration).then((value) {
-      FredericBackend.instance.setManager.state[widget.activity.activityID]
-          .deleteSet(widget.set);
+      FredericBackend.instance.setManager
+          .deleteSet(widget.activity.activityID, widget.set);
       Navigator.of(context).pop();
     });
   }

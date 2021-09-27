@@ -80,7 +80,7 @@ class EditWorkoutActivityListSegment extends StatelessWidget {
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12))),
-                        backgroundColor: kMainColor,
+                        backgroundColor: theme.mainColor,
                       ));
                     });
                   }),

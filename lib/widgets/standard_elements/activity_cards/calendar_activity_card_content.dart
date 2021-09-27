@@ -43,11 +43,11 @@ class _CalendarActivityCardContentState
                   AspectRatio(
                     child: PictureIcon(widget.activity.activity.image,
                         mainColor: widget.state == ActivityCardState.Normal
-                            ? kMainColor
-                            : kGreenColor,
+                            ? theme.mainColorInText
+                            : theme.positiveColor,
                         accentColor: widget.state == ActivityCardState.Normal
-                            ? kMainColorLight
-                            : kGreenColorLight),
+                            ? theme.mainColorLight
+                            : theme.positiveColorLight),
                     aspectRatio: 1,
                   ),
                   SizedBox(width: 12),
@@ -62,7 +62,7 @@ class _CalendarActivityCardContentState
                                   fontFamily: 'Montserrat',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: kTextColor)),
+                                  color: theme.textColor)),
                           Expanded(child: Container()),
                         ]),
                         Row(
@@ -70,7 +70,7 @@ class _CalendarActivityCardContentState
                             Text(
                               '${widget.activity.sets}',
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
                                   fontSize: 14),
@@ -79,7 +79,7 @@ class _CalendarActivityCardContentState
                             Text(
                                 '${widget.activity.sets == 1 ? 'set' : 'sets'}',
                                 style: TextStyle(
-                                    color: kTextColor,
+                                    color: theme.textColor,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 0.5,
                                     fontSize: 12)),
@@ -89,7 +89,7 @@ class _CalendarActivityCardContentState
                             Text(
                               '${widget.activity.reps}',
                               style: TextStyle(
-                                  color: kTextColor,
+                                  color: theme.textColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
                                   fontSize: 14),
@@ -98,7 +98,7 @@ class _CalendarActivityCardContentState
                             Text(
                                 '${widget.activity.reps == 1 ? 'repetition' : 'repetitions'}',
                                 style: TextStyle(
-                                    color: kTextColor,
+                                    color: theme.textColor,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 0.5,
                                     fontSize: 12)),

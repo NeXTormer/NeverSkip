@@ -25,9 +25,12 @@ class ActivityCard extends StatelessWidget {
       this.onClick,
       this.state = ActivityCardState.Normal,
       this.addButton = false,
-      this.mainColor = kMainColor,
-      this.accentColor = kAccentColor})
-      : super(key: key);
+      Color? mainColor,
+      Color? accentColor})
+      : super(key: key) {
+    this.mainColor = mainColor ?? theme.mainColor;
+    this.accentColor = accentColor ?? theme.accentColor;
+  }
 
   final FredericActivity activity;
   final ActivityCardType type;
@@ -35,8 +38,8 @@ class ActivityCard extends StatelessWidget {
 
   final FredericSetList? setList;
 
-  final Color mainColor;
-  final Color accentColor;
+  late final Color mainColor;
+  late final Color accentColor;
 
   final bool addButton;
 

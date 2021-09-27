@@ -40,10 +40,12 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   Widget build(BuildContext context) {
     return CupertinoScaffold(
       body: Scaffold(
-        backgroundColor: kScaffoldBackgroundColor,
+        backgroundColor: theme.backgroundColor,
         extendBodyBehindAppBar: false,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.dark,
+          value: theme.isDark || theme.isColorful
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark,
           child: PageView(
             children: screens,
             controller: pageController,
@@ -57,7 +59,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+                topRight: Radius.circular(12), topLeft: Radius.circular(12)),
             boxShadow: [
               BoxShadow(
                   color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
@@ -65,13 +67,16 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             child: BottomNavigationBar(
               items: items,
               elevation: 0,
-              backgroundColor: Colors.white,
-              selectedItemColor: kAccentColor,
-              unselectedItemColor: kMainColor,
+              backgroundColor:
+                  theme.isColorful ? theme.mainColor : theme.backgroundColor,
+              selectedItemColor:
+                  theme.isColorful ? Colors.white : theme.accentColor,
+              unselectedItemColor:
+                  theme.isColorful ? Colors.white : theme.mainColor,
               showUnselectedLabels: true,
               type: BottomNavigationBarType.fixed,
               currentIndex: currentIndex,
@@ -90,21 +95,13 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
 }
 
 class FredericScreen {
-  FredericScreen(
-      {required this.screen,
-      required this.icon,
-      required this.label,
-      this.appbar});
+  FredericScreen({
+    required this.screen,
+    required this.icon,
+    required this.label,
+  });
 
-  FredericAppBar? appbar;
   Widget screen;
   IconData icon;
   String label;
-}
-
-class FredericAppBar {
-  FredericAppBar({required this.title, this.leading, this.actions});
-  Widget title;
-  Widget? leading;
-  List<Widget>? actions;
 }

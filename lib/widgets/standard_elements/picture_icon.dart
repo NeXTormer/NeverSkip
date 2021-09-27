@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
 class PictureIcon extends StatelessWidget {
-  PictureIcon(this.url,
-      {this.mainColor = kMainColor, this.accentColor = kMainColorLight});
+  PictureIcon(
+    this.url, {
+    Color? mainColor,
+    Color? accentColor,
+  }) {
+    this.mainColor = mainColor ?? theme.mainColor;
+    this.accentColor = accentColor ?? theme.mainColorLight;
+  }
 
   final String? url;
-  final Color mainColor;
-  final Color accentColor;
+  late final Color mainColor;
+  late final Color accentColor;
 
   @override
   Widget build(BuildContext context) {

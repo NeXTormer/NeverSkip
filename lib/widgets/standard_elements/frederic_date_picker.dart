@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:intl/intl.dart';
 
 class FredericDatePicker extends StatefulWidget {
@@ -45,70 +46,75 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
   Widget build(BuildContext context) {
     dayWidth = (MediaQuery.of(context).size.width / 10);
     dayTotalWidth = dayPadding + dayWidth;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        children: [
-          Container(
-            height: 36,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: monthController,
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                      padding: EdgeInsets.only(left: index == 0 ? 12 : 0),
-                      child: buildMonth(startingDate, -index, index,
-                          index == selectedMonthIndex));
-                },
-                itemCount: 13),
-          ),
-          SizedBox(height: 16),
-          Container(
-            height: 50,
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              controller: dayController,
-              scrollDirection: Axis.horizontal,
-              itemCount: 365 + 30,
-              itemBuilder: (context, index) {
-                int year = startingDate.year;
-                int month = startingDate.month;
-                int day = startingDate.day;
-
-                // Using this method instead of:
-                //    startingDate.add(Duration(days: index));
-                // because DateTime::add() takes daylight savings into
-                // consideration and we don't want that
-                DateTime date = DateTime(year, month, day + index);
-                return Container(
-                  margin: EdgeInsets.only(left: index == 0 ? 12 : 0),
-                  width: dayTotalWidth,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDayIndex = index;
-                        selectMonth(date);
-                        widget.onDateChanged.call(date);
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border:
-                              Border.all(color: kCardBorderColor, width: 0.6)),
-                      child: WeekDaysSliderDayButton(
-                          dayIndex: index,
-                          selectedDate: selectedDayIndex,
-                          date: date),
-                    ),
-                  ),
-                );
-              },
+    return Container(
+      color: theme.backgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          children: [
+            Container(
+              height: 36,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: monthController,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                        padding: EdgeInsets.only(left: index == 0 ? 12 : 0),
+                        child: buildMonth(startingDate, -index, index,
+                            index == selectedMonthIndex));
+                  },
+                  itemCount: 13),
             ),
-          ),
-        ],
+            SizedBox(height: 16),
+            Container(
+              height: 50,
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                controller: dayController,
+                scrollDirection: Axis.horizontal,
+                itemCount: 365 + 30,
+                itemBuilder: (context, index) {
+                  int year = startingDate.year;
+                  int month = startingDate.month;
+                  int day = startingDate.day;
+
+                  // Using this method instead of:
+                  //    startingDate.add(Duration(days: index));
+                  // because DateTime::add() takes daylight savings into
+                  // consideration and we don't want that
+                  DateTime date = DateTime(year, month, day + index);
+                  return Container(
+                    margin: EdgeInsets.only(left: index == 0 ? 12 : 0),
+                    width: dayTotalWidth,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedDayIndex = index;
+                          selectMonth(date);
+                          widget.onDateChanged.call(date);
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: theme.cardBorderColor, width: 0.6)),
+                        child: FredericCard(
+                          child: WeekDaysSliderDayButton(
+                              dayIndex: index,
+                              selectedDate: selectedDayIndex,
+                              date: date),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -155,16 +161,18 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         }),
         child: Container(
           decoration: BoxDecoration(
-              color: selected ? kMainColorLight : Colors.white,
+              color: selected
+                  ? theme.mainColorLight
+                  : (theme.isDark ? theme.cardBackgroundColor : Colors.white),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: kCardBorderColor)),
+              border: Border.all(color: theme.cardBorderColor)),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           child: Center(
             child: Text(string,
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: selected ? kMainColor : Colors.black)),
+                    color: selected ? theme.mainColorInText : theme.textColor)),
           ),
         ),
       ),
@@ -178,7 +186,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: kCardBorderColor)),
+            border: Border.all(color: theme.cardBorderColor)),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         child: Center(
           child: Text(year,

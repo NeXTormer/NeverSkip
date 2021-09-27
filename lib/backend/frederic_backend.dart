@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_event_bus.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
@@ -53,12 +56,26 @@ class FredericBackend {
   late final FredericStorageManager _storageManager;
   FredericStorageManager get storageManager => _storageManager;
 
-  void loadData() {
-    //TODO: wait until data loaded to complete
+  bool _hasDataLoaded = false;
+  List<Completer<void>> _dataLoadedCompleters = <Completer<void>>[];
 
-    _activityManager.reload();
-    _workoutManager.reload();
-    _goalManager.loadData();
+  Future<void> waitUntilDataIsLoaded() async {
+    if (_hasDataLoaded) return;
+    Completer<void> completer = Completer<void>();
+    _dataLoadedCompleters.add(completer);
+    return completer.future;
+  }
+
+  void loadData() async {
+    var profiler = FredericProfiler.track('[Backend] load all data');
+    await _activityManager.reload();
+    await _workoutManager.reload();
+    await _goalManager.loadData();
+    _hasDataLoaded = true;
+    for (Completer completer in _dataLoadedCompleters) {
+      completer.complete();
+    }
+    profiler.stop();
   }
 
   void dispose() {

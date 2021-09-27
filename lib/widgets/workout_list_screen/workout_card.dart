@@ -66,7 +66,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 children: [
                   AspectRatio(
                     aspectRatio: 1,
-                    child: PictureIcon(widget.workout.image),
+                    child: PictureIcon(widget.workout.image,
+                        mainColor: theme.mainColorInText),
                   ),
                   SizedBox(width: 10),
                   Expanded(
@@ -86,7 +87,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                   style: TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontSize: 14,
-                                      color: kTextColor,
+                                      color: theme.textColor,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
@@ -97,7 +98,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                   child: CupertinoSwitch(
                                     key: ValueKey(widget.workout.workoutID),
                                     value: isSelected,
-                                    activeColor: kMainColor,
+                                    activeColor: theme.mainColor,
                                     onChanged: widget.workout.workoutID == 'new'
                                         ? null
                                         : (value) =>
@@ -132,8 +133,14 @@ class _WorkoutCardState extends State<WorkoutCard> {
             Expanded(child: Container()),
             Padding(
               padding: const EdgeInsets.only(right: 9),
-              child: Text(widget.description ?? widget.workout.description,
-                  maxLines: 2, overflow: TextOverflow.ellipsis),
+              child: Text(
+                widget.description ?? widget.workout.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color:
+                        theme.isBright ? theme.textColor : theme.greyTextColor),
+              ),
             )
           ],
         ));

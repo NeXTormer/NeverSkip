@@ -83,44 +83,49 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
         controller: ModalScrollController.of(context),
         slivers: [
-          SliverPadding(padding: EdgeInsets.only(bottom: 12)),
           SliverToBoxAdapter(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Row(
-              children: [
-                Icon(
-                  ExtraIcons.settings,
-                  color: kMainColor,
-                ),
-                SizedBox(width: 32),
-                Text(
-                  widget.isNewWorkout ? 'Create workout' : 'Edit workout',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Expanded(child: Container()),
-                GestureDetector(
-                  onTap: () {
-                    saveData();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    widget.isNewWorkout ? 'Create' : 'Save',
-                    style: TextStyle(
-                        color: kMainColor, fontWeight: FontWeight.w500),
+              child: Container(
+            color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 24, bottom: 16),
+              child: Row(
+                children: [
+                  Icon(
+                    ExtraIcons.settings,
+                    color: theme.isColorful ? Colors.white : theme.mainColor,
                   ),
-                )
-              ],
+                  SizedBox(width: 32),
+                  Text(
+                    widget.isNewWorkout ? 'Create workout' : 'Edit workout',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  Expanded(child: Container()),
+                  GestureDetector(
+                    onTap: () {
+                      saveData();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      widget.isNewWorkout ? 'Create' : 'Save',
+                      style: TextStyle(
+                          color:
+                              theme.isColorful ? Colors.white : theme.mainColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )
+                ],
+              ),
             ),
           )),
-          SliverDivider(),
+          if (theme.isBright) SliverDivider(),
           SliverToBoxAdapter(
               child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: WorkoutCard.dummy(
               widget.workout,
               description: dummyDescription,
@@ -205,7 +210,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                               dummyRepeating = value;
                             });
                           },
-                          activeColor: kMainColor)
+                          activeColor: theme.mainColor)
                     ],
                   ),
                   SizedBox(height: 12),
@@ -245,8 +250,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                       duration: const Duration(milliseconds: 160),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          border: Border.all(color: kCardBorderColor)),
+                          color: theme.backgroundColor,
+                          border: Border.all(color: theme.cardBorderColor)),
                       child: true
                           ? FredericDatePicker(
                               initialDate: widget.workout.startDate,

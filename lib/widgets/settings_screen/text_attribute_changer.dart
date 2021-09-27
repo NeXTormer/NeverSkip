@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 
 class TextAttributeChanger extends StatefulWidget {
@@ -32,6 +33,7 @@ class _TextAttributeChangerState extends State<TextAttributeChanger> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: FredericTextField(
           widget.placeholder,
+          brightContents: theme.isDark,
           controller: controller,
           text: currentValue,
           onSubmit: (value) {

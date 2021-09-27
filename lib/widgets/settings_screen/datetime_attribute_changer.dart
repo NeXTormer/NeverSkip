@@ -31,6 +31,7 @@ class _DateTimeAttributeChangerState extends State<DateTimeAttributeChanger> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: FredericCard(
+          color: Colors.white,
           height: 160,
           child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.date,

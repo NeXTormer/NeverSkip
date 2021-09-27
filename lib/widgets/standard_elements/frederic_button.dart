@@ -4,13 +4,16 @@ import 'package:frederic/main.dart';
 class FredericButton extends StatelessWidget {
   FredericButton(this.text,
       {required this.onPressed,
-      this.mainColor = kMainColor,
-      this.textColor = kBrightTextColor,
+      Color? mainColor,
+      Color? textColor,
       this.inverted = false,
       this.fontSize = 15,
-      this.fontWeight = FontWeight.w600});
-  final Color mainColor;
-  final Color textColor;
+      this.fontWeight = FontWeight.w600}) {
+    this.mainColor = mainColor ?? theme.mainColor;
+    this.textColor = textColor ?? theme.textColorColorfulBackground;
+  }
+  late final Color mainColor;
+  late final Color textColor;
   final double height = 44;
   final String text;
   final bool inverted;
@@ -30,7 +33,7 @@ class FredericButton extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: inverted ? Border.all(color: mainColor) : null,
-            color: inverted ? Colors.white : mainColor),
+            color: inverted ? (theme.cardBackgroundColor) : mainColor),
         child: Center(
             child: Text(
           text,

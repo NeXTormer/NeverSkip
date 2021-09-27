@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 
 class FredericContainerTransition extends StatelessWidget {
   const FredericContainerTransition({
@@ -36,6 +37,8 @@ class FredericContainerTransition extends StatelessWidget {
       openElevation: 0,
       closedElevation: 0,
       transitionType: transitionType,
+      openColor: theme.backgroundColor,
+      closedColor: theme.backgroundColor,
       closedShape: customBorder != null
           ? customBorder!
           : RoundedRectangleBorder(

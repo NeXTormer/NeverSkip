@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
 class FredericChip extends StatelessWidget {
-  const FredericChip(this.text,
-      {Key? key, this.fontSize = 10, this.color = kAccentColor})
-      : super(key: key);
+  FredericChip(this.text,
+      {Key? key, this.fontSize = 10, Color? color})
+      : super(key: key)
+  {
+    this.color = color ?? theme.accentColor;
+  }
 
   final String text;
-  final Color color;
+  late final Color color;
   final double fontSize;
 
   @override

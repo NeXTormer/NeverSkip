@@ -105,7 +105,10 @@ class FredericSetList {
     }
   }
 
-  void deleteSet(FredericSet set) {
+  ///
+  /// Don't use this, use the method in [FredericSetManager]
+  ///
+  void deleteSetLocally(FredericSet set) {
     if (_setDocuments
         .where((element) => element.month == set.monthID)
         .first
@@ -120,12 +123,15 @@ class FredericSetList {
     }
   }
 
-  void addSet(FredericSet set) {
+  ///
+  /// Don't use this, use the method in [FredericSetManager]
+  ///
+  void addSetLocally(FredericSet set) {
     if (_setDocuments.isEmpty ||
         _setDocuments
             .where((element) => element.month == set.monthID)
             .isEmpty) {
-      _createDocumentWith(set);
+      _createDocumentWithSet(set);
     } else {
       if (_setDocuments
           .where((element) => element.month == set.monthID)
@@ -136,7 +142,7 @@ class FredericSetList {
     if (set.reps > _bestReps) _bestReps = set.reps;
   }
 
-  void _createDocumentWith(FredericSet set) async {
+  void _createDocumentWithSet(FredericSet set) async {
     var doc = await _setManager.setsCollection.add({
       'activityid': activityID,
       'month': set.monthID,

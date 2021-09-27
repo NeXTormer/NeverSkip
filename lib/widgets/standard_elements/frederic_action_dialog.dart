@@ -40,7 +40,8 @@ class FredericActionDialog extends StatelessWidget {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12), color: Colors.white),
+                borderRadius: BorderRadius.circular(12),
+                color: theme.cardBackgroundColor),
             child: Container(
               child: Column(
                 children: [
@@ -93,8 +94,9 @@ class FredericActionDialog extends StatelessWidget {
                                     Navigator.of(context).pop();
                                   }
                                 },
-                                mainColor:
-                                    destructiveAction ? Colors.red : kMainColor,
+                                mainColor: destructiveAction
+                                    ? Colors.red
+                                    : theme.mainColor,
                               )),
                         ),
                       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
@@ -33,7 +34,8 @@ class SettingsSegment extends StatelessWidget {
                     (index) => index % 2 == 1
                         ? Container(
                             height: 1,
-                            color: Colors.black12,
+                            color:
+                                theme.isDark ? Colors.white12 : Colors.black12,
                           )
                         : elements[index ~/ 2]),
               ),

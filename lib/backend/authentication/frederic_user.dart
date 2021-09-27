@@ -98,7 +98,6 @@ class FredericUser {
 
   set progressMonitors(List<String> value) {
     if (uid == '') return;
-    if (value == progressMonitors) return;
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -107,7 +106,6 @@ class FredericUser {
 
   set activeWorkouts(List<String> value) {
     if (uid == '') return;
-    if (value == activeWorkouts) return;
     FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
@@ -126,14 +124,20 @@ class FredericUser {
 
   set streakStartDate(DateTime? value) {
     if (uid == '') return;
-    FirebaseFirestore.instance.collection('users').doc(uid).update(
-        {'streakstart': value == null ? null : Timestamp.fromDate(value)});
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'streakstart': value == null
+          ? null
+          : Timestamp.fromDate(DateTime(value.year, value.month, value.day))
+    });
   }
 
   set streakLatestDate(DateTime? value) {
     if (uid == '') return;
-    FirebaseFirestore.instance.collection('users').doc(uid).update(
-        {'streaklatest': value == null ? null : Timestamp.fromDate(value)});
+    FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'streaklatest': value == null
+          ? null
+          : Timestamp.fromDate(DateTime(value.year, value.month, value.day))
+    });
   }
 
   bool streakLatestDateWasTodayOrYesterday() {
@@ -148,10 +152,9 @@ class FredericUser {
   }
 
   Future<bool> hasActivitiesOnDay(DateTime day) async {
-    await FredericBackend.instance.workoutManager.waitForFirstReload();
     for (var workoutID in activeWorkouts) {
       FredericWorkout? workout =
-          FredericBackend.instance.workoutManager.workouts[workoutID];
+          FredericBackend.instance.workoutManager.state.workouts[workoutID];
       if (workout == null) continue;
       if (workout.activities.getDay(day).isNotEmpty) return true;
     }
@@ -160,7 +163,7 @@ class FredericUser {
 
   Future<bool> updateProfilePicture(XFile imageFile) async {
     String? url = await FredericBackend.instance.storageManager
-        .uploadXFileImageToStorage(imageFile, 'profilepicture.jpeg');
+        .uploadXFileImageToUserStorage(imageFile, 'profilepicture.jpeg');
     if (url != null) {
       image = url;
       return true;

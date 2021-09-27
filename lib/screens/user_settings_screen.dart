@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
@@ -10,7 +11,8 @@ import 'package:frederic/widgets/settings_screen/image_attribute_changer.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/text_attribute_changer.dart';
-import 'package:frederic/widgets/standard_elements/basic_app_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
 class UserSettingsScreen extends StatelessWidget {
@@ -18,23 +20,28 @@ class UserSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: BlocBuilder<FredericUserManager, FredericUser>(
+    return FredericScaffold(
+      body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) => CustomScrollView(
           slivers: [
-            BasicAppBar(
-              title: 'User Settings',
-              subtitle: 'Manage your User Account',
-            ),
-            SliverDivider(),
             SliverToBoxAdapter(
-              child: Container(
-                height: 150,
-                child: Center(
-                  child: CircleAvatar(
-                    backgroundColor: kMainColorLight,
-                    radius: 60,
-                    backgroundImage: CachedNetworkImageProvider(user.image),
+              child: FredericBasicAppBar(
+                title: 'User Settings',
+                subtitle: 'Manage your User Account',
+              ),
+            ),
+            if (theme.isBright) SliverDivider(),
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 8),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  height: 150,
+                  child: Center(
+                    child: CircleAvatar(
+                      backgroundColor: theme.mainColorLight,
+                      radius: 60,
+                      backgroundImage: CachedNetworkImageProvider(user.image),
+                    ),
                   ),
                 ),
               ),
@@ -112,8 +119,8 @@ class UserSettingsScreen extends StatelessWidget {
                   text: 'Sign Out',
                   icon: Icons.exit_to_app,
                   onTap: () {
-                    //FirebaseAuth.instance.signOut();
-                    //Phoenix.rebirth(context);
+                    FirebaseAuth.instance.signOut();
+                    FredericBase.forceFullRestart(context);
                   }),
               SettingsElement(
                   text: 'Delete Account', icon: Icons.delete_forever),

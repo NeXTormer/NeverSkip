@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
     bool smallScreen = screenHeight < 700;
     bool medScreen = screenHeight < 800;
     return Scaffold(
-        backgroundColor: kScaffoldBackgroundColor,
+        backgroundColor: theme.backgroundColor,
         body: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
           child: Container(
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontSize: 18,
                                   letterSpacing: 0.4,
                                   fontWeight: FontWeight.w600,
-                                  color: kMainColor))),
+                                  color: theme.mainColor))),
                       SizedBox(height: 8),
                       Align(
                           alignment: Alignment.centerLeft,
@@ -238,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   login ? 'Sign Up' : 'Log In',
                                   style: TextStyle(
-                                      color: kMainColor,
+                                      color: theme.mainColor,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600),
                                 ),

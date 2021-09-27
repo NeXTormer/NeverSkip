@@ -50,8 +50,8 @@ class _FredericSliderState extends State<FredericSlider> {
             divisions: divisions,
             min: widget.min,
             max: widget.max,
-            activeColor: kMainColor,
-            inactiveColor: kMainColorLight,
+            activeColor: theme.mainColor,
+            inactiveColor: theme.mainColorLight,
             onChanged: (newVal) {
               setState(() {
                 value = newVal;
@@ -88,7 +88,7 @@ class _FredericSliderThumb extends SliderComponentShape {
     final Canvas canvas = context.canvas;
     final double val = value == 0 ? 1 : (value * max);
 
-    Paint paint = Paint()..color = kMainColor;
+    Paint paint = Paint()..color = theme.mainColor;
     Path path = Path();
     int pathScale = 10;
     path.moveTo(center.dx + 0 * pathScale, 7 + center.dy - 0.5 * pathScale);
@@ -96,8 +96,8 @@ class _FredericSliderThumb extends SliderComponentShape {
     path.lineTo(center.dx + 1 * pathScale, 7 + center.dy + 1.5 * pathScale);
     path.close();
     canvas.drawPath(path, paint);
-    canvas.drawCircle(center, 12, Paint()..color = kMainColorLight);
-    canvas.drawCircle(center, 12, Paint()..color = kMainColorLight);
+    canvas.drawCircle(center, 12, Paint()..color = theme.mainColorLight);
+    canvas.drawCircle(center, 12, Paint()..color = theme.mainColorLight);
     canvas.drawCircle(center, 8, paint);
 
     double normalWidth = 80;
@@ -122,15 +122,15 @@ class _FredericSliderThumb extends SliderComponentShape {
     double bottom = top + height;
 
     RRect rect = RRect.fromLTRBR(left, top, right, bottom, Radius.circular(10));
-    canvas.drawRRect(rect, Paint()..color = kScaffoldBackgroundColor);
+    canvas.drawRRect(rect, Paint()..color = theme.backgroundColor);
     canvas.drawRRect(
         rect,
         Paint()
-          ..color = kCardBorderColor
+          ..color = theme.textColor
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1);
     TextSpan text = TextSpan(
-        style: TextStyle(color: kBlack54Color, fontSize: 16),
+        style: TextStyle(color: theme.textColor, fontSize: 16),
         text: '${val.ceil()} week${val.ceil() == 1 ? '' : 's'}');
     TextPainter textPainter =
         TextPainter(text: text, textDirection: textDirection);
