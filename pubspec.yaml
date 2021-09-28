@@ -33,10 +33,11 @@ dependencies:
   firebase_performance: ^0.7.0+2
   firebase_remote_config: ^0.10.0-dev.2
   
-  firebase_crashlytics: ^2.2.1
+  google_sign_in: ^5.1.1
   firebase_app_check: ^0.0.2
-  flutter_launcher_icons: ^0.9.0
+  firebase_crashlytics: ^2.2.1
   flutter_native_splash: ^1.1.8+4
+  flutter_launcher_icons: ^0.9.0
   flutter_local_notifications: ^6.1.0
 
   async: ^2.6.1

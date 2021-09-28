@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontSize: 18,
                                   letterSpacing: 0.4,
                                   fontWeight: FontWeight.w600,
-                                  color: theme.mainColor))),
+                                  color: theme.mainColorInText))),
                       SizedBox(height: 8),
                       Align(
                           alignment: Alignment.centerLeft,
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 1.6,
                                   letterSpacing: 0.2,
                                   fontWeight: FontWeight.w400,
-                                  color: Color(0x993A3A3A)))),
+                                  color: theme.textColor))),
                       SizedBox(height: 40),
                       if (!smallScreen)
                         Padding(
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w400,
-                                    color: Color(0xFF2F2E41)),
+                                    color: theme.textColor),
                               ),
                             ),
                           if (!login)
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Text('I agree to the ',
                                       style: TextStyle(
                                           fontSize: 11,
-                                          color: const Color(0xFF2F2E41))),
+                                          color: theme.textColor)),
                                   GestureDetector(
                                     onTap: () {
                                       launch(widget.termsAndContidionsURL);
@@ -194,12 +194,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 11,
-                                            color: const Color(0xFF2F2E41))),
+                                            color: theme.textColor)),
                                   ),
                                   Text(' of this app.',
                                       style: TextStyle(
-                                          fontSize: 11,
-                                          color: const Color(0xFF2F2E41)))
+                                          fontSize: 11, color: theme.textColor))
                                 ],
                               ),
                             ),
@@ -226,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? 'Don\'t have an account? '
                                     : 'Already have an account? ',
                                 style: TextStyle(
-                                    color: Color(0xFF2F2E41),
+                                    color: theme.textColor,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -238,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   login ? 'Sign Up' : 'Log In',
                                   style: TextStyle(
-                                      color: theme.mainColor,
+                                      color: theme.mainColorInText,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600),
                                 ),

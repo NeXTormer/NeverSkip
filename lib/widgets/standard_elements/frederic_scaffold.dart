@@ -16,6 +16,8 @@ class FredericScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
       backgroundColor:
           theme.isColorful ? theme.mainColor : theme.backgroundColor,
       body: SafeArea(
