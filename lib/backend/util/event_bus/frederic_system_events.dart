@@ -1,5 +1,7 @@
 class FredericSystemEvent {
-  FredericSystemEvent(this.type, {this.description = 'unnamed event'});
+  FredericSystemEvent(
+      {this.type = FredericSystemEventType.Other,
+      this.description = 'unnamed event'});
   final FredericSystemEventType type;
   final String description;
 }
@@ -7,4 +9,5 @@ class FredericSystemEvent {
 enum FredericSystemEventType {
   Complex,
   CalendarDayCompleted,
+  Other,
 }

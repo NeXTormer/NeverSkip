@@ -55,7 +55,7 @@ class CalendarDay extends StatelessWidget {
       /// CalendarDay also manages user streak; bad code -> use event queue
       if (dayFinished && activitiesDueToday.isNotEmpty) {
         FredericBackend.instance.eventBus.add(FredericSystemEvent(
-            FredericSystemEventType.CalendarDayCompleted,
+            type: FredericSystemEventType.CalendarDayCompleted,
             description: 'Calendar day completed'));
       }
     }

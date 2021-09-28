@@ -5,7 +5,7 @@ import 'package:frederic/extensions.dart';
 
 class StreakManager {
   StreakManager(this.userManager, FredericBackend backend) {
-    backend.eventBus.subscribe((event) {
+    backend.eventBus.defaultProcessor.subscribe((event) {
       if (event.type == FredericSystemEventType.CalendarDayCompleted) {
         _handleCompleteDay();
       }

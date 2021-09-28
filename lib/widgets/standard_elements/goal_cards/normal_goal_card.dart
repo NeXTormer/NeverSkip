@@ -126,9 +126,11 @@ class _NormalGoalCard extends State<NormalGoalCard> {
       padding: EdgeInsets.all(10),
       child: Row(
         children: [
-          PictureIcon(widget.activity == null
-              ? widget.goal.image
-              : widget.activity!.image),
+          PictureIcon(
+              widget.activity == null
+                  ? widget.goal.image
+                  : widget.activity!.image,
+              mainColor: theme.mainColorInText),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 8),
@@ -140,17 +142,11 @@ class _NormalGoalCard extends State<NormalGoalCard> {
                     children: [
                       Container(
                         width: 120,
-                        child: RichText(
+                        child: Text(
+                          '${title ?? widget.goal.title}',
                           overflow: TextOverflow.ellipsis,
-                          strutStyle: StrutStyle(fontSize: 10),
-                          text: TextSpan(
-                            text: '${title ?? widget.goal.title}',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                color: theme.greyTextColor,
-                                fontSize: 10,
-                                letterSpacing: 0.3),
-                          ),
+                          style: TextStyle(
+                              color: theme.greyTextColor, fontSize: 12),
                         ),
                       ),
                       Flexible(

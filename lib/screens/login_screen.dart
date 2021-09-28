@@ -7,6 +7,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
+import 'package:frederic/widgets/standard_elements/sign_in_with_google_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,31 +21,20 @@ class LoginScreen extends StatefulWidget {
   final String subtitleSignup =
       'Sign up and create an account so that you can remain healthy by following your daily goals and plans.';
 
-  final String termsAndContidionsURL = 'https://hawkford.io/';
-
   final String subtitle =
       'Sign in and continue so that you can remain healthy by following your daily goals and plans.';
-
-  final RegExp emailValidator = RegExp(
-      r"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$");
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmationController =
-      TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-
   bool login = false;
-  bool acceptedTermsAndConditions = false;
-  bool hasError = false;
-  String errorText = '';
 
   StreamSubscription<FredericUser>? streamSubscription;
+
+  bool hasError = false;
+  String errorText = '';
 
   @override
   void initState() {
@@ -108,14 +98,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 8),
                       Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                              login ? widget.subtitle : widget.subtitleSignup,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  height: 1.6,
-                                  letterSpacing: 0.2,
-                                  fontWeight: FontWeight.w400,
-                                  color: theme.textColor))),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            switchInCurve: Curves.easeInOut,
+                            switchOutCurve: Curves.easeInOut,
+                            child: Text(
+                                login ? widget.subtitle : widget.subtitleSignup,
+                                key: ValueKey<String>(login
+                                    ? widget.subtitle
+                                    : widget.subtitleSignup),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    height: 1.6,
+                                    letterSpacing: 0.2,
+                                    fontWeight: FontWeight.w400,
+                                    color: theme.textColor)),
+                          )),
                       SizedBox(height: 40),
                       if (!smallScreen)
                         Padding(
@@ -132,76 +130,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Container(
                       child: Column(
                         children: [
-                          if (!smallScreen)
-                            Expanded(flex: 50, child: Container()),
-                          //SizedBox(height: 50),
-                          if (!login)
-                            FredericTextField(
-                              'Name',
-                              icon: ExtraIcons.person,
-                              controller: nameController,
-                            ),
-                          if (!login) SizedBox(height: 10),
-                          FredericTextField('E-Mail',
-                              icon: ExtraIcons.mail,
-                              controller: emailController),
-                          SizedBox(height: 10),
-                          FredericTextField(
-                            'Password',
-                            icon: ExtraIcons.lock,
-                            isPasswordField: true,
-                            controller: passwordController,
+                          SizedBox(height: 24),
+                          _LoginByEmailButton(
+                            login: login,
+                            onError: (error) {
+                              if (error == null) {
+                                setState(() {
+                                  hasError = false;
+                                });
+                              } else {
+                                setState(() {
+                                  errorText = error;
+                                  hasError = true;
+                                });
+                              }
+                            },
                           ),
-                          if (!login) SizedBox(height: 10),
-                          if (!login)
-                            FredericTextField('Confirm password',
-                                isPasswordField: true,
-                                icon: ExtraIcons.lock,
-                                controller: passwordConfirmationController),
-                          SizedBox(height: 16),
-                          if (login)
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Forgot password?',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w400,
-                                    color: theme.textColor),
-                              ),
-                            ),
-                          if (!login)
-                            GestureDetector(
-                              onTap: () => setState(() =>
-                                  acceptedTermsAndConditions =
-                                      !acceptedTermsAndConditions),
-                              onLongPress: () =>
-                                  print('Show Terms and Conditions'),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  buildCheckBox(),
-                                  SizedBox(width: 6),
-                                  Text('I agree to the ',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          color: theme.textColor)),
-                                  GestureDetector(
-                                    onTap: () {
-                                      launch(widget.termsAndContidionsURL);
-                                    },
-                                    child: Text('Terms & Conditions',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 11,
-                                            color: theme.textColor)),
-                                  ),
-                                  Text(' of this app.',
-                                      style: TextStyle(
-                                          fontSize: 11, color: theme.textColor))
-                                ],
-                              ),
-                            ),
+                          SizedBox(height: 12),
+                          SignInWithGoogleButton(
+                            signUp: !login,
+                          ),
                           SizedBox(height: 12),
                           if (hasError)
                             Align(
@@ -210,13 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                       color: Colors.redAccent, fontSize: 14)),
                             ),
-                          SizedBox(height: 12),
-                          FredericButton(
-                            login ? 'Log In' : 'Sign Up',
-                            onPressed: buttonHandler,
-                          ),
                           Expanded(flex: 50, child: Container()),
-                          //SizedBox(height: 50),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -256,6 +198,150 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+
+    streamSubscription?.cancel();
+  }
+}
+
+class _LoginByEmailButton extends StatefulWidget {
+  _LoginByEmailButton(
+      {this.login = true,
+      this.expanded = false,
+      required this.onError,
+      Key? key})
+      : super(key: key);
+
+  final bool login;
+  final bool expanded;
+
+  final void Function(String? error) onError;
+
+  final RegExp emailValidator = RegExp(
+      r"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$");
+
+  final String termsAndContidionsURL = 'https://hawkford.io/';
+
+  @override
+  _LoginByEmailButtonState createState() => _LoginByEmailButtonState();
+}
+
+class _LoginByEmailButtonState extends State<_LoginByEmailButton> {
+  bool expanded = false;
+  bool acceptedTermsAndConditions = false;
+  String buttonText = '';
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmationController =
+      TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    expanded = false;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    buttonText = expanded
+        ? (widget.login ? 'Log in' : 'Sign up')
+        : (widget.login ? 'Log in with E-Mail' : 'Sign up with E-Mail');
+    return Column(
+      children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: expanded ? (widget.login ? 144 : 254) : 0,
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(children: [
+              if (!widget.login)
+                FredericTextField(
+                  'Name',
+                  icon: ExtraIcons.person,
+                  controller: nameController,
+                ),
+              if (!widget.login) SizedBox(height: 10),
+              FredericTextField('E-Mail',
+                  icon: ExtraIcons.mail, controller: emailController),
+              SizedBox(height: 10),
+              FredericTextField(
+                'Password',
+                icon: ExtraIcons.lock,
+                isPasswordField: true,
+                controller: passwordController,
+              ),
+              if (!widget.login) SizedBox(height: 10),
+              if (!widget.login)
+                FredericTextField('Confirm password',
+                    isPasswordField: true,
+                    icon: ExtraIcons.lock,
+                    controller: passwordConfirmationController),
+              SizedBox(height: 16),
+              if (widget.login)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'Forgot password?',
+                    style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                        color: theme.textColor),
+                  ),
+                ),
+              if (!widget.login)
+                GestureDetector(
+                  onTap: () => setState(() =>
+                      acceptedTermsAndConditions = !acceptedTermsAndConditions),
+                  onLongPress: () => print('Show Terms and Conditions'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      buildCheckBox(),
+                      SizedBox(width: 6),
+                      Text('I agree to the ',
+                          style:
+                              TextStyle(fontSize: 11, color: theme.textColor)),
+                      GestureDetector(
+                        onTap: () {
+                          launch(widget.termsAndContidionsURL);
+                        },
+                        child: Text('Terms & Conditions',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 11,
+                                color: theme.textColor)),
+                      ),
+                      Text(' of this app.',
+                          style:
+                              TextStyle(fontSize: 11, color: theme.textColor))
+                    ],
+                  ),
+                ),
+              SizedBox(height: 12),
+            ]),
+          ),
+        ),
+        FredericButton(
+          buttonText,
+          onPressed: () {
+            if (!expanded) {
+              setState(() {
+                expanded = true;
+              });
+            } else {
+              buttonHandler();
+            }
+          },
+        ),
+      ],
+    );
+  }
+
   Widget buildCheckBox() {
     return Container(
       height: 16,
@@ -280,17 +366,12 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = passwordController.text.trim();
     String passwordConfirm = passwordConfirmationController.text.trim();
 
-    if (login) {
+    if (widget.login) {
       if (email.isEmpty || password.isEmpty) {
-        errorText = 'Please enter your email and password.';
-        setState(() {
-          hasError = true;
-        });
+        widget.onError('Please enter your email and password.');
         return;
       }
-      setState(() {
-        hasError = false;
-      });
+      widget.onError(null);
       FredericBackend.instance.userManager
           .add(FredericLoginEvent(email, password));
     } else {
@@ -298,41 +379,28 @@ class _LoginScreenState extends State<LoginScreen> {
           password.isEmpty ||
           passwordConfirm.isEmpty ||
           name.isEmpty) {
-        errorText = 'Please fill out all fields.';
-        setState(() {
-          hasError = true;
-        });
+        widget.onError('Please fill out all fields');
+
         return;
       }
 
       if (!widget.emailValidator.hasMatch(email)) {
-        errorText = 'Please enter a valid email.';
-        setState(() {
-          hasError = true;
-        });
+        widget.onError('Please enter a valid email.');
+
         return;
       }
 
       if (password != passwordConfirm) {
-        errorText = 'The passwords do not match.';
-        setState(() {
-          hasError = true;
-        });
+        widget.onError('The passwords do not match.');
+
         return;
       }
 
       if (!acceptedTermsAndConditions) {
-        errorText = 'You need to accept the Terms & Conditions to use the app.';
-        setState(() {
-          hasError = true;
-        });
-        return;
-      }
+        widget.onError(
+            'You need to accept the Terms & Conditions to use the app.');
 
-      if (hasError) {
-        setState(() {
-          hasError = false;
-        });
+        return;
       }
 
       FredericBackend.instance.userManager.add(FredericSignupEvent(
@@ -349,6 +417,5 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
     nameController.dispose();
     passwordConfirmationController.dispose();
-    streamSubscription?.cancel();
   }
 }

@@ -1,26 +1,34 @@
 import 'dart:collection';
 
+import 'package:frederic/backend/util/event_bus/frederic_default_event_processor.dart';
+import 'package:frederic/backend/util/event_bus/frederic_event_processor.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 
 import 'frederic_system_events.dart';
 
-typedef FredericEventCallback = void Function(FredericSystemEvent event);
-
 class FredericEventBus {
-  FredericEventBus();
+  FredericEventBus() {
+    _processors.add(_defaultEventProcessor);
+  }
+
   static const bool kMonitorPerformance = true;
 
   final Queue<FredericSystemEvent> _queue = ListQueue<FredericSystemEvent>(10);
-  final List<FredericEventCallback> _subscribers = <FredericEventCallback>[];
+  final List<FredericEventProcessor> _processors = <FredericEventProcessor>[];
+
+  FredericDefaultEventProcessor _defaultEventProcessor =
+      FredericDefaultEventProcessor();
+
+  FredericDefaultEventProcessor get defaultProcessor => _defaultEventProcessor;
 
   bool _shouldProcessEventsThisLoop = false;
 
-  void subscribe(FredericEventCallback callback) {
-    _subscribers.add(callback);
+  void addEventProcessor(FredericEventProcessor processor) {
+    _processors.add(processor);
   }
 
-  void unsubscribe(FredericEventCallback callback) {
-    _subscribers.remove(callback);
+  void removeEventProcessor(FredericEventProcessor processor) {
+    _processors.remove(processor);
   }
 
   void add(FredericSystemEvent event) {
@@ -46,11 +54,12 @@ class FredericEventBus {
 
   void _publishEvent(FredericSystemEvent event) {
     FredericProfiler? profiler;
-    for (FredericEventCallback subscriber in _subscribers) {
+    for (FredericEventProcessor processor in _processors) {
+      if (!processor.acceptsEvent(event)) continue;
       if (kMonitorPerformance)
         profiler =
             FredericProfiler.track('[FredericEventBus] ${event.description}');
-      subscriber.call(event);
+      processor.processEvent(event);
       if (kMonitorPerformance) profiler!.stop();
     }
   }

@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/admin_panel/backend/admin_backend.dart';
 import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
-import 'package:frederic/backend/analytics_service.dart';
+import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
@@ -93,9 +93,10 @@ class _FredericBaseState extends State<FredericBase> {
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
-    if (getIt.isRegistered<AnalyticsService>())
-      getIt.unregister<AnalyticsService>();
-    getIt.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
+    if (getIt.isRegistered<FredericAnalyticsService>())
+      getIt.unregister<FredericAnalyticsService>();
+    getIt.registerLazySingleton<FredericAnalyticsService>(
+        () => FredericAnalyticsService());
 
     return Container(
       key: _key,

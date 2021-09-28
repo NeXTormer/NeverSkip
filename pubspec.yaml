@@ -84,7 +84,8 @@ flutter:
     - assets/images/dumbbell_with_bg_blue.png
     - assets/images/dumbbell2.png
     - assets/images/login_illustration.png
-    
+    - assets/images/google/google_logo_light.png
+
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -99,6 +100,10 @@ flutter:
      - family: ExtraIcons
        fonts:
          - asset: assets/fonts/ExtraIcons.ttf
+     - family: Roboto
+       fonts:
+         - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+           weight: 500
      - family: Montserrat
        fonts:
          - asset: assets/fonts/Montserrat/Montserrat-Black.ttf

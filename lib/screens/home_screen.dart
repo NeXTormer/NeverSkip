@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frederic/backend/analytics_service.dart';
+import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -20,11 +19,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AnalyticsService _analyticsService = getIt<AnalyticsService>();
-
   @override
   void initState() {
-    _analyticsService.setUserProperties(
+    FredericAnalyticsService.instance.setUserProperties(
         userID: FirebaseAuth.instance.currentUser?.uid ?? '');
     super.initState();
   }
@@ -41,14 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
               if (theme.isMonotone) SliverDivider(),
               ProgressIndicatorSegment(),
               GoalSegment(),
-              TrainingVolumeChartSegment(),
               AchievementSegment(),
+              TrainingVolumeChartSegment(),
             ],
           );
-        },
-        buildWhen: (previous, current) {
-          return true;
-          return current.finishedLoading;
         },
       ),
     );

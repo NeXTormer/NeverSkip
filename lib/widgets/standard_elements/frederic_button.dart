@@ -35,13 +35,19 @@ class FredericButton extends StatelessWidget {
             border: inverted ? Border.all(color: mainColor) : null,
             color: inverted ? (theme.cardBackgroundColor) : mainColor),
         child: Center(
-            child: Text(
-          text,
-          style: TextStyle(
-              letterSpacing: 0.2,
-              color: inverted ? mainColor : textColor,
-              fontWeight: fontWeight,
-              fontSize: fontSize),
+            child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          child: Text(
+            text,
+            key: ValueKey<String>(text),
+            style: TextStyle(
+                letterSpacing: 0.2,
+                color: inverted ? mainColor : textColor,
+                fontWeight: fontWeight,
+                fontSize: fontSize),
+          ),
         )),
       ),
     );
