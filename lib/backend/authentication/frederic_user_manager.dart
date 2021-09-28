@@ -32,6 +32,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   final bool logTransition;
   Function? onLoadData;
 
+  //TODO: Split into multiple functions
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
     if (event is FredericUserDataChangedEvent) {

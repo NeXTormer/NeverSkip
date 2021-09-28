@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:frederic/backend/activities/frederic_activity_manager.dart';
+import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
@@ -27,6 +28,7 @@ class FredericBackend {
     _workoutManager = FredericWorkoutManager();
     _goalManager = FredericGoalManager();
     _storageManager = FredericStorageManager(this);
+    _analyticsService = FredericAnalyticsService();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -51,6 +53,9 @@ class FredericBackend {
 
   late final FredericStorageManager _storageManager;
   FredericStorageManager get storageManager => _storageManager;
+
+  late final FredericAnalyticsService _analyticsService;
+  FredericAnalyticsService get analyticsService => _analyticsService;
 
   bool _hasDataLoaded = false;
   List<Completer<void>> _dataLoadedCompleters = <Completer<void>>[];
