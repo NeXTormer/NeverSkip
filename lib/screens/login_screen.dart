@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           SizedBox(height: 24),
-                          _LoginByEmailButton(
+                          AuthenticateWithEmailButton(
                             login: login,
                             onError: (error) {
                               if (error == null) {
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                           ),
-                          SizedBox(height: 12),
+                          SizedBox(height: 20),
                           SignInWithGoogleButton(
                             signUp: !login,
                           ),
@@ -206,8 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class _LoginByEmailButton extends StatefulWidget {
-  _LoginByEmailButton(
+class AuthenticateWithEmailButton extends StatefulWidget {
+  AuthenticateWithEmailButton(
       {this.login = true,
       this.expanded = false,
       required this.onError,
@@ -225,10 +225,12 @@ class _LoginByEmailButton extends StatefulWidget {
   final String termsAndContidionsURL = 'https://hawkford.io/';
 
   @override
-  _LoginByEmailButtonState createState() => _LoginByEmailButtonState();
+  _AuthenticateWithEmailButtonState createState() =>
+      _AuthenticateWithEmailButtonState();
 }
 
-class _LoginByEmailButtonState extends State<_LoginByEmailButton> {
+class _AuthenticateWithEmailButtonState
+    extends State<AuthenticateWithEmailButton> {
   bool expanded = false;
   bool acceptedTermsAndConditions = false;
   String buttonText = '';

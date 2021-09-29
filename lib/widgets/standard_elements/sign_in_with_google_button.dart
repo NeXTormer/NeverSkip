@@ -12,28 +12,31 @@ class SignInWithGoogleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool dark = theme.isDark;
-    return Container(
-      height: 44,
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        color: dark ? darkColor : brightColor,
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/images/google/google_logo_light.png',
-          ),
-          SizedBox(width: 24),
-          Text(
-            '${signUp ? 'Sign up' : 'Log in'} with Google',
-            style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: dark ? Colors.white : Colors.grey),
-          )
-        ],
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        height: 44,
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: dark ? darkColor : brightColor,
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              'assets/images/google/google_logo_light.png',
+            ),
+            SizedBox(width: 24),
+            Text(
+              '${signUp ? 'Sign up' : 'Log in'} with Google',
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: dark ? Colors.white : Colors.grey),
+            )
+          ],
+        ),
       ),
     );
   }

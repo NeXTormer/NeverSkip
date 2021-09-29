@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:frederic/backend/analytics/frederic_analytics_event.dart';
 import 'package:frederic/backend/util/event_bus/frederic_event_processor.dart';
-import 'package:frederic/backend/util/event_bus/frederic_system_events.dart';
+import 'package:frederic/backend/util/event_bus/frederic_system_event.dart';
 
 class FredericAnalyticsService implements FredericEventProcessor {
   final FirebaseAnalytics _analytics = FirebaseAnalytics();

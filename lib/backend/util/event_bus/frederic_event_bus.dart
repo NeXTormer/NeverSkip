@@ -4,7 +4,7 @@ import 'package:frederic/backend/util/event_bus/frederic_default_event_processor
 import 'package:frederic/backend/util/event_bus/frederic_event_processor.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 
-import 'frederic_system_events.dart';
+import 'frederic_system_event.dart';
 
 class FredericEventBus {
   FredericEventBus() {

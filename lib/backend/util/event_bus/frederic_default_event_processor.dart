@@ -1,5 +1,5 @@
 import 'package:frederic/backend/util/event_bus/frederic_event_processor.dart';
-import 'package:frederic/backend/util/event_bus/frederic_system_events.dart';
+import 'package:frederic/backend/util/event_bus/frederic_system_event.dart';
 
 typedef FredericEventCallback = void Function(FredericSystemEvent event);
 

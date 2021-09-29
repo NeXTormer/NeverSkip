@@ -29,6 +29,8 @@ class FredericBackend {
     _goalManager = FredericGoalManager();
     _storageManager = FredericStorageManager(this);
     _analyticsService = FredericAnalyticsService();
+
+    _registerEventProcessors();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -77,6 +79,10 @@ class FredericBackend {
       completer.complete();
     }
     profiler.stop();
+  }
+
+  void _registerEventProcessors() {
+    eventBus.addEventProcessor(_analyticsService);
   }
 
   void dispose() {}
