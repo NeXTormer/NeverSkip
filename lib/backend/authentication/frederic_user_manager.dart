@@ -32,7 +32,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   final bool logTransition;
   Function? onLoadData;
 
-  //TODO: Split into multiple functions
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
     if (event is FredericUserDataChangedEvent) {
@@ -50,49 +49,57 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
         yield FredericUser(event.uid, waiting: false);
       }
     } else if (event is FredericLoginEvent) {
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: event.email, password: event.password);
-        SharedPreferences.getInstance()
-            .then((value) => value.setBool('wasLoggedIn', true));
-        yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          yield FredericUser('', statusMessage: 'The email does not exist.');
-        } else if (e.code == 'wrong-password') {
-          yield FredericUser('', statusMessage: 'Wrong password.');
-        }
-        yield FredericUser('', statusMessage: 'Invalid credentials');
-      }
+      yield await _handleLoginEvent(event);
     } else if (event is FredericSignOutEvent) {
       FirebaseAuth.instance.signOut();
       yield FredericUser('');
     } else if (event is FredericSignupEvent) {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: event.email, password: event.password);
-        if (userCredential.user != null) {
-          await _createUserEntryInDB(userCredential.user!.uid, event.name);
-          yield FredericUser(userCredential.user!.uid);
-        } else {
-          yield FredericUser('',
-              statusMessage: 'Sign up error. Please contact support.');
-        }
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          yield FredericUser('', statusMessage: 'The password is too weak.');
-        }
-        if (e.code == 'email-already-in-use') {
-          yield FredericUser('',
-              statusMessage: 'This email address is already used');
-        }
-        yield FredericUser('',
-            statusMessage: 'Sign up error. Please contact support.');
-      } catch (e) {
-        yield FredericUser('',
+      yield await _handleSignupEvent(event);
+    }
+  }
+
+  Future<FredericUser> _handleLoginEvent(FredericLoginEvent event) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: event.email, password: event.password);
+      SharedPreferences.getInstance()
+          .then((value) => value.setBool('wasLoggedIn', true));
+      return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return FredericUser('', statusMessage: 'The email does not exist.');
+      } else if (e.code == 'wrong-password') {
+        return FredericUser('', statusMessage: 'Wrong password.');
+      }
+      return FredericUser('', statusMessage: 'Invalid credentials');
+    }
+  }
+
+  Future<FredericUser> _handleSignupEvent(FredericSignupEvent event) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: event.email, password: event.password);
+      if (userCredential.user != null) {
+        await _createUserEntryInDB(userCredential.user!.uid, event.name);
+        return FredericUser(userCredential.user!.uid);
+      } else {
+        return FredericUser('',
             statusMessage: 'Sign up error. Please contact support.');
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return FredericUser('', statusMessage: 'The password is too weak.');
+      }
+      if (e.code == 'email-already-in-use') {
+        return FredericUser('',
+            statusMessage: 'This email address is already used');
+      }
+      return FredericUser('',
+          statusMessage: 'Sign up error. Please contact support.');
+    } catch (e) {
+      return FredericUser('',
+          statusMessage: 'Sign up error. Please contact support.');
     }
   }
 

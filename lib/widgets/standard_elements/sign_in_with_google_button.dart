@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInWithGoogleButton extends StatelessWidget {
   SignInWithGoogleButton({this.signUp = false, Key? key}) : super(key: key);
@@ -13,7 +15,27 @@ class SignInWithGoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     bool dark = theme.isDark;
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        GoogleSignIn googleSignIn = GoogleSignIn(
+          scopes: [
+            'email',
+          ],
+        );
+
+        GoogleSignInAccount? account = await googleSignIn.signIn();
+        if (account != null) {
+          print('=============account not null');
+          var auth = await account.authentication;
+          var credentials = GoogleAuthProvider.credential(
+              accessToken: auth.accessToken, idToken: auth.idToken);
+          var userCredential =
+              await FirebaseAuth.instance.signInWithCredential(credentials);
+
+          print(account.email);
+        } else {
+          print('=============account null');
+        }
+      },
       child: Container(
         height: 44,
         padding: EdgeInsets.all(2),

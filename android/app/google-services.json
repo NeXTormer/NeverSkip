@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:301523012050:android:4aa7b3b2bcaaf47028600b",
+        "mobilesdk_app_id": "1:301523012050:android:af95b0b938ce82a028600b",
         "android_client_info": {
           "package_name": "io.hawkford.fredericapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "301523012050-o63g1qn8tai2rvvu2krudmqno10nvodr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.hawkford.fredericapp",
+            "certificate_hash": "98106ca8b0b7f1c4a64b74c5ec8fa4d1cb608996"
+          }
+        },
         {
           "client_id": "301523012050-sm5lu4ji2r7ff4tv7133asjjjdnvaee1.apps.googleusercontent.com",
           "client_type": 3
@@ -21,7 +29,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAgJAxe9yJY8J-HtFHCADRxRO9TW17zfJk"
+          "current_key": "AIzaSyA-B-IW68nYRTAAStyjAggGPlTx3r9dI6E"
         }
       ],
       "services": {
@@ -35,7 +43,7 @@
               "client_id": "301523012050-nsff5rrd86lhkmn3tmgl5gr9jib8hlr9.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "io.hawkford.fredericapp"
+                "bundle_id": "io.hawkford.frederic"
               }
             }
           ]
