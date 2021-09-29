@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'frederic_auth_event.dart';
 
 class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   FredericUserManager(
@@ -34,79 +35,26 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
-    if (event is FredericUserDataChangedEvent) {
-      if (!hasLoaded) {
-        hasLoaded = true;
-        onLoadData?.call();
+    if (event is FredericRestoreLoginStatusEvent) {
+      if (state.waiting == true) {
+        yield await event.process(this);
       }
-      yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
-          snapshot: event.snapshot);
+    } else if (event is FredericUserDataChangedEvent) {
+      yield await event.process(this);
       FredericBackend.instance.waitUntilDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
       });
-    } else if (event is FredericRestoreLoginStatusEvent) {
-      if (state.waiting == true) {
-        yield FredericUser(event.uid, waiting: false);
-      }
-    } else if (event is FredericLoginEvent) {
-      yield await _handleLoginEvent(event);
-    } else if (event is FredericSignOutEvent) {
-      FirebaseAuth.instance.signOut();
-      yield FredericUser('');
-    } else if (event is FredericSignupEvent) {
-      yield await _handleSignupEvent(event);
+    } else {
+      event.process(this);
     }
   }
 
-  Future<FredericUser> _handleLoginEvent(FredericLoginEvent event) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: event.email, password: event.password);
-      SharedPreferences.getInstance()
-          .then((value) => value.setBool('wasLoggedIn', true));
-      return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return FredericUser('', statusMessage: 'The email does not exist.');
-      } else if (e.code == 'wrong-password') {
-        return FredericUser('', statusMessage: 'Wrong password.');
-      }
-      return FredericUser('', statusMessage: 'Invalid credentials');
-    }
-  }
-
-  Future<FredericUser> _handleSignupEvent(FredericSignupEvent event) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: event.email, password: event.password);
-      if (userCredential.user != null) {
-        await _createUserEntryInDB(userCredential.user!.uid, event.name);
-        return FredericUser(userCredential.user!.uid);
-      } else {
-        return FredericUser('',
-            statusMessage: 'Sign up error. Please contact support.');
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        return FredericUser('', statusMessage: 'The password is too weak.');
-      }
-      if (e.code == 'email-already-in-use') {
-        return FredericUser('',
-            statusMessage: 'This email address is already used');
-      }
-      return FredericUser('',
-          statusMessage: 'Sign up error. Please contact support.');
-    } catch (e) {
-      return FredericUser('',
-          statusMessage: 'Sign up error. Please contact support.');
-    }
-  }
-
+  //TODO: when adding apple login: add event to this 'if'
   @override
   void onTransition(Transition<FredericAuthEvent, FredericUser> transition) {
-    if (transition.event is FredericLoginEvent ||
-        transition.event is FredericSignupEvent ||
+    if (transition.event is FredericEmailLoginEvent ||
+        transition.event is FredericEmailSignupEvent ||
+        transition.event is FredericGoogleLoginEvent ||
         transition.event is FredericRestoreLoginStatusEvent) {
       _userStreamSubscription = FirebaseFirestore.instance
           .collection('users')
@@ -145,46 +93,19 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
-  Future<void> _createUserEntryInDB(String uid, String name) async {
+  Future<void> createUserEntryInDB(
+      {required String uid,
+      String? name,
+      String? image,
+      String? username}) async {
     return FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'name': name,
-      'image':
+      'name': name ?? '',
+      'image': image ??
           'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-profile-screen.jpg?alt=media&token=52f200e9-fac8-4295-bf7d-01b59f92a987',
+      'username': username ?? null,
       'uid': uid,
       'activeworkouts': <String>[],
       'progressmonitors': <String>[]
     });
   }
-}
-
-abstract class FredericAuthEvent {}
-
-class FredericLoginEvent extends FredericAuthEvent {
-  FredericLoginEvent(this.email, this.password);
-
-  final String email;
-  final String password;
-}
-
-class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
-  FredericRestoreLoginStatusEvent(this.uid);
-  final String uid;
-}
-
-class FredericSignupEvent extends FredericAuthEvent {
-  FredericSignupEvent(this.name, this.email, this.password);
-
-  final String name;
-  final String email;
-  final String password;
-}
-
-class FredericSignOutEvent extends FredericAuthEvent {
-  FredericSignOutEvent([this.reason]);
-  final String? reason;
-}
-
-class FredericUserDataChangedEvent extends FredericAuthEvent {
-  FredericUserDataChangedEvent(this.snapshot);
-  final DocumentSnapshot<Map<String, dynamic>> snapshot;
 }
