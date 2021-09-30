@@ -1,22 +1,22 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:frederic/backend/analytics/frederic_analytics_event.dart';
-import 'package:frederic/backend/util/event_bus/frederic_event_processor.dart';
-import 'package:frederic/backend/util/event_bus/frederic_system_event.dart';
+import 'package:frederic/backend/analytics/frederic_analytics_message.dart';
+import 'package:frederic/backend/util/event_bus/frederic_base_message.dart';
+import 'package:frederic/backend/util/event_bus/frederic_message_processor.dart';
 
-class FredericAnalyticsService implements FredericEventProcessor {
+class FredericAnalyticsService implements FredericMessageProcessor {
   final FirebaseAnalytics _analytics = FirebaseAnalytics();
 
   FirebaseAnalyticsObserver getAnalyticsObserver() =>
       FirebaseAnalyticsObserver(analytics: _analytics);
 
   @override
-  bool acceptsEvent(FredericSystemEvent event) {
-    return event is FredericAnalyticsEvent;
+  bool acceptsMessage(FredericBaseMessage event) {
+    return event is FredericAnalyticsMessage;
   }
 
   @override
-  void processEvent(FredericSystemEvent event) {
+  void processMessage(FredericBaseMessage event) {
     // TODO: implement processEvent
   }
 

@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 
 import 'frederic_auth_event.dart';
 
 class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
-  FredericUserManager(
-      {this.onLoadData,
-      this.logTransition = false,
-      required FredericBackend backend})
+  FredericUserManager({required FredericBackend backend})
       : _backend = backend,
         super(FredericUser('', waiting: true)) {
     FirebaseAuth.instance.authStateChanges().listen((userdata) {
@@ -24,15 +23,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   }
 
   late final StreakManager streakManager;
-
   final FredericBackend _backend;
+
+  bool firestoreDataWasLoadedAtLeastOnce = false;
+
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
       _userStreamSubscription;
-  List<Completer<void>> _userHasAuthenticatedCompleters = <Completer<void>>[];
-
-  bool hasLoaded = false;
-  final bool logTransition;
-  Function? onLoadData;
 
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
@@ -42,7 +38,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       }
     } else if (event is FredericUserDataChangedEvent) {
       yield await event.process(this);
-      FredericBackend.instance.waitUntilDataIsLoaded().then((value) {
+      FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
       });
     } else {
@@ -65,7 +61,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     } else if (transition.event is FredericSignOutEvent) {
       _userStreamSubscription?.cancel();
     }
-    if (logTransition) {
+    if (false) {
       print('==========Frederic User Transition==========');
       print(transition);
       print('============================================');
@@ -74,26 +70,14 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     super.onTransition(transition);
   }
 
-  Future<void> waitForUserAuthentication() async {
-    if (hasLoaded) return;
-    Completer<void> completer = Completer<void>();
-    _userHasAuthenticatedCompleters.add(completer);
-    return completer.future;
-  }
-
-  void hasLoadedDataCallback() {
-    if (hasLoaded) return;
-    hasLoaded = true;
-    for (Completer<void> completer in _userHasAuthenticatedCompleters) {
-      completer.complete();
-      print('COMPLETE COMPLETERS==================================');
-    }
-    _userHasAuthenticatedCompleters.clear();
-    onLoadData?.call();
+  void signOut(BuildContext context) async {
+    await _userStreamSubscription?.cancel();
+    FirebaseAuth.instance.signOut();
+    FredericBase.forceFullRestart(context);
   }
 
   void changePassword(String newPassword) {
-    throw UnimplementedError('change password not implemented');
+    throw UnimplementedError('change password not implemented yet');
   }
 
   void addActiveWorkout(String workoutID) {

@@ -1,18 +1,19 @@
-import 'package:frederic/backend/util/event_bus/frederic_event_processor.dart';
-import 'package:frederic/backend/util/event_bus/frederic_system_event.dart';
+import 'package:frederic/backend/util/event_bus/frederic_message_processor.dart';
 
-typedef FredericEventCallback = void Function(FredericSystemEvent event);
+import 'frederic_base_message.dart';
 
-class FredericDefaultEventProcessor implements FredericEventProcessor {
+typedef FredericEventCallback = void Function(FredericBaseMessage event);
+
+class FredericDefaultMessageProcessor implements FredericMessageProcessor {
   final List<FredericEventCallback> _subscribers = <FredericEventCallback>[];
 
   @override
-  bool acceptsEvent(FredericSystemEvent event) {
+  bool acceptsMessage(FredericBaseMessage event) {
     return true;
   }
 
   @override
-  void processEvent(FredericSystemEvent event) {
+  void processMessage(FredericBaseMessage event) {
     for (FredericEventCallback subscriber in _subscribers) {
       subscriber.call(event);
     }

@@ -93,10 +93,6 @@ class _FredericBaseState extends State<FredericBase> {
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
 
-    FredericBackend.instance.userManager
-        .waitForUserAuthentication()
-        .then((value) => forceRebuild);
-
     return Container(
       key: _key,
       child: MultiBlocProvider(

@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../frederic_backend.dart';
 import 'frederic_user.dart';
 import 'frederic_user_manager.dart';
 
@@ -126,8 +128,10 @@ class FredericUserDataChangedEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    if (!userManager.hasLoaded) {
-      userManager.hasLoadedDataCallback();
+    if (!userManager.firestoreDataWasLoadedAtLeastOnce) {
+      userManager.firestoreDataWasLoadedAtLeastOnce = true;
+      FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+          FredericConcurrencyMessageType.UserHasAuthenticated));
     }
 
     return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',

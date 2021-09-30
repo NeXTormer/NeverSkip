@@ -19,10 +19,11 @@ class FredericGoalManager
       : super(
             FredericGoalListData(<String>[], HashMap<String, FredericGoal>()));
 
-  final CollectionReference _goalsCollection = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser?.uid)
-      .collection('goals');
+  CollectionReference<Map<String, dynamic>> get _goalsCollection =>
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('goals');
 
   HashMap<String, FredericGoal> _goals = HashMap<String, FredericGoal>();
 

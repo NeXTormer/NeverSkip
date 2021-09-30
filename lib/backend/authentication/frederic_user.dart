@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 /// Not mutable, managed by FredericUserManager Bloc
 ///
 class FredericUser {
-  FredericUser(this._uid,
+  FredericUser(this.uid,
       {DocumentSnapshot<Map<String, dynamic>>? snapshot,
       this.statusMessage = '',
       this.waiting = false}) {
@@ -18,7 +18,7 @@ class FredericUser {
     _calculateDerivedAttributes();
   }
 
-  final String _uid;
+  final String uid;
   final String statusMessage;
   String? _email;
   String? _name;
@@ -35,11 +35,10 @@ class FredericUser {
   List<String>? _activeWorkouts;
   List<String>? _progressMonitors;
 
-  bool get authenticated => _uid != '';
+  bool get authenticated => uid != '';
   bool get finishedLoading => _name != null;
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
-  String get uid => _uid;
   String get email => _email ?? '';
   String get name => _name ?? '';
   String get username => _username ?? '';

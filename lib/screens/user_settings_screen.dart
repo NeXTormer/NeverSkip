@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
@@ -119,8 +118,7 @@ class UserSettingsScreen extends StatelessWidget {
                   text: 'Sign Out',
                   icon: Icons.exit_to_app,
                   onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    FredericBase.forceFullRestart(context);
+                    FredericBackend.instance.userManager.signOut(context);
                   }),
               SettingsElement(
                   text: 'Delete Account', icon: Icons.delete_forever),
