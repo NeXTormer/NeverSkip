@@ -23,11 +23,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     streakManager = StreakManager(this, _backend);
   }
 
-  final FredericBackend _backend;
   late final StreakManager streakManager;
 
+  final FredericBackend _backend;
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
       _userStreamSubscription;
+  List<Completer<void>> _userHasAuthenticatedCompleters = <Completer<void>>[];
 
   bool hasLoaded = false;
   final bool logTransition;
@@ -71,6 +72,24 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
 
     super.onTransition(transition);
+  }
+
+  Future<void> waitForUserAuthentication() async {
+    if (hasLoaded) return;
+    Completer<void> completer = Completer<void>();
+    _userHasAuthenticatedCompleters.add(completer);
+    return completer.future;
+  }
+
+  void hasLoadedDataCallback() {
+    if (hasLoaded) return;
+    hasLoaded = true;
+    for (Completer<void> completer in _userHasAuthenticatedCompleters) {
+      completer.complete();
+      print('COMPLETE COMPLETERS==================================');
+    }
+    _userHasAuthenticatedCompleters.clear();
+    onLoadData?.call();
   }
 
   void changePassword(String newPassword) {

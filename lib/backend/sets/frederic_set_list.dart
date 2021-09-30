@@ -63,6 +63,7 @@ class FredericSetList {
   }
 
   void loadData(int monthsToLoad) async {
+    await FredericBackend.instance.userManager.waitForUserAuthentication();
     int lastMonth = _setManager.currentMonth - (monthsToLoad - 1);
     QuerySnapshot<Map<String, dynamic>> snapshot = await _setManager
         .setsCollection

@@ -58,7 +58,7 @@ class FredericGoogleLoginEvent extends FredericAuthEvent {
       return FredericUser(userCredential.user!.uid);
     }
 
-    throw UnimplementedError();
+    return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
   }
 }
 
@@ -127,8 +127,7 @@ class FredericUserDataChangedEvent extends FredericAuthEvent {
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
     if (!userManager.hasLoaded) {
-      userManager.hasLoaded = true;
-      userManager.onLoadData?.call();
+      userManager.hasLoadedDataCallback();
     }
 
     return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',

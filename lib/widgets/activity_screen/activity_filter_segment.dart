@@ -46,7 +46,7 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
 
   @override
   Widget build(BuildContext context) {
-    final double padding = MediaQuery.of(context).size.width / 14;
+    final double padding = 0; //MediaQuery.of(context).size.width / 16;
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -60,6 +60,7 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
             Stack(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ActivityMuscleGroupButton('All',
                         key: allKey,
@@ -111,6 +112,7 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                               handleMuscleFilters(MuscleGroup.Legs);
                               selectedIndex = 5;
                             })),
+                    SizedBox(width: 12)
                   ],
                 ),
                 AnimatedPositioned(

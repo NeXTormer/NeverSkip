@@ -17,7 +17,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
             weeklyTrainingVolume: List<int>.filled(7, 0))) {
     setsCollection = FirebaseFirestore.instance
         .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
-    loadAllSets(2);
   }
 
   WeeklyTrainingVolumeChartData weeklyTrainingVolumeChartData =
@@ -53,6 +52,10 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     );
   }
 
+  void reload() {
+    loadAllSets(2);
+  }
+
   void addSet(String activityID, FredericSet set) {
     state[activityID].addSetLocally(set);
     weeklyTrainingVolumeChartData.addSet(set);
@@ -65,6 +68,9 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   void loadAllSets(int monthsToLoad) async {
     int lastMonth = currentMonth - (monthsToLoad - 1);
+    print(
+        '==================== CURRENT USER ID: ${FirebaseAuth.instance.currentUser?.uid ?? 'NULL'}');
+    print('Loading ${setsCollection.path}');
     QuerySnapshot<Map<String, dynamic>> snapshot = await setsCollection
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();

@@ -71,6 +71,8 @@ class FredericBackend {
 
   void loadData() async {
     var profiler = FredericProfiler.track('[Backend] load all data');
+    await userManager.waitForUserAuthentication();
+    _setManager.reload();
     await _activityManager.reload();
     await _workoutManager.reload();
     await _goalManager.reload();
