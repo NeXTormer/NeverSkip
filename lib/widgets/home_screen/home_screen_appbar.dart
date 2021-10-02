@@ -17,10 +17,12 @@ class HomeScreenAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String userName = user.name.split(' ').first;
+    String timeOfDay = getTimeOfDay(DateTime.now());
+
     return FredericSliverAppBar(
       height: 124,
       title: 'Let\'s find you a Workout',
-      subtitle: 'Good Morning, $userName',
+      subtitle: 'Good $timeOfDay, $userName!',
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -51,5 +53,39 @@ class HomeScreenAppbar extends StatelessWidget {
           },
           expandedChild: SettingsScreen()),
     );
+  }
+
+  String getTimeOfDay(DateTime time) {
+    switch (time.hour) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+        return 'Morning';
+      case 10:
+      case 12:
+      case 13:
+      case 14:
+        return 'Day';
+      case 15:
+      case 16:
+      case 17:
+      case 18:
+        return 'Afternoon';
+      case 19:
+      case 20:
+      case 21:
+      case 22:
+      case 23:
+        return 'Evening';
+      default:
+        return 'Day';
+    }
   }
 }

@@ -117,6 +117,7 @@ class FredericSignOutEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
+    FredericBackend.instance.dispose();
     await FirebaseAuth.instance.signOut();
     return FredericUser('');
   }

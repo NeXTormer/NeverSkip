@@ -10,7 +10,10 @@ class FredericButton extends StatelessWidget {
       this.fontSize = 15,
       this.fontWeight = FontWeight.w600}) {
     this.mainColor = mainColor ?? theme.mainColor;
-    this.textColor = textColor ?? theme.textColorColorfulBackground;
+    this.textColor = textColor ??
+        (theme.isBright
+            ? theme.backgroundColor
+            : theme.textColorColorfulBackground);
   }
   late final Color mainColor;
   late final Color textColor;

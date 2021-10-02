@@ -22,7 +22,7 @@ import 'package:get_it/get_it.dart';
 //FirebaseAnalytics analytics = FirebaseAnalytics();
 final getIt = GetIt.instance;
 
-FredericColorTheme _colorTheme = FredericColorTheme.blueDark();
+FredericColorTheme _colorTheme = FredericColorTheme.blue();
 FredericColorTheme get theme => _colorTheme;
 
 const bool _kTestingCrashlytics = true;
@@ -89,6 +89,7 @@ class _FredericBaseState extends State<FredericBase> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight
     ]);
+
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
@@ -116,7 +117,6 @@ class _FredericBaseState extends State<FredericBase> {
           title: 'Frederic',
           theme: ThemeData(
               primaryColor: theme.mainColor,
-              accentColor: theme.accentColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,
               fontFamily: 'Montserrat',
               textTheme: TextTheme(
@@ -125,7 +125,11 @@ class _FredericBaseState extends State<FredericBase> {
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
                     fontSize: 13),
-              )),
+              ),
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                  secondary: theme.accentColor,
+                  brightness:
+                      theme.isBright ? Brightness.light : Brightness.dark)),
           home: OrientationBuilder(
             builder: (context, orientation) {
               if (orientation == Orientation.portrait) {
@@ -152,7 +156,6 @@ class _FredericBaseState extends State<FredericBase> {
   }
 
   void forceRebuild() {
-    print('==================================== FORCE REBUILD');
     setState(() {});
   }
 }

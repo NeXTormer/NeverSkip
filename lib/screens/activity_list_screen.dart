@@ -53,16 +53,17 @@ class ActivityListScreen extends StatelessWidget {
                     if (theme.isMonotone) SliverDivider(),
                     FeaturedActivitySegment(
                       'Featured',
-                      user.progressMonitors,
+                      FredericBackend.instance.defaults.featuredActivities,
                       onTap: onSelect,
                       isSelector: isSelector,
                     ),
-                    FeaturedActivitySegment(
-                      'Calisthenics',
-                      user.progressMonitors,
-                      onTap: onSelect,
-                      isSelector: isSelector,
-                    ),
+                    if (user.progressMonitors.isNotEmpty)
+                      FeaturedActivitySegment(
+                        'Personal Records',
+                        user.progressMonitors,
+                        onTap: onSelect,
+                        isSelector: isSelector,
+                      ),
                     ActivityFilterSegment(filterController: filter),
                     ActivityListSegment(
                       filterController: filter,

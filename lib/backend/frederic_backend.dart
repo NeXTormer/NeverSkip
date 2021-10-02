@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -70,6 +71,11 @@ class FredericBackend extends FredericMessageProcessor {
   Future<void> waitUntilUserHasAuthenticated() =>
       _waitUntilUserHasAuthenticated.waitForX();
 
+  FredericDefaults? _defaults;
+  FredericDefaults get defaults => _defaults ?? FredericDefaults.empty();
+  DocumentReference<Map<String, dynamic>> _defaultsReference =
+      FirebaseFirestore.instance.collection('defaults').doc('defaults');
+
   @override
   bool acceptsMessage(FredericBaseMessage message) {
     return message is FredericConcurrencyMessage;
@@ -93,6 +99,11 @@ class FredericBackend extends FredericMessageProcessor {
 
   void loadData() async {
     var profiler = FredericProfiler.track('[Backend] load all data');
+
+    await waitUntilUserHasAuthenticated();
+
+    _defaults = FredericDefaults(await _defaultsReference.get());
+
     _setManager.reload();
     await _activityManager.reload();
     await _workoutManager.reload();
@@ -108,4 +119,17 @@ class FredericBackend extends FredericMessageProcessor {
   }
 
   void dispose() {}
+}
+
+class FredericDefaults {
+  FredericDefaults(DocumentSnapshot<Map<String, dynamic>> document) {
+    _featuredActivities =
+        document.data()?['featured_activities']?.cast<String>() ??
+            const <String>[];
+  }
+
+  FredericDefaults.empty();
+
+  List<String>? _featuredActivities;
+  List<String> get featuredActivities => _featuredActivities ?? <String>[];
 }

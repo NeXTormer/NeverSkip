@@ -15,38 +15,40 @@ class SignInWithGoogleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool dark = theme.isDark;
-    return InkWell(
-      onTap: () async {
-        GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+    return Card(
+      child: InkWell(
+        onTap: () async {
+          GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
-        GoogleSignInAccount? account = await googleSignIn.signIn();
-        if (account != null) {
-          FredericBackend.instance.userManager
-              .add(FredericGoogleLoginEvent(account));
-        }
-      },
-      child: Container(
-        height: 44,
-        padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: dark ? darkColor : brightColor,
-        ),
-        child: Row(
-          children: [
-            Image.asset(
-              'assets/images/google/google_logo_light.png',
-            ),
-            SizedBox(width: 24),
-            Text(
-              '${signUp ? 'Sign up' : 'Log in'} with Google',
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: dark ? Colors.white : Colors.grey),
-            )
-          ],
+          GoogleSignInAccount? account = await googleSignIn.signIn();
+          if (account != null) {
+            FredericBackend.instance.userManager
+                .add(FredericGoogleLoginEvent(account));
+          }
+        },
+        child: Container(
+          height: 44,
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: dark ? darkColor : brightColor,
+              border: Border.all(color: theme.cardBorderColor, width: 1.4)),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/google/google_logo_light.png',
+              ),
+              SizedBox(width: 24),
+              Text(
+                '${signUp ? 'Sign up' : 'Log in'} with Google',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: dark ? Colors.white : Colors.black45),
+              )
+            ],
+          ),
         ),
       ),
     );
