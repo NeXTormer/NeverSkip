@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_auth_event.dart';
@@ -16,14 +17,20 @@ class SignInWithGoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     bool dark = theme.isDark;
     return Card(
+      margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () async {
           GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
           GoogleSignInAccount? account = await googleSignIn.signIn();
           if (account != null) {
+            final authentication = await account.authentication;
+            final authCredentials = GoogleAuthProvider.credential(
+                accessToken: authentication.accessToken,
+                idToken: authentication.idToken);
+
             FredericBackend.instance.userManager
-                .add(FredericGoogleLoginEvent(account));
+                .add(FredericOAuthSignInEvent(authCredentials));
           }
         },
         child: Container(

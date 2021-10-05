@@ -51,7 +51,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   void onTransition(Transition<FredericAuthEvent, FredericUser> transition) {
     if (transition.event is FredericEmailLoginEvent ||
         transition.event is FredericEmailSignupEvent ||
-        transition.event is FredericGoogleLoginEvent ||
+        transition.event is FredericOAuthSignInEvent ||
         transition.event is FredericRestoreLoginStatusEvent) {
       _userStreamSubscription = FirebaseFirestore.instance
           .collection('users')

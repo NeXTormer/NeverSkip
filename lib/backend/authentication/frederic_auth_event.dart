@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../frederic_backend.dart';
@@ -37,19 +36,15 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
   }
 }
 
-class FredericGoogleLoginEvent extends FredericAuthEvent {
-  FredericGoogleLoginEvent(this.googleAccount);
+class FredericOAuthSignInEvent extends FredericAuthEvent {
+  FredericOAuthSignInEvent(this.authCredential);
 
-  final GoogleSignInAccount googleAccount;
+  final OAuthCredential authCredential;
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    final authentication = await googleAccount.authentication;
-    final authCredentials = GoogleAuthProvider.credential(
-        accessToken: authentication.accessToken,
-        idToken: authentication.idToken);
     final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(authCredentials);
+        await FirebaseAuth.instance.signInWithCredential(authCredential);
 
     if (userCredential.additionalUserInfo?.isNewUser ?? true) {
       await userManager.createUserEntryInDB(

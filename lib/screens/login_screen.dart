@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io' show Platform;
+import 'dart:math';
 
+import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication/frederic_auth_event.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/login_screen/authenticate_with_email_button.dart';
 import 'package:frederic/widgets/login_screen/sign_in_with_google_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -142,6 +149,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                           ),
+                          if (Platform.isIOS) SizedBox(height: 20),
+                          if (Platform.isIOS)
+                            SignInWithAppleButton(
+                                borderRadius: BorderRadius.circular(10),
+                                text: login
+                                    ? 'Log in with Apple'
+                                    : 'Sign up with Apple',
+                                style: theme.isDark
+                                    ? SignInWithAppleButtonStyle.white
+                                    : SignInWithAppleButtonStyle.black,
+                                onPressed: handleAppleSignIn),
                           SizedBox(height: 20),
                           SignInWithGoogleButton(
                             signUp: !login,
@@ -192,6 +210,42 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ));
+  }
+
+  void handleAppleSignIn() async {
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    final credential = await SignInWithApple.getAppleIDCredential(
+      nonce: nonce,
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    final oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: credential.identityToken,
+      rawNonce: rawNonce,
+    );
+
+    FredericBackend.instance.userManager
+        .add(FredericOAuthSignInEvent(oauthCredential));
+  }
+
+  String generateNonce([int length = 32]) {
+    final charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
+  }
+
+  /// Returns the sha256 hash of [input] in hex notation.
+  String sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 
   @override
