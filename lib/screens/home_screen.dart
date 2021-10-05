@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: BouncingScrollPhysics(),
             slivers: [
               HomeScreenAppbar(user),
-              if (theme.isMonotone) SliverDivider(),
               ProgressIndicatorSegment(),
               GoalSegment(),
               AchievementSegment(),

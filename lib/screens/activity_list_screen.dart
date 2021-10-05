@@ -50,7 +50,6 @@ class ActivityListScreen extends StatelessWidget {
                       user: user,
                       filterController: filter,
                     ),
-                    if (theme.isMonotone) SliverDivider(),
                     FeaturedActivitySegment(
                       'Featured',
                       FredericBackend.instance.defaults.featuredActivities,
