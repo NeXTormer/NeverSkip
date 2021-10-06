@@ -104,7 +104,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     return FirebaseFirestore.instance.collection('users').doc(uid).set({
       'name': name ?? '',
       'image': image ??
-          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-profile-screen.jpg?alt=media&token=52f200e9-fac8-4295-bf7d-01b59f92a987',
+          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaults%2Fdefault-user-image.png?alt=media&token=f275c43b-bb43-40e2-943d-8afb9e3f7c4e',
       'username': username ?? null,
       'uid': uid,
       'activeworkouts': <String>[],

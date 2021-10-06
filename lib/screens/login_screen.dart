@@ -70,13 +70,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     bool smallScreen = screenHeight < 700;
-    bool medScreen = screenHeight < 800;
+    bool medScreen = screenHeight < 900;
+
     return Scaffold(
         backgroundColor: theme.backgroundColor,
         body: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
           child: Container(
-            height: screenHeight,
+            height: 880,
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -172,7 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                       color: Colors.redAccent, fontSize: 14)),
                             ),
-                          Expanded(flex: 50, child: Container()),
+                          //Expanded(flex: 50, child: Container()),
+                          SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -216,21 +218,25 @@ class _LoginScreenState extends State<LoginScreen> {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
-    final credential = await SignInWithApple.getAppleIDCredential(
-      nonce: nonce,
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-    );
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        nonce: nonce,
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: credential.identityToken,
-      rawNonce: rawNonce,
-    );
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: credential.identityToken,
+        rawNonce: rawNonce,
+      );
 
-    FredericBackend.instance.userManager
-        .add(FredericOAuthSignInEvent(oauthCredential));
+      FredericBackend.instance.userManager
+          .add(FredericOAuthSignInEvent(oauthCredential));
+    } catch (e) {
+      print(e);
+    }
   }
 
   String generateNonce([int length = 32]) {

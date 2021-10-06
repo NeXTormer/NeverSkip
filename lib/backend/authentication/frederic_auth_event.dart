@@ -46,11 +46,18 @@ class FredericOAuthSignInEvent extends FredericAuthEvent {
     final userCredential =
         await FirebaseAuth.instance.signInWithCredential(authCredential);
 
+    String? name = userCredential.user?.displayName;
+    String? image = userCredential.user?.photoURL;
+
+    if (name == null) {
+      //TODO: get name and picture
+    }
+
     if (userCredential.additionalUserInfo?.isNewUser ?? true) {
       await userManager.createUserEntryInDB(
           uid: userCredential.user!.uid,
-          name: userCredential.user?.displayName,
-          image: userCredential.user?.photoURL,
+          name: name,
+          image: image,
           username: userCredential.additionalUserInfo?.username);
       return FredericUser(userCredential.user!.uid);
     }
