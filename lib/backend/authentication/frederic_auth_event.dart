@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,9 +38,10 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
 }
 
 class FredericOAuthSignInEvent extends FredericAuthEvent {
-  FredericOAuthSignInEvent(this.authCredential);
+  FredericOAuthSignInEvent(this.authCredential, [this.context]);
 
   final OAuthCredential authCredential;
+  final BuildContext? context;
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {

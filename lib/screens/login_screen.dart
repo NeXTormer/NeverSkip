@@ -160,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: theme.isDark
                                     ? SignInWithAppleButtonStyle.white
                                     : SignInWithAppleButtonStyle.black,
-                                onPressed: handleAppleSignIn),
+                                onPressed: () => handleAppleSignIn(context)),
                           SizedBox(height: 20),
                           SignInWithGoogleButton(
                             signUp: !login,
@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  void handleAppleSignIn() async {
+  void handleAppleSignIn(BuildContext context) async {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
@@ -233,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       FredericBackend.instance.userManager
-          .add(FredericOAuthSignInEvent(oauthCredential));
+          .add(FredericOAuthSignInEvent(oauthCredential, context));
     } catch (e) {
       print(e);
     }
