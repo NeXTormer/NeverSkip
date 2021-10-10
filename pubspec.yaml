@@ -56,6 +56,7 @@ dependencies:
   cupertino_icons: ^1.0.3
   infinite_listview: ^1.1.0
   modal_bottom_sheet: ^2.0.0
+  introduction_screen: ^2.1.0
   cached_network_image: ^3.0.0
 
   date_format: ^2.0.2
@@ -84,7 +85,9 @@ flutter:
     - assets/images/dumbbell_with_bg_blue.png
     - assets/images/dumbbell2.png
     - assets/images/login_illustration.png
-    
+    - assets/images/Frederic_Goal.png
+    - assets/images/introduction.png
+
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
