@@ -26,32 +26,32 @@ class HomeScreenAppbar extends StatelessWidget {
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: CachedNetworkImageProvider(user.image),
-          ),
+          FredericContainerTransition(
+              tappable: true,
+              closedBorderRadius: 32,
+              transitionType: ContainerTransitionType.fadeThrough,
+              childBuilder: (context, openContainer) {
+                return CircleAvatar(
+                  radius: 20,
+                  backgroundImage: CachedNetworkImageProvider(user.image),
+                );
+                return Container(
+                    height: 32,
+                    width: 32,
+                    color: theme.isColorful ? Colors.white : theme.mainColor,
+                    child: Icon(
+                      ExtraIcons.settings,
+                      color: theme.isColorful ? theme.mainColor : Colors.white,
+                      size: 18,
+                    ));
+              },
+              expandedChild: SettingsScreen()),
           StreakIcon(
             user: user,
             onColorfulBackground: theme.isColorful,
           ),
         ],
       ),
-      icon: FredericContainerTransition(
-          tappable: true,
-          closedBorderRadius: 8,
-          transitionType: ContainerTransitionType.fadeThrough,
-          childBuilder: (context, openContainer) {
-            return Container(
-                height: 32,
-                width: 32,
-                color: theme.isColorful ? Colors.white : theme.mainColor,
-                child: Icon(
-                  ExtraIcons.settings,
-                  color: theme.isColorful ? theme.mainColor : Colors.white,
-                  size: 18,
-                ));
-          },
-          expandedChild: SettingsScreen()),
     );
   }
 

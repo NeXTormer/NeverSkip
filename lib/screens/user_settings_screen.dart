@@ -92,6 +92,11 @@ class UserSettingsScreen extends StatelessWidget {
                     updateValue: (newDate) => user.birthday = newDate,
                   ),
                   icon: Icons.cake_outlined),
+              SettingsElement(
+                text: 'E-Mail Address',
+                icon: Icons.mail_outline_rounded,
+                clickable: false,
+              ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(
@@ -121,8 +126,11 @@ class UserSettingsScreen extends StatelessWidget {
                     FredericBackend.instance.userManager.signOut(context);
                   }),
               SettingsElement(
+                  text: 'Change Password', icon: Icons.vpn_key_outlined),
+              SettingsElement(
                   text: 'Delete Account', icon: Icons.delete_forever),
             ]),
+            SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
           ],
         ),
       ),

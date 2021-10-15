@@ -37,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
             SettingsSegment(title: 'App Settings', elements: <SettingsElement>[
               SettingsElement(
                 text: 'Color Theme',
-                subText: 'Dark Blue',
+                subText: theme.name,
                 changeAttributeWidget: ColorThemeChanger(),
                 changerTitle: 'Change the Color Theme',
                 icon: Icons.color_lens_outlined,

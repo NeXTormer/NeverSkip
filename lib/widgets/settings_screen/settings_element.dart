@@ -12,6 +12,7 @@ class SettingsElement extends StatefulWidget {
       this.hasSwitch = false,
       this.isFirstItem = false,
       this.isLastItem = false,
+      this.clickable = true,
       this.changerTitle,
       this.changerSubtitle,
       this.onTap,
@@ -31,6 +32,7 @@ class SettingsElement extends StatefulWidget {
   final String? changerSubtitle;
   final String? infoText;
   final IconData? icon;
+  final bool clickable;
   final bool hasSwitch;
   final bool defaultSwitchPosition;
   bool isFirstItem;
@@ -55,10 +57,29 @@ class _SettingsElementState extends State<SettingsElement> {
 
   @override
   Widget build(BuildContext context) {
+    BorderRadius borderRadius = BorderRadius.only(
+        topLeft: widget.isFirstItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0),
+        topRight: widget.isFirstItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0),
+        bottomRight: widget.isLastItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0),
+        bottomLeft: widget.isLastItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0));
+    ShapeBorder customBorder =
+        RoundedRectangleBorder(borderRadius: borderRadius);
     Widget container = Container(
-        color: theme.cardBackgroundColor,
         padding: EdgeInsets.only(left: widget.icon != null ? 0 : 6, right: 8),
         height: 46,
+        decoration: BoxDecoration(
+            //color:
+            //  true ? Colors.white.withOpacity(1) : theme.cardBackgroundColor,
+            borderRadius: borderRadius,
+            border: Border.all(color: Colors.transparent)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -98,46 +119,28 @@ class _SettingsElementState extends State<SettingsElement> {
                     });
                   },
                   activeColor: theme.mainColor),
-            if (!widget.hasSwitch)
+            if (!widget.hasSwitch && widget.clickable)
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: theme.greyColor,
               )
           ],
         ));
-    ShapeBorder customBorder = RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: widget.isFirstItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0),
-            topRight: widget.isFirstItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0),
-            bottomRight: widget.isLastItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0),
-            bottomLeft: widget.isLastItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0)));
-    if (widget.hasSwitch) return container;
+    if (widget.hasSwitch || !widget.clickable)
+      return Material(
+        color: Colors.transparent,
+        borderRadius: borderRadius,
+        child: container,
+      );
     if (widget.onTap != null)
-      return InkWell(
-          child: container,
-          onTap: widget.onTap,
-          customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: widget.isFirstItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0),
-                  topRight: widget.isFirstItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0),
-                  bottomRight: widget.isLastItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0),
-                  bottomLeft: widget.isLastItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0))));
+      return Material(
+        borderRadius: borderRadius,
+        color: theme.cardBackgroundColor,
+        child: InkWell(
+            child: container,
+            onTap: widget.onTap,
+            customBorder: RoundedRectangleBorder(borderRadius: borderRadius)),
+      );
 
     return FredericContainerTransition(
       closedBorderRadius: 0,
@@ -147,10 +150,13 @@ class _SettingsElementState extends State<SettingsElement> {
           infoText: widget.infoText,
           subtitle: widget.changerSubtitle,
           title: widget.changerTitle ?? 'Change Attribute'),
-      childBuilder: (context, openContainer) => InkWell(
-        onTap: openContainer,
-        child: container,
-        customBorder: customBorder,
+      childBuilder: (context, openContainer) => Material(
+        color: theme.cardBackgroundColor,
+        child: InkWell(
+          onTap: openContainer,
+          child: container,
+          customBorder: customBorder,
+        ),
       ),
     );
   }

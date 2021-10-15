@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class FredericColorTheme {
   FredericColorTheme.blue(
-      {this.mainColor = const Color(0xFF3E4FD8),
+      {this.name = "Bright Blue",
+      this.mainColor = const Color(0xFF3E4FD8),
       this.mainColorInText = const Color(0xFF3E4FD8),
       this.mainColorLight = const Color(0x1A3E4FD8),
       this.accentColor = const Color(0xFF4791FF),
@@ -26,7 +27,8 @@ class FredericColorTheme {
       this.cardBorderColor = const Color(0xFFE2E2E2)});
 
   FredericColorTheme.blueColorful(
-      {this.mainColor = const Color(0xFF3E4FD8),
+      {this.name = "Colorful Blue",
+      this.mainColor = const Color(0xFF3E4FD8),
       this.mainColorInText = const Color(0xFF3E4FD8),
       this.mainColorLight = const Color(0x1A3E4FD8),
       this.accentColor = const Color(0xFF4791FF),
@@ -50,7 +52,8 @@ class FredericColorTheme {
       this.cardBorderColor = const Color(0xFFE2E2E2)});
 
   FredericColorTheme.orangeColorful(
-      {this.mainColor = const Color(0xFFD8903E),
+      {this.name = "Colorful Orange",
+      this.mainColor = const Color(0xFFD8903E),
       this.mainColorInText = const Color(0xFFCC7127),
       this.mainColorLight = const Color(0x1AD8903E),
       this.accentColor = const Color(0xFFB77E3C),
@@ -74,7 +77,8 @@ class FredericColorTheme {
       this.cardBorderColor = const Color(0xFFE2E2E2)});
 
   FredericColorTheme.orange(
-      {this.mainColor = const Color(0xFFD8903E),
+      {this.name = "Bright Orange",
+      this.mainColor = const Color(0xFFD8903E),
       this.mainColorInText = const Color(0xFFCC7127),
       this.mainColorLight = const Color(0x1AD8903E),
       this.accentColor = const Color(0xFFB77E3C),
@@ -98,7 +102,8 @@ class FredericColorTheme {
       this.cardBorderColor = const Color(0xFFE2E2E2)});
 
   FredericColorTheme.blueDark(
-      {this.mainColor = const Color(0xFF3E4FD8),
+      {this.name = "Dark Blue",
+      this.mainColor = const Color(0xFF3E4FD8),
       this.mainColorInText = const Color(0xFF4791FF),
       this.mainColorLight = const Color(0xFF353535),
       this.accentColor = const Color(0xFF4791FF),
@@ -122,7 +127,8 @@ class FredericColorTheme {
       this.cardBorderColor = Colors.transparent});
 
   FredericColorTheme.orangeDark(
-      {this.mainColor = const Color(0xFFD8903E),
+      {this.name = "Dark Orange",
+      this.mainColor = const Color(0xFFD8903E),
       this.mainColorInText = const Color(0xFFCC7127),
       this.mainColorLight = const Color(0x1AD8903E),
       this.accentColor = const Color(0xFFB77E3C),
@@ -145,31 +151,33 @@ class FredericColorTheme {
       this.greyTextColor = const Color(0xFFC4C4C4),
       this.cardBorderColor = Colors.transparent});
 
-  bool isDark;
-  bool isColorful;
+  final String name;
 
-  Color mainColor;
-  Color mainColorLight;
-  Color accentColor;
-  Color accentColorLight;
-  Color positiveColor;
-  Color positiveColorLight;
-  Color negativeColor;
-  Color negativeColorLight;
+  final bool isDark;
+  final bool isColorful;
 
-  Color dividerColor;
-  Color backgroundColor;
-  Color backgroundHighlightColor;
-  Color cardBackgroundColor;
-  Color greyColor;
-  Color disabledGreyColor;
+  final Color mainColor;
+  final Color mainColorLight;
+  final Color accentColor;
+  final Color accentColorLight;
+  final Color positiveColor;
+  final Color positiveColorLight;
+  final Color negativeColor;
+  final Color negativeColorLight;
 
-  Color mainColorInText;
-  Color textColor;
-  Color textColorBright;
-  Color textColorColorfulBackground;
-  Color greyTextColor;
-  Color cardBorderColor;
+  final Color dividerColor;
+  final Color backgroundColor;
+  final Color backgroundHighlightColor;
+  final Color cardBackgroundColor;
+  final Color greyColor;
+  final Color disabledGreyColor;
+
+  final Color mainColorInText;
+  final Color textColor;
+  final Color textColorBright;
+  final Color textColorColorfulBackground;
+  final Color greyTextColor;
+  final Color cardBorderColor;
 
   bool get isBright => !isDark;
   bool get isMonotone => !isColorful;
