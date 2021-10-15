@@ -150,8 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                           ),
-                          if (Platform.isIOS) SizedBox(height: 20),
-                          if (Platform.isIOS)
+                          if (Platform.isIOS && false) SizedBox(height: 20),
+                          if (Platform.isIOS && false)
                             SignInWithAppleButton(
                                 borderRadius: BorderRadius.circular(10),
                                 text: login
@@ -162,10 +162,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     : SignInWithAppleButtonStyle.black,
                                 onPressed: () => handleAppleSignIn(context)),
                           SizedBox(height: 20),
-                          SignInWithGoogleButton(
-                            signUp: !login,
-                          ),
-                          SizedBox(height: 12),
+                          if (Platform.isAndroid)
+                            SignInWithGoogleButton(
+                              signUp: !login,
+                            ),
+                          if (Platform.isAndroid) SizedBox(height: 12),
                           if (hasError)
                             Align(
                               alignment: Alignment.center,

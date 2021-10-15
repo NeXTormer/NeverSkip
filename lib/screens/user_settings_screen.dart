@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
@@ -7,6 +8,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/settings_screen/datetime_attribute_changer.dart';
 import 'package:frederic/widgets/settings_screen/image_attribute_changer.dart';
+import 'package:frederic/widgets/settings_screen/password_changer.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/text_attribute_changer.dart';
@@ -94,6 +96,7 @@ class UserSettingsScreen extends StatelessWidget {
                   icon: Icons.cake_outlined),
               SettingsElement(
                 text: 'E-Mail Address',
+                subText: FirebaseAuth.instance.currentUser?.email,
                 icon: Icons.mail_outline_rounded,
                 clickable: false,
               ),
@@ -126,7 +129,11 @@ class UserSettingsScreen extends StatelessWidget {
                     FredericBackend.instance.userManager.signOut(context);
                   }),
               SettingsElement(
-                  text: 'Change Password', icon: Icons.vpn_key_outlined),
+                text: 'Change Password (Not Implemented)',
+                changerTitle: 'Change your Password',
+                icon: Icons.vpn_key_outlined,
+                changeAttributeWidget: PasswordChanger(),
+              ),
               SettingsElement(
                   text: 'Delete Account', icon: Icons.delete_forever),
             ]),

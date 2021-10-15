@@ -50,8 +50,19 @@ class FredericUser {
   DateTime? get birthday => _birthday;
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
-  List<String> get progressMonitors => _progressMonitors ?? const <String>[];
-  List<String> get activeWorkouts => _activeWorkouts ?? const <String>[];
+  List<String> get progressMonitors {
+    if (_progressMonitors == null) {
+      _progressMonitors = <String>[];
+    }
+    return _progressMonitors!;
+  }
+
+  List<String> get activeWorkouts {
+    if (_activeWorkouts == null) {
+      _activeWorkouts = <String>[];
+    }
+    return _activeWorkouts!;
+  }
 
   int get age {
     if (birthday == null) return -1;
