@@ -16,6 +16,9 @@ class _PasswordChangerState extends State<PasswordChanger> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController newPasswordRepeatController = TextEditingController();
 
+  bool hasError = false;
+  String errorText = '';
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +60,11 @@ class _PasswordChangerState extends State<PasswordChanger> {
               icon: null,
             ),
             SizedBox(height: 12),
-            Text(''),
+            Align(
+              alignment: Alignment.center,
+              child: Text(errorText,
+                  style: TextStyle(color: Colors.redAccent, fontSize: 14)),
+            ),
             SizedBox(height: 12),
             FredericButton('Change Password', onPressed: () {})
           ],

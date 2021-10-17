@@ -137,6 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: 24),
                           AuthenticateWithEmailButton(
                             login: login,
+                            hasError: hasError,
                             onError: (error) {
                               if (error == null) {
                                 setState(() {
@@ -150,17 +151,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                           ),
-                          if (Platform.isIOS && false) SizedBox(height: 20),
-                          if (Platform.isIOS && false)
-                            SignInWithAppleButton(
-                                borderRadius: BorderRadius.circular(10),
-                                text: login
-                                    ? 'Log in with Apple'
-                                    : 'Sign up with Apple',
-                                style: theme.isDark
-                                    ? SignInWithAppleButtonStyle.white
-                                    : SignInWithAppleButtonStyle.black,
-                                onPressed: () => handleAppleSignIn(context)),
+                          // if (Platform.isIOS && false) SizedBox(height: 20),
+                          // if (Platform.isIOS && false)
+                          //   SignInWithAppleButton(
+                          //       borderRadius: BorderRadius.circular(10),
+                          //       text: login
+                          //           ? 'Log in with Apple'
+                          //           : 'Sign up with Apple',
+                          //       style: theme.isDark
+                          //           ? SignInWithAppleButtonStyle.white
+                          //           : SignInWithAppleButtonStyle.black,
+                          //       onPressed: () => handleAppleSignIn(context)),
                           SizedBox(height: 20),
                           if (Platform.isAndroid)
                             SignInWithGoogleButton(

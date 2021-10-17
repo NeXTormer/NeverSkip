@@ -42,17 +42,18 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
         streakManager.handleUserDataChange();
       });
     } else {
-      event.process(this);
+      yield await event.process(this);
     }
   }
 
-  //TODO: when adding apple login: add event to this 'if'
+  //TODO: Add event to 'if' when implementing new login
   @override
   void onTransition(Transition<FredericAuthEvent, FredericUser> transition) {
-    if (transition.event is FredericEmailLoginEvent ||
-        transition.event is FredericEmailSignupEvent ||
-        transition.event is FredericOAuthSignInEvent ||
-        transition.event is FredericRestoreLoginStatusEvent) {
+    if ((transition.event is FredericEmailLoginEvent ||
+            transition.event is FredericEmailSignupEvent ||
+            transition.event is FredericOAuthSignInEvent ||
+            transition.event is FredericRestoreLoginStatusEvent) &&
+        transition.nextState.uid != '') {
       _userStreamSubscription = FirebaseFirestore.instance
           .collection('users')
           .doc(transition.nextState.uid)
@@ -70,14 +71,17 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     super.onTransition(transition);
   }
 
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('==========Frederic User Bloc Error =================');
+
+    super.onError(error, stackTrace);
+  }
+
   void signOut(BuildContext context) async {
     await _userStreamSubscription?.cancel();
     FirebaseAuth.instance.signOut();
     FredericBase.forceFullRestart(context);
-  }
-
-  void changePassword(String newPassword) {
-    throw UnimplementedError('change password not implemented yet');
   }
 
   void addActiveWorkout(String workoutID) {

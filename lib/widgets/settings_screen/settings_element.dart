@@ -82,6 +82,7 @@ class _SettingsElementState extends State<SettingsElement> {
             border: Border.all(color: Colors.transparent)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (widget.icon != null)
               Padding(
@@ -99,16 +100,24 @@ class _SettingsElementState extends State<SettingsElement> {
                       )),
                 ),
               ),
-            Text(
-              widget.text,
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: theme.textColor),
+            Expanded(
+              child: Text(
+                widget.text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: theme.textColor),
+              ),
             ),
-            Expanded(child: Container()),
-            if (widget.subText != null) Text(widget.subText!),
+            if (widget.subText != null)
+              Text(
+                widget.subText!,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+              ),
             SizedBox(width: 6),
             if (widget.hasSwitch)
               CupertinoSwitch(

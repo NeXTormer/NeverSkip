@@ -25,13 +25,17 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
           .signInWithEmailAndPassword(email: email, password: password);
       SharedPreferences.getInstance()
           .then((value) => value.setBool('wasLoggedIn', true));
+      print('login successful');
       return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        print('email not exist');
         return FredericUser('', statusMessage: 'The email does not exist.');
       } else if (e.code == 'wrong-password') {
+        print('wrong password');
         return FredericUser('', statusMessage: 'Wrong password.');
       }
+      print('other error ${e.code}');
       return FredericUser('', statusMessage: 'Invalid credentials');
     }
   }
@@ -124,6 +128,18 @@ class FredericSignOutEvent extends FredericAuthEvent {
     FredericBackend.instance.dispose();
     await FirebaseAuth.instance.signOut();
     return FredericUser('');
+  }
+}
+
+class FredericChangePasswordEvent extends FredericAuthEvent {
+  FredericChangePasswordEvent(this.currentPassword, this.newPassword);
+  final String currentPassword;
+  final String newPassword;
+
+  @override
+  Future<FredericUser> process(FredericUserManager userManager) {
+    // TODO: implement process
+    throw UnimplementedError();
   }
 }
 
