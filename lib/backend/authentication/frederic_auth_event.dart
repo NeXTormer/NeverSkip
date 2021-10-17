@@ -57,6 +57,7 @@ class FredericOAuthSignInEvent extends FredericAuthEvent {
 
     if (name == null) {
       //TODO: get name and picture
+
     }
 
     if (userCredential.additionalUserInfo?.isNewUser ?? true) {

@@ -116,4 +116,14 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       'progressmonitors': <String>[]
     });
   }
+
+  Future<void> deleteUser(bool confirm) async {
+    if (!confirm) return;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(state.uid)
+        .delete();
+    await FirebaseAuth.instance.currentUser!.delete();
+    return;
+  }
 }

@@ -6,6 +6,7 @@ import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/settings_screen/account_deleter.dart';
 import 'package:frederic/widgets/settings_screen/datetime_attribute_changer.dart';
 import 'package:frederic/widgets/settings_screen/image_attribute_changer.dart';
 import 'package:frederic/widgets/settings_screen/password_changer.dart';
@@ -129,13 +130,19 @@ class UserSettingsScreen extends StatelessWidget {
                     FredericBackend.instance.userManager.signOut(context);
                   }),
               SettingsElement(
-                text: 'Change Password (Not Implemented)',
+                text: 'Change Password',
                 changerTitle: 'Change your Password',
                 icon: Icons.vpn_key_outlined,
                 changeAttributeWidget: PasswordChanger(),
               ),
               SettingsElement(
-                  text: 'Delete Account', icon: Icons.delete_forever),
+                text: 'Delete Account',
+                icon: Icons.delete_forever,
+                infoText:
+                    'Do you really want to delete your account? This action can not be undone!',
+                changerTitle: 'Delete Account',
+                changeAttributeWidget: AccountDeleter(),
+              ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
           ],
