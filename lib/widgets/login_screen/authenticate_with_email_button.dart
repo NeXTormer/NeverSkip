@@ -5,6 +5,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/forgot_password_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -101,12 +102,20 @@ class _AuthenticateWithEmailButtonState
                   if (widget.login)
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        'Forgot password?',
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            color: theme.textColor),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ForgotPasswordScreen();
+                          }));
+                        },
+                        child: Text(
+                          'Forgot password?',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
+                              color: theme.textColor),
+                        ),
                       ),
                     ),
                   if (!widget.login && false)

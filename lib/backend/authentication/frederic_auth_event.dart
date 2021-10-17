@@ -131,18 +131,6 @@ class FredericSignOutEvent extends FredericAuthEvent {
   }
 }
 
-class FredericChangePasswordEvent extends FredericAuthEvent {
-  FredericChangePasswordEvent(this.currentPassword, this.newPassword);
-  final String currentPassword;
-  final String newPassword;
-
-  @override
-  Future<FredericUser> process(FredericUserManager userManager) {
-    // TODO: implement process
-    throw UnimplementedError();
-  }
-}
-
 class FredericUserDataChangedEvent extends FredericAuthEvent {
   FredericUserDataChangedEvent(this.snapshot);
   final DocumentSnapshot<Map<String, dynamic>> snapshot;
