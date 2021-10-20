@@ -55,7 +55,6 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
           children: [
             FredericHeading(
               'Muscle Groups',
-              onPressed: () {},
             ),
             Stack(
               children: [

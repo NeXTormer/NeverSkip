@@ -27,7 +27,6 @@ class FeaturedActivitySegment extends StatelessWidget {
                 const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
             child: FredericHeading(
               label,
-              onPressed: () {},
             ),
           ),
           BlocBuilder<FredericActivityManager, FredericActivityListData>(

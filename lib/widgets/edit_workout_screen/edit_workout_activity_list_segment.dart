@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
@@ -12,7 +13,7 @@ import 'package:frederic/widgets/standard_elements/activity_cards/edit_workout_a
 /// Part of the EditWorkoutScreen. Responsible for
 /// displaying the user's added activities
 ///
-class EditWorkoutActivityListSegment extends StatelessWidget {
+class EditWorkoutActivityListSegment extends StatefulWidget {
   EditWorkoutActivityListSegment(
       {required this.workout,
       required this.pageController,
@@ -23,50 +24,60 @@ class EditWorkoutActivityListSegment extends StatelessWidget {
   final WeekdaysSliderController weekdaysSliderController;
 
   @override
+  State<EditWorkoutActivityListSegment> createState() =>
+      _EditWorkoutActivityListSegmentState();
+}
+
+class _EditWorkoutActivityListSegmentState
+    extends State<EditWorkoutActivityListSegment> {
+  bool currentlyDragging = false;
+
+  FredericActivity? latestDeletion;
+
+  @override
   Widget build(BuildContext context) {
-    bool workoutIsEditable = workout.canEdit;
+    bool workoutIsEditable = widget.workout.canEdit;
     return Expanded(
       child: PageView(
           onPageChanged: (index) {
-            weekdaysSliderController.onChangeCallback(index);
+            widget.weekdaysSliderController.onChangeCallback(index);
           },
-          controller: pageController,
-          children: List.generate(workout.period * 7, (weekday) {
+          controller: widget.pageController,
+          children: List.generate(widget.workout.period * 7, (weekday) {
             int activityCount =
-                workout.activities.activities[weekday + 1].length;
+                widget.workout.activities.activities[weekday + 1].length;
             return CupertinoScrollbar(
                 child: Padding(
               padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
               child: ReorderableListView.builder(
                   proxyDecorator: _proxyDecorator,
                   onReorder: (oldIndex, newIndex) {
+                    currentlyDragging = false;
                     if (workoutIsEditable) {
-                      int oldIndexAdapted = (oldIndex ~/ 2);
-                      int newIndexAdapted = (newIndex ~/ 2);
-                      if (newIndexAdapted >= activityCount)
-                        newIndexAdapted = activityCount - 1;
-                      if (oldIndexAdapted >= activityCount)
-                        oldIndexAdapted = activityCount - 1;
-                      workout.switchActivities(
-                          weekday + 1, oldIndexAdapted, newIndexAdapted);
+                      widget.workout.changeOrderOfActivity(
+                          weekday + 1, oldIndex, newIndex);
                     }
                   },
-                  itemCount: activityCount * 2,
+                  itemCount: activityCount,
                   itemBuilder: (context, index) {
-                    if (index % 2 == 1) {
-                      return Container(height: 16, key: UniqueKey());
-                    }
-
-                    FredericWorkoutActivity activity =
-                        workout.activities.activities[weekday + 1][index ~/ 2];
+                    FredericWorkoutActivity activity = widget
+                        .workout.activities.activities[weekday + 1][index];
                     return EditWorkoutActivityCard(activity,
-                        workout: workout,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        workout: widget.workout,
                         editable: workoutIsEditable,
                         key: ValueKey(activity), onDelete: () {
-                      workout.removeActivity(activity, weekday + 1);
+                      widget.workout.removeActivity(activity, weekday + 1);
+                      latestDeletion = activity.activity;
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         duration: Duration(seconds: 4),
-                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        elevation: 4,
+                        margin: EdgeInsets.only(bottom: 4, left: 16, right: 16),
+                        dismissDirection: DismissDirection.down,
+                        padding: EdgeInsets.only(
+                            top: 4, bottom: 4, left: 16, right: 16),
                         content: Text(
                           'Activity removed from workout.',
                           style: TextStyle(fontFamily: 'Montserrat'),
@@ -74,12 +85,22 @@ class EditWorkoutActivityListSegment extends StatelessWidget {
                         action: SnackBarAction(
                           textColor: Colors.white,
                           label: 'Undo',
-                          onPressed: () {},
+                          onPressed: () {
+                            if (latestDeletion != null) {
+                              FredericBackend.instance.workoutManager.state
+                                  .workouts[widget.workout.workoutID]
+                                  ?.addActivity(FredericWorkoutActivity(
+                                      activity: latestDeletion!,
+                                      weekday: weekday + 1));
+                            }
+                          },
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12))),
+                                topRight: Radius.circular(12),
+                                bottomRight: Radius.circular(12),
+                                bottomLeft: Radius.circular(12))),
                         backgroundColor: theme.mainColor,
                       ));
                     });
@@ -90,19 +111,26 @@ class EditWorkoutActivityListSegment extends StatelessWidget {
   }
 
   Widget _proxyDecorator(Widget child, int index, Animation<double> animation) {
+    if (!currentlyDragging) {
+      HapticFeedback.selectionClick();
+      currentlyDragging = true;
+    }
     return Material(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(10),
+      elevation: 0,
+      color: Colors.transparent,
       child: child,
     );
     return AnimatedBuilder(
       animation: animation,
       builder: (BuildContext context, Widget? child) {
         final double animValue = Curves.easeInOut.transform(animation.value);
-        final double elevation = lerpDouble(0, 0, animValue)!;
+        final double elevation = lerpDouble(0, 1, animValue)!;
         return Material(
-          borderRadius: BorderRadius.circular(8),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
           child: child,
-          elevation: elevation,
+          elevation: 1,
         );
       },
       child: child,

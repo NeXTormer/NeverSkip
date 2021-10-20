@@ -97,7 +97,7 @@ class ProgressIndicatorCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: TextStyle(
-                                  color: theme.greyColor,
+                                  color: theme.greyTextColor,
                                   fontSize: 10,
                                   letterSpacing: 0.3),
                             ),

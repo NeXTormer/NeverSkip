@@ -8,7 +8,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
-import 'package:frederic/widgets/standard_elements/number_slider.dart';
+import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -112,7 +112,7 @@ class AddProgressScreen extends StatelessWidget {
                       children: [
                         buildSubHeading('Sets', Icons.account_tree_outlined),
                         SizedBox(height: 12),
-                        NumberSlider(
+                        NumberWheel(
                           controller: setsSliderController,
                           itemWidth: 0.14,
                           numberOfItems: 10,
@@ -121,7 +121,7 @@ class AddProgressScreen extends StatelessWidget {
                         SizedBox(height: 12),
                         buildSubHeading('Repetitions', Icons.repeat_outlined),
                         SizedBox(height: 12),
-                        NumberSlider(
+                        NumberWheel(
                             controller: repsSliderController,
                             itemWidth: 0.14,
                             numberOfItems: 100,
@@ -130,7 +130,7 @@ class AddProgressScreen extends StatelessWidget {
                           SizedBox(height: 12),
                           buildSubHeading('Weight', ExtraIcons.dumbbell),
                           SizedBox(height: 12),
-                          NumberSlider(
+                          NumberWheel(
                               controller: weightSliderController,
                               itemWidth: 0.14,
                               startingIndex: 56)

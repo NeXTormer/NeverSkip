@@ -62,12 +62,13 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       descriptionController.addListener(() {
         setState(() {
-          dummyDescription = descriptionController.text;
+          if (descriptionController.text.isNotEmpty)
+            dummyDescription = descriptionController.text;
         });
       });
       nameController.addListener(() {
         setState(() {
-          dummyName = nameController.text;
+          if (nameController.text.isNotEmpty) dummyName = nameController.text;
         });
       });
     });
@@ -147,7 +148,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
               child: FredericTextField(
                 widget.workout.name,
                 maxLength: 42,
-                text: widget.workout.name,
+                text: widget.isNewWorkout ? '' : widget.workout.name,
                 icon: null,
                 controller: nameController,
               ),
@@ -163,9 +164,9 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: FredericTextField(
-                widget.workout.name,
+                widget.workout.description,
                 controller: descriptionController,
-                text: widget.workout.description,
+                text: widget.isNewWorkout ? '' : widget.workout.description,
                 icon: null,
                 maxLines: 2,
                 maxLength: 110,
