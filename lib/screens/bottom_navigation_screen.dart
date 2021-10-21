@@ -1,22 +1,26 @@
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
-  BottomNavigationScreen(this.screens);
+  BottomNavigationScreen(this.screens, {required this.analyticsObserver});
 
   final List<FredericScreen> screens;
+
+  final FirebaseAnalyticsObserver analyticsObserver;
 
   @override
   _BottomNavigationScreenState createState() => _BottomNavigationScreenState();
 }
 
-class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
+class _BottomNavigationScreenState extends State<BottomNavigationScreen>
+    with SingleTickerProviderStateMixin, RouteAware {
   late int currentIndex;
   late List<BottomNavigationBarItem> items;
   late List<Widget> screens;
-  PageController? pageController;
+  PageController pageController = PageController();
 
   @override
   void initState() {
@@ -24,7 +28,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     currentIndex = 0;
     screens = <Widget>[];
     items = <BottomNavigationBarItem>[];
-    pageController = PageController();
 
     for (var screen in widget.screens) {
       items.add(BottomNavigationBarItem(
@@ -53,6 +56,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
               setState(() {
                 currentIndex = index;
               });
+              _sendCurrentTabToAnalytics();
             },
           ),
         ),
@@ -83,7 +87,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
               onTap: (index) {
                 setState(() {
                   currentIndex = index;
-                  pageController!.jumpToPage(index);
+                  pageController.jumpToPage(index);
                 });
               },
             ),
@@ -91,6 +95,35 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    widget.analyticsObserver
+        .subscribe(this, ModalRoute.of(context)! as PageRoute);
+  }
+
+  @override
+  void didPush() {
+    _sendCurrentTabToAnalytics();
+  }
+
+  @override
+  void didPopNext() {
+    _sendCurrentTabToAnalytics();
+  }
+
+  void _sendCurrentTabToAnalytics() {
+    widget.analyticsObserver.analytics.setCurrentScreen(
+      screenName: widget.screens[currentIndex].label,
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.analyticsObserver.unsubscribe(this);
+    super.dispose();
   }
 }
 

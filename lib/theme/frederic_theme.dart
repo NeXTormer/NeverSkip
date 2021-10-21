@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class FredericColorTheme {
   FredericColorTheme.blue(
       {this.name = "Bright Blue",
+      this.uid = 1,
       this.mainColor = const Color(0xFF3E4FD8),
       this.mainColorInText = const Color(0xFF3E4FD8),
       this.mainColorLight = const Color(0x1A3E4FD8),
@@ -28,6 +29,7 @@ class FredericColorTheme {
 
   FredericColorTheme.blueColorful(
       {this.name = "Colorful Blue",
+      this.uid = 2,
       this.mainColor = const Color(0xFF3E4FD8),
       this.mainColorInText = const Color(0xFF3E4FD8),
       this.mainColorLight = const Color(0x1A3E4FD8),
@@ -53,6 +55,7 @@ class FredericColorTheme {
 
   FredericColorTheme.orangeColorful(
       {this.name = "Colorful Orange",
+      this.uid = 3,
       this.mainColor = const Color(0xFFD8903E),
       this.mainColorInText = const Color(0xFFCC7127),
       this.mainColorLight = const Color(0x1AD8903E),
@@ -78,6 +81,7 @@ class FredericColorTheme {
 
   FredericColorTheme.orange(
       {this.name = "Bright Orange",
+      this.uid = 4,
       this.mainColor = const Color(0xFFD8903E),
       this.mainColorInText = const Color(0xFFCC7127),
       this.mainColorLight = const Color(0x1AD8903E),
@@ -103,6 +107,7 @@ class FredericColorTheme {
 
   FredericColorTheme.blueDark(
       {this.name = "Dark Blue",
+      this.uid = 5,
       this.mainColor = const Color(0xFF3E4FD8),
       this.mainColorInText = const Color(0xFF4791FF),
       this.mainColorLight = const Color(0xFF353535),
@@ -128,6 +133,7 @@ class FredericColorTheme {
 
   FredericColorTheme.orangeDark(
       {this.name = "Dark Orange",
+      this.uid = 6,
       this.mainColor = const Color(0xFFD8903E),
       this.mainColorInText = const Color(0xFFCC7127),
       this.mainColorLight = const Color(0x1AD8903E),
@@ -151,7 +157,38 @@ class FredericColorTheme {
       this.greyTextColor = const Color(0xFFC4C4C4),
       this.cardBorderColor = Colors.transparent});
 
+  static FredericColorTheme find(int id) {
+    switch (id) {
+      case 1:
+        FredericColorTheme theme = FredericColorTheme.blue();
+        assert(theme.uid == id, 'Color theme UIDs not matching!');
+        return theme;
+      case 2:
+        FredericColorTheme theme = FredericColorTheme.blueColorful();
+        assert(theme.uid == id, 'Color theme UIDs not matching!');
+        return theme;
+      case 3:
+        FredericColorTheme theme = FredericColorTheme.orangeColorful();
+        assert(theme.uid == id, 'Color theme UIDs not matching!');
+        return theme;
+      case 4:
+        FredericColorTheme theme = FredericColorTheme.orange();
+        assert(theme.uid == id, 'Color theme UIDs not matching!');
+        return theme;
+      case 5:
+        FredericColorTheme theme = FredericColorTheme.blueDark();
+        assert(theme.uid == id, 'Color theme UIDs not matching!');
+        return theme;
+      case 6:
+        FredericColorTheme theme = FredericColorTheme.orangeDark();
+        assert(theme.uid == id, 'Color theme UIDs not matching!');
+        return theme;
+    }
+    return FredericColorTheme.blue();
+  }
+
   final String name;
+  final int uid;
 
   final bool isDark;
   final bool isColorful;
@@ -182,7 +219,3 @@ class FredericColorTheme {
   bool get isBright => !isDark;
   bool get isMonotone => !isColorful;
 }
-// const Color theme.mainColor = const Color(0xFFD8903E);
-// const Color kAccentColor = const Color(0xFFFFEA47);
-// const Color theme.mainColorLight = const Color(0x1AD8903E);
-// const Color kAccentColorLight = const Color(0xFFFFEA47);

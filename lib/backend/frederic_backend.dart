@@ -32,7 +32,7 @@ class FredericBackend extends FredericMessageProcessor {
     _workoutManager = FredericWorkoutManager();
     _goalManager = FredericGoalManager();
     _storageManager = FredericStorageManager(this);
-    _analyticsService = FredericAnalyticsService();
+    _analytics = FredericAnalytics();
 
     _registerEventProcessors();
   }
@@ -60,8 +60,8 @@ class FredericBackend extends FredericMessageProcessor {
   late final FredericStorageManager _storageManager;
   FredericStorageManager get storageManager => _storageManager;
 
-  late final FredericAnalyticsService _analyticsService;
-  FredericAnalyticsService get analyticsService => _analyticsService;
+  late final FredericAnalytics _analytics;
+  FredericAnalytics get analytics => _analytics;
 
   WaitForX _waitUntilCoreDataHasLoaded = WaitForX();
   Future<void> waitUntilCoreDataIsLoaded() =>
@@ -114,7 +114,6 @@ class FredericBackend extends FredericMessageProcessor {
   }
 
   void _registerEventProcessors() {
-    messageBus.addMessageProcessor(_analyticsService);
     messageBus.addMessageProcessor(this);
   }
 

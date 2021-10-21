@@ -40,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "301523012050-nsff5rrd86lhkmn3tmgl5gr9jib8hlr9.apps.googleusercontent.com",
+              "client_id": "301523012050-3la95uuqbqvi6qj4jpglhduvgr30pvgl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "io.hawkford.frederic"
+                "bundle_id": "io.hawkford.fredericapp"
               }
             }
           ]

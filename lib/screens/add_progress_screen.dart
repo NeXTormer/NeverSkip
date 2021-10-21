@@ -14,7 +14,9 @@ import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddProgressScreen extends StatelessWidget {
-  AddProgressScreen(this.activity);
+  AddProgressScreen(this.activity) {
+    FredericBackend.instance.analytics.analytics.logAddPaymentInfo();
+  }
 
   final FredericActivity activity;
 

@@ -239,7 +239,11 @@ class _NormalGoalCard extends State<NormalGoalCard> {
               ),
             ),
             TextSpan(text: ' '),
-            TextSpan(text: '$unit')
+            TextSpan(
+                text: '$unit',
+                style: TextStyle(
+                  color: theme.textColor,
+                ))
           ]),
     );
   }
