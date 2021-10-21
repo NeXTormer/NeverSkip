@@ -12,33 +12,32 @@ class FredericMainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthenticationWrapper(
-      homePage: OnboardingScreen(),
-
-      // BottomNavigationScreen(
-      //   [
-      //     FredericScreen(
-      //       screen: HomeScreen(),
-      //       icon: ExtraIcons.person,
-      //       label: 'Home',
-      //     ),
-      //     FredericScreen(
-      //       screen: CalendarScreen(),
-      //       icon: ExtraIcons.calendar,
-      //       label: 'Calendar',
-      //     ),
-      //     FredericScreen(
-      //       screen: ActivityListScreen(),
-      //       icon: ExtraIcons.dumbbell,
-      //       label: 'Exercises',
-      //     ),
-      //     FredericScreen(
-      //       screen: WorkoutListScreen(),
-      //       icon: ExtraIcons.statistics,
-      //       label: 'Workouts',
-      //     ),
-      //   ],
-      // ),
+      homePage: BottomNavigationScreen(
+        [
+          FredericScreen(
+            screen: HomeScreen(),
+            icon: ExtraIcons.person,
+            label: 'Home',
+          ),
+          FredericScreen(
+            screen: CalendarScreen(),
+            icon: ExtraIcons.calendar,
+            label: 'Calendar',
+          ),
+          FredericScreen(
+            screen: ActivityListScreen(),
+            icon: ExtraIcons.dumbbell,
+            label: 'Exercises',
+          ),
+          FredericScreen(
+            screen: WorkoutListScreen(),
+            icon: ExtraIcons.statistics,
+            label: 'Workouts',
+          ),
+        ],
+      ),
       loginPage: LoginScreen(),
+      onboardingPage: OnboardingScreen(),
     );
   }
 }

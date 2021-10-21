@@ -73,7 +73,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
                 email: event.email, password: event.password);
         if (userCredential.user != null) {
           await _createUserEntryInDB(userCredential.user!.uid, event.name);
-          yield FredericUser(userCredential.user!.uid);
+          yield FredericUser(userCredential.user!.uid, registered: true);
         } else {
           yield FredericUser('',
               statusMessage: 'Sign up error. Please contact support.');

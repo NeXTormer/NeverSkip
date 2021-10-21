@@ -1,4 +1,9 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/bottom_navigation_screen.dart';
@@ -51,13 +56,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const _bodyStyle = TextStyle(fontSize: 16, color: Colors.black);
-
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imagePadding: EdgeInsets.zero,
     );
+
+    TextSpan _bodyText(String text, {bool bold = false}) => TextSpan(
+        text: text,
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: bold ? FontWeight.w700 : FontWeight.normal));
 
     Widget _titleText(String text) => Text(text,
         textAlign: TextAlign.center,
@@ -66,14 +76,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           fontSize: 20,
           fontWeight: FontWeight.w700,
         ));
-    Widget _bodyText(String text, {bool bold = false}) => Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: bold ? FontWeight.w700 : FontWeight.normal),
-        );
 
     return IntroductionScreen(
       key: introKey,
@@ -81,54 +83,98 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       pages: [
         PageViewModel(
           image: Image(
+            height: 270,
             colorBlendMode: BlendMode.screen,
             fit: BoxFit.scaleDown,
-            image: AssetImage('assets/images/introduction.png'),
+            image: AssetImage('assets/images/introduction_screen_1.png'),
           ),
           titleWidget: _titleText('Personal records and goals'),
           bodyWidget: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Use the ', style: _bodyStyle),
-                  Icon(Icons.add, color: Colors.black, size: 22),
-                  Text(' to create a new personal', style: _bodyStyle),
-                ],
+              Text.rich(
+                TextSpan(
+                  children: [
+                    _bodyText('Use the '),
+                    WidgetSpan(
+                        child: Icon(Icons.add, color: Colors.black, size: 22)),
+                    _bodyText(
+                        ' to create a new personal record or goal.\n\nVisualize your best '),
+                    _bodyText('performances', bold: true),
+                    _bodyText(' and keep yourself motivated.\n\n'),
+                    _bodyText('Set personal '),
+                    _bodyText('goals', bold: true),
+                    _bodyText(
+                        ' that you want to accomplish within a certain time frame.')
+                  ],
+                ),
+                textAlign: TextAlign.center,
               ),
-              Text('record or goal\n', style: _bodyStyle),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _bodyText('Visualize your best '),
-                  _bodyText('performances ', bold: true),
-                  _bodyText('and')
-                ],
-              ),
-              _bodyText('keep yourself motivated\n'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _bodyText('Set personal '),
-                  _bodyText('goals ', bold: true),
-                  _bodyText('that you want to')
-                ],
-              ),
-              _bodyText('accomplish within a certain time frame.'),
             ],
           ),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          titleWidget: _titleText('Learn as you go'),
-          bodyWidget: _bodyText(
-              'Download the Stockpile app and master the market with our mini-lesson.'),
+          image: Image(
+            height: 270,
+            colorBlendMode: BlendMode.screen,
+            fit: BoxFit.scaleDown,
+            image: AssetImage('assets/images/introduction_screen_2.png'),
+          ),
+          titleWidget: _titleText('Log your activity progress'),
+          bodyWidget: Column(
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    _bodyText(
+                        'Click on any activity in your calendar or workoutplan to log '),
+                    _bodyText('kg', bold: true),
+                    _bodyText(', '),
+                    _bodyText('reps', bold: true),
+                    _bodyText(', '),
+                    _bodyText('or '),
+                    _bodyText('sets', bold: true),
+                    _bodyText('.\n\nTrack your training '),
+                    _bodyText('performances', bold: true),
+                    _bodyText(' and increase progressively.')
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          titleWidget: _titleText('Kids and teens'),
-          bodyWidget: _bodyText(
-              'Kids and teens can track their stocks 24/7 and place trades that you approve.'),
+          image: Image(
+            height: 270,
+            colorBlendMode: BlendMode.screen,
+            fit: BoxFit.scaleDown,
+            image: AssetImage('assets/images/introduction_screen_3.png'),
+          ),
+          titleWidget: _titleText('Your personal workout planner'),
+          bodyWidget: Column(
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    _bodyText('Use the planner to create your '),
+                    _bodyText('individual', bold: true),
+                    _bodyText(
+                        ' trainingsplan. \n\nChoose the perfect exercises for your and your goal from an '),
+                    _bodyText('extensive', bold: true),
+                    _bodyText(' selection.'),
+                    _bodyText('\n\nActivate individual workout plan to '),
+                    _bodyText('link', bold: true),
+                    _bodyText(' them to the integrated '),
+                    _bodyText('calendar', bold: true),
+                    _bodyText(' so you never miss a trainings day again.'),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
           decoration: pageDecoration,
         ),
       ],
