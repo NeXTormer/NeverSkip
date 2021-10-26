@@ -15,9 +15,9 @@ class FredericActionDialog extends StatelessWidget {
       Key? key})
       : super(key: key);
 
-  static void show(
+  static Future<dynamic> show(
       {required BuildContext context, required FredericActionDialog dialog}) {
-    showDialog(context: context, builder: (context) => dialog);
+    return showDialog(context: context, builder: (context) => dialog);
   }
 
   final Widget? child;
@@ -68,7 +68,7 @@ class FredericActionDialog extends StatelessWidget {
                           left: 12, right: 12, bottom: 12, top: 8),
                       child: FredericButton(
                         'Okay',
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => Navigator.of(context).pop(true),
                       ),
                     ),
                   if (!infoOnly)
@@ -79,7 +79,8 @@ class FredericActionDialog extends StatelessWidget {
                               padding:
                                   EdgeInsets.only(left: 12, bottom: 12, top: 8),
                               child: FredericButton('Cancel',
-                                  onPressed: () => Navigator.of(context).pop(),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
                                   inverted: true)),
                         ),
                         Expanded(
@@ -91,7 +92,7 @@ class FredericActionDialog extends StatelessWidget {
                                 onPressed: () {
                                   onConfirm();
                                   if (closeOnConfirm) {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop(true);
                                   }
                                 },
                                 mainColor: destructiveAction

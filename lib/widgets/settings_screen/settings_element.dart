@@ -18,6 +18,7 @@ class SettingsElement extends StatefulWidget {
       this.onTap,
       this.infoText,
       this.changeAttributeWidget,
+      this.changeAttributeSliver,
       this.onChanged,
       this.defaultSwitchPosition = false,
       Color? iconBackgroundColor,
@@ -34,13 +35,14 @@ class SettingsElement extends StatefulWidget {
   final IconData? icon;
   final bool clickable;
   final bool hasSwitch;
-  final bool defaultSwitchPosition;
+  final bool? defaultSwitchPosition;
   bool isFirstItem;
   bool isLastItem;
   final void Function()? onTap;
-  final void Function(bool state)? onChanged;
+  final Future<bool> Function(bool state)? onChanged;
   late final Color iconBackgroundColor;
   final Widget? changeAttributeWidget;
+  final Widget? changeAttributeSliver;
 
   @override
   _SettingsElementState createState() => _SettingsElementState();
@@ -51,12 +53,13 @@ class _SettingsElementState extends State<SettingsElement> {
 
   @override
   void initState() {
-    switchState = widget.defaultSwitchPosition;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    switchState = widget.defaultSwitchPosition ?? false;
+
     BorderRadius borderRadius = BorderRadius.only(
         topLeft: widget.isFirstItem
             ? const Radius.circular(9)
@@ -119,13 +122,25 @@ class _SettingsElementState extends State<SettingsElement> {
                 textAlign: TextAlign.right,
               ),
             SizedBox(width: 6),
-            if (widget.hasSwitch)
+            if (widget.hasSwitch && widget.defaultSwitchPosition == null)
+              SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: theme.mainColor,
+                ),
+              ),
+            if (widget.hasSwitch && widget.defaultSwitchPosition != null)
               CupertinoSwitch(
                   value: switchState,
-                  onChanged: (state) {
-                    setState(() {
-                      switchState = state;
-                    });
+                  onChanged: (state) async {
+                    if (widget.onChanged == null) return;
+                    if (await widget.onChanged!(state)) {
+                      setState(() {
+                        switchState = state;
+                      });
+                    }
                   },
                   activeColor: theme.mainColor),
             if (!widget.hasSwitch && widget.clickable)
@@ -155,7 +170,11 @@ class _SettingsElementState extends State<SettingsElement> {
       closedBorderRadius: 0,
       customBorder: customBorder,
       expandedChild: ChangeSingleAttributeScreen(
-          widget.changeAttributeWidget ?? Container(),
+          changeAttributeWidget: widget.changeAttributeWidget == null &&
+                  widget.changeAttributeSliver == null
+              ? Container()
+              : widget.changeAttributeWidget,
+          changeAttributeSliver: widget.changeAttributeSliver,
           infoText: widget.infoText,
           subtitle: widget.changerSubtitle,
           title: widget.changerTitle ?? 'Change Attribute'),

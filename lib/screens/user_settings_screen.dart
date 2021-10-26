@@ -13,9 +13,11 @@ import 'package:frederic/widgets/settings_screen/password_changer.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/text_attribute_changer.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSettingsScreen extends StatelessWidget {
   const UserSettingsScreen({Key? key}) : super(key: key);
@@ -103,24 +105,58 @@ class UserSettingsScreen extends StatelessWidget {
               ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
-            SettingsSegment(
-                title: 'Privacy Settings',
-                elements: <SettingsElement>[
-                  SettingsElement(
-                      text: 'Discoverable by others',
-                      icon: Icons.security,
-                      hasSwitch: true,
-                      defaultSwitchPosition: true),
-                  SettingsElement(
-                      text: 'Publish Streak',
-                      icon: Icons.local_fire_department_outlined,
-                      defaultSwitchPosition: true,
-                      hasSwitch: true),
-                  SettingsElement(
-                      text: 'Manage Friends',
-                      icon: Icons.people,
-                      subText: '7 Friends'),
-                ]),
+            FutureBuilder<SharedPreferences>(
+                future: SharedPreferences.getInstance(),
+                builder: (context, preferences) {
+                  return SettingsSegment(
+                      title: 'Privacy Settings',
+                      elements: <SettingsElement>[
+                        SettingsElement(
+                            text: 'Discoverable by others',
+                            icon: Icons.security,
+                            hasSwitch: true,
+                            defaultSwitchPosition: true),
+                        SettingsElement(
+                            text: 'Publish Streak',
+                            icon: Icons.local_fire_department_outlined,
+                            defaultSwitchPosition: true,
+                            hasSwitch: true),
+                        SettingsElement(
+                            text: 'Manage Friends',
+                            icon: Icons.people,
+                            subText: '7 Friends'),
+                        SettingsElement(
+                          text: 'Share Anonymous Analytics',
+                          icon: Icons.analytics_outlined,
+                          hasSwitch: true,
+                          defaultSwitchPosition:
+                              preferences.data?.getBool('collect-analytics'),
+                          onChanged: (value) async {
+                            if (value == false) {
+                              return await FredericActionDialog.show(
+                                      context: context,
+                                      dialog: FredericActionDialog(
+                                          title: 'Disable Anonymous Analytics?',
+                                          childText:
+                                              'Analytics are collected anonymously and are not shared with others.\nThey help us provide you a better experience.',
+                                          closeOnConfirm: true,
+                                          onConfirm: () {
+                                            preferences.data?.setBool(
+                                                'collect-analytics', value);
+                                            FredericBackend.instance.analytics
+                                                .disable();
+                                          })) ??
+                                  false;
+                            } else {
+                              preferences.data
+                                  ?.setBool('collect-analytics', value);
+                              FredericBackend.instance.analytics.enable();
+                              return true;
+                            }
+                          },
+                        ),
+                      ]);
+                }),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(title: 'Actions', elements: <SettingsElement>[
               SettingsElement(

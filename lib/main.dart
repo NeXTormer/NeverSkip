@@ -120,9 +120,6 @@ class _FredericBaseState extends State<FredericBase> {
               value: FredericBackend.instance.goalManager),
         ],
         child: MaterialApp(
-          navigatorObservers: [
-            FredericBackend.instance.analytics.getAnalyticsObserver(),
-          ],
           showPerformanceOverlay: false,
           title: 'Frederic',
           theme: ThemeData(

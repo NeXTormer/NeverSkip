@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -18,9 +17,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    //TODO: Move to FredericUserManager
-    FredericBackend.instance.analytics.setUserProperties(
-        userID: FirebaseAuth.instance.currentUser?.uid ?? '');
     super.initState();
   }
 

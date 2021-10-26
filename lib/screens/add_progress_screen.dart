@@ -14,9 +14,12 @@ import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddProgressScreen extends StatelessWidget {
-  AddProgressScreen(this.activity) {
-    FredericBackend.instance.analytics.analytics.logAddPaymentInfo();
+  AddProgressScreen(this.activity, {this.openedFromCalendar = false}) {
+    FredericBackend.instance.analytics.analytics
+        .setCurrentScreen(screenName: 'add-progress-screen');
   }
+
+  final bool openedFromCalendar;
 
   final FredericActivity activity;
 
@@ -64,6 +67,7 @@ class AddProgressScreen extends StatelessWidget {
                     child: Container(
                       child: GestureDetector(
                         onTap: () {
+                          saveData();
                           Navigator.of(context).pop();
                         },
                         child: Text(
@@ -141,14 +145,7 @@ class AddProgressScreen extends StatelessWidget {
                           padding:
                               const EdgeInsets.only(left: 0, right: 0, top: 16),
                           child: FredericButton('Save', onPressed: () {
-                            int sets = setsSliderController.value.toInt();
-                            int reps = repsSliderController.value.toInt();
-                            int weight = weightSliderController.value.toInt();
-                            for (int i = 0; i < sets; i++) {
-                              FredericBackend.instance.setManager.addSet(
-                                  activity.activityID,
-                                  FredericSet(reps, weight, DateTime.now()));
-                            }
+                            saveData();
                             Navigator.of(context).pop();
                           }),
                         )
@@ -181,6 +178,21 @@ class AddProgressScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void saveData() {
+    int sets = setsSliderController.value.toInt();
+    int reps = repsSliderController.value.toInt();
+    int weight = weightSliderController.value.toInt();
+    for (int i = 0; i < sets; i++) {
+      FredericBackend.instance.setManager.addSet(
+          activity.activityID, FredericSet(reps, weight, DateTime.now()));
+    }
+    if (openedFromCalendar) {
+      FredericBackend.instance.analytics.logAddProgressOnCalendar();
+    } else {
+      FredericBackend.instance.analytics.logAddProgressOnActivity();
+    }
   }
 
   Widget buildSubHeading(String title, IconData icon) {

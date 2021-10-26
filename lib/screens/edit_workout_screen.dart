@@ -18,7 +18,10 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 /// Screen create/edit individual workouts
 ///
 class EditWorkoutScreen extends StatefulWidget {
-  EditWorkoutScreen(this.workoutID);
+  EditWorkoutScreen(this.workoutID) {
+    FredericBackend.instance.analytics.analytics
+        .setCurrentScreen(screenName: 'edit-workout-screen');
+  }
 
   final String workoutID;
 

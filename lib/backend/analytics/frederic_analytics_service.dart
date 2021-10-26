@@ -7,19 +7,67 @@ class FredericAnalytics {
   FirebaseAnalyticsObserver getAnalyticsObserver() =>
       FirebaseAnalyticsObserver(analytics: analytics);
 
-  Future<void> setUserProperties({required String userID}) async {
-    await analytics.setUserId(userID);
+  Future<void> enable() {
+    return analytics.setAnalyticsCollectionEnabled(true);
   }
 
-  Future<void> logLogin() async {
-    await analytics.logLogin(loginMethod: 'email');
+  Future<void> disable() {
+    return analytics.setAnalyticsCollectionEnabled(false);
   }
 
-  Future<void> logSignUp() async {
-    await analytics.logSignUp(signUpMethod: 'email');
+  Future<void> logLogin(String method) {
+    return analytics.logLogin(loginMethod: method);
   }
 
-  Future<void> logGoalCreated() async {
-    await analytics.logEvent(name: 'create_goal');
+  Future<void> logSignUp(String method) {
+    return analytics.logSignUp(signUpMethod: method);
+  }
+
+  Future<void> logGoalCreated() {
+    return analytics.logEvent(name: 'create-goal');
+  }
+
+  Future<void> logGoalDeleted() {
+    return analytics.logEvent(name: 'delete-goal');
+  }
+
+  Future<void> logWorkoutCreated() {
+    return analytics.logEvent(name: 'create-workout');
+  }
+
+  Future<void> logWorkoutSaved() {
+    return analytics.logEvent(name: 'save-workout');
+  }
+
+  Future<void> logWorkoutDeleted() {
+    return analytics.logEvent(name: 'delete-workout');
+  }
+
+  Future<void> logAddProgressOnActivity() {
+    return analytics.logEvent(name: 'add-progress-using-activity');
+  }
+
+  Future<void> logAddProgressOnCalendar() {
+    return analytics.logEvent(name: 'add-progress-using-calendar');
+  }
+
+  Future<void> logCompleteCalendarDay() {
+    return analytics.logEvent(name: 'complete-calendar-day');
+  }
+
+  Future<void> logEnableCustomWorkout() {
+    return analytics.logEvent(name: 'enable-custom-workout');
+  }
+
+  Future<void> logEnableGlobalWorkout() {
+    return analytics.logEvent(name: 'enable-global-workout');
+  }
+
+  Future<void> logDisableCustomWorkout() {
+    return analytics.logEvent(name: 'disable-custom-workout');
+  }
+
+  Future<void> logDisableGlobalWorkout() {
+    return analytics.logEvent(name: 'disable-global-workout');
   }
 }
