@@ -25,7 +25,8 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
           .signInWithEmailAndPassword(email: email, password: password);
       SharedPreferences.getInstance()
           .then((value) => value.setBool('wasLoggedIn', true));
-      print('login successful');
+      FredericBackend.instance.analytics.analytics
+          .logLogin(loginMethod: 'email');
       return FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -49,6 +50,8 @@ class FredericOAuthSignInEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
+    FredericBackend.instance.analytics.analytics.logLogin(loginMethod: 'oauth');
+
     final userCredential =
         await FirebaseAuth.instance.signInWithCredential(authCredential);
 
@@ -96,6 +99,8 @@ class FredericEmailSignupEvent extends FredericAuthEvent {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
+        FredericBackend.instance.analytics.analytics
+            .logSignUp(signUpMethod: 'email');
         await userManager.createUserEntryInDB(
             uid: userCredential.user!.uid, name: name);
         return FredericUser(userCredential.user!.uid);
@@ -126,6 +131,7 @@ class FredericSignOutEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
+    FredericBackend.instance.analytics.analytics.logEvent(name: 'sign-out');
     FredericBackend.instance.dispose();
     await FirebaseAuth.instance.signOut();
     return FredericUser('');

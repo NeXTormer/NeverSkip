@@ -21,7 +21,7 @@ class _ColorThemeChangerState extends State<ColorThemeChanger> {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32, top: 8),
       sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate((context, index) {
             return GestureDetector(
@@ -35,7 +35,7 @@ class _ColorThemeChangerState extends State<ColorThemeChanger> {
           }, childCount: themes.length),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 1 / 1.4,
+            childAspectRatio: 1 / 1.5,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           )),

@@ -12,6 +12,7 @@ import 'package:frederic/backend/util/event_bus/frederic_base_message.dart';
 import 'package:frederic/backend/util/event_bus/frederic_message_bus.dart';
 import 'package:frederic/backend/util/event_bus/frederic_message_processor.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
+import 'package:frederic/backend/util/toast_manager.dart';
 import 'package:frederic/backend/util/wait_for_x.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
@@ -62,6 +63,8 @@ class FredericBackend extends FredericMessageProcessor {
 
   late final FredericAnalytics _analytics;
   FredericAnalytics get analytics => _analytics;
+
+  final ToastManager toastManager = ToastManager();
 
   WaitForX _waitUntilCoreDataHasLoaded = WaitForX();
   Future<void> waitUntilCoreDataIsLoaded() =>

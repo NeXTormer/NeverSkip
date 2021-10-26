@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +23,7 @@ class UserSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FredericBackend.instance.analytics.logEnterUserSettingsScreen();
     return FredericScaffold(
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) => CustomScrollView(
@@ -34,7 +34,7 @@ class UserSettingsScreen extends StatelessWidget {
                 subtitle: 'Manage your User Account',
               ),
             ),
-            if (theme.isBright) SliverDivider(),
+            if (theme.isMonotone) SliverDivider(),
             SliverPadding(
               padding: const EdgeInsets.only(top: 8),
               sliver: SliverToBoxAdapter(
@@ -44,7 +44,7 @@ class UserSettingsScreen extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: theme.mainColorLight,
                       radius: 60,
-                      backgroundImage: CachedNetworkImageProvider(user.image),
+                      backgroundImage: NetworkImage(user.image),
                     ),
                   ),
                 ),

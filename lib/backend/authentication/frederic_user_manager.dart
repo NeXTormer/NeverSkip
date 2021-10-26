@@ -106,14 +106,21 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       String? name,
       String? image,
       String? username}) async {
+    DocumentSnapshot<Map<String, dynamic>> defaultDoc = await FirebaseFirestore
+        .instance
+        .collection('defaults')
+        .doc('default_user')
+        .get();
+
     return FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'name': name ?? '',
-      'image': image ??
-          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaults%2Fdefault-user-image.png?alt=media&token=f275c43b-bb43-40e2-943d-8afb9e3f7c4e',
+      'name': name ?? defaultDoc.data()?['name'] ?? '',
+      'image': image ?? defaultDoc.data()?['image'] ?? '',
       'username': username ?? null,
       'uid': uid,
-      'activeworkouts': <String>[],
-      'progressmonitors': <String>[]
+      'activeworkouts': defaultDoc.data()?['activeworkouts'] ?? <String>[],
+      'progressmonitors': defaultDoc.data()?['progressmonitors'] ?? <String>[],
+      'streakstart': null,
+      'streaklatest': null,
     });
   }
 

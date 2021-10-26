@@ -105,7 +105,11 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   SizedBox(width: 32),
                   Text(
                     widget.isNewWorkout ? 'Create workout' : 'Edit workout',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color:
+                            theme.isColorful ? Colors.white : theme.mainColor),
                   ),
                   Expanded(child: Container()),
                   GestureDetector(

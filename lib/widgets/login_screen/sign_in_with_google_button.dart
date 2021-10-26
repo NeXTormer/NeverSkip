@@ -31,6 +31,8 @@ class SignInWithGoogleButton extends StatelessWidget {
 
             FredericBackend.instance.userManager
                 .add(FredericOAuthSignInEvent(authCredentials));
+            FredericBackend.instance.toastManager
+                .showLoginLoadingToast(context);
           }
         },
         child: Container(

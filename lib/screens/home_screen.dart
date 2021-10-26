@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    FredericBackend.instance.toastManager.removeLoginLoadingToast(context);
     super.initState();
   }
 

@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:frederic/theme/frederic_theme.dart';
 
 class FredericAnalytics {
   final FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -69,5 +70,22 @@ class FredericAnalytics {
 
   Future<void> logDisableGlobalWorkout() {
     return analytics.logEvent(name: 'disable-global-workout');
+  }
+
+  Future<void> logEnterSettingsScreen() {
+    return analytics.setCurrentScreen(screenName: 'settings-screen');
+  }
+
+  Future<void> logEnterUserSettingsScreen() {
+    return analytics.setCurrentScreen(screenName: 'user-settings-screen');
+  }
+
+  Future<void> logEnterHomeScreen() {
+    return analytics.setCurrentScreen(screenName: 'Home');
+  }
+
+  Future<void> logChangeColorTheme(FredericColorTheme theme) {
+    return analytics.logEvent(
+        name: 'change-color-theme', parameters: {'theme': theme.name});
   }
 }

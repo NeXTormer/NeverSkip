@@ -1,9 +1,7 @@
 import 'package:animations/animations.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/settings_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_sliver_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
@@ -30,20 +28,23 @@ class HomeScreenAppbar extends StatelessWidget {
               tappable: true,
               closedBorderRadius: 32,
               transitionType: ContainerTransitionType.fadeThrough,
+              onClose: () =>
+                  FredericBackend.instance.analytics.logEnterHomeScreen(),
               childBuilder: (context, openContainer) {
                 return CircleAvatar(
-                  radius: 20,
-                  backgroundImage: CachedNetworkImageProvider(user.image),
+                  radius: 22,
+                  foregroundColor: theme.isBright
+                      ? Colors.white
+                      : theme.textColorColorfulBackground,
+                  backgroundColor: theme.isBright
+                      ? Colors.white
+                      : theme.textColorColorfulBackground,
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    foregroundImage: NetworkImage(user.image),
+                  ),
                 );
-                return Container(
-                    height: 32,
-                    width: 32,
-                    color: theme.isColorful ? Colors.white : theme.mainColor,
-                    child: Icon(
-                      ExtraIcons.settings,
-                      color: theme.isColorful ? theme.mainColor : Colors.white,
-                      size: 18,
-                    ));
               },
               expandedChild: SettingsScreen()),
           StreakIcon(

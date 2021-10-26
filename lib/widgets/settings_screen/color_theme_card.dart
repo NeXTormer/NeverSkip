@@ -17,8 +17,9 @@ class ColorThemeCard extends StatelessWidget {
       width: 120,
       decoration: BoxDecoration(
           color: localTheme.cardBackgroundColor,
-          border:
-              theme.isDark ? null : Border.all(color: Colors.black, width: 3),
+          border: theme.isDark
+              ? null
+              : Border.all(color: theme.disabledGreyColor, width: 3),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         children: [
@@ -35,12 +36,22 @@ class ColorThemeCard extends StatelessWidget {
                     topRight: Radius.circular(6),
                     bottomRight: Radius.circular(7),
                     bottomLeft: Radius.circular(7))),
-            child: Text(
-              'SilverFit',
-              style: TextStyle(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SilverFit',
+                  style: TextStyle(
+                      color: localTheme.textColorColorfulBackground,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500),
+                ),
+                Icon(
+                  selected ? Icons.check_circle_outline : Icons.circle_outlined,
                   color: localTheme.textColorColorfulBackground,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500),
+                )
+              ],
             ),
           ),
           if (!localTheme.isColorful) FredericDivider(),
