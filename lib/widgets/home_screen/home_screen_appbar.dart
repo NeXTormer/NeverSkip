@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -42,7 +43,7 @@ class HomeScreenAppbar extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.white,
-                    foregroundImage: NetworkImage(user.image),
+                    foregroundImage: CachedNetworkImageProvider(user.image),
                   ),
                 );
               },

@@ -54,12 +54,11 @@ class _SettingsElementState extends State<SettingsElement> {
   @override
   void initState() {
     super.initState();
+    switchState = widget.defaultSwitchPosition ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
-    switchState = widget.defaultSwitchPosition ?? false;
-
     BorderRadius borderRadius = BorderRadius.only(
         topLeft: widget.isFirstItem
             ? const Radius.circular(9)
@@ -135,8 +134,8 @@ class _SettingsElementState extends State<SettingsElement> {
               CupertinoSwitch(
                   value: switchState,
                   onChanged: (state) async {
-                    if (widget.onChanged == null) return;
-                    if (await widget.onChanged!(state)) {
+                    if (widget.onChanged == null ||
+                        await widget.onChanged!(state)) {
                       setState(() {
                         switchState = state;
                       });

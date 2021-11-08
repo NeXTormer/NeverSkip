@@ -126,14 +126,20 @@ class UserSettingsScreen extends StatelessWidget {
                             icon: Icons.people,
                             subText: '7 Friends'),
                         SettingsElement(
+                          key: UniqueKey(),
                           text: 'Share Anonymous Analytics',
                           icon: Icons.analytics_outlined,
                           hasSwitch: true,
-                          defaultSwitchPosition:
-                              preferences.data?.getBool('collect-analytics'),
+                          defaultSwitchPosition: () {
+                            bool nodata = preferences.data == null;
+                            if (nodata) return null;
+                            return preferences.data
+                                    ?.getBool('collect-analytics') ??
+                                true;
+                          }(),
                           onChanged: (value) async {
                             if (value == false) {
-                              return await FredericActionDialog.show(
+                              return (await FredericActionDialog.show(
                                       context: context,
                                       dialog: FredericActionDialog(
                                           title: 'Disable Anonymous Analytics?',
@@ -145,7 +151,7 @@ class UserSettingsScreen extends StatelessWidget {
                                                 'collect-analytics', value);
                                             FredericBackend.instance.analytics
                                                 .disable();
-                                          })) ??
+                                          }))) ??
                                   false;
                             } else {
                               preferences.data
@@ -163,7 +169,13 @@ class UserSettingsScreen extends StatelessWidget {
                   text: 'Sign Out',
                   icon: Icons.exit_to_app,
                   onTap: () {
-                    FredericBackend.instance.userManager.signOut(context);
+                    FredericActionDialog.show(
+                        context: context,
+                        dialog: FredericActionDialog(
+                            title: 'Do you want to sign out?',
+                            onConfirm: () => FredericBackend
+                                .instance.userManager
+                                .signOut(context)));
                   }),
               SettingsElement(
                 text: 'Change Password',
