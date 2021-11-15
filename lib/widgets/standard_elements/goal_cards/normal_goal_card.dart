@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
+import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
@@ -290,7 +291,9 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         builder: (context) => FredericActionDialog(
               onConfirm: () {
                 // FredericBackend.instance.goalManager.deleteGoal(widget.goal);
-                widget.goal.isDeleted = true;
+                FredericBackend.instance.goalManager
+                    .add(FredericGoalDeleteEvent(widget.goal));
+                // widget.goal.isDeleted = true;
                 Navigator.of(context).pop();
               },
               destructiveAction: true,
