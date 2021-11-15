@@ -63,6 +63,19 @@ android {
            storePassword keystoreProperties['storePassword']
        }
    }
+
+   productFlavors {
+       production {
+           dimension "default"
+           resValue "string", "app_name", "SilverFit"
+           applicationIdSuffix ""
+       }
+       development {
+           dimension "default"
+           resValue "string", "app_name", "SilverFitDev"
+           applicationIdSuffix ".dev"
+       }
+   }
    
    buildTypes {
        release {
