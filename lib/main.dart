@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/admin_panel/backend/admin_backend.dart';
 import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
-import 'package:frederic/backend/analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
@@ -19,11 +18,11 @@ import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-//FirebaseAnalytics analytics = FirebaseAnalytics();
 final getIt = GetIt.instance;
 
-FredericColorTheme _colorTheme = FredericColorTheme.blueDark();
+FredericColorTheme _colorTheme = FredericColorTheme.blue();
 FredericColorTheme get theme => _colorTheme;
 
 const bool _kTestingCrashlytics = true;
@@ -47,6 +46,7 @@ void main() async {
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
     if (_kTestingCrashlytics) {
@@ -59,6 +59,12 @@ void main() async {
     await Firebase.initializeApp();
     //await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '');
     await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    Object? themeID = preferences.get('colortheme');
+    if (themeID != null && themeID is int) {
+      _colorTheme = FredericColorTheme.find(themeID);
+    }
 
     runApp(FredericBase());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
@@ -74,8 +80,11 @@ class FredericBase extends StatefulWidget {
     context.findAncestorStateOfType<_FredericBaseState>()!.forceRestart();
   }
 
-  static void setColorTheme(BuildContext context, FredericColorTheme theme) {
+  static void setColorTheme(
+      BuildContext context, FredericColorTheme theme) async {
     _colorTheme = theme;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setInt('colortheme', theme.uid);
     context.findAncestorStateOfType<_FredericBaseState>()!.forceRestart();
   }
 }
@@ -90,12 +99,10 @@ class _FredericBaseState extends State<FredericBase> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight
     ]);
+
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
-    if (getIt.isRegistered<AnalyticsService>())
-      getIt.unregister<AnalyticsService>();
-    getIt.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
 
     return Container(
       key: _key,
@@ -113,14 +120,10 @@ class _FredericBaseState extends State<FredericBase> {
               value: FredericBackend.instance.goalManager),
         ],
         child: MaterialApp(
-          // navigatorObservers: [
-          //   FirebaseAnalyticsObserver(analytics: analytics),
-          // ],
           showPerformanceOverlay: false,
           title: 'Frederic',
           theme: ThemeData(
               primaryColor: theme.mainColor,
-              accentColor: theme.accentColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,
               fontFamily: 'Montserrat',
               textTheme: TextTheme(
@@ -129,7 +132,11 @@ class _FredericBaseState extends State<FredericBase> {
                     fontWeight: FontWeight.w400,
                     letterSpacing: 0.6,
                     fontSize: 13),
-              )),
+              ),
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                  secondary: theme.accentColor,
+                  brightness:
+                      theme.isBright ? Brightness.light : Brightness.dark)),
           home: OrientationBuilder(
             builder: (context, orientation) {
               if (orientation == Orientation.portrait) {

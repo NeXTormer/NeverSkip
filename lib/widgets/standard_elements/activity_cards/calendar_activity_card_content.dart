@@ -121,7 +121,10 @@ class _CalendarActivityCardContentState
         builder: (newContext) {
           return BlocProvider.value(
               value: BlocProvider.of<FredericSetManager>(context),
-              child: AddProgressScreen(widget.activity.activity));
+              child: AddProgressScreen(
+                widget.activity.activity,
+                openedFromCalendar: true,
+              ));
         });
   }
 }

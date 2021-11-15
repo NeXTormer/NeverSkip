@@ -205,7 +205,8 @@ class FredericWorkout {
     if (_activities.everyday.contains(activity)) {
       return false;
     }
-    _activities.activities[activity.weekday].add(activity);
+    _activities.activities[activity.weekday]
+        .add(activity..order = _activities.activities[activity.weekday].length);
     updateActivitiesInDB();
     return true;
   }
@@ -217,18 +218,29 @@ class FredericWorkout {
   ///
   void removeActivity(FredericWorkoutActivity activity, int weekday) {
     _activities.activities[weekday].remove(activity);
+    updateOrderOfActivities(weekday);
     updateActivitiesInDB();
   }
 
-  void switchActivities(int weekday, int firstIndex, int secondIndex) {
-    FredericWorkoutActivity first = _activities.activities[weekday][firstIndex];
-    FredericWorkoutActivity second =
-        _activities.activities[weekday][secondIndex];
-    first.order = secondIndex;
-    second.order = firstIndex;
-    _activities.activities[weekday][firstIndex] = second;
-    _activities.activities[weekday][secondIndex] = first;
+  void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {
+    List<FredericWorkoutActivity> list = _activities.activities[weekday];
+
+    if (oldIndex < newIndex) {
+      // removing the item at oldIndex will shorten the list by 1.
+      newIndex -= 1;
+    }
+    final activity = list.removeAt(oldIndex);
+    updateOrderOfActivities(weekday);
+    list.insert(newIndex, activity);
+
     updateActivitiesInDB();
+  }
+
+  void updateOrderOfActivities(int weekday) {
+    List<FredericWorkoutActivity> list = _activities.activities[weekday];
+    for (int i = 0; i < list.length; i++) {
+      list[i].order = i;
+    }
   }
 
   void updateActivitiesInDB() {

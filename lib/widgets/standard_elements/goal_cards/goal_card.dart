@@ -4,7 +4,7 @@ import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/achievement_goal_card.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/normal_goal_card.dart';
-import 'package:frederic/widgets/standard_elements/number_slider.dart';
+import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 
 enum GoalCardType { Normal, Achievement }

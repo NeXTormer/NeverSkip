@@ -8,8 +8,8 @@ import 'package:frederic/main.dart';
 /// [width], [height], and [itemWidth] can be customized. The [itemWidth] means
 /// the percentage of the screen width which one item takes up.
 ///
-class NumberSlider extends StatefulWidget {
-  NumberSlider({
+class NumberWheel extends StatefulWidget {
+  NumberWheel({
     required this.controller,
     this.numberOfItems = 400,
     this.startingIndex = 10,
@@ -22,11 +22,12 @@ class NumberSlider extends StatefulWidget {
   final NumberSliderController controller;
 
   @override
-  _NumberSliderState createState() => _NumberSliderState();
+  _NumberWheelState createState() => _NumberWheelState();
 }
 
-class _NumberSliderState extends State<NumberSlider> {
+class _NumberWheelState extends State<NumberWheel> {
   PageController? controller;
+  bool blockVibrationFeedback = true;
 
   @override
   void initState() {
@@ -78,7 +79,11 @@ class _NumberSliderState extends State<NumberSlider> {
               pageSnapping: false,
               onPageChanged: (index) {
                 widget.controller.value = index + 1;
-                HapticFeedback.lightImpact();
+                if (!blockVibrationFeedback) {
+                  HapticFeedback.lightImpact();
+                } else {
+                  blockVibrationFeedback = false;
+                }
               },
               controller: controller,
             ),

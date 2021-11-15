@@ -1,13 +1,15 @@
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/util/event_bus/frederic_system_events.dart';
+import 'package:frederic/backend/util/event_bus/frederic_system_message.dart';
 import 'package:frederic/extensions.dart';
 
 class StreakManager {
   StreakManager(this.userManager, FredericBackend backend) {
-    backend.eventBus.subscribe((event) {
-      if (event.type == FredericSystemEventType.CalendarDayCompleted) {
-        _handleCompleteDay();
+    backend.messageBus.defaultProcessor.subscribe((event) {
+      if (event is FredericSystemMessage) {
+        if (event.type == FredericSystemMessageType.CalendarDayCompleted) {
+          _handleCompleteDay();
+        }
       }
     });
   }

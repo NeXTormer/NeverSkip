@@ -1,5 +1,5 @@
 name: frederic
-description: A new Flutter application.
+description: Ever set a fitness goal and quit halfway through? Frederic keeps you motivated all the way through and helps you build healthy behaviors.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.1.0+1
+version: 0.3.2+10
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -24,25 +24,27 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^1.4.0
+  firebase_core: ^1.7.0
   firebase_auth: ^3.0.1
   cloud_firestore: ^2.4.0
   firebase_storage: ^10.0.1
-  firebase_analytics: ^8.0.3
+  firebase_analytics: ^8.3.3
   firebase_messaging: ^10.0.7
   firebase_performance: ^0.7.0+2
-  firebase_remote_config: ^0.10.0-dev.2
-  
+  firebase_remote_config: ^0.11.0+1
+
   google_sign_in: ^5.1.1
+  sign_in_with_apple: ^3.2.0
   firebase_app_check: ^0.0.2
   firebase_crashlytics: ^2.2.1
   flutter_native_splash: ^1.1.8+4
   flutter_launcher_icons: ^0.9.0
-  flutter_local_notifications: ^6.1.0
+  flutter_local_notifications: ^9.0.0
 
   async: ^2.6.1
+  crypto: ^3.0.1
   get_it: ^7.1.3
-  provider: ^5.0.0
+  provider: ^6.0.1
   flutter_bloc: ^7.0.0
   flutter_phoenix: ^1.0.0
   shared_preferences: ^2.0.5
@@ -61,14 +63,20 @@ dependencies:
   date_format: ^2.0.2
 
 flutter_native_splash:
-  color: "#FFFFFF"
-  image: assets/splash.png
+  background_image: "assets/icon/icon_background.png"
+  image: assets/icon/icon_foreground.png
   android_disable_fullscreen: true
+  android12: true
 
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/1024.png"
+  image_path: "assets/icon/icon_ios.png"
+  image_path_ios: "assets/icon/icon_ios.png"
+  image_path_android: "assets/icon/icon_android.png"
+  adaptive_icon_background: "assets/icon/icon_background.png"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -84,7 +92,8 @@ flutter:
     - assets/images/dumbbell_with_bg_blue.png
     - assets/images/dumbbell2.png
     - assets/images/login_illustration.png
-    
+    - assets/images/google/google_logo_light.png
+
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -99,6 +108,10 @@ flutter:
      - family: ExtraIcons
        fonts:
          - asset: assets/fonts/ExtraIcons.ttf
+     - family: Roboto
+       fonts:
+         - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+           weight: 500
      - family: Montserrat
        fonts:
          - asset: assets/fonts/Montserrat/Montserrat-Black.ttf

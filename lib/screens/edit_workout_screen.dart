@@ -18,7 +18,10 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 /// Screen create/edit individual workouts
 ///
 class EditWorkoutScreen extends StatefulWidget {
-  EditWorkoutScreen(this.workoutID);
+  EditWorkoutScreen(this.workoutID) {
+    FredericBackend.instance.analytics.analytics
+        .setCurrentScreen(screenName: 'edit-workout-screen');
+  }
 
   final String workoutID;
 
@@ -40,43 +43,45 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
-      builder: (context, workoutListData) {
-        FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
-        if (workout == null) {
-          Navigator.of(context).pop();
+    return FredericScaffold(
+      body: BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
+        builder: (context, workoutListData) {
+          FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
+          if (workout == null) {
+            Navigator.of(context).pop();
+            return FredericScaffold(
+              body: Center(
+                child: Text('Error: workout doesn\'t exist'),
+              ),
+            );
+          }
           return FredericScaffold(
-            body: Center(
-              child: Text('Error: workout doesn\'t exist'),
+            floatingActionButton:
+                workout.canEdit ? buildAddExerciseButton(width, 44) : null,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            body: Column(
+              children: [
+                EditWorkoutHeader(workout),
+                if (theme.isBright) SizedBox(height: 8),
+                if (theme.isBright) FredericDivider(),
+                SizedBox(height: 8),
+                WeekdaysSliderSegment(
+                    pageController: pageController,
+                    weekdaysSliderController: weekdaysSliderController,
+                    workout: workout),
+                SizedBox(height: 8),
+                FredericDivider(),
+                SizedBox(height: 8),
+                EditWorkoutActivityListSegment(
+                    workout: workout,
+                    pageController: pageController,
+                    weekdaysSliderController: weekdaysSliderController),
+              ],
             ),
           );
-        }
-        return FredericScaffold(
-          floatingActionButton:
-              workout.canEdit ? buildAddExerciseButton(width, 44) : null,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          body: Column(
-            children: [
-              EditWorkoutHeader(workout),
-              if (theme.isBright) SizedBox(height: 8),
-              if (theme.isBright) FredericDivider(),
-              SizedBox(height: 8),
-              WeekdaysSliderSegment(
-                  pageController: pageController,
-                  weekdaysSliderController: weekdaysSliderController,
-                  workout: workout),
-              SizedBox(height: 8),
-              FredericDivider(),
-              SizedBox(height: 8),
-              EditWorkoutActivityListSegment(
-                  workout: workout,
-                  pageController: pageController,
-                  weekdaysSliderController: weekdaysSliderController),
-            ],
-          ),
-        );
-      },
+        },
+      ),
     );
   }
 

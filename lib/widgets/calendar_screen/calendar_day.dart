@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
-import 'package:frederic/backend/util/event_bus/frederic_system_events.dart';
+import 'package:frederic/backend/util/event_bus/frederic_system_message.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
@@ -52,10 +52,9 @@ class CalendarDay extends StatelessWidget {
         }
       }
 
-      /// CalendarDay also manages user streak; bad code -> use event queue
       if (dayFinished && activitiesDueToday.isNotEmpty) {
-        FredericBackend.instance.eventBus.add(FredericSystemEvent(
-            FredericSystemEventType.CalendarDayCompleted,
+        FredericBackend.instance.messageBus.add(FredericSystemMessage(
+            type: FredericSystemMessageType.CalendarDayCompleted,
             description: 'Calendar day completed'));
       }
     }
