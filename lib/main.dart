@@ -17,8 +17,8 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
 
@@ -27,7 +27,10 @@ FredericColorTheme get theme => _colorTheme;
 
 const bool _kTestingCrashlytics = true;
 
-void main() async {
+late final kAppFlavor;
+
+void start(Flavor flavor) async {
+  kAppFlavor = flavor;
   LicenseRegistry.addLicense(() async* {
     final license =
         await rootBundle.loadString('assets/fonts/Montserrat/OFL.txt');
@@ -121,7 +124,8 @@ class _FredericBaseState extends State<FredericBase> {
         ],
         child: MaterialApp(
           showPerformanceOverlay: false,
-          title: 'Frederic',
+          debugShowCheckedModeBanner: kAppFlavor == Flavor.Development,
+          title: 'SilverFit',
           theme: ThemeData(
               primaryColor: theme.mainColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,
@@ -166,3 +170,5 @@ class _FredericBaseState extends State<FredericBase> {
     setState(() {});
   }
 }
+
+enum Flavor { Development, Production }
