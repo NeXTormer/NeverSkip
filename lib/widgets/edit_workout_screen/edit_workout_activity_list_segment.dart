@@ -47,64 +47,82 @@ class _EditWorkoutActivityListSegmentState
             int activityCount =
                 widget.workout.activities.activities[weekday + 1].length;
             return CupertinoScrollbar(
-                child: Padding(
-              padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
-              child: ReorderableListView.builder(
-                  proxyDecorator: _proxyDecorator,
-                  onReorder: (oldIndex, newIndex) {
-                    currentlyDragging = false;
-                    if (workoutIsEditable) {
-                      widget.workout.changeOrderOfActivity(
-                          weekday + 1, oldIndex, newIndex);
-                    }
-                  },
-                  itemCount: activityCount,
-                  itemBuilder: (context, index) {
-                    FredericWorkoutActivity activity = widget
-                        .workout.activities.activities[weekday + 1][index];
-                    return EditWorkoutActivityCard(activity,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        workout: widget.workout,
-                        editable: workoutIsEditable,
-                        key: ValueKey(activity), onDelete: () {
-                      widget.workout.removeActivity(activity, weekday + 1);
-                      latestDeletion = activity.activity;
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        duration: Duration(seconds: 4),
-                        behavior: SnackBarBehavior.floating,
-                        elevation: 4,
-                        margin: EdgeInsets.only(bottom: 4, left: 16, right: 16),
-                        dismissDirection: DismissDirection.down,
-                        padding: EdgeInsets.only(
-                            top: 4, bottom: 4, left: 16, right: 16),
-                        content: Text(
-                          'Activity removed from workout.',
-                          style: TextStyle(fontFamily: 'Montserrat'),
-                        ),
-                        action: SnackBarAction(
-                          textColor: Colors.white,
-                          label: 'Undo',
-                          onPressed: () {
-                            if (latestDeletion != null) {
-                              FredericBackend.instance.workoutManager.state
-                                  .workouts[widget.workout.workoutID]
-                                  ?.addActivity(FredericWorkoutActivity(
-                                      activity: latestDeletion!,
-                                      weekday: weekday + 1));
-                            }
-                          },
-                        ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                                bottomRight: Radius.circular(12),
-                                bottomLeft: Radius.circular(12))),
-                        backgroundColor: theme.mainColor,
-                      ));
-                    });
-                  }),
+                child: Row(
+              children: [
+                Container(
+                  height: double.infinity,
+                  width: 0.3,
+                  color: const Color(0xFFC9C9C9),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 16, left: 16, right: 16),
+                    child: ReorderableListView.builder(
+                        proxyDecorator: _proxyDecorator,
+                        onReorder: (oldIndex, newIndex) {
+                          currentlyDragging = false;
+                          if (workoutIsEditable) {
+                            widget.workout.changeOrderOfActivity(
+                                weekday + 1, oldIndex, newIndex);
+                          }
+                        },
+                        itemCount: activityCount,
+                        itemBuilder: (context, index) {
+                          FredericWorkoutActivity activity = widget.workout
+                              .activities.activities[weekday + 1][index];
+                          return EditWorkoutActivityCard(activity,
+                              margin: const EdgeInsets.only(bottom: 16),
+                              workout: widget.workout,
+                              editable: workoutIsEditable,
+                              key: ValueKey(activity), onDelete: () {
+                            widget.workout
+                                .removeActivity(activity, weekday + 1);
+                            latestDeletion = activity.activity;
+                            ScaffoldMessenger.of(context)
+                                .removeCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: Duration(seconds: 4),
+                              behavior: SnackBarBehavior.floating,
+                              elevation: 4,
+                              margin: EdgeInsets.only(
+                                  bottom: 4, left: 16, right: 16),
+                              dismissDirection: DismissDirection.down,
+                              padding: EdgeInsets.only(
+                                  top: 4, bottom: 4, left: 16, right: 16),
+                              content: Text(
+                                'Activity removed from workout.',
+                                style: TextStyle(fontFamily: 'Montserrat'),
+                              ),
+                              action: SnackBarAction(
+                                textColor: Colors.white,
+                                label: 'Undo',
+                                onPressed: () {
+                                  if (latestDeletion != null) {
+                                    FredericBackend
+                                        .instance
+                                        .workoutManager
+                                        .state
+                                        .workouts[widget.workout.workoutID]
+                                        ?.addActivity(FredericWorkoutActivity(
+                                            activity: latestDeletion!,
+                                            weekday: weekday + 1));
+                                  }
+                                },
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12),
+                                      topRight: Radius.circular(12),
+                                      bottomRight: Radius.circular(12),
+                                      bottomLeft: Radius.circular(12))),
+                              backgroundColor: theme.mainColor,
+                            ));
+                          });
+                        }),
+                  ),
+                ),
+              ],
             ));
           })),
     );

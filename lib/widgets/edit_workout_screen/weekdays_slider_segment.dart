@@ -123,11 +123,12 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
                           children: List.generate(7, (index) {
                             return GestureDetector(
                               onTap: () => handleChangeDay(index + (week * 7)),
-                              child: WeekDaysSliderDayButton(
+                              child: WeekDaysSliderDayCard(
                                 onSwap: (first, second) {
                                   widget.workout.swapDays(first, second);
                                 },
                                 dayIndex: index + (week * 7),
+                                isDraggable: widget.workout.canEdit,
                                 selectedDate: selectedDate,
                                 date: widget.startingDate.add(
                                   Duration(

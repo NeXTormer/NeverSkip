@@ -72,7 +72,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     workout: workout),
                 SizedBox(height: 8),
                 FredericDivider(),
-                SizedBox(height: 8),
+                //SizedBox(height: 8),
                 EditWorkoutActivityListSegment(
                     workout: workout,
                     pageController: pageController,

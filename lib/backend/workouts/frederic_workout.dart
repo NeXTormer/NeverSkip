@@ -225,6 +225,7 @@ class FredericWorkout {
   void swapDays(int first, int second) {
     first++;
     second++;
+    bool someChanges = false;
     List<FredericWorkoutActivity> firstActivities =
         _activities.activities[first].toList();
     _activities.activities[first] = _activities.activities[second].toList();
@@ -232,13 +233,16 @@ class FredericWorkout {
 
     _activities.activities[first].forEach((element) {
       element.changeWeekday(first);
+      someChanges = true;
     });
 
     _activities.activities[second].forEach((element) {
       element.changeWeekday(second);
+      someChanges = true;
     });
-
-    updateActivitiesInDB();
+    if (someChanges) {
+      updateActivitiesInDB();
+    }
   }
 
   void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {

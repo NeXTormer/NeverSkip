@@ -5,11 +5,12 @@ import 'package:frederic/main.dart';
 /// Contains the two designs (whether selected or not)
 /// of the WeekDaysSliderDayButton.
 ///
-class WeekDaysSliderDayButton extends StatelessWidget {
-  WeekDaysSliderDayButton(
+class WeekDaysSliderDayCard extends StatelessWidget {
+  WeekDaysSliderDayCard(
       {required this.dayIndex,
       required this.selectedDate,
       required this.date,
+      this.isDraggable = false,
       this.onSwap,
       this.dayWidth});
 
@@ -18,11 +19,13 @@ class WeekDaysSliderDayButton extends StatelessWidget {
   final int selectedDate;
   final DateTime date;
   final double? dayWidth;
+  final bool isDraggable;
 
   @override
   Widget build(BuildContext context) {
     var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
     Widget contents = buildContents(context, false, false, false);
+    if (!isDraggable) return contents;
     return DragTarget<int>(
       builder: (ctx, candidates, rejected) {
         if (candidates.isNotEmpty) {
