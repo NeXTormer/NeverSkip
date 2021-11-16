@@ -123,12 +123,12 @@ class FredericSetList {
       if (reps > 4) list.add(RepsWeightSuggestion(reps - 2, weight + 0));
       list.add(RepsWeightSuggestion(reps + 2, weight + 0));
     } else {
-      list.add(RepsWeightSuggestion(reps + 1, weight + 0));
-      list.add(RepsWeightSuggestion(reps + 2, weight + 0));
-      list.add(RepsWeightSuggestion(reps + 4, weight + 0));
-      if (reps > 1) list.add(RepsWeightSuggestion(reps - 1, weight + 0));
-      if (reps > 2) list.add(RepsWeightSuggestion(reps - 2, weight + 0));
-      if (reps > 4) list.add(RepsWeightSuggestion(reps - 4, weight + 0));
+      list.add(RepsWeightSuggestion(reps + 1, null));
+      list.add(RepsWeightSuggestion(reps + 2, null));
+      list.add(RepsWeightSuggestion(reps + 4, null));
+      if (reps > 1) list.add(RepsWeightSuggestion(reps - 1, null));
+      if (reps > 2) list.add(RepsWeightSuggestion(reps - 2, null));
+      if (reps > 4) list.add(RepsWeightSuggestion(reps - 4, null));
     }
 
     return list;

@@ -28,7 +28,8 @@ class RepsWeightSmartSuggestions extends StatelessWidget {
                         controller.setRepsAndWeight(suggestions[index]);
                       },
                       selected: suggestions[index].reps == controller.reps &&
-                          suggestions[index].weight == controller.weight,
+                          (suggestions[index].weight == controller.weight ||
+                              suggestions[index].weight == null),
                     )),
           ));
     });
