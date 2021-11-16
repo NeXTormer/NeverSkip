@@ -222,6 +222,25 @@ class FredericWorkout {
     updateActivitiesInDB();
   }
 
+  void swapDays(int first, int second) {
+    first++;
+    second++;
+    List<FredericWorkoutActivity> firstActivities =
+        _activities.activities[first].toList();
+    _activities.activities[first] = _activities.activities[second].toList();
+    _activities.activities[second] = firstActivities;
+
+    _activities.activities[first].forEach((element) {
+      element.changeWeekday(first);
+    });
+
+    _activities.activities[second].forEach((element) {
+      element.changeWeekday(second);
+    });
+
+    updateActivitiesInDB();
+  }
+
   void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {
     List<FredericWorkoutActivity> list = _activities.activities[weekday];
 
@@ -290,7 +309,7 @@ class FredericWorkoutActivities {
     if (day.isAfter(end) && workout.repeating == false)
       return <FredericWorkoutActivity>[];
     int daysDiff = day.difference(start).inDays % (period * 7);
-    return activities[daysDiff + 1] + activities[0];
+    return activities[daysDiff + 1];
   }
 
   List<Map<String, dynamic>> toList() {
