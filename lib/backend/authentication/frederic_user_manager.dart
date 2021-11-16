@@ -92,11 +92,11 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   }
 
   void addActiveWorkout(String workoutID) {
-    List<String> activeWorkoutsList = state.activeWorkouts;
+    List<String> activeWorkoutsList = state.activeWorkouts.toList();
 
     if (!activeWorkoutsList.contains(workoutID)) {
       activeWorkoutsList.add(workoutID);
-      state.activeWorkouts = activeWorkoutsList;
+      state.activeWorkouts = activeWorkoutsList.toList();
     }
   }
 

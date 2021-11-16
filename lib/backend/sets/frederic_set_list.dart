@@ -5,6 +5,7 @@ import 'package:frederic/backend/database/frederic_database_document.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/extensions.dart';
+import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
 
 ///
 /// Represents all loaded sets of a specific activity. Use this class to add
@@ -47,12 +48,12 @@ class FredericSetList {
   final String activityID;
   final FredericSetManager _setManager;
 
-  int _bestWeight = 0;
+  double _bestWeight = 0;
   int _bestReps = 0;
 
   List<FredericSetDocument> _setDocuments = <FredericSetDocument>[];
 
-  int get bestWeight => _bestWeight;
+  double get bestWeight => _bestWeight;
   int get bestReps => _bestReps;
 
   List<FredericSetDocument> get setDocuments => _setDocuments;
@@ -97,6 +98,40 @@ class FredericSetList {
     }
     sets.sort();
     return sets;
+  }
+
+  //TODO: improve performance maybe
+  List<RepsWeightSuggestion> getSuggestions(
+      {int count = 6, bool weighted = true, int recommendedReps = 10}) {
+    List<RepsWeightSuggestion> list = <RepsWeightSuggestion>[];
+    int reps = 0;
+    double weight = 0;
+    final latestList = getLatestSets(1);
+    if (latestList.isNotEmpty) {
+      FredericSet latest = latestList.first;
+      reps = latest.reps;
+      weight = latest.weight;
+    }
+    if (reps == 0) reps = recommendedReps;
+    if (weight == 0) weight = 30;
+    if (weighted) {
+      if (weight > 10) list.add(RepsWeightSuggestion(reps + 0, weight - 5));
+      list.add(RepsWeightSuggestion(reps + 0, weight + 0));
+      list.add(RepsWeightSuggestion(reps + 0, weight + 5));
+      if (reps > 4 && weight > 10)
+        list.add(RepsWeightSuggestion(reps - 2, weight - 5));
+      if (reps > 4) list.add(RepsWeightSuggestion(reps - 2, weight + 0));
+      list.add(RepsWeightSuggestion(reps + 2, weight + 0));
+    } else {
+      list.add(RepsWeightSuggestion(reps + 1, weight + 0));
+      list.add(RepsWeightSuggestion(reps + 2, weight + 0));
+      list.add(RepsWeightSuggestion(reps + 4, weight + 0));
+      if (reps > 1) list.add(RepsWeightSuggestion(reps - 1, weight + 0));
+      if (reps > 2) list.add(RepsWeightSuggestion(reps - 2, weight + 0));
+      if (reps > 4) list.add(RepsWeightSuggestion(reps - 4, weight + 0));
+    }
+
+    return list;
   }
 
   void _calculateBestProgress() {
