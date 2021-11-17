@@ -50,6 +50,9 @@ class _ImageAttributeChangerState extends State<ImageAttributeChanger> {
                 child: Text('No Image'),
               ),
             ),
+          SizedBox(height: 32),
+          Text(
+              'Your new profile picture may not be immediately visible in the app. If your profile pictures doesn\'t change within a few seconds you can restart the app.'),
           SizedBox(height: 24),
           FredericButton('Upload new Image', inverted: true,
               onPressed: () async {

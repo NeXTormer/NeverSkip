@@ -14,20 +14,19 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
       : super(FredericSetListData(
             changedActivities: <String>[],
             sets: HashMap<String, FredericSetList>(),
-            weeklyTrainingVolume: List<int>.filled(7, 0))) {
-    setsCollection = FirebaseFirestore.instance
-        .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
-    loadAllSets(2);
-  }
+            weeklyTrainingVolume: List<int>.filled(7, 0)));
 
   WeeklyTrainingVolumeChartData weeklyTrainingVolumeChartData =
       WeeklyTrainingVolumeChartData();
 
-  late final CollectionReference<Map<String, dynamic>> setsCollection;
   final int currentMonth = FredericSetDocument.calculateMonth(DateTime.now());
   static final int startingYear = 2021;
 
   HashMap<String, FredericSetList> _sets = HashMap<String, FredericSetList>();
+
+  CollectionReference<Map<String, dynamic>> get setsCollection =>
+      FirebaseFirestore.instance
+          .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
 
   FredericSetList operator [](String value) {
     if (!_sets.containsKey(value))
@@ -53,6 +52,10 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     );
   }
 
+  void reload() {
+    loadAllSets(2);
+  }
+
   void addSet(String activityID, FredericSet set) {
     state[activityID].addSetLocally(set);
     weeklyTrainingVolumeChartData.addSet(set);
@@ -68,6 +71,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     QuerySnapshot<Map<String, dynamic>> snapshot = await setsCollection
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();
+
     _sets.clear();
     HashMap<String, List<FredericDatabaseDocument>> documentMap =
         HashMap<String, List<FredericDatabaseDocument>>();

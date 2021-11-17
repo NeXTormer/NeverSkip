@@ -69,7 +69,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
   }
 
   void addNewProgressIndicator(BuildContext context) {
-    showCupertinoModalBottomSheet(
+    CupertinoScaffold.showCupertinoModalBottomSheet(
         context: context,
         builder: (ctx) => BlocProvider.value(
             value: BlocProvider.of<FredericSetManager>(context),

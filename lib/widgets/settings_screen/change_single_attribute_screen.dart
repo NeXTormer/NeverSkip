@@ -4,11 +4,17 @@ import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 
 class ChangeSingleAttributeScreen extends StatefulWidget {
-  const ChangeSingleAttributeScreen(this.changeAttributeWidget,
-      {required this.title, this.subtitle, this.infoText, Key? key})
+  const ChangeSingleAttributeScreen(
+      {required this.title,
+      this.changeAttributeWidget,
+      this.changeAttributeSliver,
+      this.subtitle,
+      this.infoText,
+      Key? key})
       : super(key: key);
 
-  final Widget changeAttributeWidget;
+  final Widget? changeAttributeWidget;
+  final Widget? changeAttributeSliver;
   final String title;
   final String? subtitle;
   final String? infoText;
@@ -29,7 +35,7 @@ class _ChangeSingleAttributeScreenState
             SliverToBoxAdapter(
                 child: FredericBasicAppBar(
                     title: widget.title, subtitle: widget.subtitle)),
-            if (theme.isBright) SliverDivider(),
+            if (theme.isMonotone) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
             if (widget.infoText != null)
               SliverPadding(
@@ -44,9 +50,12 @@ class _ChangeSingleAttributeScreenState
                   ),
                 )),
               ),
-            SliverToBoxAdapter(
-              child: widget.changeAttributeWidget,
-            )
+            if (widget.changeAttributeSliver != null)
+              widget.changeAttributeSliver!,
+            if (widget.changeAttributeWidget != null)
+              SliverToBoxAdapter(
+                child: widget.changeAttributeWidget,
+              )
           ],
         ));
   }

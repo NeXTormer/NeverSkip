@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io' show Platform;
+import 'dart:math';
 
+import 'package:crypto/crypto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/authentication/frederic_user_manager.dart';
+import 'package:frederic/backend/authentication/frederic_auth_event.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/widgets/standard_elements/frederic_button.dart';
-import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
+import 'package:frederic/widgets/login_screen/authenticate_with_email_button.dart';
+import 'package:frederic/widgets/login_screen/sign_in_with_google_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -20,31 +24,20 @@ class LoginScreen extends StatefulWidget {
   final String subtitleSignup =
       'Sign up and create an account so that you can remain healthy by following your daily goals and plans.';
 
-  final String termsAndContidionsURL = 'https://hawkford.io/';
-
   final String subtitle =
       'Sign in and continue so that you can remain healthy by following your daily goals and plans.';
-
-  final RegExp emailValidator = RegExp(
-      r"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$");
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmationController =
-      TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-
   bool login = false;
-  bool acceptedTermsAndConditions = false;
-  bool hasError = false;
-  String errorText = '';
 
   StreamSubscription<FredericUser>? streamSubscription;
+
+  bool hasError = false;
+  String errorText = '';
 
   @override
   void initState() {
@@ -77,13 +70,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     bool smallScreen = screenHeight < 700;
-    bool medScreen = screenHeight < 800;
+    bool medScreen = screenHeight < 900;
+
     return Scaffold(
         backgroundColor: theme.backgroundColor,
         body: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
           child: Container(
-            height: screenHeight,
+            height: 880,
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
@@ -108,14 +102,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 8),
                       Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                              login ? widget.subtitle : widget.subtitleSignup,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  height: 1.6,
-                                  letterSpacing: 0.2,
-                                  fontWeight: FontWeight.w400,
-                                  color: theme.textColor))),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            switchInCurve: Curves.easeInOut,
+                            switchOutCurve: Curves.easeInOut,
+                            child: Text(
+                                login ? widget.subtitle : widget.subtitleSignup,
+                                key: ValueKey<String>(login
+                                    ? widget.subtitle
+                                    : widget.subtitleSignup),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    height: 1.6,
+                                    letterSpacing: 0.2,
+                                    fontWeight: FontWeight.w400,
+                                    color: theme.textColor)),
+                          )),
                       SizedBox(height: 40),
                       if (!smallScreen)
                         Padding(
@@ -132,77 +134,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Container(
                       child: Column(
                         children: [
-                          if (!smallScreen)
-                            Expanded(flex: 50, child: Container()),
-                          //SizedBox(height: 50),
-                          if (!login)
-                            FredericTextField(
-                              'Name',
-                              icon: ExtraIcons.person,
-                              controller: nameController,
-                            ),
-                          if (!login) SizedBox(height: 10),
-                          FredericTextField('E-Mail',
-                              icon: ExtraIcons.mail,
-                              controller: emailController),
-                          SizedBox(height: 10),
-                          FredericTextField(
-                            'Password',
-                            icon: ExtraIcons.lock,
-                            isPasswordField: true,
-                            controller: passwordController,
+                          SizedBox(height: 24),
+                          AuthenticateWithEmailButton(
+                            login: login,
+                            hasError: hasError,
+                            onError: (error) {
+                              if (error == null) {
+                                setState(() {
+                                  hasError = false;
+                                });
+                              } else {
+                                setState(() {
+                                  errorText = error;
+                                  hasError = true;
+                                });
+                              }
+                            },
                           ),
-                          if (!login) SizedBox(height: 10),
-                          if (!login)
-                            FredericTextField('Confirm password',
-                                isPasswordField: true,
-                                icon: ExtraIcons.lock,
-                                controller: passwordConfirmationController),
-                          SizedBox(height: 16),
-                          if (login)
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Forgot password?',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w400,
-                                    color: theme.textColor),
-                              ),
+                          // if (Platform.isIOS && false) SizedBox(height: 20),
+                          // if (Platform.isIOS && false)
+                          //   SignInWithAppleButton(
+                          //       borderRadius: BorderRadius.circular(10),
+                          //       text: login
+                          //           ? 'Log in with Apple'
+                          //           : 'Sign up with Apple',
+                          //       style: theme.isDark
+                          //           ? SignInWithAppleButtonStyle.white
+                          //           : SignInWithAppleButtonStyle.black,
+                          //       onPressed: () => handleAppleSignIn(context)),
+                          SizedBox(height: 20),
+                          if (Platform.isAndroid)
+                            SignInWithGoogleButton(
+                              signUp: !login,
                             ),
-                          if (!login)
-                            GestureDetector(
-                              onTap: () => setState(() =>
-                                  acceptedTermsAndConditions =
-                                      !acceptedTermsAndConditions),
-                              onLongPress: () =>
-                                  print('Show Terms and Conditions'),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  buildCheckBox(),
-                                  SizedBox(width: 6),
-                                  Text('I agree to the ',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          color: theme.textColor)),
-                                  GestureDetector(
-                                    onTap: () {
-                                      launch(widget.termsAndContidionsURL);
-                                    },
-                                    child: Text('Terms & Conditions',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 11,
-                                            color: theme.textColor)),
-                                  ),
-                                  Text(' of this app.',
-                                      style: TextStyle(
-                                          fontSize: 11, color: theme.textColor))
-                                ],
-                              ),
-                            ),
-                          SizedBox(height: 12),
+                          if (Platform.isAndroid) SizedBox(height: 12),
                           if (hasError)
                             Align(
                               alignment: Alignment.center,
@@ -210,13 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                       color: Colors.redAccent, fontSize: 14)),
                             ),
-                          SizedBox(height: 12),
-                          FredericButton(
-                            login ? 'Log In' : 'Sign Up',
-                            onPressed: buttonHandler,
-                          ),
-                          Expanded(flex: 50, child: Container()),
-                          //SizedBox(height: 50),
+                          //Expanded(flex: 50, child: Container()),
+                          SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -256,99 +216,50 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  Widget buildCheckBox() {
-    return Container(
-      height: 16,
-      width: 16,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
-          border: Border.all(color: const Color(0xFFB8B8B8)),
-          color: Colors.white),
-      child: acceptedTermsAndConditions
-          ? Icon(
-              Icons.check,
-              size: 12,
-              color: const Color(0xFF5C5C5C),
-            )
-          : null,
-    );
+  void handleAppleSignIn(BuildContext context) async {
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        nonce: nonce,
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: credential.identityToken,
+        rawNonce: rawNonce,
+      );
+
+      FredericBackend.instance.userManager
+          .add(FredericOAuthSignInEvent(oauthCredential, context));
+    } catch (e) {
+      print(e);
+    }
   }
 
-  void buttonHandler() {
-    String email = emailController.text.trim();
-    String name = nameController.text.trim();
-    String password = passwordController.text.trim();
-    String passwordConfirm = passwordConfirmationController.text.trim();
+  String generateNonce([int length = 32]) {
+    final charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
+  }
 
-    if (login) {
-      if (email.isEmpty || password.isEmpty) {
-        errorText = 'Please enter your email and password.';
-        setState(() {
-          hasError = true;
-        });
-        return;
-      }
-      setState(() {
-        hasError = false;
-      });
-      FredericBackend.instance.userManager
-          .add(FredericLoginEvent(email, password));
-    } else {
-      if (email.isEmpty ||
-          password.isEmpty ||
-          passwordConfirm.isEmpty ||
-          name.isEmpty) {
-        errorText = 'Please fill out all fields.';
-        setState(() {
-          hasError = true;
-        });
-        return;
-      }
-
-      if (!widget.emailValidator.hasMatch(email)) {
-        errorText = 'Please enter a valid email.';
-        setState(() {
-          hasError = true;
-        });
-        return;
-      }
-
-      if (password != passwordConfirm) {
-        errorText = 'The passwords do not match.';
-        setState(() {
-          hasError = true;
-        });
-        return;
-      }
-
-      if (!acceptedTermsAndConditions) {
-        errorText = 'You need to accept the Terms & Conditions to use the app.';
-        setState(() {
-          hasError = true;
-        });
-        return;
-      }
-
-      if (hasError) {
-        setState(() {
-          hasError = false;
-        });
-      }
-
-      FredericBackend.instance.userManager.add(FredericSignupEvent(
-          nameController.text.trim(),
-          emailController.text.trim(),
-          passwordController.text.trim()));
-    }
+  /// Returns the sha256 hash of [input] in hex notation.
+  String sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 
   @override
   void dispose() {
     super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    nameController.dispose();
-    passwordConfirmationController.dispose();
+
     streamSubscription?.cancel();
   }
 }

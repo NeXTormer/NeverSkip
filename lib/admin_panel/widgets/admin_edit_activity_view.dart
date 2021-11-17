@@ -14,7 +14,7 @@ import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
-import 'package:frederic/widgets/standard_elements/number_slider.dart';
+import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
 class AdminEditActivityView extends StatefulWidget {

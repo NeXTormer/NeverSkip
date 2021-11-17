@@ -29,7 +29,6 @@ class AchievementSegment extends StatelessWidget {
                       left: 16, right: 16, top: 22, bottom: 8),
                   child: FredericHeading(
                     'Achievements',
-                    onPressed: () {},
                   )),
               Container(
                 child: ListView.builder(

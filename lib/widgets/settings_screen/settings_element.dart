@@ -12,11 +12,13 @@ class SettingsElement extends StatefulWidget {
       this.hasSwitch = false,
       this.isFirstItem = false,
       this.isLastItem = false,
+      this.clickable = true,
       this.changerTitle,
       this.changerSubtitle,
       this.onTap,
       this.infoText,
       this.changeAttributeWidget,
+      this.changeAttributeSliver,
       this.onChanged,
       this.defaultSwitchPosition = false,
       Color? iconBackgroundColor,
@@ -31,14 +33,16 @@ class SettingsElement extends StatefulWidget {
   final String? changerSubtitle;
   final String? infoText;
   final IconData? icon;
+  final bool clickable;
   final bool hasSwitch;
-  final bool defaultSwitchPosition;
+  final bool? defaultSwitchPosition;
   bool isFirstItem;
   bool isLastItem;
   final void Function()? onTap;
-  final void Function(bool state)? onChanged;
+  final Future<bool> Function(bool state)? onChanged;
   late final Color iconBackgroundColor;
   final Widget? changeAttributeWidget;
+  final Widget? changeAttributeSliver;
 
   @override
   _SettingsElementState createState() => _SettingsElementState();
@@ -49,18 +53,38 @@ class _SettingsElementState extends State<SettingsElement> {
 
   @override
   void initState() {
-    switchState = widget.defaultSwitchPosition;
     super.initState();
+    switchState = widget.defaultSwitchPosition ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
+    BorderRadius borderRadius = BorderRadius.only(
+        topLeft: widget.isFirstItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0),
+        topRight: widget.isFirstItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0),
+        bottomRight: widget.isLastItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0),
+        bottomLeft: widget.isLastItem
+            ? const Radius.circular(9)
+            : const Radius.circular(0));
+    ShapeBorder customBorder =
+        RoundedRectangleBorder(borderRadius: borderRadius);
     Widget container = Container(
-        color: theme.cardBackgroundColor,
         padding: EdgeInsets.only(left: widget.icon != null ? 0 : 6, right: 8),
         height: 46,
+        decoration: BoxDecoration(
+            //color:
+            //  true ? Colors.white.withOpacity(1) : theme.cardBackgroundColor,
+            borderRadius: borderRadius,
+            border: Border.all(color: Colors.transparent)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (widget.icon != null)
               Padding(
@@ -78,79 +102,88 @@ class _SettingsElementState extends State<SettingsElement> {
                       )),
                 ),
               ),
-            Text(
-              widget.text,
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: theme.textColor),
+            Expanded(
+              child: Text(
+                widget.text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: theme.textColor),
+              ),
             ),
-            Expanded(child: Container()),
-            if (widget.subText != null) Text(widget.subText!),
+            if (widget.subText != null)
+              Text(
+                widget.subText!,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+              ),
             SizedBox(width: 6),
-            if (widget.hasSwitch)
+            if (widget.hasSwitch && widget.defaultSwitchPosition == null)
+              SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: theme.mainColor,
+                ),
+              ),
+            if (widget.hasSwitch && widget.defaultSwitchPosition != null)
               CupertinoSwitch(
                   value: switchState,
-                  onChanged: (state) {
-                    setState(() {
-                      switchState = state;
-                    });
+                  onChanged: (state) async {
+                    if (widget.onChanged == null ||
+                        await widget.onChanged!(state)) {
+                      setState(() {
+                        switchState = state;
+                      });
+                    }
                   },
                   activeColor: theme.mainColor),
-            if (!widget.hasSwitch)
+            if (!widget.hasSwitch && widget.clickable)
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: theme.greyColor,
               )
           ],
         ));
-    ShapeBorder customBorder = RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: widget.isFirstItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0),
-            topRight: widget.isFirstItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0),
-            bottomRight: widget.isLastItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0),
-            bottomLeft: widget.isLastItem
-                ? const Radius.circular(8)
-                : const Radius.circular(0)));
-    if (widget.hasSwitch) return container;
+    if (widget.hasSwitch || !widget.clickable)
+      return Material(
+        color: Colors.transparent,
+        borderRadius: borderRadius,
+        child: container,
+      );
     if (widget.onTap != null)
-      return InkWell(
-          child: container,
-          onTap: widget.onTap,
-          customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: widget.isFirstItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0),
-                  topRight: widget.isFirstItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0),
-                  bottomRight: widget.isLastItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0),
-                  bottomLeft: widget.isLastItem
-                      ? const Radius.circular(8)
-                      : const Radius.circular(0))));
+      return Material(
+        borderRadius: borderRadius,
+        color: theme.cardBackgroundColor,
+        child: InkWell(
+            child: container,
+            onTap: widget.onTap,
+            customBorder: RoundedRectangleBorder(borderRadius: borderRadius)),
+      );
 
     return FredericContainerTransition(
       closedBorderRadius: 0,
       customBorder: customBorder,
       expandedChild: ChangeSingleAttributeScreen(
-          widget.changeAttributeWidget ?? Container(),
+          changeAttributeWidget: widget.changeAttributeWidget == null &&
+                  widget.changeAttributeSliver == null
+              ? Container()
+              : widget.changeAttributeWidget,
+          changeAttributeSliver: widget.changeAttributeSliver,
           infoText: widget.infoText,
           subtitle: widget.changerSubtitle,
           title: widget.changerTitle ?? 'Change Attribute'),
-      childBuilder: (context, openContainer) => InkWell(
-        onTap: openContainer,
-        child: container,
-        customBorder: customBorder,
+      childBuilder: (context, openContainer) => Material(
+        color: theme.cardBackgroundColor,
+        child: InkWell(
+          onTap: openContainer,
+          child: container,
+          customBorder: customBorder,
+        ),
       ),
     );
   }

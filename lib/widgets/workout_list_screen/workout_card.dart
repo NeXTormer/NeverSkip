@@ -159,9 +159,11 @@ class _WorkoutCardState extends State<WorkoutCard> {
             List<String> activeWorkouts =
                 FredericBackend.instance.userManager.state.activeWorkouts;
             if (value) {
-              if (!activeWorkouts.contains(widget.workout.workoutID)) {
-                activeWorkouts.add(widget.workout.workoutID);
-              }
+              FredericBackend.instance.userManager
+                  .addActiveWorkout(widget.workout.workoutID);
+              // if (!activeWorkouts.contains(widget.workout.workoutID)) {
+              //   activeWorkouts.add(widget.workout.workoutID);
+              // }
               isSelected = true;
             } else {
               if (activeWorkouts.contains(widget.workout.workoutID)) {

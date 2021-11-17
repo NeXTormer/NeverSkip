@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_database_document.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
@@ -63,9 +64,11 @@ class FredericSetList {
   }
 
   void loadData(int monthsToLoad) async {
+    await FredericBackend.instance.waitUntilUserHasAuthenticated();
     int lastMonth = _setManager.currentMonth - (monthsToLoad - 1);
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _setManager
-        .setsCollection
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets')
         .where('activityid', isEqualTo: activityID)
         .where('month', isGreaterThanOrEqualTo: lastMonth)
         .get();

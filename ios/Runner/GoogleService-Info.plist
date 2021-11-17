@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>301523012050-nsff5rrd86lhkmn3tmgl5gr9jib8hlr9.apps.googleusercontent.com</string>
+	<string>301523012050-3la95uuqbqvi6qj4jpglhduvgr30pvgl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.301523012050-nsff5rrd86lhkmn3tmgl5gr9jib8hlr9</string>
+	<string>com.googleusercontent.apps.301523012050-3la95uuqbqvi6qj4jpglhduvgr30pvgl</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>301523012050-kjcnhg257ech72ulvgtgh69qeivr8ppp.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyD3tpITwhdrzk-VSKd8pM2MWBP1XjGfxCQ</string>
 	<key>GCM_SENDER_ID</key>
@@ -29,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:301523012050:ios:bdf9bd66cab241aa28600b</string>
+	<string>1:301523012050:ios:2357a5981328605328600b</string>
 	<key>DATABASE_URL</key>
 	<string>https://hawkford-frederic-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frederic/main.dart';
+
+import 'frederic_auth_event.dart';
 
 class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
-  FredericUserManager(
-      {this.onLoadData,
-      this.logTransition = false,
-      required FredericBackend backend})
+  FredericUserManager({required FredericBackend backend})
       : _backend = backend,
         super(FredericUser('', waiting: true)) {
     FirebaseAuth.instance.authStateChanges().listen((userdata) {
@@ -22,26 +22,23 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     streakManager = StreakManager(this, _backend);
   }
 
-  final FredericBackend _backend;
   late final StreakManager streakManager;
+  final FredericBackend _backend;
+
+  bool firestoreDataWasLoadedAtLeastOnce = false;
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
       _userStreamSubscription;
 
-  bool hasLoaded = false;
-  final bool logTransition;
-  Function? onLoadData;
-
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
-    if (event is FredericUserDataChangedEvent) {
-      if (!hasLoaded) {
-        hasLoaded = true;
-        onLoadData?.call();
+    if (event is FredericRestoreLoginStatusEvent) {
+      if (state.waiting == true) {
+        yield await event.process(this);
       }
-      yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '',
-          snapshot: event.snapshot);
-      FredericBackend.instance.waitUntilDataIsLoaded().then((value) {
+    } else if (event is FredericUserDataChangedEvent) {
+      yield await event.process(this);
+      FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
       });
     } else if (event is FredericRestoreLoginStatusEvent) {
@@ -95,11 +92,14 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
+  //TODO: Add event to 'if' when implementing new login
   @override
   void onTransition(Transition<FredericAuthEvent, FredericUser> transition) {
-    if (transition.event is FredericLoginEvent ||
-        transition.event is FredericSignupEvent ||
-        transition.event is FredericRestoreLoginStatusEvent) {
+    if ((transition.event is FredericEmailLoginEvent ||
+            transition.event is FredericEmailSignupEvent ||
+            transition.event is FredericOAuthSignInEvent ||
+            transition.event is FredericRestoreLoginStatusEvent) &&
+        transition.nextState.uid != '') {
       _userStreamSubscription = FirebaseFirestore.instance
           .collection('users')
           .doc(transition.nextState.uid)
@@ -108,7 +108,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     } else if (transition.event is FredericSignOutEvent) {
       _userStreamSubscription?.cancel();
     }
-    if (logTransition) {
+    if (false) {
       print('==========Frederic User Transition==========');
       print(transition);
       print('============================================');
@@ -117,12 +117,22 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     super.onTransition(transition);
   }
 
-  void changePassword(String newPassword) {
-    throw UnimplementedError('change password not implemented');
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    print('==========Frederic User Bloc Error =================');
+
+    super.onError(error, stackTrace);
+  }
+
+  void signOut(BuildContext context) async {
+    await _userStreamSubscription?.cancel();
+    FirebaseAuth.instance.signOut();
+    FredericBase.forceFullRestart(context);
   }
 
   void addActiveWorkout(String workoutID) {
     List<String> activeWorkoutsList = state.activeWorkouts;
+
     if (!activeWorkoutsList.contains(workoutID)) {
       activeWorkoutsList.add(workoutID);
       state.activeWorkouts = activeWorkoutsList;
@@ -137,46 +147,36 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
-  Future<void> _createUserEntryInDB(String uid, String name) async {
+  Future<void> createUserEntryInDB(
+      {required String uid,
+      String? name,
+      String? image,
+      String? username}) async {
+    DocumentSnapshot<Map<String, dynamic>> defaultDoc = await FirebaseFirestore
+        .instance
+        .collection('defaults')
+        .doc('default_user')
+        .get();
+
     return FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'name': name,
-      'image':
-          'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fdefault-profile-screen.jpg?alt=media&token=52f200e9-fac8-4295-bf7d-01b59f92a987',
+      'name': name ?? defaultDoc.data()?['name'] ?? '',
+      'image': image ?? defaultDoc.data()?['image'] ?? '',
+      'username': username ?? null,
       'uid': uid,
-      'activeworkouts': <String>[],
-      'progressmonitors': <String>[]
+      'activeworkouts': defaultDoc.data()?['activeworkouts'] ?? <String>[],
+      'progressmonitors': defaultDoc.data()?['progressmonitors'] ?? <String>[],
+      'streakstart': null,
+      'streaklatest': null,
     });
   }
-}
 
-abstract class FredericAuthEvent {}
-
-class FredericLoginEvent extends FredericAuthEvent {
-  FredericLoginEvent(this.email, this.password);
-
-  final String email;
-  final String password;
-}
-
-class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
-  FredericRestoreLoginStatusEvent(this.uid);
-  final String uid;
-}
-
-class FredericSignupEvent extends FredericAuthEvent {
-  FredericSignupEvent(this.name, this.email, this.password);
-
-  final String name;
-  final String email;
-  final String password;
-}
-
-class FredericSignOutEvent extends FredericAuthEvent {
-  FredericSignOutEvent([this.reason]);
-  final String? reason;
-}
-
-class FredericUserDataChangedEvent extends FredericAuthEvent {
-  FredericUserDataChangedEvent(this.snapshot);
-  final DocumentSnapshot<Map<String, dynamic>> snapshot;
+  Future<void> deleteUser(bool confirm) async {
+    if (!confirm) return;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(state.uid)
+        .delete();
+    await FirebaseAuth.instance.currentUser!.delete();
+    return;
+  }
 }

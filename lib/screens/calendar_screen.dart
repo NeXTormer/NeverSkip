@@ -8,7 +8,6 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/calendar_screen/calendar_day.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/frederic_sliver_app_bar.dart';
-import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -30,7 +29,6 @@ class CalendarScreen extends StatelessWidget {
                   icon: StreakIcon(
                       user: user, onColorfulBackground: theme.isColorful),
                 ),
-                if (theme.isMonotone) SliverDivider(),
                 SliverPadding(padding: const EdgeInsets.only(bottom: 8)),
                 //if (false)
                 SliverList(
