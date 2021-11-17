@@ -47,6 +47,8 @@ class ActivityListScreen extends StatelessWidget {
                       subtitle,
                       user: user,
                       filterController: filter,
+                      isSelector: isSelector,
+                      onSelect: onSelect,
                     ),
                     FeaturedActivitySegment(
                       'Featured',

@@ -9,6 +9,7 @@ class FredericContainerTransition extends StatelessWidget {
     this.dragThreshold = 3,
     this.closedBorderRadius = 8,
     this.customBorder,
+    this.containerKey,
     this.onClose,
     this.tappable = false,
     this.transitionType = ContainerTransitionType.fadeThrough,
@@ -17,6 +18,7 @@ class FredericContainerTransition extends StatelessWidget {
 
   final Widget Function(BuildContext, VoidCallback) childBuilder;
   final Widget expandedChild;
+  final GlobalKey? containerKey;
   final double dragThreshold;
   final double closedBorderRadius;
   final bool tappable;
@@ -27,6 +29,7 @@ class FredericContainerTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
+      key: containerKey,
       tappable: tappable,
       closedBuilder: childBuilder,
       openBuilder: (context, closeContainer) => GestureDetector(

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/unit_text.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProgressIndicatorCard extends StatelessWidget {
@@ -24,7 +28,17 @@ class ProgressIndicatorCard extends StatelessWidget {
     return FredericCard(
         height: 65,
         width: 160,
-        onTap: () {},
+        onTap: () {
+          if (activity != null)
+            CupertinoScaffold.showCupertinoModalBottomSheet(
+                enableDrag: true,
+                context: context,
+                builder: (newContext) {
+                  return BlocProvider.value(
+                      value: BlocProvider.of<FredericSetManager>(context),
+                      child: AddProgressScreen(activity!));
+                });
+        },
         onLongPress: () {
           showDialog(
               context: context,
