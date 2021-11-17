@@ -127,7 +127,7 @@ class _FredericSliderState extends State<FredericSlider> {
   Widget build(BuildContext context) {
     divisions = widget.isInteractive
         ? (adaptiveMax.toInt() - adaptiveMin.toInt()).abs()
-        : (widget.max.toInt() - widget.min.toInt());
+        : (widget.max - widget.min).toInt();
     if (adaptiveMin >= adaptiveMax) {
       inverse = true;
       inverseAdaptiveCurrent = inverseValue(

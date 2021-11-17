@@ -56,8 +56,6 @@ class GoalCard extends StatelessWidget {
         goal,
         sets: sets,
         activity: activity,
-        startDate: startDate,
-        endDate: endDate,
         startStateController: startStateController,
         currentStateController: currentStateController,
         endStateController: endStateController,
