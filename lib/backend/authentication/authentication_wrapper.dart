@@ -5,11 +5,15 @@ import 'package:frederic/backend/backend.dart';
 
 class AuthenticationWrapper extends StatefulWidget {
   AuthenticationWrapper(
-      {Key? key, required this.homePage, required this.loginPage})
+      {Key? key,
+      required this.homePage,
+      required this.loginPage,
+      required this.onboardingPage})
       : super(key: key);
 
   final Widget homePage;
   final Widget loginPage;
+  final Widget onboardingPage;
 
   @override
   _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
@@ -24,7 +28,9 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         buildWhen: (previous, next) =>
             previous.authenticated != next.authenticated,
         builder: (context, user) {
-          return user.authenticated ? widget.homePage : widget.loginPage;
+          return user.authenticated
+              ? (user.justRegistered ? widget.onboardingPage : widget.homePage)
+              : widget.loginPage;
         });
   }
 }

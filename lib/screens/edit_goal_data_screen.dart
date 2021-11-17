@@ -10,6 +10,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/screens/screens.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -22,6 +23,15 @@ import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+enum Datepicker { Start, End }
+enum FormError {
+  CurrentStateEqualsEndStart,
+  StartStateEqualsEndState,
+  EndDateSmallerThenStartDate,
+  StartDateEqualsEndDate,
+  Success,
+}
 
 class EditGoalDataScreen extends StatefulWidget {
   EditGoalDataScreen(this.goal, {this.sets, this.activity}) {
@@ -50,7 +60,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
 
   PageController? endPageController;
 
-  String dateText = '';
+  String startDateText = '';
+  String endDateText = '';
 
   num dummyCurrentState = 0;
   FredericActivity? dummyActivity;
@@ -58,12 +69,14 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
 
-  bool datePickerOpen = false;
+  bool startDatepickerOpened = false;
+  bool endDatepickerOpened = false;
   bool trackActivity = false;
 
   @override
   void initState() {
-    dateText = formatDateTime(widget.goal.startDate);
+    startDateText = formatDateTime(widget.goal.startDate);
+    endDateText = formatDateTime(widget.goal.endDate);
     titleController.text = widget.goal.title;
     startStateController.value = widget.goal.startState;
     currentStateController.value = widget.goal.currentState;
@@ -117,8 +130,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               child: Column(
                 children: [
                   // TODO Implement better datepicker
-                  buildDatePickerRow('Start Date'),
-                  buildDatePickerRow('End Date'),
+                  buildDatePickerRow('Start Date', Datepicker.Start),
+                  buildDatePickerRow('End Date', Datepicker.End),
                 ],
               ),
             ),
@@ -128,13 +141,24 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
+// enum FormError {
+//   CurrentStateEqualsEndStart,
+//   StartStateEqualsEndState,
+//   EndDateSmallerThenStartDate,
+//   StartDateEqualsEndDate
+// }
   void saveData() {
-    bool _checkEquality(num first, num second) {
-      return first.ceil() != second.ceil();
-    }
-
-    bool _checkCompleteness(num value, num target) {
-      return value.ceil() == target.ceil();
+    FormError _checkForm() {
+      if (startStateController.value == endStateController.value) {
+        return FormError.StartStateEqualsEndState;
+      } else if (currentStateController.value == endStateController.value) {
+        return FormError.CurrentStateEqualsEndStart;
+      } else if (startDateText == endDateText) {
+        return FormError.StartDateEqualsEndDate;
+      } else if (selectedStartDate!.compareTo(selectedEndDate!) > 0) {
+        return FormError.EndDateSmallerThenStartDate;
+      }
+      return FormError.Success;
     }
 
     Future<void> _showErrorMessage(String text) async {
@@ -156,10 +180,20 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     }
 
     if (widget.isNewGoal) {
-      if (_checkEquality(
-          startStateController.value, endStateController.value)) {
-        if (!_checkCompleteness(
-            currentStateController.value, endStateController.value)) {
+      switch (_checkForm()) {
+        case FormError.CurrentStateEqualsEndStart:
+          _showErrorMessage('The curret state must not match the end state!');
+          return;
+        case FormError.StartStateEqualsEndState:
+          _showErrorMessage('The start state must not match the end state!');
+          return;
+        case FormError.StartDateEqualsEndDate:
+          _showErrorMessage('The start date must not match the end date!');
+          break;
+        case FormError.EndDateSmallerThenStartDate:
+          _showErrorMessage('The end date must not be before the start date!');
+          break;
+        case FormError.Success:
           widget.goal.save(
             activityID: dummyActivity == null ? '' : dummyActivity!.activityID,
             title: titleController.text,
@@ -170,15 +204,16 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             startState: startStateController.value,
             currentState: currentStateController.value,
             endState: endStateController.value,
-            startDate: Timestamp.fromDate(DateTime.now()),
-            endDate: Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
+            startDate: Timestamp.fromDate(selectedStartDate!),
+            endDate: Timestamp.fromDate(selectedEndDate!),
             isComleted: false,
             isDeleted: false,
           );
-        } else
-          _showErrorMessage('The current state must not match the end state!');
-      } else
-        _showErrorMessage('The start state must not match the end state!');
+          return;
+        default:
+          _showErrorMessage('Some error happened');
+          return;
+      }
     } else {
       widget.goal.title = titleController.text;
       widget.goal.startState = startStateController.value;
@@ -283,6 +318,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         child: GoalCard(
           widget.goal,
           sets: widget.sets ?? null,
+          endDate: selectedEndDate,
+          startDate: selectedStartDate,
           titleController: titleController,
           currentStateController: currentStateController,
           startStateController: startStateController,
@@ -475,7 +512,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
-  Widget buildDatePickerRow(String text) {
+  Widget buildDatePickerRow(String text, Datepicker datepicker) {
+    bool datepickerStatus = datepicker == Datepicker.Start
+        ? startDatepickerOpened
+        : endDatepickerOpened;
     return Column(
       children: [
         Row(
@@ -486,13 +526,20 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               width: 100,
               onTap: () {
                 setState(() {
-                  datePickerOpen = !datePickerOpen;
+                  datepickerStatus = !datepickerStatus;
+                  if (datepicker == Datepicker.Start) {
+                    startDatepickerOpened = !startDatepickerOpened;
+                    endDatepickerOpened = false;
+                  } else {
+                    endDatepickerOpened = !endDatepickerOpened;
+                    startDatepickerOpened = false;
+                  }
                 });
               },
               padding: const EdgeInsets.all(8),
               child: Center(
                 child: Text(
-                  dateText,
+                  datepicker == Datepicker.Start ? startDateText : endDateText,
                   maxLines: 1,
                 ),
               ),
@@ -501,7 +548,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         ),
         SizedBox(height: 8),
         AnimatedContainer(
-          height: datePickerOpen ? 150 : 0,
+          height: datepickerStatus ? 150 : 0,
           duration: Duration(microseconds: 200),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -510,7 +557,16 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           ),
           child: FredericDatePicker(
             initialDate: DateTime.now(),
-            onDateChanged: (date) {},
+            onDateChanged: (date) {
+              datepicker == Datepicker.Start
+                  ? selectedStartDate = date
+                  : selectedEndDate = date;
+              setState(() {
+                datepicker == Datepicker.Start
+                    ? startDateText = date.formattedEuropean()
+                    : endDateText = date.formattedEuropean();
+              });
+            },
           ),
         ),
       ],
