@@ -14,11 +14,13 @@ class WeekdaysSliderSegment extends StatelessWidget {
   WeekdaysSliderSegment(
       {required this.pageController,
       required this.weekdaysSliderController,
+      this.defaultSelectedIndex = 0,
       required this.workout});
 
   final PageController pageController;
   final FredericWorkout workout;
   final WeekdaysSliderController weekdaysSliderController;
+  final int defaultSelectedIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +29,12 @@ class WeekdaysSliderSegment extends StatelessWidget {
         if (workout.period != 1) buildWeekdayArrowIndicator(8, Direction.left),
         if (workout.period != 1) buildWeekdayArrowIndicator(8, Direction.right),
         WeekdaysSlider(
-          startingDate: workout.startDate,
+          startingDate: workout.startDateAdjusted,
           pageController: pageController,
           workout: workout,
           weekdaysSliderController: weekdaysSliderController,
           weekCount: workout.period,
+          defaultSelectedIndex: defaultSelectedIndex,
         ),
       ],
     );
@@ -79,6 +82,7 @@ class WeekdaysSlider extends StatefulWidget {
       required this.pageController,
       required this.workout,
       required this.weekdaysSliderController,
+      this.defaultSelectedIndex = 0,
       Key? key})
       : super(key: key);
 
@@ -87,6 +91,7 @@ class WeekdaysSlider extends StatefulWidget {
   final PageController pageController;
   final WeekdaysSliderController weekdaysSliderController;
   final int weekCount;
+  final int defaultSelectedIndex;
 
   @override
   _WeekdaysSliderState createState() => _WeekdaysSliderState();
@@ -100,7 +105,9 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
   @override
   void initState() {
     widget.weekdaysSliderController.setCallback(changeDayCallback);
-    weekPageController = PageController();
+    weekPageController =
+        PageController(initialPage: widget.defaultSelectedIndex ~/ 7);
+    selectedDate = widget.defaultSelectedIndex;
     super.initState();
   }
 

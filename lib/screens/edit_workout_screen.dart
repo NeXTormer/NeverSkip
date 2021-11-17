@@ -18,12 +18,13 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 /// Screen create/edit individual workouts
 ///
 class EditWorkoutScreen extends StatefulWidget {
-  EditWorkoutScreen(this.workoutID) {
+  EditWorkoutScreen(this.workoutID, {this.defaultPage = 0}) {
     FredericBackend.instance.analytics.analytics
         .setCurrentScreen(screenName: 'edit-workout-screen');
   }
 
   final String workoutID;
+  final int defaultPage;
 
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
@@ -35,7 +36,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   void initState() {
-    pageController = PageController();
+    pageController = PageController(initialPage: widget.defaultPage);
     weekdaysSliderController = WeekdaysSliderController();
     super.initState();
   }
@@ -49,11 +50,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
           if (workout == null) {
             Navigator.of(context).pop();
-            return FredericScaffold(
-              body: Center(
-                child: Text('Error: workout doesn\'t exist'),
-              ),
-            );
+            print('Workout not found');
+            return Container();
           }
           return FredericScaffold(
             floatingActionButton:
@@ -67,6 +65,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 if (theme.isBright) FredericDivider(),
                 SizedBox(height: 8),
                 WeekdaysSliderSegment(
+                    defaultSelectedIndex: widget.defaultPage,
                     pageController: pageController,
                     weekdaysSliderController: weekdaysSliderController,
                     workout: workout),

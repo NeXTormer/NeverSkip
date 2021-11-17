@@ -103,7 +103,9 @@ class ProgressIndicatorCard extends StatelessWidget {
                                   letterSpacing: 0.3),
                             ),
                           ),
-                          UnitText('$bestProgress', activity!.progressUnit)
+                          UnitText(
+                              '${bestProgress.truncateToDouble() == bestProgress ? bestProgress.toInt() : bestProgress}',
+                              activity!.progressUnit)
                         ],
                       ),
                     ),

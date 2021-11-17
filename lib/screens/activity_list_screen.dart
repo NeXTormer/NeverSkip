@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_segment.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_screen_app_bar.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_segment.dart';
@@ -14,7 +13,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../state/activity_filter_controller.dart';
-import '../widgets/standard_elements/sliver_divider.dart';
 
 class ActivityListScreen extends StatelessWidget {
   ActivityListScreen(
@@ -56,13 +54,6 @@ class ActivityListScreen extends StatelessWidget {
                       onTap: onSelect,
                       isSelector: isSelector,
                     ),
-                    if (user.progressMonitors.isNotEmpty)
-                      FeaturedActivitySegment(
-                        'Personal Records',
-                        user.progressMonitors,
-                        onTap: onSelect,
-                        isSelector: isSelector,
-                      ),
                     ActivityFilterSegment(filterController: filter),
                     ActivityListSegment(
                       filterController: filter,

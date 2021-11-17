@@ -54,6 +54,17 @@ class FredericWorkout {
   bool? _repeating;
 
   DateTime get startDate => _startDate ?? DateTime.now();
+  DateTime get startDateAdjusted {
+    DateTime today = DateTime.now();
+    DateTime end = startDate.add(Duration(days: period * 7));
+    if (today.isAfter(end) && repeating == false) return startDate;
+    print("OFFSET: ${_activities.getDayIndex(today)}");
+    return today.subtract(
+        Duration(days: today.difference(startDate).inDays % (period * 7)));
+    return today.subtract(Duration(days: _activities.getDayIndex(today)));
+    return today.subtract(today.difference(startDate));
+  }
+
   String get name => _name ?? 'Workout name';
   String get description => _description ?? 'Workout description';
   String get image =>
@@ -314,6 +325,13 @@ class FredericWorkoutActivities {
       return <FredericWorkoutActivity>[];
     int daysDiff = day.difference(start).inDays % (period * 7);
     return activities[daysDiff + 1];
+  }
+
+  int getDayIndex(DateTime day) {
+    DateTime start = workout.startDate;
+    DateTime end = workout.startDate.add(Duration(days: period * 7));
+    if (day.isAfter(end) && workout.repeating == false) return -1;
+    return day.difference(start).inDays % (period * 7);
   }
 
   List<Map<String, dynamic>> toList() {

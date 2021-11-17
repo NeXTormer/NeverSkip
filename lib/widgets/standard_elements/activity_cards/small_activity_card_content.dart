@@ -51,7 +51,7 @@ class SmallActivityCardContent extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '$bestProgress',
+                      '${bestProgress.truncateToDouble() == bestProgress ? bestProgress.toInt() : bestProgress}',
                       style: TextStyle(
                           color: theme.textColor,
                           fontWeight: FontWeight.w600,
