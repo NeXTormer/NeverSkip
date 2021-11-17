@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
@@ -7,16 +8,21 @@ class FredericButton extends StatelessWidget {
       Color? mainColor,
       Color? textColor,
       this.inverted = false,
+      this.loading = false,
       this.fontSize = 15,
       this.fontWeight = FontWeight.w600}) {
     this.mainColor = mainColor ?? theme.mainColor;
-    this.textColor = textColor ?? theme.textColorColorfulBackground;
+    this.textColor = textColor ??
+        (theme.isBright
+            ? theme.backgroundColor
+            : theme.textColorColorfulBackground);
   }
   late final Color mainColor;
   late final Color textColor;
   final double height = 44;
   final String text;
   final bool inverted;
+  final bool loading;
   final double fontSize;
   final FontWeight fontWeight;
 
@@ -35,13 +41,29 @@ class FredericButton extends StatelessWidget {
             border: inverted ? Border.all(color: mainColor) : null,
             color: inverted ? (theme.cardBackgroundColor) : mainColor),
         child: Center(
-            child: Text(
-          text,
-          style: TextStyle(
-              letterSpacing: 0.2,
-              color: inverted ? mainColor : textColor,
-              fontWeight: fontWeight,
-              fontSize: fontSize),
+            child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          child: loading
+              ? Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: AspectRatio(
+                      aspectRatio: 1,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: inverted ? mainColor : textColor,
+                      )),
+                )
+              : Text(
+                  text,
+                  key: ValueKey<String>(text),
+                  style: TextStyle(
+                      letterSpacing: 0.2,
+                      color: inverted ? mainColor : textColor,
+                      fontWeight: fontWeight,
+                      fontSize: fontSize),
+                ),
         )),
       ),
     );

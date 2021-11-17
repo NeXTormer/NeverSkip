@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/bottom_navigation_screen.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
 
@@ -35,6 +36,8 @@ class FredericMainApp extends StatelessWidget {
             label: 'Workouts',
           ),
         ],
+        analyticsObserver:
+            FredericBackend.instance.analytics.getAnalyticsObserver(),
       ),
       loginPage: LoginScreen(),
       onboardingPage: OnboardingScreen(),

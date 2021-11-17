@@ -19,6 +19,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class EditWorkoutDataScreen extends StatefulWidget {
   EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key) {
     isNewWorkout = workout.workoutID == 'new';
+    FredericBackend.instance.analytics.analytics
+        .setCurrentScreen(screenName: 'edit-workout-data-screen');
   }
 
   final FredericWorkout workout;
@@ -62,12 +64,13 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       descriptionController.addListener(() {
         setState(() {
-          dummyDescription = descriptionController.text;
+          if (descriptionController.text.isNotEmpty)
+            dummyDescription = descriptionController.text;
         });
       });
       nameController.addListener(() {
         setState(() {
-          dummyName = nameController.text;
+          if (nameController.text.isNotEmpty) dummyName = nameController.text;
         });
       });
     });
@@ -102,7 +105,11 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   SizedBox(width: 32),
                   Text(
                     widget.isNewWorkout ? 'Create workout' : 'Edit workout',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color:
+                            theme.isColorful ? Colors.white : theme.mainColor),
                   ),
                   Expanded(child: Container()),
                   GestureDetector(
@@ -147,7 +154,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
               child: FredericTextField(
                 widget.workout.name,
                 maxLength: 42,
-                text: widget.workout.name,
+                text: widget.isNewWorkout ? '' : widget.workout.name,
                 icon: null,
                 controller: nameController,
               ),
@@ -163,9 +170,9 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: FredericTextField(
-                widget.workout.name,
+                widget.workout.description,
                 controller: descriptionController,
-                text: widget.workout.description,
+                text: widget.isNewWorkout ? '' : widget.workout.description,
                 icon: null,
                 maxLines: 2,
                 maxLength: 110,
@@ -281,6 +288,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                     context: context,
                                     builder: (ctx) => FredericActionDialog(
                                           onConfirm: () {
+                                            FredericBackend.instance.analytics
+                                                .logWorkoutDeleted();
                                             FredericBackend
                                                 .instance.workoutManager
                                                 .add(FredericWorkoutDeleteEvent(
@@ -326,6 +335,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
 
   void saveData() {
     if (widget.isNewWorkout) {
+      FredericBackend.instance.analytics.logWorkoutCreated();
       widget.workout.save(
           title: dummyName,
           description: dummyDescription,
@@ -334,6 +344,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
           repeating: dummyRepeating,
           startDate: selectedStartDate ?? DateTime.now());
     } else {
+      FredericBackend.instance.analytics.logWorkoutSaved();
       if (selectedStartDate != null &&
           widget.workout.startDate != selectedStartDate!) {
         widget.workout.startDate = selectedStartDate!;

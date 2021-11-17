@@ -19,12 +19,21 @@ class FredericGoalManager
       : super(
             FredericGoalListData(<String>[], HashMap<String, FredericGoal>()));
 
-  final CollectionReference _goalsCollection = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser?.uid)
-      .collection('goals');
-
   HashMap<String, FredericGoal> _goals = HashMap<String, FredericGoal>();
+
+  CollectionReference<Map<String, dynamic>> get _goalsCollection =>
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('goals');
+
+  set goals(List<String> value) {
+    if (FirebaseAuth.instance.currentUser?.uid == '') return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .update({'goals': value});
+  }
 
   FredericGoal? operator [](String value) {
     return _goals[value];
@@ -70,14 +79,6 @@ class FredericGoalManager
     // print(transition);
     // print('============');
     super.onTransition(transition);
-  }
-
-  set goals(List<String> value) {
-    if (FirebaseAuth.instance.currentUser?.uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .update({'goals': value});
   }
 }
 

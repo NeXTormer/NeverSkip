@@ -14,7 +14,7 @@ class UserFeedbackToast {
       color: theme.mainColor.withAlpha(220) // Colors.black.withAlpha(50),
       );
 
-  showAddedToast(BuildContext context) {
+  void showAddedToast(BuildContext context) {
     fToast.init(context);
     fToast.showToast(
       gravity: ToastGravity.CENTER,
@@ -41,7 +41,7 @@ class UserFeedbackToast {
     );
   }
 
-  showProgressAddedToast(BuildContext context) {
+  void showProgressAddedToast(BuildContext context) {
     fToast.init(context);
     fToast.showToast(
       gravity: ToastGravity.CENTER,

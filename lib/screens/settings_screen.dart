@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -19,6 +20,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FredericBackend.instance.analytics.logEnterSettingsScreen();
     return FredericScaffold(
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) => CustomScrollView(
@@ -30,15 +32,15 @@ class SettingsScreen extends StatelessWidget {
                 icon: FredericAppBarIcon(ExtraIcons.settings),
               ),
             ),
-            if (theme.isBright) SliverDivider(),
+            if (theme.isMonotone) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 10)),
             UserSettingsSegment(user),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(title: 'App Settings', elements: <SettingsElement>[
               SettingsElement(
                 text: 'Color Theme',
-                subText: 'Dark Blue',
-                changeAttributeWidget: ColorThemeChanger(),
+                subText: theme.name,
+                changeAttributeSliver: ColorThemeChanger(),
                 changerTitle: 'Change the Color Theme',
                 icon: Icons.color_lens_outlined,
               ),

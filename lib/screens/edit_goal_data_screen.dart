@@ -19,7 +19,7 @@ import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_slider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
-import 'package:frederic/widgets/standard_elements/number_slider.dart';
+import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -236,7 +236,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               setState(() {
                 if (widget.isNewGoal) {
                   dummyActivity = activity;
-                  titleController.text = activity.name;
+                  if (titleController.text.isEmpty ||
+                      titleController.text == widget.goal.title) {
+                    titleController.text = activity.name;
+                  }
                   currentStateController.value =
                       widget.sets![dummyActivity!.activityID].bestWeight == 0
                           ? widget.sets![dummyActivity!.activityID].bestReps
@@ -358,7 +361,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           children: [
             buildSubHeading('Start', Icons.star_outline),
             SizedBox(height: 12),
-            NumberSlider(
+            NumberWheel(
               controller: startStateController,
               itemWidth: 0.14,
               numberOfItems: 200,
@@ -367,7 +370,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             SizedBox(height: 12),
             buildSubHeading('End', Icons.star_outline),
             SizedBox(height: 12),
-            NumberSlider(
+            NumberWheel(
               controller: endStateController,
               itemWidth: 0.14,
               numberOfItems: 200,

@@ -8,11 +8,12 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
-import '../number_slider.dart';
+import '../number_wheel.dart';
 
 class EditWorkoutActivityCard extends StatefulWidget {
   const EditWorkoutActivityCard(
     this.activity, {
+    this.margin,
     required this.onDelete,
     required this.workout,
     this.editable = true,
@@ -21,6 +22,8 @@ class EditWorkoutActivityCard extends StatefulWidget {
 
   final FredericWorkoutActivity activity;
   final FredericWorkout workout;
+
+  final EdgeInsets? margin;
 
   final void Function() onDelete;
 
@@ -43,6 +46,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
   Widget build(BuildContext context) {
     return FredericCard(
         animated: true,
+        margin: widget.margin,
         height: deleted ? 0 : 70,
         padding: EdgeInsets.all(deleted ? 0 : 10),
         duration: widget.animationDuration,
@@ -223,7 +227,7 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
               children: [
                 buildSubHeading('Sets', Icons.account_tree_outlined),
                 SizedBox(height: 12),
-                NumberSlider(
+                NumberWheel(
                   controller: widget.setsSliderController,
                   itemWidth: 0.14,
                   numberOfItems: 10,
@@ -232,7 +236,7 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
                 SizedBox(height: 12),
                 buildSubHeading('Repetitions', Icons.repeat_outlined),
                 SizedBox(height: 12),
-                NumberSlider(
+                NumberWheel(
                     controller: widget.repsSliderController,
                     itemWidth: 0.14,
                     numberOfItems: 100,

@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 /// Not mutable, managed by FredericUserManager Bloc
 ///
 class FredericUser {
-  FredericUser(this._uid,
+  FredericUser(this.uid,
       {DocumentSnapshot<Map<String, dynamic>>? snapshot,
       this.statusMessage = '',
       this.waiting = false,
@@ -42,7 +42,6 @@ class FredericUser {
   bool get finishedLoading => _name != null;
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
-  String get uid => _uid;
   String get email => _email ?? '';
   String get name => _name ?? '';
   String get username => _username ?? '';
@@ -54,8 +53,19 @@ class FredericUser {
   DateTime? get birthday => _birthday;
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
-  List<String> get progressMonitors => _progressMonitors ?? const <String>[];
-  List<String> get activeWorkouts => _activeWorkouts ?? const <String>[];
+  List<String> get progressMonitors {
+    if (_progressMonitors == null) {
+      _progressMonitors = <String>[];
+    }
+    return _progressMonitors!;
+  }
+
+  List<String> get activeWorkouts {
+    if (_activeWorkouts == null) {
+      _activeWorkouts = <String>[];
+    }
+    return _activeWorkouts!;
+  }
 
   int get age {
     if (birthday == null) return -1;

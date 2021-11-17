@@ -84,7 +84,9 @@ class _FredericTextFieldState extends State<FredericTextField> {
               : Icon(
                   widget.icon,
                   size: widget.size,
-                  color: widget.brightContents ? Colors.white : theme.mainColor,
+                  color: widget.brightContents
+                      ? Colors.white
+                      : theme.mainColorInText,
                 ),
           suffixIcon: widget.suffixIcon == null
               ? null

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/standard_elements/number_slider.dart';
+import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 
-enum SliderUnit { Weeks, Kilometers, Kilograms }
+enum SliderUnit { Weeks, Kilometers, Kilograms, None }
 
 class FredericSlider extends StatefulWidget {
   const FredericSlider(
@@ -10,6 +10,7 @@ class FredericSlider extends StatefulWidget {
       required this.onChanged,
       this.min = 0,
       this.max = 10,
+      this.thumbWidth,
       this.snap = false,
       this.isInteractive = false,
       this.value = 5,
@@ -24,6 +25,7 @@ class FredericSlider extends StatefulWidget {
   final double min;
   final double max;
   final double value;
+  final double? thumbWidth;
 
   final bool snap;
   final bool isInteractive;
@@ -61,7 +63,7 @@ class _FredericSliderState extends State<FredericSlider> {
         widget.endStateController != null &&
         widget.currentStateController != null) {
       widget.startStateController!.addListener(() {
-        if (mounted)
+        if (mounted) {
           setState(() {
             adaptiveMin = widget.startStateController!.value.toDouble();
             if (adaptiveMax < adaptiveMin) {
@@ -83,9 +85,10 @@ class _FredericSliderState extends State<FredericSlider> {
               widget.currentStateController!.value = adaptiveMin;
             }
           });
+        }
       });
       widget.endStateController!.addListener(() {
-        if (mounted)
+        if (mounted) {
           setState(() {
             adaptiveMax = widget.endStateController!.value.toDouble();
             if (adaptiveMin < adaptiveMax) {
@@ -107,12 +110,14 @@ class _FredericSliderState extends State<FredericSlider> {
               widget.currentStateController!.value = adaptiveMax;
             }
           });
+        }
       });
       widget.currentStateController!.addListener(() {
-        if (mounted)
+        if (mounted) {
           setState(() {
             adaptiveCurrent = widget.currentStateController!.value.toDouble();
           });
+        }
       });
     }
     super.initState();
@@ -136,8 +141,12 @@ class _FredericSliderState extends State<FredericSlider> {
         data: SliderTheme.of(context).copyWith(
           trackHeight: 6,
           overlayShape: RoundSliderOverlayShape(overlayRadius: 11),
-          thumbShape: _FredericSliderThumb(widget.min, widget.max,
-              widget.isInteractive ? adaptiveCurrent : value, widget.unit,
+          thumbShape: _FredericSliderThumb(
+              widget.isInteractive ? adaptiveMin : widget.min,
+              widget.isInteractive ? adaptiveMax : widget.max,
+              widget.isInteractive ? adaptiveCurrent : value,
+              widget.unit,
+              thumbWidth: widget.thumbWidth,
               inverse: (adaptiveMin <= adaptiveMax) ? false : true),
           tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
         ),
@@ -194,9 +203,12 @@ class _FredericSliderState extends State<FredericSlider> {
 
 class _FredericSliderThumb extends SliderComponentShape {
   _FredericSliderThumb(this.min, this.max, this.labelValue, this.unit,
-      {this.inverse = false});
+      {this.inverse = false, this.thumbWidth}) {
+    if (thumbWidth == null) thumbWidth = 80;
+  }
   final double min;
   final double max;
+  double? thumbWidth;
   final double labelValue;
   final SliderUnit unit;
   final bool inverse;
@@ -232,7 +244,8 @@ class _FredericSliderThumb extends SliderComponentShape {
     canvas.drawCircle(center, 12, Paint()..color = theme.mainColorLight);
     canvas.drawCircle(center, 12, Paint()..color = theme.mainColorLight);
     canvas.drawCircle(center, 8, paint);
-    double normalWidth = 80;
+
+    double normalWidth = getThumbWidth(unit);
 
     double left = center.dx - 39;
     double offset = 0;
@@ -247,7 +260,7 @@ class _FredericSliderThumb extends SliderComponentShape {
 
     if (offset < -20) offset = 0;
 
-    double width = offset == 0 ? normalWidth : 70;
+    double width = offset == 0 ? normalWidth : normalWidth - 10;
     double height = 31;
     double top = center.dy + 20;
     double right = left + width;
@@ -263,14 +276,14 @@ class _FredericSliderThumb extends SliderComponentShape {
           ..strokeWidth = 1);
     TextSpan text = TextSpan(
         style: TextStyle(color: theme.textColor, fontSize: 16),
-        text: '${val.ceil()} week${val.ceil() == 1 ? '' : 's'}');
+        text: '${getLabelUnit(unit, val.toInt())}');
     TextPainter textPainter =
         TextPainter(text: text, textDirection: textDirection);
     textPainter.layout();
     textPainter.paint(canvas, Offset(center.dx - 28 + offset, center.dy + 26));
   }
 
-  String handleLabelUnit(SliderUnit unit, int value) {
+  String getLabelUnit(SliderUnit unit, int value) {
     switch (unit) {
       case SliderUnit.Weeks:
         return '$value week${value == 1 ? '' : 's'}';
@@ -280,6 +293,19 @@ class _FredericSliderThumb extends SliderComponentShape {
         return '$value km';
       default:
         return '$value';
+    }
+  }
+
+  double getThumbWidth(SliderUnit unit) {
+    switch (unit) {
+      case SliderUnit.Weeks:
+        return 80;
+      case SliderUnit.Kilograms:
+        return 60;
+      case SliderUnit.Kilometers:
+        return 60;
+      default:
+        return 80;
     }
   }
 }
