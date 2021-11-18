@@ -39,7 +39,7 @@ class FredericContainerTransition extends StatelessWidget {
               closeContainer();
             }
           },
-          child: expandedChild),
+          child: SafeArea(bottom: false, child: expandedChild)),
       openElevation: 0,
       closedElevation: 0,
       transitionType: transitionType,

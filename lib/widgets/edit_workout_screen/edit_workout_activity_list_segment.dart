@@ -64,6 +64,7 @@ class _EditWorkoutActivityListSegmentState
                     padding:
                         const EdgeInsets.only(top: 16, left: 16, right: 16),
                     child: ReorderableListView.builder(
+                        physics: BouncingScrollPhysics(),
                         proxyDecorator: _proxyDecorator,
                         onReorder: (oldIndex, newIndex) {
                           currentlyDragging = false;

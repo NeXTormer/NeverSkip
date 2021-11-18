@@ -54,10 +54,11 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             return Container();
           }
           return FredericScaffold(
-            floatingActionButton:
-                workout.canEdit ? buildAddExerciseButton(width, 44) : null,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: workout.canEdit
+                ? buildAlternativeAddExerciseButton(width, 44)
+                : null,
+            // floatingActionButtonLocation:
+            //     FloatingActionButtonLocation.centerDocked,
             body: Column(
               children: [
                 EditWorkoutHeader(workout),
@@ -80,6 +81,17 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget buildAlternativeAddExerciseButton(double width, double height) {
+    return FloatingActionButton(
+      backgroundColor: theme.mainColor,
+      onPressed: () => showActivityList(context),
+      child: Icon(
+        Icons.post_add_outlined,
+        color: theme.textColorColorfulBackground,
       ),
     );
   }
