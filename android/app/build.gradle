@@ -64,14 +64,15 @@ android {
        }
    }
 
+   flavorDimensions "types"
    productFlavors {
        production {
-           dimension "default"
+           dimension "types"
            resValue "string", "app_name", "SilverFit"
            applicationIdSuffix ""
        }
        development {
-           dimension "default"
+           dimension "types"
            resValue "string", "app_name", "SilverFitDev"
            applicationIdSuffix ".dev"
        }
