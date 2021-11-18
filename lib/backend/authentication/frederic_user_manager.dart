@@ -41,54 +41,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
       });
-    } else if (event is FredericRestoreLoginStatusEvent) {
-      if (state.waiting == true) {
-        yield FredericUser(event.uid, waiting: false);
-      }
-    } else if (event is FredericLoginEvent) {
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: event.email, password: event.password);
-        SharedPreferences.getInstance()
-            .then((value) => value.setBool('wasLoggedIn', true));
-        yield FredericUser(FirebaseAuth.instance.currentUser?.uid ?? '');
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          yield FredericUser('', statusMessage: 'The email does not exist.');
-        } else if (e.code == 'wrong-password') {
-          yield FredericUser('', statusMessage: 'Wrong password.');
-        }
-        yield FredericUser('', statusMessage: 'Invalid credentials');
-      }
-    } else if (event is FredericSignOutEvent) {
-      FirebaseAuth.instance.signOut();
-      yield FredericUser('');
-    } else if (event is FredericSignupEvent) {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: event.email, password: event.password);
-        if (userCredential.user != null) {
-          await _createUserEntryInDB(userCredential.user!.uid, event.name);
-          yield FredericUser(userCredential.user!.uid, registered: true);
-        } else {
-          yield FredericUser('',
-              statusMessage: 'Sign up error. Please contact support.');
-        }
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          yield FredericUser('', statusMessage: 'The password is too weak.');
-        }
-        if (e.code == 'email-already-in-use') {
-          yield FredericUser('',
-              statusMessage: 'This email address is already used');
-        }
-        yield FredericUser('',
-            statusMessage: 'Sign up error. Please contact support.');
-      } catch (e) {
-        yield FredericUser('',
-            statusMessage: 'Sign up error. Please contact support.');
-      }
+    } else {
+      yield await event.process(this);
     }
   }
 

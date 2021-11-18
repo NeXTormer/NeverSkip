@@ -20,7 +20,7 @@ class FredericUser {
   }
 
   final bool registered;
-  final String _uid;
+  final String uid;
   final String statusMessage;
   String? _email;
   String? _name;
@@ -38,7 +38,7 @@ class FredericUser {
   List<String>? _progressMonitors;
 
   bool get justRegistered => registered;
-  bool get authenticated => _uid != '';
+  bool get authenticated => uid != '';
   bool get finishedLoading => _name != null;
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;

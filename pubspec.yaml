@@ -97,10 +97,7 @@ flutter:
     - assets/images/introduction_screen_1.png
     - assets/images/introduction_screen_2.png
     - assets/images/introduction_screen_3.png
-<<<<<<< HEAD
-=======
     - assets/images/google/google_logo_light.png
->>>>>>> Onboarding
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
