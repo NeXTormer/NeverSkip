@@ -1,14 +1,19 @@
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/bottom_navigation_screen.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+
+const String _recordDescription =
+    'Visualize your best performances and keep yourself motivated.';
+const String _goalDescription =
+    'Set personal goals that you want to accomplish within a certain time frame.';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -19,6 +24,35 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final introKey = GlobalKey<IntroductionScreenState>();
+
+  void _onIntroEnd(context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return BottomNavigationScreen(
+        [
+          FredericScreen(
+            screen: HomeScreen(),
+            icon: ExtraIcons.person,
+            label: 'Home',
+          ),
+          FredericScreen(
+            screen: CalendarScreen(),
+            icon: ExtraIcons.calendar,
+            label: 'Calendar',
+          ),
+          FredericScreen(
+            screen: ActivityListScreen(),
+            icon: ExtraIcons.dumbbell,
+            label: 'Exercises',
+          ),
+          FredericScreen(
+            screen: WorkoutListScreen(),
+            icon: ExtraIcons.statistics,
+            label: 'Workouts',
+          ),
+        ],
+      );
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,36 +198,5 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
       ),
     );
-  }
-
-  void _onIntroEnd(context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return BottomNavigationScreen(
-        [
-          FredericScreen(
-            screen: HomeScreen(),
-            icon: ExtraIcons.person,
-            label: 'Home',
-          ),
-          FredericScreen(
-            screen: CalendarScreen(),
-            icon: ExtraIcons.calendar,
-            label: 'Calendar',
-          ),
-          FredericScreen(
-            screen: ActivityListScreen(),
-            icon: ExtraIcons.dumbbell,
-            label: 'Exercises',
-          ),
-          FredericScreen(
-            screen: WorkoutListScreen(),
-            icon: ExtraIcons.statistics,
-            label: 'Workouts',
-          ),
-        ],
-        analyticsObserver:
-            FredericBackend.instance.analytics.getAnalyticsObserver(),
-      );
-    }));
   }
 }
