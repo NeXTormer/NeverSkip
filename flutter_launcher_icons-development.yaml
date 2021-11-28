@@ -6,3 +6,5 @@ flutter_icons:
   image_path_android: "assets/icon/development/icon_android.png"
   adaptive_icon_background: "assets/icon/development/icon_background.png"
   adaptive_icon_foreground: "assets/icon/development/icon_foreground.png"
+  remove_alpha_ios: true
+  
