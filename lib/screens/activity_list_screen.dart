@@ -36,7 +36,7 @@ class ActivityListScreen extends StatelessWidget {
           onPressed: () {},
           child: Icon(
             Icons.post_add_outlined,
-            color: theme.textColorColorfulBackground,
+            color: Colors.white,
           ),
           backgroundColor: theme.mainColor,
         ),
