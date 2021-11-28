@@ -48,6 +48,13 @@ class HomeScreenAppbar extends StatelessWidget {
                 );
               },
               expandedChild: SettingsScreen()),
+          if (kAppFlavor == Flavor.Development)
+            Icon(
+              Icons.build_circle_outlined,
+              size: 32,
+              color: theme.textColorColorfulBackground,
+            ),
+          if (kAppFlavor == Flavor.Development) Expanded(child: Container()),
           StreakIcon(
             user: user,
             onColorfulBackground: theme.isColorful,
