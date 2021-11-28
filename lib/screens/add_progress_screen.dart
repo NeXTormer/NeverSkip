@@ -5,15 +5,18 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/widgets/add_progress_screen/enter_reps_counter_widget.dart';
+import 'package:frederic/widgets/add_progress_screen/enter_weight_widget.dart';
+import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
-import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
-class AddProgressScreen extends StatelessWidget {
+class AddProgressScreen extends StatefulWidget {
   AddProgressScreen(this.activity, {this.openedFromCalendar = false}) {
     FredericBackend.instance.analytics.analytics
         .setCurrentScreen(screenName: 'add-progress-screen');
@@ -23,10 +26,12 @@ class AddProgressScreen extends StatelessWidget {
 
   final FredericActivity activity;
 
-  final NumberSliderController repsSliderController = NumberSliderController();
-  final NumberSliderController setsSliderController = NumberSliderController();
-  final NumberSliderController weightSliderController =
-      NumberSliderController();
+  @override
+  State<AddProgressScreen> createState() => _AddProgressScreenState();
+}
+
+class _AddProgressScreenState extends State<AddProgressScreen> {
+  final AddProgressController controller = AddProgressController(0, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -94,86 +99,94 @@ class AddProgressScreen extends StatelessWidget {
             ),
           const SizedBox(height: 8),
           Expanded(
-            child: CustomScrollView(
-              physics: ClampingScrollPhysics(),
-              controller: ModalScrollController.of(context),
-              slivers: [
-                SliverPadding(padding: EdgeInsets.only(bottom: 12)),
-                _DisplayActivityCard(activity),
-                SliverToBoxAdapter(
-                    child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 16, bottom: 16),
-                  child: FredericHeading('Current Performance'),
-                )),
-                SliverToBoxAdapter(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: theme.cardBackgroundColor,
-                        border: Border.all(color: theme.cardBorderColor)),
-                    child: Column(
-                      children: [
-                        buildSubHeading('Sets', Icons.account_tree_outlined),
-                        SizedBox(height: 12),
-                        NumberWheel(
-                          controller: setsSliderController,
-                          itemWidth: 0.14,
-                          numberOfItems: 10,
-                          startingIndex: 1,
+            child: BlocBuilder<FredericSetManager, FredericSetListData>(
+                buildWhen: (current, next) =>
+                    next.hasChanged(widget.activity.activityID),
+                builder: (context, setListData) {
+                  List<FredericSet> sets =
+                      setListData[widget.activity.activityID].getLatestSets();
+                  if (sets.isEmpty) {
+                    controller.setRepsAndWeight(RepsWeightSuggestion(
+                        widget.activity.recommendedReps, 30));
+                  } else {
+                    controller.setRepsAndWeight(
+                        RepsWeightSuggestion(sets[0].reps, sets[0].weight));
+                  }
+                  List<RepsWeightSuggestion> suggestions =
+                      setListData[widget.activity.activityID].getSuggestions(
+                          weighted: widget.activity.type ==
+                              FredericActivityType.Weighted,
+                          recommendedReps: widget.activity.recommendedReps);
+                  return CustomScrollView(
+                    physics: ClampingScrollPhysics(),
+                    controller: ModalScrollController.of(context),
+                    slivers: [
+                      SliverPadding(padding: EdgeInsets.only(bottom: 12)),
+                      _DisplayActivityCard(widget.activity),
+                      SliverToBoxAdapter(
+                          child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, top: 16, bottom: 16),
+                        child: FredericHeading('Current Performance'),
+                      )),
+                      ChangeNotifierProvider<AddProgressController>.value(
+                        value: controller,
+                        child: SliverToBoxAdapter(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: theme.cardBackgroundColor,
+                                border:
+                                    Border.all(color: theme.cardBorderColor)),
+                            child: Column(
+                              children: [
+                                buildSubHeading(
+                                    'Repetitions', Icons.repeat_outlined),
+                                SizedBox(height: 12),
+                                EnterRepsCounterWidget(),
+                                if (widget.activity.type ==
+                                    FredericActivityType.Weighted) ...[
+                                  SizedBox(height: 12),
+                                  buildSubHeading(
+                                      'Weight', ExtraIcons.dumbbell),
+                                  SizedBox(height: 12),
+                                  EnterWeightWidget(),
+                                ],
+                                SizedBox(height: 8),
+                                buildSubHeading('Smart Suggestions',
+                                    Icons.smart_button_outlined),
+                                SizedBox(height: 8),
+                                RepsWeightSmartSuggestions(suggestions),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 0, right: 0, top: 16),
+                                  child: FredericButton('Save', onPressed: () {
+                                    saveData();
+                                    Navigator.of(context).pop();
+                                  }),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                        SizedBox(height: 12),
-                        buildSubHeading('Repetitions', Icons.repeat_outlined),
-                        SizedBox(height: 12),
-                        NumberWheel(
-                            controller: repsSliderController,
-                            itemWidth: 0.14,
-                            numberOfItems: 100,
-                            startingIndex: activity.recommendedReps + 1),
-                        if (activity.type == FredericActivityType.Weighted) ...[
-                          SizedBox(height: 12),
-                          buildSubHeading('Weight', ExtraIcons.dumbbell),
-                          SizedBox(height: 12),
-                          NumberWheel(
-                              controller: weightSliderController,
-                              itemWidth: 0.14,
-                              startingIndex: 56)
-                        ], //TODO: set to average weight
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 0, right: 0, top: 16),
-                          child: FredericButton('Save', onPressed: () {
-                            saveData();
-                            Navigator.of(context).pop();
-                          }),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                    child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 16, bottom: 16),
-                  child: FredericHeading('Previous Performance'),
-                )),
-                BlocBuilder<FredericSetManager, FredericSetListData>(
-                    buildWhen: (current, next) =>
-                        next.hasChanged(activity.activityID),
-                    builder: (context, setListData) {
-                      List<FredericSet> sets =
-                          setListData[activity.activityID].getLatestSets();
-                      return SliverList(
+                      ),
+                      SliverToBoxAdapter(
+                          child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, top: 16, bottom: 16),
+                        child: FredericHeading('Previous Performance'),
+                      )),
+                      SliverList(
                           delegate: SliverChildBuilderDelegate(
                               (context, index) =>
-                                  SetCard(sets[index], activity),
-                              childCount: sets.length));
-                    }),
-                SliverToBoxAdapter(child: SizedBox(height: 12))
-              ],
-            ),
+                                  SetCard(sets[index], widget.activity),
+                              childCount: sets.length)),
+                      SliverToBoxAdapter(child: SizedBox(height: 12))
+                    ],
+                  );
+                }),
           ),
         ],
       ),
@@ -181,14 +194,13 @@ class AddProgressScreen extends StatelessWidget {
   }
 
   void saveData() {
-    int sets = setsSliderController.value.toInt();
-    int reps = repsSliderController.value.toInt();
-    int weight = weightSliderController.value.toInt();
-    for (int i = 0; i < sets; i++) {
-      FredericBackend.instance.setManager.addSet(
-          activity.activityID, FredericSet(reps, weight, DateTime.now()));
-    }
-    if (openedFromCalendar) {
+    int reps = controller.reps;
+    double weight = controller.weight;
+
+    FredericBackend.instance.setManager.addSet(
+        widget.activity.activityID, FredericSet(reps, weight, DateTime.now()));
+
+    if (widget.openedFromCalendar) {
       FredericBackend.instance.analytics.logAddProgressOnCalendar();
     } else {
       FredericBackend.instance.analytics.logAddProgressOnActivity();
@@ -198,19 +210,49 @@ class AddProgressScreen extends StatelessWidget {
   Widget buildSubHeading(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon),
+        SizedBox(height: 24, width: 24, child: Icon(icon)),
         SizedBox(width: 8),
         Text(
           title,
           style: TextStyle(
               fontFamily: 'Montserrat',
               color: theme.textColor,
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w500),
         )
       ],
     );
   }
+}
+
+class AddProgressController extends ChangeNotifier {
+  AddProgressController(int reps, double weight)
+      : //_sets = sets,
+        _reps = reps,
+        _weight = weight;
+
+  set reps(int value) {
+    _reps = value;
+    notifyListeners();
+  }
+
+  set weight(double value) {
+    _weight = value;
+    notifyListeners();
+  }
+
+  int get reps => _reps;
+  double get weight => _weight;
+
+  void setRepsAndWeight(RepsWeightSuggestion suggestion) {
+    _reps = suggestion.reps;
+    _weight = suggestion.weight ?? 0;
+    notifyListeners();
+  }
+
+  //int _sets;
+  int _reps;
+  double _weight;
 }
 
 class _DisplayActivityCard extends StatefulWidget {
