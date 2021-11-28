@@ -27,8 +27,8 @@ class FredericActivity implements DataTableElement<FredericActivity> {
     _recommendedSets = data['recommendedsets'];
     _type = parseTypeFromString(data['type']);
 
-    List<dynamic> muscleGroups = data['musclegroup'];
-    muscleGroups.forEach((element) {
+    List<dynamic>? muscleGroups = data['musclegroup'];
+    muscleGroups?.forEach((element) {
       if (element is String)
         _muscleGroups.add(parseSingleMuscleGroupFromString(element));
     });

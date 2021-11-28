@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/state/activity_filter_controller.dart';
 import 'package:frederic/widgets/standard_elements/frederic_sliver_app_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
-
-import '../../state/activity_filter_controller.dart';
-import '../standard_elements/frederic_text_field.dart';
 
 class ActivityListScreenAppBar extends StatefulWidget {
   ActivityListScreenAppBar(this.title, this.subtitle,
-      {required this.user, required this.filterController});
+      {this.isSelector = false,
+      this.onSelect,
+      required this.user,
+      required this.filterController});
 
   final String title;
   final String subtitle;
   final FredericUser user;
   final ActivityFilterController filterController;
+
+  final bool isSelector;
+  final void Function(FredericActivity)? onSelect;
 
   @override
   _ActivityListScreenAppBarState createState() =>
@@ -58,6 +64,9 @@ class _ActivityListScreenAppBarState extends State<ActivityListScreenAppBar> {
               size: 20,
               suffixIcon: Icons.highlight_remove_outlined,
             ),
+            // ExpandingSearchBar(
+            //     child: ActivitySearcher(
+            //         isSelector: widget.isSelector, onSelect: widget.onSelect)),
             SizedBox(height: 10),
           ],
         ),

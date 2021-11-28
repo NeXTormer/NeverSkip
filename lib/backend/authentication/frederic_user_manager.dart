@@ -48,12 +48,19 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   //TODO: Add event to 'if' when implementing new login
   @override
-  void onTransition(Transition<FredericAuthEvent, FredericUser> transition) {
+  void onTransition(
+      Transition<FredericAuthEvent, FredericUser> transition) async {
     if ((transition.event is FredericEmailLoginEvent ||
             transition.event is FredericEmailSignupEvent ||
             transition.event is FredericOAuthSignInEvent ||
             transition.event is FredericRestoreLoginStatusEvent) &&
         transition.nextState.uid != '') {
+      // Info: maybe remove async and await for this call for better performance
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(transition.nextState.uid)
+          .set({'last_login': Timestamp.now()}, SetOptions(merge: true));
+
       _userStreamSubscription = FirebaseFirestore.instance
           .collection('users')
           .doc(transition.nextState.uid)
@@ -85,11 +92,11 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   }
 
   void addActiveWorkout(String workoutID) {
-    List<String> activeWorkoutsList = state.activeWorkouts;
+    List<String> activeWorkoutsList = state.activeWorkouts.toList();
 
     if (!activeWorkoutsList.contains(workoutID)) {
       activeWorkoutsList.add(workoutID);
-      state.activeWorkouts = activeWorkoutsList;
+      state.activeWorkouts = activeWorkoutsList.toList();
     }
   }
 
