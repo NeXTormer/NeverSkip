@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class GoalCardMedailleIndicator extends StatefulWidget {
-  const GoalCardMedailleIndicator({Key? key}) : super(key: key);
+  const GoalCardMedailleIndicator({this.size = 25, Key? key}) : super(key: key);
+  final double size;
 
   @override
   _GoalCardMedailleIndicatorState createState() =>
@@ -23,8 +24,8 @@ class _GoalCardMedailleIndicatorState extends State<GoalCardMedailleIndicator>
   Widget build(BuildContext context) {
     return Lottie.network(
         'https://assets9.lottiefiles.com/packages/lf20_nywmyj3y.json',
-        width: 25,
-        height: 25,
+        width: widget.size,
+        height: widget.size,
         controller: _controller, onLoaded: (composition) {
       // print('>>> Play Animation <<<');
       Future.delayed(Duration(milliseconds: 200), () {

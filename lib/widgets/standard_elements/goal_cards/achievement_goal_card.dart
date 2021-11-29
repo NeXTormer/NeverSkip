@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/screens/achievement_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AchievementGoalCard extends StatelessWidget {
   const AchievementGoalCard(this.goal, {this.index = 0});
@@ -20,7 +22,9 @@ class AchievementGoalCard extends StatelessWidget {
     String startDateFormatted = DateFormat('dd.MM.yyyy').format(goal.startDate);
     int usedDays = goal.endDate.difference(goal.startDate).inDays;
     return FredericCard(
-        onTap: () {}, // TODO See goal stats
+        onTap: () {
+          handleClick(context);
+        },
         onLongPress: () {
           handleLongClick(context);
         },
@@ -113,6 +117,11 @@ class AchievementGoalCard extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  void handleClick(BuildContext context) {
+    CupertinoScaffold.showCupertinoModalBottomSheet(
+        context: context, builder: (c) => AchievementScreen());
   }
 
   void handleLongClick(BuildContext context) {
