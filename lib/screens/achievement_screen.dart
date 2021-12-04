@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/achievement_screen/achievement_progress_bar.dart';
+import 'package:frederic/widgets/achievement_screen/achievement_timeline.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card_medaille_indicator.dart';
@@ -10,7 +13,8 @@ import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AchievementScreen extends StatelessWidget {
-  const AchievementScreen({Key? key}) : super(key: key);
+  const AchievementScreen(this.goal, {Key? key}) : super(key: key);
+  final FredericGoal goal;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,7 @@ class AchievementScreen extends StatelessWidget {
                 ),
               ),
               buildStatsSegment(),
+              buildTimelineSegment(),
             ],
           ),
           Positioned(
@@ -85,14 +90,15 @@ class AchievementScreen extends StatelessWidget {
 
   Widget buildTitleSegment() {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: FredericTextField(
-          'widget.goal.title',
-          maxLength: 30,
-          text: 'widget.goal.title',
-          icon: null,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: theme.cardBackgroundColor,
+          border: Border.all(color: theme.cardBorderColor),
         ),
+        child: Text(goal.title),
       ),
     );
   }
@@ -132,7 +138,7 @@ class AchievementScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AchievementProgressBar(0.5),
+                  AchievementProgressBar(goal, goal.startState.toDouble()),
                 ],
               ),
             ),
@@ -143,7 +149,12 @@ class AchievementScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AchievementProgressBar(0.95),
+                  AchievementProgressBar(
+                    goal,
+                    goal.endState.toDouble(),
+                    progressRatio: 0.96,
+                    delayInMillisecond: 200,
+                  ),
                 ],
               ),
             ),
@@ -155,6 +166,30 @@ class AchievementScreen extends StatelessWidget {
   }
 
   Widget buildStatsSegment() {
+    Widget _buildCircleWithTitleAndText(String title, String text) {
+      return Column(
+        children: [
+          Text(title),
+          SizedBox(height: 10),
+          CircleAvatar(
+            radius: 40,
+            backgroundColor: theme.mainColor,
+            child: CircleAvatar(
+              radius: 32,
+              backgroundColor: theme.backgroundColor,
+              child: Center(
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: theme.textColor),
+                ),
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -164,11 +199,33 @@ class AchievementScreen extends StatelessWidget {
           color: theme.cardBackgroundColor,
           border: Border.all(color: theme.cardBorderColor),
         ),
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Hello'),
+            _buildCircleWithTitleAndText('Avr. Workout Time', '30\nmin'),
+            _buildCircleWithTitleAndText('Avr. Workout Time', '30\nmin')
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildTimelineSegment() {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding:
+                const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 6),
+            child: AchievementTimeline(
+              goal,
+              width: 330,
+              height: 5,
+              delayInMillisecond: 1000,
+            ),
+          ),
+        ],
       ),
     );
   }

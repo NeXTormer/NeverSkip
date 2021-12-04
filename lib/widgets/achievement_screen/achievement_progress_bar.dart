@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/achievement_screen/triangle_clipper.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
 class AchievementProgressBar extends StatefulWidget {
-  const AchievementProgressBar(this.progress,
-      {this.length = 280, this.thickness = 13, Key? key})
+  const AchievementProgressBar(this.goal, this.progress,
+      {this.progressRatio = 0.5,
+      this.length = 280,
+      this.thickness = 13,
+      this.delayInMillisecond = 0,
+      Key? key})
       : super(key: key);
 
+  final FredericGoal goal;
   final double progress;
+  final double progressRatio;
   final double length;
   final double thickness;
+  final int delayInMillisecond;
 
   @override
   State<AchievementProgressBar> createState() => _AchievementProgressBarState();
@@ -31,7 +39,8 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
             setState(() {});
           });
 
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(Duration(milliseconds: (200 + widget.delayInMillisecond)),
+        () {
       _controller.forward();
     });
 
@@ -41,7 +50,9 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
   @override
   Widget build(BuildContext context) {
     double dotPosition =
-        _animation.value * widget.progress * widget.length - 15;
+        _animation.value * widget.progressRatio * widget.length - 15;
+    double increasingTextValue = (_animation.value * widget.progress);
+    String displayTextString = increasingTextValue.toStringAsFixed(1);
     return Container(
       height: widget.thickness * 2,
       width: widget.length,
@@ -55,7 +66,7 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
             ),
             child: LinearProgressIndicator(
               minHeight: widget.thickness,
-              value: _animation.value * widget.progress,
+              value: _animation.value * widget.progressRatio,
               backgroundColor: theme.mainColorLight,
               valueColor: AlwaysStoppedAnimation<Color>(theme.mainColor),
             ),
@@ -89,7 +100,7 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
             child: FredericCard(
               width: 70,
               height: 30,
-              child: Center(child: Text('100 kg')),
+              child: Center(child: Text('$displayTextString kg')),
             ),
           ),
         ],

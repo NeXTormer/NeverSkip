@@ -121,7 +121,7 @@ class AchievementGoalCard extends StatelessWidget {
 
   void handleClick(BuildContext context) {
     CupertinoScaffold.showCupertinoModalBottomSheet(
-        context: context, builder: (c) => AchievementScreen());
+        context: context, builder: (c) => AchievementScreen(goal));
   }
 
   void handleLongClick(BuildContext context) {
