@@ -29,8 +29,11 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
   late AnimationController _controller;
   late Animation _animation;
 
+  String _unit = '';
+
   @override
   void initState() {
+    _unit = widget.goal.unit == '' ? 'kg' : widget.goal.unit;
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     _animation =
@@ -51,8 +54,8 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
   Widget build(BuildContext context) {
     double dotPosition =
         _animation.value * widget.progressRatio * widget.length - 15;
-    double increasingTextValue = (_animation.value * widget.progress);
-    String displayTextString = increasingTextValue.toStringAsFixed(1);
+    double animatedTextValue = (_animation.value * widget.progress);
+    String displayProgressText = animatedTextValue.toStringAsFixed(1);
     return Container(
       height: widget.thickness * 2,
       width: widget.length,
@@ -100,7 +103,7 @@ class _AchievementProgressBarState extends State<AchievementProgressBar>
             child: FredericCard(
               width: 70,
               height: 30,
-              child: Center(child: Text('$displayTextString kg')),
+              child: Center(child: Text('$displayProgressText $_unit')),
             ),
           ),
         ],

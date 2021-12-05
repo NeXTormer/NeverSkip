@@ -154,7 +154,6 @@ class _AchievementTimelineState extends State<AchievementTimeline>
 
   String dayToString(int day) {
     String result = 'yala';
-    print(day);
     switch (day) {
       case 1:
         result = 'Mon';
