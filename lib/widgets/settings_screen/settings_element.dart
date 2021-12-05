@@ -59,6 +59,14 @@ class _SettingsElementState extends State<SettingsElement> {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle mainTextStyle = TextStyle(
+        fontFamily: 'Montserrat',
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: theme.textColor);
+
+    TextStyle subTextStyle = TextStyle();
+
     BorderRadius borderRadius = BorderRadius.only(
         topLeft: widget.isFirstItem
             ? const Radius.circular(9)
@@ -76,7 +84,7 @@ class _SettingsElementState extends State<SettingsElement> {
         RoundedRectangleBorder(borderRadius: borderRadius);
     Widget container = Container(
         padding: EdgeInsets.only(left: widget.icon != null ? 0 : 6, right: 8),
-        height: 46,
+        //height: ,
         decoration: BoxDecoration(
             //color:
             //  true ? Colors.white.withOpacity(1) : theme.cardBackgroundColor,
@@ -84,69 +92,122 @@ class _SettingsElementState extends State<SettingsElement> {
             border: Border.all(color: Colors.transparent)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             if (widget.icon != null)
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 6, left: 6, bottom: 6, right: 12),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: theme.mainColor),
-                      child: Icon(
-                        widget.icon!,
-                        color: Colors.white,
-                      )),
+              ConstrainedBox(
+                constraints: BoxConstraints.tightFor(height: 44),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 6, left: 6, bottom: 6, right: 12),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: theme.mainColor),
+                        child: Icon(
+                          widget.icon!,
+                          color: Colors.white,
+                        )),
+                  ),
                 ),
               ),
             Expanded(
-              child: Text(
-                widget.text,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: theme.textColor),
+              child: Container(
+                //color: Colors.red,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  Size mainTextSize = _textSize(widget.text, mainTextStyle);
+                  Size subTextSize = widget.subText == null
+                      ? Size.square(0)
+                      : _textSize(widget.subText!, subTextStyle);
+                  const double padding = 30;
+                  double totalLength =
+                      mainTextSize.width + subTextSize.width + padding;
+                  int lines = totalLength ~/ constraints.maxWidth;
+                  lines++;
+                  bool mainTextTooLong = (mainTextSize.width + padding + 10) >
+                      constraints.maxWidth;
+                  return ConstrainedBox(
+                    constraints:
+                        BoxConstraints.tightFor(height: lines * 12 + 32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.text,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: mainTextStyle,
+                              ),
+                            ),
+                            if (widget.subText != null && lines == 1)
+                              Text(
+                                widget.subText!,
+                                maxLines: 1,
+                                textAlign: TextAlign.right,
+                                style: subTextStyle,
+                              ),
+                            if (widget.subText != null && lines == 1)
+                              SizedBox(width: 6),
+                            if (widget.hasSwitch &&
+                                widget.defaultSwitchPosition == null)
+                              SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  color: theme.mainColor,
+                                ),
+                              ),
+                            if (widget.hasSwitch &&
+                                widget.defaultSwitchPosition != null)
+                              CupertinoSwitch(
+                                  value: switchState,
+                                  onChanged: (state) async {
+                                    if (widget.onChanged == null ||
+                                        await widget.onChanged!(state)) {
+                                      setState(() {
+                                        switchState = state;
+                                      });
+                                    }
+                                  },
+                                  activeColor: theme.mainColor),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            if (widget.subText != null && lines == 2)
+                              Expanded(
+                                child: Text(
+                                  widget.subText!,
+                                  maxLines: 1,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: subTextStyle,
+                                ),
+                              ),
+                            if (widget.subText != null && lines == 2)
+                              SizedBox(width: 18),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                }),
               ),
             ),
-            if (widget.subText != null)
-              Text(
-                widget.subText!,
-                maxLines: 1,
-                textAlign: TextAlign.right,
-              ),
-            SizedBox(width: 6),
-            if (widget.hasSwitch && widget.defaultSwitchPosition == null)
-              SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  color: theme.mainColor,
-                ),
-              ),
-            if (widget.hasSwitch && widget.defaultSwitchPosition != null)
-              CupertinoSwitch(
-                  value: switchState,
-                  onChanged: (state) async {
-                    if (widget.onChanged == null ||
-                        await widget.onChanged!(state)) {
-                      setState(() {
-                        switchState = state;
-                      });
-                    }
-                  },
-                  activeColor: theme.mainColor),
             if (!widget.hasSwitch && widget.clickable)
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: theme.greyColor,
-              )
+              ),
           ],
         ));
     if (widget.hasSwitch || !widget.clickable)
@@ -186,5 +247,14 @@ class _SettingsElementState extends State<SettingsElement> {
         ),
       ),
     );
+  }
+
+  Size _textSize(String text, TextStyle? style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 }
