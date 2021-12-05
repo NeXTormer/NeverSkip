@@ -29,6 +29,10 @@ const bool _kTestingCrashlytics = true;
 
 late final kAppFlavor;
 
+void main() {
+  start(Flavor.Basic);
+}
+
 void start(Flavor flavor) async {
   kAppFlavor = flavor;
   LicenseRegistry.addLicense(() async* {
@@ -171,4 +175,4 @@ class _FredericBaseState extends State<FredericBase> {
   }
 }
 
-enum Flavor { Development, Production }
+enum Flavor { Development, Production, Basic }

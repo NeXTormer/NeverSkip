@@ -48,6 +48,7 @@ class HomeScreenAppbar extends StatelessWidget {
                 );
               },
               expandedChild: SettingsScreen()),
+          if (kAppFlavor == Flavor.Basic) Icon(Icons.ac_unit_outlined),
           if (kAppFlavor == Flavor.Development)
             Icon(
               Icons.build_circle_outlined,
