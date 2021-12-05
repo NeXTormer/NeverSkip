@@ -9,7 +9,7 @@ void main() {
 
   group('email-login-test', () {
     testWidgets('login with email and password', (WidgetTester tester) async {
-      app.main();
+      app.start(app.Flavor.Development);
       await tester.pumpAndSettle();
 
       expect(find.text('Create a new account'), findsOneWidget);

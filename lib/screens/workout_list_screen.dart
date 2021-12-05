@@ -57,8 +57,6 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
 
   Widget buildAlternativeAddWorkoutButton(BuildContext context) {
     return FloatingActionButton(
-        elevation: 0,
-        highlightElevation: 0,
         backgroundColor: theme.mainColor,
         onPressed: () => CupertinoScaffold.showCupertinoModalBottomSheet(
             context: context,
@@ -66,7 +64,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
                 body: EditWorkoutDataScreen(FredericWorkout.create()))),
         child: Icon(
           Icons.add_chart,
-          color: theme.textColorColorfulBackground,
+          color: Colors.white,
         ));
   }
 
