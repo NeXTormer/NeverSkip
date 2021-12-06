@@ -96,18 +96,15 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Transform.scale(
-                                  scale: 0.88,
-                                  child: CupertinoSwitch(
-                                    key: ValueKey(widget.workout.workoutID),
-                                    value: isSelected,
-                                    activeColor: theme.mainColor,
-                                    onChanged: widget.workout.workoutID == 'new'
-                                        ? null
-                                        : (value) =>
-                                            handleSwitch(context, value),
-                                  ),
+                                padding:
+                                    const EdgeInsets.only(top: 4, right: 2),
+                                child: CupertinoSwitch(
+                                  key: ValueKey(widget.workout.workoutID),
+                                  value: isSelected,
+                                  activeColor: theme.mainColor,
+                                  onChanged: widget.workout.workoutID == 'new'
+                                      ? null
+                                      : (value) => handleSwitch(context, value),
                                 ),
                               )
                             ],

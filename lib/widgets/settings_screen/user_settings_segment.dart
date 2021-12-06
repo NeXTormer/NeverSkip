@@ -32,31 +32,34 @@ class UserSettingsSegment extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 22),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Manage your User Account',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14),
-                        )
-                      ],
+                    padding: const EdgeInsets.only(
+                        top: 6, bottom: 6, left: 12, right: 2),
+                    child: Container(
+                      //color: Colors.red,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 22),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Manage your User Account',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
