@@ -24,7 +24,7 @@ class GoalCard extends StatelessWidget {
       this.interactable = true,
       this.index = 0});
 
-  final FredericGoal goal;
+  final FredericGoal? goal;
 
   final GoalCardType type;
 
@@ -49,11 +49,11 @@ class GoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == GoalCardType.Achievement) {
-      return AchievementGoalCard(goal, index: index);
+      return AchievementGoalCard(goal!, index: index);
     }
     if (type == GoalCardType.Normal) {
       return NormalGoalCard(
-        goal,
+        goal!,
         sets: sets,
         activity: activity,
         startDate: startDate,
@@ -66,7 +66,6 @@ class GoalCard extends StatelessWidget {
         interactable: interactable,
       );
     }
-
     return Container(
         color: Colors.redAccent,
         height: 40,

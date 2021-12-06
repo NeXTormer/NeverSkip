@@ -99,20 +99,17 @@ class _AchievementTimelineState extends State<AchievementTimeline>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            animatedOpacityTextbox(
+            animatedDateOpacity(
                 '${_startDate!.day}\n$_startDayString', _delayDate),
-            animatedWeeksContainer(
-                '$_days Days', containerWidthDate, _delayDays),
-            animatedOpacityTextbox(
-                '${_endDate!.day}\n$_endDayString', _delayDate),
+            animatedDaysText('$_days Days', containerWidthDate, _delayDays),
+            animatedDateOpacity('${_endDate!.day}\n$_endDayString', _delayDate),
           ],
         ),
       ],
     );
   }
 
-  Widget animatedWeeksContainer(
-      String text, double width, int delayInMilliseconds) {
+  Widget animatedDaysText(String text, double width, int delayInMilliseconds) {
     return Container(
       height: 20,
       width: width,
@@ -131,13 +128,13 @@ class _AchievementTimelineState extends State<AchievementTimeline>
     );
   }
 
-  Widget animatedOpacityTextbox(String text, int delayInMilliseconds) {
+  Widget animatedDateOpacity(String text, int delayInMilliseconds) {
     return AnimatedOpacity(
       curve: Curves.easeIn,
       duration: Duration(milliseconds: delayInMilliseconds),
       opacity: _visibleDates ? 1.0 : 0.0,
       child: Container(
-        width: 40,
+        width: 45,
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
