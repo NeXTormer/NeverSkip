@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:provider/provider.dart';
+
+import 'add_progress_card.dart';
 
 class RepsWeightSmartSuggestions extends StatelessWidget {
   const RepsWeightSmartSuggestions(this.suggestions, {Key? key})
