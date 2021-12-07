@@ -11,25 +11,29 @@ import '../../main.dart';
 
 class ActivityPlayerActivityCard extends StatelessWidget {
   ActivityPlayerActivityCard(this.activity,
-      {this.disabled = false, this.indicator = false});
+      {this.disabled = false, this.onTap, this.finished = false});
 
-  final FredericWorkoutActivity activity;
-  final bool indicator;
+  final FredericWorkoutActivity? activity;
   final bool disabled;
+  final bool finished;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
+      height: 75,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CalendarTimeLine(
-            isActive: indicator,
+            isActive: !disabled,
             activeColor: disabled ? theme.greyColor : theme.mainColor,
           ),
           SizedBox(width: 8),
-          Expanded(child: _CardContent(activity, disabled: disabled))
+          Expanded(
+              child: activity == null
+                  ? _DoneCardContent(onTap: onTap)
+                  : _CardContent(activity!, disabled: disabled, onTap: onTap))
         ],
       ),
     );
@@ -37,15 +41,18 @@ class ActivityPlayerActivityCard extends StatelessWidget {
 }
 
 class _CardContent extends StatelessWidget {
-  const _CardContent(this.activity, {Key? key, this.disabled = false})
+  const _CardContent(this.activity,
+      {this.onTap, Key? key, this.disabled = false})
       : super(key: key);
 
   final FredericWorkoutActivity activity;
   final bool disabled;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return FredericCard(
+        onTap: onTap,
         padding: EdgeInsets.all(10),
         child: Row(
           children: [
@@ -112,6 +119,53 @@ class _CardContent extends StatelessWidget {
                       Expanded(child: Container()),
                     ],
                   )
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+}
+
+class _DoneCardContent extends StatelessWidget {
+  const _DoneCardContent({this.onTap, Key? key}) : super(key: key);
+
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return FredericCard(
+        onTap: onTap,
+        padding: EdgeInsets.all(10),
+        child: Row(
+          children: [
+            AspectRatio(
+              child: PictureIcon.icon(Icons.thumb_up_outlined,
+                  mainColor: theme.mainColorInText,
+                  accentColor: theme.mainColorLight),
+              aspectRatio: 1,
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Good Job! You\'re done for the Day!',
+                      maxLines: 2,
+                      style: TextStyle(
+                          //textBaseline: TextBaseline.alphabetic,
+                          fontFamily: 'Montserrat',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: theme.textColor)),
+                  Text(
+                    'Click here for more info.',
+                    style: TextStyle(
+                        color: theme.textColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
+                  ),
                 ],
               ),
             ),

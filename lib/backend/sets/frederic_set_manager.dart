@@ -118,6 +118,13 @@ class FredericSetListData {
     return sets[value]!;
   }
 
+  List<FredericSet> getTodaysSets(FredericActivity activity, [DateTime? day]) {
+    day = day ?? DateTime.now();
+    FredericSetList setList = this[activity.activityID];
+
+    return setList.getTodaysSets(day);
+  }
+
   bool operator ==(other) => false;
 
   bool hasChanged(String activityID) => changedActivities.contains(activityID);

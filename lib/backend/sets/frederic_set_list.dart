@@ -80,6 +80,7 @@ class FredericSetList {
     _setManager.add(FredericSetEvent(<String>[activityID]));
   }
 
+  // TODO: make _setDocuments an ordered list to optimize it?
   List<FredericSet> getLatestSets([int count = 6]) {
     List<FredericSet> sets = <FredericSet>[];
     _setDocuments.sort();
@@ -97,6 +98,34 @@ class FredericSetList {
       sets.add(_setDocuments[documentIndex].sets[setIndex]);
     }
     sets.sort();
+    return sets;
+  }
+
+  List<FredericSet> getTodaysSets([DateTime? day]) {
+    day = day ?? DateTime.now();
+    List<FredericSet> sets = <FredericSet>[];
+
+    _setDocuments.sort();
+    int documentIndex = 0;
+    int setIndex = -1;
+    while (true) {
+      setIndex++;
+      if (documentIndex >= _setDocuments.length) break;
+      if (setIndex >= _setDocuments[documentIndex].sets.length) {
+        documentIndex++;
+        setIndex = -1;
+        continue;
+      }
+      _setDocuments[documentIndex].sets.sort();
+      FredericSet current = _setDocuments[documentIndex].sets[setIndex];
+      if (current.timestamp.isSameDay(day)) {
+        sets.add(current);
+      } else {
+        break;
+      }
+    }
+    sets.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
     return sets;
   }
 

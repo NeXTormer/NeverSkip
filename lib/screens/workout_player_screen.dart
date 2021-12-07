@@ -42,12 +42,20 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
           FredericDivider(),
           Flexible(
             child: LayoutBuilder(builder: (context, constraints) {
+              int numberOfActivities = widget.activities.length;
               return PageView.builder(
                   controller: pageController,
                   scrollDirection: Axis.vertical,
+                  itemCount: numberOfActivities,
                   itemBuilder: (context, index) {
-                    return ActivityPlayerView(widget.activities.first,
-                        constraints: constraints);
+                    return ActivityPlayerView(
+                      widget.activities[index],
+                      nextActivity: index == (numberOfActivities - 1)
+                          ? null
+                          : widget.activities[index + 1],
+                      constraints: constraints,
+                      pageController: pageController,
+                    );
                   });
             }),
           ),

@@ -52,6 +52,10 @@ class FredericAnalytics {
     return analytics.logEvent(name: 'add-progress-using-calendar');
   }
 
+  Future<void> logAddProgressOnWorkoutPlayer() {
+    return analytics.logEvent(name: 'add-progress-using-workout-player');
+  }
+
   Future<void> logCompleteCalendarDay() {
     return analytics.logEvent(name: 'complete-calendar-day');
   }
