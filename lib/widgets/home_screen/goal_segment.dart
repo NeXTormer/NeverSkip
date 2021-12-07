@@ -22,8 +22,6 @@ class GoalSegment extends StatelessWidget {
           buildWhen: (current, next) {
         return next.changedActivities.any((element) => goals.contains(element));
       }, builder: (context, setData) {
-        print('++++++++++');
-
         return BlocBuilder<FredericActivityManager, FredericActivityListData>(
             builder: (context, activityListData) {
           return Column(children: [

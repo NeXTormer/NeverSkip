@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
@@ -5,6 +6,7 @@ import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
+import 'package:frederic/widgets/home_screen/goal_finish_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
@@ -125,7 +127,7 @@ class _NormalGoalCard extends State<NormalGoalCard> {
             if (widget.interactable) handleLongClick(context);
           },
           onTap: () {
-            if (widget.interactable) handleClick(context);
+            if (widget.interactable) handleClick();
           },
           width: 260,
           padding: EdgeInsets.all(10),
@@ -263,32 +265,39 @@ class _NormalGoalCard extends State<NormalGoalCard> {
     );
   }
 
-  void handleClick(BuildContext context) {
+  void handleClick() {
     isCompleted
-        ? showDialog(
+        ? showModal(
+            configuration: FadeScaleTransitionConfiguration(
+              transitionDuration: Duration(milliseconds: 500),
+            ),
             context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Congratulations'),
-                  actionsOverflowButtonSpacing: 20,
-                  content: Text(
-                      'Do you want to save your goal to your achievements?'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          widget.goal.isCompleted = true;
-                          widget.goal.isDeleted = true;
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Delete')),
-                    ElevatedButton(
-                        onPressed: () {
-                          widget.goal.isCompleted = true;
-                          widget.goal.isDeleted = false;
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Save')),
-                  ],
-                ))
+            builder: (ctx) => Dialog(
+                insetPadding: const EdgeInsets.all(10),
+                child: GoalFinishActionDialog(widget.goal)),
+            // AlertDialog(
+            //   title: Text('Congratulations'),
+            //   actionsOverflowButtonSpacing: 20,
+            //   content:
+            //       Text('Do you want to save your goal to your achievements?'),
+            //   actions: [
+            //     ElevatedButton(
+            //         onPressed: () {
+            //           widget.goal.isCompleted = true;
+            //           widget.goal.isDeleted = true;
+            //           Navigator.of(context).pop();
+            //         },
+            //         child: Text('Delete')),
+            //     ElevatedButton(
+            //         onPressed: () {
+            //           widget.goal.isCompleted = true;
+            //           widget.goal.isDeleted = false;
+            //           Navigator.of(context).pop();
+            //         },
+            //         child: Text('Save')),
+            //   ],
+            // ),
+          )
         : CupertinoScaffold.showCupertinoModalBottomSheet(
             context: context,
             builder: (c) => Scaffold(

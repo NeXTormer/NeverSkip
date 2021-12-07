@@ -27,7 +27,6 @@ class _GoalCardMedailleIndicatorState extends State<GoalCardMedailleIndicator>
         width: widget.size,
         height: widget.size,
         controller: _controller, onLoaded: (composition) {
-      // print('>>> Play Animation <<<');
       Future.delayed(Duration(milliseconds: 200), () {
         _controller
           ..duration = composition.duration
