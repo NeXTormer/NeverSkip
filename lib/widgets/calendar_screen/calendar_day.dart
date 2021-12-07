@@ -190,15 +190,19 @@ class CalendarActivityCard extends StatelessWidget {
 }
 
 class CalendarTimeLine extends StatelessWidget {
-  CalendarTimeLine({this.isActive = false, Color? activeColor}) {
+  CalendarTimeLine(
+      {this.isActive = false, this.finished = false, Color? activeColor}) {
     this.activeColor = activeColor ?? theme.mainColor;
     disabledColor = theme.disabledGreyColor;
+    this.finishedColor = theme.positiveColor;
   }
 
   final bool isActive;
+  final bool finished;
 
   late final Color activeColor;
   late final Color disabledColor;
+  late final Color finishedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -207,15 +211,20 @@ class CalendarTimeLine extends StatelessWidget {
         children: [
           Stack(
             alignment: Alignment.center,
-            children: isActive
-                ? [
+            children: !isActive
+                ? finished
+                    ? [
+                        circle(finishedColor, 8),
+                        circle(finishedColor.withOpacity(0.1), 16)
+                      ]
+                    : [
+                        circle(disabledColor, 10),
+                        circle(Colors.white, 6),
+                        circle(Colors.transparent, 16)
+                      ]
+                : [
                     circle(activeColor, 8),
                     circle(activeColor.withOpacity(0.1), 16)
-                  ]
-                : [
-                    circle(disabledColor, 10),
-                    circle(Colors.white, 6),
-                    circle(Colors.transparent, 16)
                   ],
           ),
           SizedBox(height: 4),
@@ -226,9 +235,11 @@ class CalendarTimeLine extends StatelessWidget {
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: isActive
-                          ? [activeColor, activeColor.withAlpha(0)]
-                          : [disabledColor, disabledColor.withAlpha(0)]),
+                      colors: !isActive
+                          ? finished
+                              ? [finishedColor, finishedColor.withAlpha(0)]
+                              : [disabledColor, disabledColor.withAlpha(0)]
+                          : [activeColor, activeColor.withAlpha(0)]),
                   borderRadius: BorderRadius.all(Radius.circular(100))),
             ),
           ),

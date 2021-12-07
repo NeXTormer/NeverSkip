@@ -5,10 +5,10 @@ import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
+import 'package:frederic/widgets/workout_player_screen/activity_player_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../main.dart';
-import 'activity_player_view.dart';
 
 class ActivityPlayerSetSegment extends StatelessWidget {
   const ActivityPlayerSetSegment(this.activity,
@@ -20,111 +20,110 @@ class ActivityPlayerSetSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BooleanChangeNotifier>(builder: (context, finished, child) {
-      return BlocBuilder<FredericSetManager, FredericSetListData>(
-          buildWhen: (current, next) =>
-              next.changedActivities.contains(activity.activity.activityID),
-          builder: (context, setListData) {
-            double itemExtent = 60;
+    return BlocBuilder<FredericSetManager, FredericSetListData>(
+        buildWhen: (current, next) =>
+            next.changedActivities.contains(activity.activity.activityID),
+        builder: (context, setListData) {
+          double itemExtent = 60;
 
-            var todaysSets =
-                setListData[activity.activity.activityID].getTodaysSets();
+          var todaysSets =
+              setListData[activity.activity.activityID].getTodaysSets();
 
-            int numberOfSetsTODO = activity.sets;
-            int numberOfSetsDone = todaysSets.length;
-            int numberOfSetsTODOToDisplay = numberOfSetsTODO - numberOfSetsDone;
-            if (numberOfSetsTODOToDisplay < 0) numberOfSetsTODOToDisplay = 0;
-            int numberOfSetsTotal =
-                numberOfSetsDone + numberOfSetsTODOToDisplay;
+          int numberOfSetsTODO = activity.sets;
+          int numberOfSetsDone = todaysSets.length;
+          int numberOfSetsTODOToDisplay = numberOfSetsTODO - numberOfSetsDone;
+          if (numberOfSetsTODOToDisplay < 0) numberOfSetsTODOToDisplay = 0;
+          int numberOfSetsTotal = numberOfSetsDone + numberOfSetsTODOToDisplay;
 
-            int indexCurrentSet = numberOfSetsDone;
-            bool everythingComplete = numberOfSetsDone >= numberOfSetsTODO;
+          int indexCurrentSet = numberOfSetsDone;
+          bool everythingComplete = numberOfSetsDone >= numberOfSetsTODO;
 
-            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-              jumpTo(indexCurrentSet * itemExtent);
-              finished.value = everythingComplete;
-            });
+          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+            jumpTo(indexCurrentSet * itemExtent);
+          });
+          Future(() {
+            Provider.of<BooleanChangeNotifier>(context, listen: false).value =
+                everythingComplete;
+          });
 
-            //int currentFirstItem = widget.controller.offset ~/ itemExtent;
-            //print(currentFirstItem);
+          //int currentFirstItem = widget.controller.offset ~/ itemExtent;
+          //print(currentFirstItem);
 
-            return LayoutBuilder(builder: (context, constraints) {
-              double availableHeight = constraints.maxHeight;
-              int itemCount = availableHeight ~/ itemExtent;
-              double listHeight = itemCount * itemExtent;
-              return Column(
-                children: [
-                  Container(
-                    height: listHeight,
-                    child: GestureDetector(
-                      onVerticalDragUpdate: (details) {
-                        if (details.delta.dy.abs() >= 1) {
-                          if (details.delta.dy < 0) {
-                            jumpTo(controller.offset + itemExtent);
-                          } else {
-                            jumpTo(controller.offset - itemExtent);
-                          }
+          return LayoutBuilder(builder: (context, constraints) {
+            double availableHeight = constraints.maxHeight;
+            int itemCount = availableHeight ~/ itemExtent;
+            double listHeight = itemCount * itemExtent;
+            return Column(
+              children: [
+                Container(
+                  height: listHeight,
+                  child: GestureDetector(
+                    onVerticalDragUpdate: (details) {
+                      if (details.delta.dy.abs() >= 1) {
+                        if (details.delta.dy < 0) {
+                          jumpTo(controller.offset + itemExtent);
+                        } else {
+                          jumpTo(controller.offset - itemExtent);
                         }
+                      }
+                    },
+                    child:
+                        NotificationListener<OverscrollIndicatorNotification>(
+                      onNotification: (overscroll) {
+                        overscroll.disallowGlow();
+                        return true;
                       },
-                      child:
-                          NotificationListener<OverscrollIndicatorNotification>(
-                        onNotification: (overscroll) {
-                          overscroll.disallowGlow();
-                          return true;
+                      child: ListView.builder(
+                        //key: UniqueKey(),
+                        //key: ValueKey<int>(numberOfSetsTotal),
+                        controller: controller,
+                        prototypeItem: _SetCard(),
+                        itemCount: numberOfSetsTotal + 1,
+                        scrollDirection: Axis.vertical,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          if (index >= numberOfSetsTotal) {
+                            return _SetCard(
+                              finished: everythingComplete,
+                              disabled: !everythingComplete,
+                              last: true,
+                            );
+                          } else if (index > indexCurrentSet) {
+                            // sets still to do:
+                            return _SetCard(
+                              reps: activity.reps,
+                              disabled: true,
+                            );
+                          } else if (index == indexCurrentSet) {
+                            // current set:
+                            return _SetCard(
+                              reps: activity.reps,
+                            );
+                          } else {
+                            // sets already done:
+                            int reps = activity.reps;
+                            if (index < todaysSets.length)
+                              reps = todaysSets[index].reps;
+                            return _SetCard(
+                              reps: reps,
+                              finished: true,
+                            );
+                          }
                         },
-                        child: ListView.builder(
-                          //key: UniqueKey(),
-                          //key: ValueKey<int>(numberOfSetsTotal),
-                          controller: controller,
-                          prototypeItem: _SetCard(),
-                          itemCount: numberOfSetsTotal + 1,
-                          scrollDirection: Axis.vertical,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            if (index >= numberOfSetsTotal) {
-                              return _SetCard(
-                                finished: everythingComplete,
-                                disabled: !everythingComplete,
-                                last: true,
-                              );
-                            } else if (index > indexCurrentSet) {
-                              // sets still todo:
-                              return _SetCard(
-                                reps: activity.reps,
-                                disabled: true,
-                              );
-                            } else if (index == indexCurrentSet) {
-                              // current set:
-                              return _SetCard(
-                                reps: activity.reps,
-                              );
-                            } else {
-                              // sets already done:
-                              int reps = activity.reps;
-                              if (index < todaysSets.length)
-                                reps = todaysSets[index].reps;
-                              return _SetCard(
-                                reps: reps,
-                                finished: true,
-                              );
-                            }
-                          },
-                        ),
                       ),
                     ),
                   ),
-                  Expanded(child: Container()),
-                ],
-              );
-            });
+                ),
+                Expanded(child: Container()),
+              ],
+            );
           });
-    });
+        });
   }
 
   void jumpTo(double offset) {
-    if (controller.hasClients)
-      controller.animateTo(offset,
-          duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+    controller.animateTo(offset,
+        duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 }
 
@@ -230,7 +229,8 @@ class _SetCard extends StatelessWidget {
                                     fontSize: 12)),
                           ]),
                     Expanded(child: Container()),
-                    if (!last) Icon(Icons.check_box_outlined)
+                    if (!last && finished)
+                      Icon(Icons.delete_outlined, color: theme.greyTextColor)
                   ],
                 )),
           ),

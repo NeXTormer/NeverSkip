@@ -20,20 +20,24 @@ class ActivityPlayerActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool doneCard = activity == null;
     return Container(
       height: 75,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CalendarTimeLine(
-            isActive: !disabled,
-            activeColor: disabled ? theme.greyColor : theme.mainColor,
-          ),
-          SizedBox(width: 8),
+          if (!doneCard)
+            CalendarTimeLine(
+              isActive: finished ? false : !disabled,
+              finished: finished,
+              //activeColor: disabled ? theme.greyColor : theme.mainColor,
+            ),
+          if (!doneCard) SizedBox(width: 8),
           Expanded(
               child: activity == null
                   ? _DoneCardContent(onTap: onTap)
-                  : _CardContent(activity!, disabled: disabled, onTap: onTap))
+                  : _CardContent(activity!,
+                      disabled: disabled, finished: finished, onTap: onTap))
         ],
       ),
     );
@@ -42,11 +46,12 @@ class ActivityPlayerActivityCard extends StatelessWidget {
 
 class _CardContent extends StatelessWidget {
   const _CardContent(this.activity,
-      {this.onTap, Key? key, this.disabled = false})
+      {this.onTap, Key? key, this.finished = false, this.disabled = false})
       : super(key: key);
 
   final FredericWorkoutActivity activity;
   final bool disabled;
+  final bool finished;
   final void Function()? onTap;
 
   @override
@@ -58,11 +63,16 @@ class _CardContent extends StatelessWidget {
           children: [
             AspectRatio(
               child: PictureIcon(activity.activity.image,
-                  mainColor:
-                      disabled ? theme.greyTextColor : theme.mainColorInText,
+                  mainColor: disabled
+                      ? theme.greyTextColor
+                      : finished
+                          ? theme.positiveColor
+                          : theme.mainColorInText,
                   accentColor: disabled
                       ? theme.disabledGreyColor.withAlpha(50)
-                      : theme.mainColorLight),
+                      : finished
+                          ? theme.positiveColorLight
+                          : theme.mainColorLight),
               aspectRatio: 1,
             ),
             SizedBox(width: 12),

@@ -5,6 +5,7 @@ import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/sets/frederic_set.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
+import 'package:frederic/state/workout_player_state.dart';
 import 'package:frederic/widgets/add_progress_screen/add_progress_card.dart';
 import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
 import 'package:frederic/widgets/workout_player_screen/activity_player_activity_card.dart';
@@ -42,6 +43,10 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
     super.initState();
   }
 
+  void preparePlayer() {
+    // set total
+  }
+
   @override
   Widget build(BuildContext context) {
     bool showSmartSuggestions = true;
@@ -72,22 +77,27 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                       controller: scrollController,
                     )),
                     SizedBox(height: 16),
-                    AddProgressCard(
-                        controller: addProgressController,
-                        activity: widget.activity.activity,
-                        onSave: saveProgress,
-                        suggestions: showSmartSuggestions
-                            ? setListData[widget.activity.activity.activityID]
-                                .getSuggestions(
-                                    weighted: widget.activity.activity.type ==
-                                        FredericActivityType.Weighted,
-                                    recommendedReps: widget.activity.reps)
-                            : null),
+                    Consumer<WorkoutPlayerState>(
+                        builder: (context, playerState, child) {
+                      return AddProgressCard(
+                          controller: addProgressController,
+                          activity: widget.activity.activity,
+                          onSave: () => saveProgress(playerState),
+                          suggestions: showSmartSuggestions
+                              ? setListData[widget.activity.activity.activityID]
+                                  .getSuggestions(
+                                      weighted: widget.activity.activity.type ==
+                                          FredericActivityType.Weighted,
+                                      recommendedReps: widget.activity.reps)
+                              : null);
+                    }),
                     SizedBox(height: 16),
                     Consumer<BooleanChangeNotifier>(
                         builder: (context, finished, child) {
                       return ActivityPlayerActivityCard(
                         widget.nextActivity,
+                        finished: false,
+                        disabled: !finished.value,
                         onTap: () {
                           if (widget.nextActivity == null) {
                           } else {
@@ -96,7 +106,6 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                                 curve: Curves.easeInOut);
                           }
                         },
-                        disabled: !finished.value,
                       );
                     }),
                   ],
@@ -107,13 +116,13 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
         });
   }
 
-  void saveProgress() {
+  void saveProgress(WorkoutPlayerState playerState) {
     int reps = addProgressController.reps;
     double weight = addProgressController.weight;
-
-    FredericBackend.instance.setManager.addSet(
-        widget.activity.activity.activityID,
-        FredericSet(reps, weight, DateTime.now()));
+    FredericSet set = FredericSet(reps, weight, DateTime.now());
+    playerState.addProgress(widget.activity.activity, set);
+    FredericBackend.instance.setManager
+        .addSet(widget.activity.activity.activityID, set);
 
     FredericBackend.instance.analytics.logAddProgressOnWorkoutPlayer();
   }
