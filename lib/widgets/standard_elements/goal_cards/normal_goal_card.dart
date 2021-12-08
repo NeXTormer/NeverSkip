@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
@@ -272,31 +273,13 @@ class _NormalGoalCard extends State<NormalGoalCard> {
               transitionDuration: Duration(milliseconds: 500),
             ),
             context: context,
-            builder: (ctx) => Dialog(
-                insetPadding: const EdgeInsets.all(10),
-                child: GoalFinishActionDialog(widget.goal)),
-            // AlertDialog(
-            //   title: Text('Congratulations'),
-            //   actionsOverflowButtonSpacing: 20,
-            //   content:
-            //       Text('Do you want to save your goal to your achievements?'),
-            //   actions: [
-            //     ElevatedButton(
-            //         onPressed: () {
-            //           widget.goal.isCompleted = true;
-            //           widget.goal.isDeleted = true;
-            //           Navigator.of(context).pop();
-            //         },
-            //         child: Text('Delete')),
-            //     ElevatedButton(
-            //         onPressed: () {
-            //           widget.goal.isCompleted = true;
-            //           widget.goal.isDeleted = false;
-            //           Navigator.of(context).pop();
-            //         },
-            //         child: Text('Save')),
-            //   ],
-            // ),
+            builder: (ctx) {
+              HapticFeedback.heavyImpact();
+              return Dialog(
+                  backgroundColor: Colors.transparent,
+                  insetPadding: const EdgeInsets.all(10),
+                  child: GoalFinishActionDialog(widget.goal));
+            },
           )
         : CupertinoScaffold.showCupertinoModalBottomSheet(
             context: context,
@@ -313,10 +296,8 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         context: context,
         builder: (context) => FredericActionDialog(
               onConfirm: () {
-                // FredericBackend.instance.goalManager.deleteGoal(widget.goal);
                 FredericBackend.instance.goalManager
                     .add(FredericGoalDeleteEvent(widget.goal));
-                // widget.goal.isDeleted = true;
                 Navigator.of(context).pop();
               },
               destructiveAction: true,
@@ -336,7 +317,6 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         (startState ?? widget.goal.startState),
         (endState ?? widget.goal.endState));
     if (state >= 1) {
-      // widget.goal.isCompleted = true;
       isCompleted = true;
     }
   }

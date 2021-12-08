@@ -52,6 +52,7 @@ dependencies:
   image: ^3.0.2
   lottie: ^1.2.1
   shimmer: ^2.0.0
+  confetti: ^0.6.0
   animations: ^2.0.1
   fluttertoast: ^8.0.6
   image_picker: ^0.8.3+2
@@ -101,6 +102,7 @@ flutter:
     - assets/images/google/google_logo_light.png
     - assets/images/Medaille.png
     - assets/animations/app_icon_animation.json
+    - assets/animations/app_icon_animation_2.json
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
