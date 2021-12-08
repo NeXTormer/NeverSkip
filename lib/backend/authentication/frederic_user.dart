@@ -36,6 +36,7 @@ class FredericUser {
   DateTime? _streakLatestDate;
   List<String>? _activeWorkouts;
   List<String>? _progressMonitors;
+  List<String>? _goals;
 
   bool get justRegistered => registered;
   bool get authenticated => uid != '';
@@ -53,6 +54,13 @@ class FredericUser {
   DateTime? get birthday => _birthday;
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
+  List<String> get goals {
+    if (_goals == null) {
+      _goals = <String>[];
+    }
+    return _goals!;
+  }
+
   List<String> get progressMonitors {
     if (_progressMonitors == null) {
       _progressMonitors = <String>[];
@@ -115,6 +123,14 @@ class FredericUser {
         .collection('users')
         .doc(uid)
         .update({'progressmonitors': value});
+  }
+
+  set goals(List<String> value) {
+    if (uid == '') return;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'goals': value});
   }
 
   set activeWorkouts(List<String> value) {

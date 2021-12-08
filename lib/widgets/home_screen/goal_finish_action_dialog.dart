@@ -82,9 +82,17 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                   ),
                 ),
-                Text(
-                    'Do you want to save "${widget.goal.title}" to your achievements?',
-                    textAlign: TextAlign.center),
+                Text.rich(
+                  TextSpan(children: [
+                    TextSpan(text: 'Do you want to save '),
+                    TextSpan(
+                      text: '"${widget.goal.title}"',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    TextSpan(text: 'to your achievements?'),
+                  ]),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: 12),
                 Row(
                   children: [

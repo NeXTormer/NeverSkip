@@ -148,8 +148,8 @@ class _NormalGoalCard extends State<NormalGoalCard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            width: 120,
+                          Expanded(
+                            flex: 2,
                             child: Text(
                               '${title ?? widget.goal.title}',
                               overflow: TextOverflow.ellipsis,
@@ -157,7 +157,9 @@ class _NormalGoalCard extends State<NormalGoalCard> {
                                   color: theme.greyTextColor, fontSize: 12),
                             ),
                           ),
+                          SizedBox(width: 12),
                           Flexible(
+                            flex: 1,
                             child: FredericChip(
                                 '${widget.goal.endDate.difference(widget.goal.startDate).inDays} days'),
                           ),

@@ -71,7 +71,7 @@ class _AchievementTimelineState extends State<AchievementTimeline>
   @override
   Widget build(BuildContext context) {
     double containerWidth = _animation.value * widget.width;
-    double containerWidthDate = _animation.value * (widget.width - 90);
+    double containerWidthDate = _animation.value * (widget.width - 110);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

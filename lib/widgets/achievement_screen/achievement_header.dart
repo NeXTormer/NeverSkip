@@ -34,22 +34,3 @@ class AchievementHeader extends StatelessWidget {
     );
   }
 }
-
-// SliverToBoxAdapter(
-//       child: Padding(
-//         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-//         child: Row(
-//           children: [
-//             Icon(
-//               ExtraIcons.dumbbell,
-//               color: theme.mainColor,
-//             ),
-//             SizedBox(width: 32),
-//             Text(
-//               'Overview',
-//               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );

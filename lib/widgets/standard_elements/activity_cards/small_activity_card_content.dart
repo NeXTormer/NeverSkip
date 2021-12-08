@@ -38,9 +38,11 @@ class SmallActivityCardContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
+                Container(
+                  width: 93,
                   child: Text(
                     activity.name,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: theme.greyTextColor,
                         fontSize: 10,

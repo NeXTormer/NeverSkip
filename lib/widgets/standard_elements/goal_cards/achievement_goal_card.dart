@@ -57,7 +57,7 @@ class AchievementGoalCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: -2,
+            top: -3,
             left: 20,
             child: Image.asset(
               'assets/images/Medaille.png',
@@ -113,8 +113,8 @@ class AchievementGoalCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          width: 120,
+        Expanded(
+          flex: 2,
           child: Text(
             '${goal.title}',
             overflow: TextOverflow.ellipsis,
@@ -125,7 +125,9 @@ class AchievementGoalCard extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(width: 12),
         Flexible(
+            flex: 1,
             child: FredericChip('$_durationOfGoalInDays days',
                 color: index % 2 != 0 ? theme.mainColor : theme.accentColor)),
       ],
