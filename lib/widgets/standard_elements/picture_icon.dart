@@ -34,7 +34,8 @@ class PictureIcon extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8), color: Colors.black54),
+              borderRadius: BorderRadius.circular(8),
+              color: theme.mainColorLight),
         ),
       );
     if (icon == null)

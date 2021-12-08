@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/screens/edit_activity_screen.dart';
 import 'package:frederic/widgets/standard_elements/circular_plus_icon.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../backend/activities/frederic_activity.dart';
 import '../../../main.dart';
@@ -19,6 +21,12 @@ class NormalActivityCardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return FredericCard(
       onTap: addButton ? null : onClick,
+      onLongPress: () {
+        if (!activity.isGlobalActivity) {
+          CupertinoScaffold.showCupertinoModalBottomSheet(
+              context: context, builder: (c) => EditActivityScreen(activity));
+        }
+      },
       height: 60,
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -37,14 +45,25 @@ class NormalActivityCardContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${activity.name}',
-                  style: TextStyle(
-                    color: theme.textColor,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0,
-                    fontSize: 13,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${activity.name}',
+                      style: TextStyle(
+                        color: theme.textColor,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0,
+                        fontSize: 13,
+                      ),
+                    ),
+                    if (!activity.isGlobalActivity)
+                      Icon(
+                        Icons.app_registration_outlined,
+                        color: theme.mainColor,
+                        size: 16,
+                      )
+                  ],
                 ),
                 SizedBox(height: 6),
                 RichText(

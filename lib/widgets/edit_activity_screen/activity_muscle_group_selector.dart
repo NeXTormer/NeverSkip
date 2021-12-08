@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
-import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
-class AdminSelectMuscleGroup extends StatelessWidget {
-  const AdminSelectMuscleGroup(
+import '../../main.dart';
+
+class ActivityMuscleGroupSelector extends StatelessWidget {
+  const ActivityMuscleGroupSelector(
       {required this.muscleGroups,
       required this.addMuscleGroup,
       required this.removeMuscleGroup,
       Key? key})
       : super(key: key);
+
   final List<FredericActivityMuscleGroup> muscleGroups;
   final void Function(FredericActivityMuscleGroup) addMuscleGroup;
   final void Function(FredericActivityMuscleGroup) removeMuscleGroup;
@@ -39,14 +41,17 @@ class AdminSelectMuscleGroup extends StatelessWidget {
       FredericActivityMuscleGroup group) {
     bool selected = selectedGroups.contains(group);
     return FredericCard(
-      onTap: () => selected ? removeMuscleGroup(group) : addMuscleGroup(group),
-      padding: const EdgeInsets.all(6),
-      color: selected ? theme.mainColor : Colors.white,
-      child: Text(
-        name,
-        style: TextStyle(
-            fontSize: 15, color: selected ? Colors.white : Colors.black),
-      ),
-    );
+        onTap: () =>
+            selected ? removeMuscleGroup(group) : addMuscleGroup(group),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        color: selected ? theme.mainColor : Colors.white,
+        child: Center(
+            child: Text(
+          name,
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
+              color: selected ? Colors.white : theme.textColor),
+        )));
   }
 }

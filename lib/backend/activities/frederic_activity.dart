@@ -35,11 +35,12 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   }
 
   ///
-  /// Constructs an empty Activity with an empty activity ID
+  /// Constructs an empty Activity, used for creating a new Activity
   ///
-  FredericActivity.empty()
-      : activityID = '',
-        _name = 'Empty activity',
+  FredericActivity.create()
+      : activityID = 'new',
+        _name = 'New activity',
+        _description = '',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe';
 
@@ -57,7 +58,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   ///
   factory FredericActivity.fromID(String id) {
     return FredericBackend.instance.activityManager[id] ??
-        FredericActivity.empty();
+        FredericActivity.template();
   }
 
   ///
@@ -65,7 +66,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
   /// Use this activity to push a FredericActivityCreateEvent to the
   /// ActivityManager
   ///
-  FredericActivity.create(
+  FredericActivity.make(
       {required String name,
       required String description,
       required String image,

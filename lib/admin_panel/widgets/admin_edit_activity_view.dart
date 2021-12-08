@@ -178,7 +178,7 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
 
   void saveData() {
     if (widget.activity.isEmpty) {
-      var activity = FredericActivity.create(
+      var activity = FredericActivity.make(
           name: nameController.text,
           description: descriptionController.text,
           image: selectedIcon ??

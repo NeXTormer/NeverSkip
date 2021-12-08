@@ -67,7 +67,7 @@ class FredericActivityManager
       return _activities[id]!;
     }
 
-    return FredericActivity.empty();
+    return FredericActivity.template();
   }
 
   @override
