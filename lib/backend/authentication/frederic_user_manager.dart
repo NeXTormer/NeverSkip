@@ -46,7 +46,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
-  //TODO: Add event to 'if' when implementing new login
+  //TODO: Add event to 'if' when implementing new login method
   @override
   void onTransition(
       Transition<FredericAuthEvent, FredericUser> transition) async {
@@ -61,14 +61,23 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
           .doc(transition.nextState.uid)
           .set({'last_login': Timestamp.now()}, SetOptions(merge: true));
 
-      _userStreamSubscription = FirebaseFirestore.instance
-          .collection('users')
-          .doc(transition.nextState.uid)
-          .snapshots()
-          .listen((snapshot) => add(FredericUserDataChangedEvent(snapshot)));
+      try {
+        _userStreamSubscription = FirebaseFirestore.instance
+            .collection('users')
+            .doc(transition.nextState.uid)
+            .snapshots()
+            .listen((snapshot) => add(FredericUserDataChangedEvent(snapshot)));
+      } catch (e) {
+        print('===============');
+        print(e);
+      }
     } else if (transition.event is FredericSignOutEvent) {
       _userStreamSubscription?.cancel();
     }
+
+    print('=====TRANSITION======');
+    print(transition);
+    print('========END==========');
 
     super.onTransition(transition);
   }

@@ -47,7 +47,9 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
 
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    if (kReleaseMode) {
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    }
 
     if (_kTestingCrashlytics) {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
