@@ -5,9 +5,12 @@ import 'package:frederic/widgets/standard_elements/animated_progress_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_divider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
-import 'package:frederic/widgets/workout_player_screen/activity_player_view.dart';
+import 'package:frederic/widgets/workout_player_screen/workout_player_end_view.dart';
 import 'package:frederic/widgets/workout_player_screen/workout_player_start_view.dart';
+import 'package:frederic/widgets/workout_player_screen/workout_player_view.dart';
 import 'package:provider/provider.dart';
+
+enum WorkoutPlayerViewType { Start, End, Player }
 
 class WorkoutPlayerScreen extends StatefulWidget {
   const WorkoutPlayerScreen({required this.activities, Key? key})
@@ -20,8 +23,8 @@ class WorkoutPlayerScreen extends StatefulWidget {
 }
 
 class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
-  PageController pageController = PageController(viewportFraction: 1);
   WorkoutPlayerState playerState = WorkoutPlayerState();
+  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Start;
 
   @override
   void initState() {
@@ -62,34 +65,34 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
             FredericDivider(),
             Flexible(
               child: LayoutBuilder(builder: (context, constraints) {
-                int numberOfActivities = widget.activities.length;
-                return PageView.builder(
-                    controller: pageController,
-                    scrollDirection: Axis.vertical,
-                    itemCount: numberOfActivities + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return WorkoutPlayerStartView(
-                          activities: widget.activities,
-                          pageController: pageController,
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: currentView == WorkoutPlayerViewType.Player
+                      ? WorkoutPlayerView(
+                          changeView: changeView,
                           constraints: constraints,
-                        );
-                      }
-                      return ActivityPlayerView(
-                        widget.activities[index],
-                        nextActivity: index + 1 == (numberOfActivities)
-                            ? null
-                            : widget.activities[index + 1],
-                        constraints: constraints,
-                        pageController: pageController,
-                      );
-                    });
+                          activities: widget.activities)
+                      : currentView == WorkoutPlayerViewType.Start
+                          ? WorkoutPlayerStartView(
+                              activities: widget.activities,
+                              changeView: changeView,
+                              constraints: constraints)
+                          : WorkoutPlayerEndView(
+                              activities: widget.activities,
+                              constraints: constraints),
+                );
               }),
             ),
           ],
         ),
       )),
     );
+  }
+
+  void changeView(WorkoutPlayerViewType type) {
+    setState(() {
+      currentView = type;
+    });
   }
 
   @override

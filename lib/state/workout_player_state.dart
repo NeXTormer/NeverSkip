@@ -20,6 +20,13 @@ class WorkoutPlayerState extends ChangeNotifier {
   int _completedSets = 0;
   int get completedSets => _completedSets;
 
+  bool _showProgressBar = false;
+  bool get showProgressBar => _showProgressBar;
+  set showProgressBar(bool value) {
+    _showProgressBar = value;
+    notifyListeners();
+  }
+
   Map<String, SetTracker> sets = <String, SetTracker>{};
 
   void setupProgressBar(List<FredericWorkoutActivity> activities) {

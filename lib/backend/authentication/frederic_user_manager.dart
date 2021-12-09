@@ -75,9 +75,9 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       _userStreamSubscription?.cancel();
     }
 
-    print('=====TRANSITION======');
-    print(transition);
-    print('========END==========');
+    // print('=====TRANSITION======');
+    // print(transition);
+    // print('========END==========');
 
     super.onTransition(transition);
   }
