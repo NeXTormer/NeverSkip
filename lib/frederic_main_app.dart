@@ -36,8 +36,6 @@ class FredericMainApp extends StatelessWidget {
             label: 'Workouts',
           ),
         ],
-        analyticsObserver:
-            FredericBackend.instance.analytics.getAnalyticsObserver(),
       ),
       loginPage: LoginScreen(),
       onboardingPage: OnboardingScreen(),

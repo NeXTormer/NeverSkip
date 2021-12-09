@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/material/data_table.dart';
+import 'package:flutter/material.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -213,6 +213,7 @@ class FredericActivity implements DataTableElement<FredericActivity> {
         if (_muscleGroups.contains(value.key)) match = true;
       }
     }
+    if (controller.muscleGroups.entries.isEmpty) match = true;
     if (match) {
       if (controller.searchText == '') {
         return true;

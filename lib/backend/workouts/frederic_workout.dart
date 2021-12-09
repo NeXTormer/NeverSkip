@@ -58,11 +58,8 @@ class FredericWorkout {
     DateTime today = DateTime.now();
     DateTime end = startDate.add(Duration(days: period * 7));
     if (today.isAfter(end) && repeating == false) return startDate;
-    print("OFFSET: ${_activities.getDayIndex(today)}");
     return today.subtract(
         Duration(days: today.difference(startDate).inDays % (period * 7)));
-    return today.subtract(Duration(days: _activities.getDayIndex(today)));
-    return today.subtract(today.difference(startDate));
   }
 
   String get name => _name ?? 'Workout name';

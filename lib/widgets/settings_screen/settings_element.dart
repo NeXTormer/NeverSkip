@@ -4,6 +4,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/settings_screen/change_single_attribute_screen.dart';
 import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
+// ignore: must_be_immutable
 class SettingsElement extends StatefulWidget {
   SettingsElement(
       {required this.text,

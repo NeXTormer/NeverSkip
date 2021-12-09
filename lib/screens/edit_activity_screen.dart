@@ -45,7 +45,9 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   @override
   void initState() {
     muscleGroups = widget.activity.muscleGroups;
-    type = widget.activity.type;
+    type = widget.activity.type == FredericActivityType.None
+        ? FredericActivityType.Weighted
+        : widget.activity.type;
     icon = widget.activity.image;
     name = widget.activity.name;
     description = widget.activity.description;
@@ -228,6 +230,9 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
               },
             ),
           ),
+        ),
+        SliverPadding(
+          padding: EdgeInsets.all(8),
         ),
       ],
     ));

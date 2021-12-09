@@ -3,8 +3,6 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
-import 'frederic_text_field.dart';
-
 class ExpandingSearchBar extends StatelessWidget {
   const ExpandingSearchBar({required this.child, Key? key}) : super(key: key);
 
@@ -35,14 +33,6 @@ class ExpandingSearchBar extends StatelessWidget {
                 const SizedBox(width: 12),
               ],
             ),
-          );
-          return FredericTextField(
-            'Search...',
-            onColorfulBackground: theme.isColorful,
-            brightContents: theme.isColorful,
-            icon: Icons.search,
-            size: 20,
-            suffixIcon: Icons.highlight_remove_outlined,
           );
         },
         expandedChild: child);

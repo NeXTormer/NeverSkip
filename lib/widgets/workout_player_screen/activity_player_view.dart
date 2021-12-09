@@ -17,11 +17,14 @@ class ActivityPlayerView extends StatefulWidget {
       {required this.pageController,
       required this.constraints,
       this.nextActivity,
+      this.showSmartSuggestions = true,
       Key? key})
       : super(key: key);
 
   final FredericWorkoutActivity activity;
   final FredericWorkoutActivity? nextActivity;
+
+  final bool showSmartSuggestions;
 
   final BoxConstraints constraints;
   final PageController pageController;
@@ -49,7 +52,6 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
 
   @override
   Widget build(BuildContext context) {
-    bool showSmartSuggestions = true;
     return BlocBuilder<FredericSetManager, FredericSetListData>(
         buildWhen: (current, next) => next.changedActivities
             .contains(widget.activity.activity.activityID),
@@ -83,7 +85,7 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                           controller: addProgressController,
                           activity: widget.activity.activity,
                           onSave: () => saveProgress(playerState),
-                          suggestions: showSmartSuggestions
+                          suggestions: widget.showSmartSuggestions
                               ? setListData[widget.activity.activity.activityID]
                                   .getSuggestions(
                                       weighted: widget.activity.activity.type ==

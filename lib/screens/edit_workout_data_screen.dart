@@ -241,22 +241,15 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                           borderRadius: BorderRadius.circular(10),
                           color: theme.backgroundColor,
                           border: Border.all(color: theme.cardBorderColor)),
-                      child: true
-                          ? FredericDatePicker(
-                              initialDate: widget.workout.startDate,
-                              onDateChanged: (date) {
-                                selectedStartDate = date;
-                                setState(() {
-                                  dateText = date.formattedEuropean();
-                                });
-                              })
-                          : Container()),
-                  SizedBox(
-                      height: true
-                          ? 16
-                          : (MediaQuery.of(context).size.height < 950
-                              ? 950 - MediaQuery.of(context).size.height
-                              : 16)),
+                      child: FredericDatePicker(
+                          initialDate: widget.workout.startDate,
+                          onDateChanged: (date) {
+                            selectedStartDate = date;
+                            setState(() {
+                              dateText = date.formattedEuropean();
+                            });
+                          })),
+                  SizedBox(height: 16),
                   Row(
                     children: [
                       if (widget.workout.canEdit)

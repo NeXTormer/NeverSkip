@@ -23,7 +23,6 @@ class WeekDaysSliderDayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
     Widget contents = buildContents(context, false, false, false);
     if (!isDraggable) return contents;
     return DragTarget<int>(
@@ -47,8 +46,6 @@ class WeekDaysSliderDayCard extends StatelessWidget {
         onSwap?.call(data, dayIndex);
       },
     );
-
-    return contents;
   }
 
   Widget buildContents(

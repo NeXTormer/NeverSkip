@@ -77,6 +77,7 @@ class FredericActivityManager
       _activities[event.updated.activityID] = event.updated;
       yield FredericActivityListData([event.updated.activityID], _activities);
     } else if (event is FredericActivityCreateEvent) {
+      print("create activity");
       DocumentReference newActivity = await _activitiesCollection.add({
         'name': event.newActivity.name,
         'description': event.newActivity.description,

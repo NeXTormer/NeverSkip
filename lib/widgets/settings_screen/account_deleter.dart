@@ -52,6 +52,7 @@ class _AccountDeleterState extends State<AccountDeleter> {
                       ?.reauthenticateWithCredential(cred);
                   success = true;
                 } on FirebaseAuthException catch (e) {
+                  print(e);
                   setState(() {
                     loading = false;
                     confirmed = false;

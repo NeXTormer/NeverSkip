@@ -39,7 +39,7 @@ class AuthenticateWithEmailButton extends StatefulWidget {
 class _AuthenticateWithEmailButtonState
     extends State<AuthenticateWithEmailButton> {
   bool expanded = false;
-  bool acceptedTermsAndConditions = true;
+  bool acceptedTermsAndConditions = false;
   String buttonText = '';
   bool loading = false;
 
@@ -118,7 +118,7 @@ class _AuthenticateWithEmailButtonState
                         ),
                       ),
                     ),
-                  if (!widget.login && false)
+                  if (!widget.login)
                     GestureDetector(
                       onTap: () => setState(() => acceptedTermsAndConditions =
                           !acceptedTermsAndConditions),

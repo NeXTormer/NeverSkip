@@ -1,15 +1,13 @@
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
-  BottomNavigationScreen(this.screens, {required this.analyticsObserver});
+  BottomNavigationScreen(this.screens);
 
   final List<FredericScreen> screens;
-
-  final FirebaseAnalyticsObserver analyticsObserver;
 
   @override
   _BottomNavigationScreenState createState() => _BottomNavigationScreenState();
@@ -98,13 +96,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    widget.analyticsObserver
-        .subscribe(this, ModalRoute.of(context)! as PageRoute);
-  }
-
-  @override
   void didPush() {
     _sendCurrentTabToAnalytics();
   }
@@ -115,15 +106,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
   }
 
   void _sendCurrentTabToAnalytics() {
-    widget.analyticsObserver.analytics.setCurrentScreen(
-      screenName: widget.screens[currentIndex].label,
-    );
-  }
-
-  @override
-  void dispose() {
-    widget.analyticsObserver.unsubscribe(this);
-    super.dispose();
+    FredericBackend.instance.analytics
+        .logCurrentScreen(widget.screens[currentIndex].label);
   }
 }
 

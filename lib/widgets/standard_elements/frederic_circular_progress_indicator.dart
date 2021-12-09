@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-@deprecated
 class FredericCircularProgressIndicator extends StatefulWidget {
   FredericCircularProgressIndicator(
       {this.staticProgress = -1,

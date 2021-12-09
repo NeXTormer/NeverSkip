@@ -121,7 +121,7 @@ class _FredericBaseState extends State<FredericBase> {
         ],
         child: MaterialApp(
           showPerformanceOverlay: false,
-          title: 'Frederic',
+          title: 'SilverFit',
           theme: ThemeData(
               primaryColor: theme.mainColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,

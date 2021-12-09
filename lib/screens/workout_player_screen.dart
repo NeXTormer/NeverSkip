@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
-import 'package:frederic/state/page_view_blocker.dart';
 import 'package:frederic/state/workout_player_state.dart';
 import 'package:frederic/widgets/standard_elements/animated_progress_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
@@ -23,7 +22,6 @@ class WorkoutPlayerScreen extends StatefulWidget {
 class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   PageController pageController = PageController(viewportFraction: 1);
   WorkoutPlayerState playerState = WorkoutPlayerState();
-  PageViewBlocker pageViewBlocker = PageViewBlocker();
 
   @override
   void initState() {
@@ -35,77 +33,62 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<WorkoutPlayerState>.value(
       value: playerState,
-      child: ChangeNotifierProvider<PageViewBlocker>.value(
-        value: pageViewBlocker,
-        child: FredericScaffold(
-            body: Container(
-          child: Column(
-            children: [
-              Consumer<WorkoutPlayerState>(
-                  builder: (context, playerState, child) {
-                return Column(
-                  children: [
-                    FredericBasicAppBar(
-                      title: playerState.getCurrentTime(),
-                      subtitle: 'Current workout time and progress',
-                      icon: Icon(Icons.pause),
-                      bottomPadding: 2,
+      child: FredericScaffold(
+          body: Container(
+        child: Column(
+          children: [
+            Consumer<WorkoutPlayerState>(
+                builder: (context, playerState, child) {
+              return Column(
+                children: [
+                  FredericBasicAppBar(
+                    title: playerState.getCurrentTime(),
+                    subtitle: 'Current workout time and progress',
+                    icon: Icon(Icons.pause),
+                    bottomPadding: 2,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: AnimatedProgressBar(
+                      duration: const Duration(milliseconds: 100),
+                      progress: playerState.getProgress(),
+                      length: double.infinity,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: AnimatedProgressBar(
-                        duration: const Duration(milliseconds: 100),
-                        progress: playerState.getProgress(),
-                        length: double.infinity,
-                      ),
-                    ),
-                  ],
-                );
+                  ),
+                ],
+              );
+            }),
+            SizedBox(height: 10),
+            FredericDivider(),
+            Flexible(
+              child: LayoutBuilder(builder: (context, constraints) {
+                int numberOfActivities = widget.activities.length;
+                return PageView.builder(
+                    controller: pageController,
+                    scrollDirection: Axis.vertical,
+                    itemCount: numberOfActivities + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return WorkoutPlayerStartView(
+                          activities: widget.activities,
+                          pageController: pageController,
+                          constraints: constraints,
+                        );
+                      }
+                      return ActivityPlayerView(
+                        widget.activities[index],
+                        nextActivity: index + 1 == (numberOfActivities)
+                            ? null
+                            : widget.activities[index + 1],
+                        constraints: constraints,
+                        pageController: pageController,
+                      );
+                    });
               }),
-              SizedBox(height: 10),
-              FredericDivider(),
-              Flexible(
-                child: LayoutBuilder(builder: (context, constraints) {
-                  int numberOfActivities = widget.activities.length;
-                  return Consumer<PageViewBlocker>(
-                      builder: (context, blocker, child) {
-                    return PageView.builder(
-
-                        ///
-                        /// TODO
-                        ///
-                        /// maybe change physics with blocker
-                        /// or maybe impelment custom physics which makes some pages not accessible (probably better option)
-                        ///
-                        ///
-                        //physics: blocker.scrollable : BouncingScrollPhy,
-                        controller: pageController,
-                        scrollDirection: Axis.vertical,
-                        itemCount: numberOfActivities + 1,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return WorkoutPlayerStartView(
-                              activities: widget.activities,
-                              pageController: pageController,
-                              constraints: constraints,
-                            );
-                          }
-                          return ActivityPlayerView(
-                            widget.activities[index],
-                            nextActivity: index == (numberOfActivities)
-                                ? null
-                                : widget.activities[index],
-                            constraints: constraints,
-                            pageController: pageController,
-                          );
-                        });
-                  });
-                }),
-              ),
-            ],
-          ),
-        )),
-      ),
+            ),
+          ],
+        ),
+      )),
     );
   }
 
