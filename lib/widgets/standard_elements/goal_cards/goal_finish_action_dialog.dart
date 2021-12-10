@@ -172,6 +172,9 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
 
   void handleDelete() {
     FredericBackend.instance.analytics.logAchievementDeleted();
+    var goalscount = FredericBackend.instance.userManager.state.goalsCount;
+    if (goalscount >= 1)
+      FredericBackend.instance.userManager.state.goalsCount -= 1;
     FredericBackend.instance.goalManager
         .add(FredericGoalDeleteEvent(widget.goal));
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
@@ -181,6 +184,10 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
 
   void handleSave() {
     FredericBackend.instance.analytics.logGoalSavedAsAchievement();
+    FredericBackend.instance.userManager.state.achievementsCount += 1;
+    var goalscount = FredericBackend.instance.userManager.state.goalsCount;
+    if (goalscount >= 1)
+      FredericBackend.instance.userManager.state.goalsCount -= 1;
     widget.goal.isCompleted = true;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Navigator.of(context).pop();

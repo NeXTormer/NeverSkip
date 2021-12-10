@@ -4,6 +4,8 @@ import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/achievement_goal_card.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/normal_goal_card.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/shimmer_achievement_goal_card.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/shimmer_normal_goal_card.dart';
 import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 
@@ -49,22 +51,26 @@ class GoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == GoalCardType.Achievement) {
-      return AchievementGoalCard(goal!, index: index);
+      return goal == null
+          ? ShimmerAchievementGoalCard()
+          : AchievementGoalCard(goal!, index: index);
     }
     if (type == GoalCardType.Normal) {
-      return NormalGoalCard(
-        goal!,
-        sets: sets,
-        activity: activity,
-        startDate: startDate,
-        endDate: endDate,
-        startStateController: startStateController,
-        currentStateController: currentStateController,
-        endStateController: endStateController,
-        titleController: titleController,
-        unitSliderController: unitSliderController,
-        interactable: interactable,
-      );
+      return goal == null
+          ? ShimmerNormalGoalCard()
+          : NormalGoalCard(
+              goal!,
+              sets: sets,
+              activity: activity,
+              startDate: startDate,
+              endDate: endDate,
+              startStateController: startStateController,
+              currentStateController: currentStateController,
+              endStateController: endStateController,
+              titleController: titleController,
+              unitSliderController: unitSliderController,
+              interactable: interactable,
+            );
     }
     return Container(
         color: Colors.redAccent,

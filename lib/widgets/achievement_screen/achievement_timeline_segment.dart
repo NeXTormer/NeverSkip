@@ -8,6 +8,8 @@ class AchievementTimelineSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double adjustedProgressBarLength = deviceWidth - 50;
     return SliverToBoxAdapter(
       child: Column(
         children: [
@@ -17,7 +19,7 @@ class AchievementTimelineSegment extends StatelessWidget {
                 const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 6),
             child: AchievementTimeline(
               goal,
-              width: 330,
+              length: adjustedProgressBarLength,
               height: 5,
               delayInMillisecond: 1000,
             ),

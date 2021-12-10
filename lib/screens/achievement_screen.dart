@@ -85,6 +85,10 @@ class AchievementScreen extends StatelessWidget {
       builder: (ctx) => FredericActionDialog(
         onConfirm: () {
           FredericBackend.instance.analytics.logAchievementDeleted();
+          var achievementscount =
+              FredericBackend.instance.userManager.state.achievementsCount;
+          if (achievementscount >= 1)
+            FredericBackend.instance.userManager.state.achievementsCount -= 1;
           FredericBackend.instance.goalManager
               .add(FredericGoalDeleteEvent(goal));
           WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {

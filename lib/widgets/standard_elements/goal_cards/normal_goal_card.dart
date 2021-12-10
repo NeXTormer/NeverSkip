@@ -7,7 +7,7 @@ import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
-import 'package:frederic/widgets/home_screen/goal_finish_action_dialog.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/goal_finish_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
@@ -157,7 +157,6 @@ class _NormalGoalCard extends State<NormalGoalCard> {
                                   color: theme.greyTextColor, fontSize: 12),
                             ),
                           ),
-                          SizedBox(width: 12),
                           Flexible(
                             flex: 1,
                             child: FredericChip(
@@ -298,6 +297,10 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         context: context,
         builder: (context) => FredericActionDialog(
               onConfirm: () {
+                var goalscount =
+                    FredericBackend.instance.userManager.state.goalsCount;
+                if (goalscount >= 1)
+                  FredericBackend.instance.userManager.state.goalsCount -= 1;
                 FredericBackend.instance.goalManager
                     .add(FredericGoalDeleteEvent(widget.goal));
                 Navigator.of(context).pop();

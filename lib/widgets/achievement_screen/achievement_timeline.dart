@@ -4,13 +4,13 @@ import 'package:frederic/main.dart';
 
 class AchievementTimeline extends StatefulWidget {
   const AchievementTimeline(this.goal,
-      {this.width = 100,
+      {this.length = 100,
       this.height = 5,
       this.delayInMillisecond = 0,
       Key? key})
       : super(key: key);
   final FredericGoal goal;
-  final double width;
+  final double length;
   final double height;
   final int delayInMillisecond;
 
@@ -70,8 +70,8 @@ class _AchievementTimelineState extends State<AchievementTimeline>
 
   @override
   Widget build(BuildContext context) {
-    double containerWidth = _animation.value * widget.width;
-    double containerWidthDate = _animation.value * (widget.width - 110);
+    double containerWidth = _animation.value * widget.length;
+    double containerWidthDate = _animation.value * (widget.length - 110);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

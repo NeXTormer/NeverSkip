@@ -8,8 +8,9 @@ class AchievementProgressSegment extends StatelessWidget {
   const AchievementProgressSegment(this.goal, {Key? key}) : super(key: key);
   final FredericGoal goal;
 
-  @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double adjustedProgressBarLength = deviceWidth - 100;
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -27,7 +28,8 @@ class AchievementProgressSegment extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AchievementProgressBar(goal, goal.startState.toDouble()),
+                  AchievementProgressBar(goal, goal.startState.toDouble(),
+                      length: adjustedProgressBarLength),
                 ],
               ),
             ),
@@ -43,6 +45,7 @@ class AchievementProgressSegment extends StatelessWidget {
                     goal.endState.toDouble(),
                     progressRatio: 0.96,
                     delayInMillisecond: 200,
+                    length: adjustedProgressBarLength,
                   ),
                 ],
               ),

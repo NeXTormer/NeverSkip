@@ -32,7 +32,7 @@ class AchievementGoalCard extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,12 +145,13 @@ class AchievementGoalCard extends StatelessWidget {
       builder: (ctx) => FredericActionDialog(
         onConfirm: () {
           FredericBackend.instance.analytics.logAchievementDeleted();
+          var achievementscount =
+              FredericBackend.instance.userManager.state.achievementsCount;
+          if (achievementscount >= 1)
+            FredericBackend.instance.userManager.state.achievementsCount -= 1;
           FredericBackend.instance.goalManager
               .add(FredericGoalDeleteEvent(goal));
-          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          });
+          Navigator.of(context).pop();
         },
         title: 'Confirm deletion',
         destructiveAction: true,
