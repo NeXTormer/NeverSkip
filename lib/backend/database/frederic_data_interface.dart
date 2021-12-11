@@ -5,4 +5,5 @@ abstract class FredericDataInterface<T extends FredericDataObject> {
   Future<T> update(T object);
   Future<void> delete(T object);
   Future<T> create(T object);
+  Future<T> createFromMap(Map<String, dynamic> data);
 }

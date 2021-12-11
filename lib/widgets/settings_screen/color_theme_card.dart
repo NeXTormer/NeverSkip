@@ -41,7 +41,7 @@ class ColorThemeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'SilverFit',
+                  'NeverSkip',
                   style: TextStyle(
                       color: localTheme.textColorColorfulBackground,
                       fontSize: 13,

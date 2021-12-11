@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_data_interface.dart';
 
 ///
 /// Manages all Workouts. Only one instance of this should exist. Instantiated in
@@ -12,15 +11,16 @@ import 'package:frederic/backend/backend.dart';
 ///
 class FredericWorkoutManager
     extends Bloc<FredericWorkoutEvent, FredericWorkoutListData> {
-  FredericWorkoutManager()
+  FredericWorkoutManager(
+      {required this.dataInterface, required this.activityManager})
       : _workouts = HashMap<String, FredericWorkout>(),
         super(FredericWorkoutListData(
             HashMap<String, FredericWorkout>(), <String>[]));
 
-  final CollectionReference _workoutsCollection =
-      FirebaseFirestore.instance.collection('workouts');
-
   HashMap<String, FredericWorkout> _workouts;
+
+  final FredericDataInterface<FredericWorkout> dataInterface;
+  final FredericActivityManager activityManager;
 
   FredericWorkout? operator [](String value) {
     return _workouts[value];
@@ -29,32 +29,43 @@ class FredericWorkoutManager
   HashMap<String, FredericWorkout> get workouts => state.workouts;
 
   Future<void> reload() async {
-    QuerySnapshot<Object?> global =
-        await _workoutsCollection.where('owner', isEqualTo: 'global').get();
-    QuerySnapshot<Object?> private = await _workoutsCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .get();
-
+    List<FredericWorkout> workouts = await dataInterface.get();
     List<String> changed = <String>[];
-    _workouts.clear();
 
-    for (int i = 0; i < global.docs.length; i++) {
-      FredericWorkout workout = FredericWorkout(global.docs[i], this);
-      await workout.loadActivities();
-      _workouts[global.docs[i].id] = workout;
-
-      changed.add(global.docs[i].id);
-    }
-    for (int i = 0; i < private.docs.length; i++) {
-      FredericWorkout workout = FredericWorkout(private.docs[i], this);
-      await workout.loadActivities();
-      _workouts[private.docs[i].id] = workout;
-      changed.add(private.docs[i].id);
+    for (var workout in workouts) {
+      changed.add(workout.id);
+      workout.loadActivities(activityManager);
+      workout.onUpdate = updateWorkoutInDB;
+      _workouts[workout.id] = workout;
     }
 
     add(FredericWorkoutEvent(changed));
 
     return;
+  }
+
+  Future<void> loadActivitiesForOneWorkout(FredericWorkout workout) async {
+    await workout.loadActivities(activityManager);
+    add(FredericWorkoutEvent([workout.id]));
+    return;
+  }
+
+  void updateWorkoutInDB(FredericWorkout workout) {
+    dataInterface.update(workout);
+    add(FredericWorkoutUpdateEvent(workout.id));
+  }
+
+  Future<void> _deleteWorkout(FredericWorkout workout) {
+    if (FredericBackend.instance.userManager.state.activeWorkouts
+        .contains(workout.id)) {
+      List<String> activeWorkouts =
+          FredericBackend.instance.userManager.state.activeWorkouts;
+      activeWorkouts.remove(workout.id);
+      FredericBackend.instance.userManager.state.activeWorkouts =
+          activeWorkouts;
+    }
+    _workouts.remove(workout.id);
+    return dataInterface.delete(workout);
   }
 
   @override
@@ -63,21 +74,14 @@ class FredericWorkoutManager
     if (event is FredericWorkoutUpdateEvent) {
       yield FredericWorkoutListData(_workouts, event.changed);
     } else if (event is FredericWorkoutCreateEvent) {
-      _workouts[event.workout.workoutID] = event.workout;
+      var workout = await dataInterface.create(event.workout);
+      workout.onUpdate = updateWorkoutInDB;
+      _workouts[workout.id] = workout;
       yield FredericWorkoutListData(_workouts, event.changed);
     } else if (event is FredericWorkoutDeleteEvent) {
-      if (FredericBackend.instance.userManager.state.activeWorkouts
-          .contains(event.workout.workoutID)) {
-        List<String> activeWorkouts =
-            FredericBackend.instance.userManager.state.activeWorkouts;
-        activeWorkouts.remove(event.workout.workoutID);
-        FredericBackend.instance.userManager.state.activeWorkouts =
-            activeWorkouts;
-      }
-      _workouts[event.workout.workoutID]?.delete();
-      _workouts.remove(event.workout.workoutID);
+      _deleteWorkout(event.workout);
       yield FredericWorkoutListData(_workouts, event.changed);
-    } else if (event is FredericWorkoutEvent) {
+    } else {
       yield FredericWorkoutListData(_workouts, event.changed);
     }
   }
@@ -93,12 +97,12 @@ class FredericWorkoutUpdateEvent extends FredericWorkoutEvent {
 }
 
 class FredericWorkoutCreateEvent extends FredericWorkoutEvent {
-  FredericWorkoutCreateEvent(this.workout) : super([workout.workoutID]);
+  FredericWorkoutCreateEvent(this.workout) : super([workout.id]);
   FredericWorkout workout;
 }
 
 class FredericWorkoutDeleteEvent extends FredericWorkoutEvent {
-  FredericWorkoutDeleteEvent(this.workout) : super([workout.workoutID]);
+  FredericWorkoutDeleteEvent(this.workout) : super([workout.id]);
   FredericWorkout workout;
 }
 

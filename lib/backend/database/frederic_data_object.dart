@@ -1,5 +1,8 @@
 abstract class FredericDataObject {
-  FredericDataObject(this.id);
+  FredericDataObject();
 
-  final String id;
+  String get id;
+
+  void fromMap(String id, Map<String, dynamic> data);
+  Map<String, dynamic> toMap();
 }

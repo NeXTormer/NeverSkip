@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
-import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/state/activity_filter_controller.dart';
@@ -15,31 +13,17 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 ///
 class FredericActivity
     implements DataTableElement<FredericActivity>, FredericDataObject {
-  FredericActivity(DocumentSnapshot<Object?> snapshot)
-      : activityID = snapshot.id {
-    var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
-    if (data == null) return;
+  FredericActivity();
 
-    _name = data['name'];
-    _description = data['description'];
-    _image = data['image'];
-    _owner = data['owner'];
-    _recommendedReps = data['recommendedreps'];
-    _recommendedSets = data['recommendedsets'];
-    _type = parseTypeFromString(data['type']);
-
-    List<dynamic>? muscleGroups = data['musclegroup'];
-    muscleGroups?.forEach((element) {
-      if (element is String)
-        _muscleGroups.add(parseSingleMuscleGroupFromString(element));
-    });
+  FredericActivity.fromMap(String id, Map<String, dynamic> data) {
+    fromMap(id, data);
   }
 
   ///
   /// Constructs an empty Activity, used for creating a new Activity
   ///
   FredericActivity.create()
-      : activityID = 'new',
+      : id = '',
         _name = 'New activity',
         _description = '',
         _image =
@@ -49,18 +33,15 @@ class FredericActivity
   /// Constructs an Activity Template, used for creating a new Activity
   ///
   FredericActivity.template()
-      : activityID = 'template',
+      : id = '',
         _image =
-            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe';
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Floading.png?alt=media&token=4f99ab1f-c0bb-4881-b010-4c395b3206a1';
 
-  ///
-  /// Returns an existing Activity using the provided ID. If the activity
-  /// does not exist, an empty Activity is returned
-  ///
-  factory FredericActivity.fromID(String id) {
-    return FredericBackend.instance.activityManager[id] ??
-        FredericActivity.template();
-  }
+  FredericActivity.noSuchActivity(String id)
+      : this.id = id,
+        _name = 'No Such Activity found',
+        _image =
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
 
   ///
   /// Creates a new activity (only locally)
@@ -75,7 +56,7 @@ class FredericActivity
       required int recommendedSets,
       required List<FredericActivityMuscleGroup> muscleGroups,
       required FredericActivityType type})
-      : activityID = 'new-activity',
+      : id = 'new-activity',
         _name = name,
         _description = description,
         _image = image,
@@ -84,7 +65,10 @@ class FredericActivity
         _muscleGroups = muscleGroups,
         _type = type;
 
-  final String activityID;
+  late final String id;
+
+  @deprecated
+  String get activityID => id;
 
   String? _name;
   String? _description;
@@ -100,17 +84,20 @@ class FredericActivity
 
   String get name => _name ?? '';
   String get description => _description ?? '';
-  String get image => _image ?? 'https://via.placeholder.com/64x64?text=x';
+  String get image =>
+      _image ??
+      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Floading.png?alt=media&token=4f99ab1f-c0bb-4881-b010-4c395b3206a1';
   String get owner => _owner ?? 'No owner';
   int get recommendedReps => _recommendedReps ?? 1;
   int get recommendedSets => _recommendedSets ?? 1;
   bool get isNotLoaded => _name == null;
-  bool get isEmpty => activityID == '';
+  bool get isEmpty => id == '';
 
-  /// A proper activity is stored in the DB and has a valid [activityID]
-  bool get isProper => activityID.length > 16;
+  /// A proper activity is stored in the DB and has a valid [id]
+  bool get isProper => id.length > 16;
 
   bool get isGlobalActivity => _owner == 'global';
+  bool get canEdit => !isGlobalActivity;
 
   List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
   FredericActivityType get type => _type;
@@ -122,88 +109,53 @@ class FredericActivity
     return '';
   }
 
-  set name(String value) {
-    if (isProper && value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'name': value});
-      _name = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
+  @override
+  void fromMap(String id, Map<String, dynamic> data) {
+    this.id = id;
+    _name = data['name'];
+    _description = data['description'];
+    _image = data['image'];
+    _owner = data['owner'];
+    _recommendedReps = data['recommendedreps'];
+    _recommendedSets = data['recommendedsets'];
+    _type = parseTypeFromString(data['type']);
+
+    List<dynamic>? muscleGroups = data['musclegroup'];
+    muscleGroups?.forEach((element) {
+      if (element is String)
+        _muscleGroups.add(parseSingleMuscleGroupFromString(element));
+    });
   }
 
-  set description(String value) {
-    if (isProper && value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'description': value});
-      _description = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
+  @override
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'description': description,
+      'image': image,
+      'owner': owner,
+      'recommendedreps': recommendedReps,
+      'recommendedsets': recommendedSets,
+      'type': parseTypeToString(type),
+      'muslegroup': parseMuscleGroupListToStringList(muscleGroups)
+    };
   }
 
-  set image(String value) {
-    if (isProper && value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'image': value});
-      _image = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
-  }
-
-  set type(FredericActivityType value) {
-    if (isProper) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'type': parseTypeToString(type)});
-      _type = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
-  }
-
-  set muscleGroups(List<FredericActivityMuscleGroup> value) {
-    if (isProper) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'musclegroup': parseMuscleGroupListToStringList(value)});
-      _muscleGroups = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
-  }
-
-  set recommendedReps(int value) {
-    if (isProper && value >= 0) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'recommendedreps': value});
-      _recommendedReps = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
-  }
-
-  set recommendedSets(int value) {
-    if (isProper && value >= 0) {
-      FirebaseFirestore.instance
-          .collection('activities')
-          .doc(activityID)
-          .update({'recommendedsets': value});
-      _recommendedSets = value;
-      FredericBackend.instance.activityManager
-          .add(FredericActivityUpdateEvent(this));
-    }
+  void updateData(
+      {String? newName,
+      String? newDescription,
+      String? newImage,
+      FredericActivityType? newType,
+      List<FredericActivityMuscleGroup>? newMuscleGroups,
+      int? newRecommendedReps,
+      int? newRecommendedSets}) {
+    _name = newName ?? name;
+    _description = newDescription ?? description;
+    _image = newImage ?? image;
+    _type = newType ?? type;
+    _muscleGroups = newMuscleGroups ?? muscleGroups;
+    _recommendedReps = newRecommendedReps ?? recommendedReps;
+    _recommendedSets = newRecommendedSets ?? recommendedSets;
   }
 
   bool matchFilterController(ActivityFilterController controller) {
@@ -305,17 +257,17 @@ class FredericActivity
 
   @override
   bool operator ==(Object other) {
-    if (other is FredericActivity) return this.activityID == other.activityID;
+    if (other is FredericActivity) return this.id == other.id;
     return false;
   }
 
   @override
   String toString() {
-    return 'FredericActivity[id: $activityID, name: $name, owner: $owner]';
+    return 'FredericActivity[id: $id, name: $name, owner: $owner]';
   }
 
   @override
-  int get hashCode => activityID.hashCode;
+  int get hashCode => id.hashCode;
 
   @override
   List<DataColumn> toDataColumn() {

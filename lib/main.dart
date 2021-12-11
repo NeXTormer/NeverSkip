@@ -123,7 +123,7 @@ class _FredericBaseState extends State<FredericBase> {
         ],
         child: MaterialApp(
           showPerformanceOverlay: false,
-          title: 'SilverFit',
+          title: 'NeverSkip Fitness',
           theme: ThemeData(
               primaryColor: theme.mainColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,

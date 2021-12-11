@@ -309,25 +309,23 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
   }
 
   void saveData() {
+    widget.workout.updateData(
+        newName: dummyName,
+        newDescription: dummyDescription,
+        newImage: widget.workout.image,
+        newPeriod: dummyPeriod,
+        newRepeating: dummyRepeating,
+        newStartDate: widget.isNewWorkout
+            ? (selectedStartDate ?? DateTime.now())
+            : selectedStartDate);
     if (widget.isNewWorkout) {
       FredericBackend.instance.analytics.logWorkoutCreated();
-      widget.workout.save(
-          title: dummyName,
-          description: dummyDescription,
-          image: widget.workout.image,
-          period: dummyPeriod,
-          repeating: dummyRepeating,
-          startDate: selectedStartDate ?? DateTime.now());
+
+      FredericBackend.instance.workoutManager
+          .add(FredericWorkoutCreateEvent(widget.workout));
     } else {
       FredericBackend.instance.analytics.logWorkoutSaved();
-      if (selectedStartDate != null &&
-          widget.workout.startDate != selectedStartDate!) {
-        widget.workout.startDate = selectedStartDate!;
-      }
-      widget.workout.name = dummyName;
-      widget.workout.description = dummyDescription;
-      widget.workout.repeating = dummyRepeating;
-      widget.workout.period = dummyPeriod;
+      FredericBackend.instance.workoutManager.updateWorkoutInDB(widget.workout);
     }
   }
 

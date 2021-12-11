@@ -160,7 +160,8 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
           onConfirm: () {
             widget.activity.reps = repsSliderController.value.toInt();
             widget.activity.sets = setsSliderController.value.toInt();
-            widget.workout.updateActivitiesInDB();
+            FredericBackend.instance.workoutManager
+                .updateWorkoutInDB(widget.workout);
             Navigator.of(context).pop();
           },
           child: SelectSetsAndRepsPopup(

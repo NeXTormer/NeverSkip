@@ -250,17 +250,17 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
               muscleGroups: muscleGroups,
               type: type)));
     } else {
-      if (widget.activity.name != name) widget.activity.name = name;
-      if (widget.activity.description != description)
-        widget.activity.description = description;
-      if (widget.activity.image != icon && icon != null)
-        widget.activity.image = icon!;
-      if (widget.activity.recommendedReps != repsController.value.toInt())
-        widget.activity.recommendedReps = repsController.value.toInt();
-      if (widget.activity.recommendedSets != setsController.value.toInt())
-        widget.activity.recommendedSets = setsController.value.toInt();
-      widget.activity.type = type;
-      widget.activity.muscleGroups = muscleGroups;
+      widget.activity.updateData(
+          newName: name,
+          newType: type,
+          newImage: icon,
+          newDescription: description,
+          newMuscleGroups: muscleGroups,
+          newRecommendedReps: repsController.value.toInt(),
+          newRecommendedSets: setsController.value.toInt());
+
+      FredericBackend.instance.activityManager
+          .add(FredericActivityUpdateEvent(widget.activity));
     }
   }
 }
