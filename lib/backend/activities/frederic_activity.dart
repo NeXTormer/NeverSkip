@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/state/activity_filter_controller.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
@@ -13,7 +13,8 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 /// database and on all listeners of the ActivityManager-Bloc.
 /// Setters only work on Proper activities.
 ///
-class FredericActivity implements DataTableElement<FredericActivity> {
+class FredericActivity
+    implements DataTableElement<FredericActivity>, FredericDataObject {
   FredericActivity(DocumentSnapshot<Object?> snapshot)
       : activityID = snapshot.id {
     var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
