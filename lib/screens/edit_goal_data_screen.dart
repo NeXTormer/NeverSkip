@@ -222,6 +222,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           ? dummyCurrentState
           : currentStateController.value;
       widget.goal.endState = endStateController.value;
+      widget.goal.startDate = selectedStartDate!;
+      widget.goal.endDate = selectedEndDate!;
     }
   }
 
