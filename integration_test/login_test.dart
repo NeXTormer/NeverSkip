@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frederic/main.dart' as app;
@@ -9,8 +11,13 @@ import 'package:frederic/widgets/transitions/frederic_container_transition.dart'
 import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseAuth.instance.signOut();
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+
   group('email-login-actions', () {
     int random = Random.secure().nextInt(4096);
     testWidgets('email-signup-logout', (WidgetTester tester) async {
