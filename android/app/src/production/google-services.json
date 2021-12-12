@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "301523012050-26eirf7vkt29qqe15b7pfknalptp5l1t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.hawkford.fredericapp",
+            "certificate_hash": "d18e8465df6061435d5e1423b5fc1c32695c95e2"
+          }
+        },
+        {
           "client_id": "301523012050-o63g1qn8tai2rvvu2krudmqno10nvodr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

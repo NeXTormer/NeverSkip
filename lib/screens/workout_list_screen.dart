@@ -7,7 +7,6 @@ import 'package:frederic/screens/edit_workout_data_screen.dart';
 import 'package:frederic/state/workout_search_term.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
-import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_list_appbar.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_list_segment.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -26,8 +25,8 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   @override
   Widget build(BuildContext context) {
     return FredericScaffold(
-      floatingActionButton: buildAddWorkoutButton(context),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: buildAlternativeAddWorkoutButton(context),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: ChangeNotifierProvider<WorkoutSearchTerm>(
         create: (context) => searchTerm,
         child: CustomScrollView(
@@ -54,6 +53,19 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
         ),
       ),
     );
+  }
+
+  Widget buildAlternativeAddWorkoutButton(BuildContext context) {
+    return FloatingActionButton(
+        backgroundColor: theme.mainColor,
+        onPressed: () => CupertinoScaffold.showCupertinoModalBottomSheet(
+            context: context,
+            builder: (c) => Scaffold(
+                body: EditWorkoutDataScreen(FredericWorkout.create()))),
+        child: Icon(
+          Icons.add_chart,
+          color: Colors.white,
+        ));
   }
 
   Widget buildAddWorkoutButton(BuildContext context) {

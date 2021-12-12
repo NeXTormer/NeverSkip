@@ -65,7 +65,7 @@ class _FredericTextFieldState extends State<FredericTextField> {
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 14,
           color: widget.onColorfulBackground
               ? theme.textColorColorfulBackground
               : theme.greyTextColor,

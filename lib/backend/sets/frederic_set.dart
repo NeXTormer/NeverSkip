@@ -13,13 +13,13 @@ class FredericSet implements Comparable {
 
   FredericSet.fromMap(Map<String, dynamic> map)
       : reps = map['reps'],
-        weight = map['value'] {
+        weight = map['value']?.toDouble() {
     Timestamp ts = map['timestamp'];
     timestamp = ts.toDate();
   }
 
   final int reps;
-  final int weight;
+  final double weight;
   late final DateTime timestamp;
 
   int get monthID {
