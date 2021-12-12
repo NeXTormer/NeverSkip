@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
-import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/unit_text.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProgressIndicatorCard extends StatelessWidget {
@@ -21,24 +17,13 @@ class ProgressIndicatorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool loading = activity == null;
-    double bestProgress = (activity?.type == FredericActivityType.Weighted
-            ? sets.bestWeight
-            : sets.bestReps)
-        .toDouble();
+    int bestProgress = (activity?.type == FredericActivityType.Weighted
+        ? sets.bestWeight
+        : sets.bestReps);
     return FredericCard(
         height: 65,
         width: 160,
-        onTap: () {
-          if (activity != null)
-            CupertinoScaffold.showCupertinoModalBottomSheet(
-                enableDrag: true,
-                context: context,
-                builder: (newContext) {
-                  return BlocProvider.value(
-                      value: BlocProvider.of<FredericSetManager>(context),
-                      child: AddProgressScreen(activity!));
-                });
-        },
+        onTap: () {},
         onLongPress: () {
           showDialog(
               context: context,
@@ -117,9 +102,7 @@ class ProgressIndicatorCard extends StatelessWidget {
                                   letterSpacing: 0.3),
                             ),
                           ),
-                          UnitText(
-                              '${bestProgress.truncateToDouble() == bestProgress ? bestProgress.toInt() : bestProgress}',
-                              activity!.progressUnit)
+                          UnitText('$bestProgress', activity!.progressUnit)
                         ],
                       ),
                     ),

@@ -6,7 +6,6 @@ import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
-import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
@@ -92,22 +91,41 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
         controller: ModalScrollController.of(context),
         slivers: [
           SliverToBoxAdapter(
-              child: FredericBasicAppBar(
-            title: widget.isNewWorkout ? 'Create Workout' : 'Edit Workout',
-            leadingIcon: Icon(
-              ExtraIcons.settings,
-              color: theme.isColorful ? Colors.white : theme.mainColor,
-            ),
-            icon: GestureDetector(
-              onTap: () {
-                saveData();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                widget.isNewWorkout ? 'Create' : 'Save',
-                style: TextStyle(
+              child: Container(
+            color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 24, bottom: 16),
+              child: Row(
+                children: [
+                  Icon(
+                    ExtraIcons.settings,
                     color: theme.isColorful ? Colors.white : theme.mainColor,
-                    fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(width: 32),
+                  Text(
+                    widget.isNewWorkout ? 'Create workout' : 'Edit workout',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color:
+                            theme.isColorful ? Colors.white : theme.mainColor),
+                  ),
+                  Expanded(child: Container()),
+                  GestureDetector(
+                    onTap: () {
+                      saveData();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      widget.isNewWorkout ? 'Create' : 'Save',
+                      style: TextStyle(
+                          color:
+                              theme.isColorful ? Colors.white : theme.mainColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )
+                ],
               ),
             ),
           )),

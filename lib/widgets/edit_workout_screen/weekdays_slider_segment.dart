@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
-import 'package:frederic/widgets/edit_workout_screen/weekday_slider_day_card.dart';
 
 enum Direction { left, right }
 
@@ -14,13 +13,11 @@ class WeekdaysSliderSegment extends StatelessWidget {
   WeekdaysSliderSegment(
       {required this.pageController,
       required this.weekdaysSliderController,
-      this.defaultSelectedIndex = 0,
       required this.workout});
 
   final PageController pageController;
   final FredericWorkout workout;
   final WeekdaysSliderController weekdaysSliderController;
-  final int defaultSelectedIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +26,10 @@ class WeekdaysSliderSegment extends StatelessWidget {
         if (workout.period != 1) buildWeekdayArrowIndicator(8, Direction.left),
         if (workout.period != 1) buildWeekdayArrowIndicator(8, Direction.right),
         WeekdaysSlider(
-          startingDate: workout.startDateAdjusted,
+          startingDate: workout.startDate,
           pageController: pageController,
-          workout: workout,
           weekdaysSliderController: weekdaysSliderController,
           weekCount: workout.period,
-          defaultSelectedIndex: defaultSelectedIndex,
         ),
       ],
     );
@@ -63,7 +58,7 @@ class WeekdaysSliderSegment extends StatelessWidget {
                 ? Icons.arrow_back_ios
                 : Icons.arrow_forward_ios,
             size: 15,
-            color: theme.mainColor,
+            color: theme.textColor.withOpacity(0.8),
           ),
         ),
       ),
@@ -80,18 +75,14 @@ class WeekdaysSlider extends StatefulWidget {
       {this.weekCount = 1,
       required this.startingDate,
       required this.pageController,
-      required this.workout,
       required this.weekdaysSliderController,
-      this.defaultSelectedIndex = 0,
       Key? key})
       : super(key: key);
 
   final DateTime startingDate;
-  final FredericWorkout workout;
   final PageController pageController;
   final WeekdaysSliderController weekdaysSliderController;
   final int weekCount;
-  final int defaultSelectedIndex;
 
   @override
   _WeekdaysSliderState createState() => _WeekdaysSliderState();
@@ -105,9 +96,7 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
   @override
   void initState() {
     widget.weekdaysSliderController.setCallback(changeDayCallback);
-    weekPageController =
-        PageController(initialPage: widget.defaultSelectedIndex ~/ 7);
-    selectedDate = widget.defaultSelectedIndex;
+    weekPageController = PageController();
     super.initState();
   }
 
@@ -130,12 +119,8 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
                           children: List.generate(7, (index) {
                             return GestureDetector(
                               onTap: () => handleChangeDay(index + (week * 7)),
-                              child: WeekDaysSliderDayCard(
-                                onSwap: (first, second) {
-                                  widget.workout.swapDays(first, second);
-                                },
+                              child: WeekDaysSliderDayButton(
                                 dayIndex: index + (week * 7),
-                                isDraggable: widget.workout.canEdit,
                                 selectedDate: selectedDate,
                                 date: widget.startingDate.add(
                                   Duration(
@@ -169,6 +154,103 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
           duration: Duration(milliseconds: 250), curve: Curves.easeInOutCirc);
     } else {
       widget.pageController.jumpToPage(index);
+    }
+  }
+}
+
+///
+/// Contains the two designs (whether selected or not)
+/// of the WeekDaysSliderDayButton.
+///
+class WeekDaysSliderDayButton extends StatelessWidget {
+  WeekDaysSliderDayButton(
+      {required this.dayIndex,
+      required this.selectedDate,
+      required this.date,
+      this.dayWidth});
+
+  final int dayIndex;
+  final int selectedDate;
+  final DateTime date;
+  final double? dayWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
+    return selectedDate == dayIndex
+        ? Container(
+            width: width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color: theme.mainColor.withOpacity(0.1),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${date.day}',
+                    style: TextStyle(
+                      color: theme.mainColorInText,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.1,
+                      fontSize: 17,
+                    )),
+                Text(
+                  '${numToWeekday(date.weekday)}',
+                  style: TextStyle(
+                    color: theme.mainColorInText.withOpacity(0.7),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.6,
+                    fontSize: 13,
+                  ),
+                )
+              ],
+            ),
+          )
+        : Container(
+            width: width,
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${date.day}',
+                    style: TextStyle(
+                      color: theme.textColor,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.1,
+                      fontSize: 17,
+                    )),
+                Text(
+                  '${numToWeekday(date.weekday)}',
+                  style: TextStyle(
+                    color: theme.textColor.withOpacity(0.8),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.6,
+                    fontSize: 13,
+                  ),
+                )
+              ],
+            ),
+          );
+  }
+
+  String numToWeekday(num number) {
+    switch (number % 7) {
+      case 0:
+        return 'Sun';
+      case 1:
+        return 'Mon';
+      case 2:
+        return 'Tue';
+      case 3:
+        return 'Wed';
+      case 4:
+        return 'Thu';
+      case 5:
+        return 'Fri';
+      case 6:
+        return 'Sat';
+      default:
+        return number.toString();
     }
   }
 }

@@ -8,7 +8,7 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 class WeeklyTrainingVolumeChartData {
   WeeklyTrainingVolumeChartData();
 
-  final double calisthenicsWeight = 50;
+  final int calisthenicsWeight = 50;
 
   List<int> data = List<int>.filled(7, 0);
   DateTime? startOfWeek;
@@ -39,18 +39,18 @@ class WeeklyTrainingVolumeChartData {
 
   void _addDataToChart(FredericSet set) {
     if (set.timestamp.isAfter(startOfWeek!)) {
-      double weight = set.weight;
+      int weight = set.weight;
       if (weight == 0) weight = calisthenicsWeight;
-      int volume = (weight * set.reps).toInt();
+      int volume = weight * set.reps;
       data[set.timestamp.weekday - 1] += volume;
     }
   }
 
   void _removeDataFromChart(FredericSet set) {
     if (set.timestamp.isAfter(startOfWeek!)) {
-      double weight = set.weight;
+      int weight = set.weight;
       if (weight == 0) weight = calisthenicsWeight;
-      int volume = (weight * set.reps).toInt();
+      int volume = weight * set.reps;
       data[set.timestamp.weekday - 1] -= volume;
     }
   }

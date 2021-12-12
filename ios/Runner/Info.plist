@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>$(APP_DISPLAY_NAME)</string>
+	<string>SilverFit</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -38,7 +38,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Take a photo to use as your profile picture.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>The microphone isn&apos;t needed. It&apos;s just necessary for videos.</string>
+	<string>The microphone isn't needed. It's just necessary for videos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>You can upload a profile picture and other custom images to the app.</string>
 	<key>UILaunchStoryboardName</key>

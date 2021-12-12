@@ -52,11 +52,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
             ? () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CupertinoScaffold(
-                            body: EditWorkoutScreen(
-                          widget.workout.workoutID,
-                          defaultPage: widget.workout.activities
-                              .getDayIndex(DateTime.now()),
-                        ))));
+                        body: EditWorkoutScreen(widget.workout.workoutID))));
               }
             : null,
         padding: EdgeInsets.only(top: 12, left: 12, bottom: 10, right: 3),

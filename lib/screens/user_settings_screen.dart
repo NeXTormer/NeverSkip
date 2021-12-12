@@ -30,7 +30,6 @@ class UserSettingsScreen extends StatelessWidget {
           slivers: [
             SliverToBoxAdapter(
               child: FredericBasicAppBar(
-                backButton: true,
                 title: 'User Settings',
                 subtitle: 'Manage your User Account',
               ),
