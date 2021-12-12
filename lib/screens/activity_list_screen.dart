@@ -14,7 +14,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../state/activity_filter_controller.dart';
-import '../widgets/standard_elements/sliver_divider.dart';
 
 class ActivityListScreen extends StatelessWidget {
   ActivityListScreen(
@@ -33,6 +32,14 @@ class ActivityListScreen extends StatelessWidget {
     return ChangeNotifierProvider<ActivityFilterController>(
       create: (context) => ActivityFilterController(),
       child: FredericScaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(
+            Icons.post_add_outlined,
+            color: Colors.white,
+          ),
+          backgroundColor: theme.mainColor,
+        ),
         body: BlocBuilder<FredericUserManager, FredericUser>(
           buildWhen: (last, next) =>
               last.progressMonitors != next.progressMonitors,
@@ -49,6 +56,8 @@ class ActivityListScreen extends StatelessWidget {
                       subtitle,
                       user: user,
                       filterController: filter,
+                      isSelector: isSelector,
+                      onSelect: onSelect,
                     ),
                     FeaturedActivitySegment(
                       'Featured',
@@ -56,13 +65,6 @@ class ActivityListScreen extends StatelessWidget {
                       onTap: onSelect,
                       isSelector: isSelector,
                     ),
-                    if (user.progressMonitors.isNotEmpty)
-                      FeaturedActivitySegment(
-                        'Personal Records',
-                        user.progressMonitors,
-                        onTap: onSelect,
-                        isSelector: isSelector,
-                      ),
                     ActivityFilterSegment(filterController: filter),
                     ActivityListSegment(
                       filterController: filter,

@@ -1,17 +1,13 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
-import 'package:frederic/widgets/standard_elements/goal_cards/goal_finish_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
-import 'package:frederic/widgets/standard_elements/goal_cards/goal_card_medaille_indicator.dart';
 import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
@@ -119,106 +115,92 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         (endState ?? widget.goal.endState));
     isCompleted = false;
     if (mounted && widget.interactable) checkIfGoalIsCompleted();
-
-    return Stack(
-      children: [
-        FredericCard(
-          shimmer: isCompleted ? true : false,
-          onLongPress: () {
-            if (widget.interactable) handleLongClick(context);
-          },
-          onTap: () {
-            if (widget.interactable) handleClick();
-          },
-          width: 260,
-          padding: EdgeInsets.all(10),
-          child: Row(
-            children: [
-              PictureIcon(
-                  widget.activity == null
-                      ? widget.goal.image
-                      : widget.activity!.image,
-                  mainColor: theme.mainColorInText),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Column(
+    return FredericCard(
+      shimmer: isCompleted ? true : false,
+      onLongPress: () {
+        if (widget.interactable) handleLongClick(context);
+      },
+      onTap: () {
+        if (widget.interactable) handleClick(context);
+      },
+      width: 260,
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
+          PictureIcon(
+              widget.activity == null
+                  ? widget.goal.image
+                  : widget.activity!.image,
+              mainColor: theme.mainColorInText),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Container(
+                        width: 120,
+                        child: Text(
+                          '${title ?? widget.goal.title}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: theme.greyTextColor, fontSize: 12),
+                        ),
+                      ),
+                      Flexible(
+                        child: FredericChip(
+                            '${widget.goal.endDate.difference(widget.goal.startDate).inDays} days'),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: buildProgressBarText(
+                                  startState ?? widget.goal.startState,
+                                  '${widget.goal.unit}'),
+                            ),
+                            Flexible(
+                              child: buildProgressBarText(
+                                  endState ?? widget.goal.endState,
+                                  '${widget.goal.unit}'),
+                            ),
+                          ],
+                        ),
+                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            flex: 2,
-                            child: Text(
-                              '${title ?? widget.goal.title}',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: theme.greyTextColor, fontSize: 12),
+                            child: ProgressBar(
+                              inverse
+                                  ? (inverseValue(
+                                      widget.currentStateController!.value
+                                          .toDouble(),
+                                      widget.endStateController!.value
+                                          .toDouble(),
+                                      widget.startStateController!.value
+                                          .toDouble()))
+                                  : currentStateNormalized.toDouble(),
                             ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: FredericChip(
-                                '${widget.goal.endDate.difference(widget.goal.startDate).inDays} days'),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: buildProgressBarText(
-                                      startState ?? widget.goal.startState,
-                                      '${widget.goal.unit}'),
-                                ),
-                                Flexible(
-                                  child: buildProgressBarText(
-                                      endState ?? widget.goal.endState,
-                                      '${widget.goal.unit}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ProgressBar(
-                                  inverse
-                                      ? (inverseValue(
-                                          widget.currentStateController!.value
-                                              .toDouble(),
-                                          widget.endStateController!.value
-                                              .toDouble(),
-                                          widget.startStateController!.value
-                                              .toDouble()))
-                                      : currentStateNormalized.toDouble(),
-                                ),
-                              ),
-                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-        if (isCompleted)
-          Positioned(
-            top: -2,
-            left: 22,
-            child: Container(
-              child: GoalCardMedailleIndicator(),
+                ],
+              ),
             ),
-          ),
-      ],
+          )
+        ],
+      ),
     );
   }
 
@@ -267,21 +249,32 @@ class _NormalGoalCard extends State<NormalGoalCard> {
     );
   }
 
-  void handleClick() {
+  void handleClick(BuildContext context) {
     isCompleted
-        ? showModal(
-            configuration: FadeScaleTransitionConfiguration(
-              transitionDuration: Duration(milliseconds: 500),
-            ),
+        ? showDialog(
             context: context,
-            builder: (ctx) {
-              HapticFeedback.heavyImpact();
-              return Dialog(
-                  backgroundColor: Colors.transparent,
-                  insetPadding: const EdgeInsets.all(10),
-                  child: GoalFinishActionDialog(widget.goal));
-            },
-          )
+            builder: (context) => AlertDialog(
+                  title: Text('Congratulations'),
+                  actionsOverflowButtonSpacing: 20,
+                  content: Text(
+                      'Do you want to save your goal to your achievements?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          widget.goal.isCompleted = true;
+                          widget.goal.isDeleted = true;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Delete')),
+                    ElevatedButton(
+                        onPressed: () {
+                          widget.goal.isCompleted = true;
+                          widget.goal.isDeleted = false;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Save')),
+                  ],
+                ))
         : CupertinoScaffold.showCupertinoModalBottomSheet(
             context: context,
             builder: (c) => Scaffold(
@@ -297,12 +290,10 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         context: context,
         builder: (context) => FredericActionDialog(
               onConfirm: () {
-                var goalscount =
-                    FredericBackend.instance.userManager.state.goalsCount;
-                if (goalscount >= 1)
-                  FredericBackend.instance.userManager.state.goalsCount -= 1;
+                // FredericBackend.instance.goalManager.deleteGoal(widget.goal);
                 FredericBackend.instance.goalManager
                     .add(FredericGoalDeleteEvent(widget.goal));
+                // widget.goal.isDeleted = true;
                 Navigator.of(context).pop();
               },
               destructiveAction: true,
@@ -322,6 +313,7 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         (startState ?? widget.goal.startState),
         (endState ?? widget.goal.endState));
     if (state >= 1) {
+      // widget.goal.isCompleted = true;
       isCompleted = true;
     }
   }

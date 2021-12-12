@@ -29,8 +29,6 @@ class FredericUser {
   int? _weight;
   int? _height;
   int? _currentStreak;
-  int? _goalsCount;
-  int? _achievementsCount;
   bool waiting;
   bool? _hasCompletedStreakToday;
   DateTime? _birthday;
@@ -52,12 +50,9 @@ class FredericUser {
   int get weight => _weight ?? -1;
   int get height => _height ?? -1;
   int get streak => _currentStreak ?? 0;
-  int get goalsCount => _goalsCount ?? 0;
-  int get achievementsCount => _achievementsCount ?? 0;
   DateTime? get birthday => _birthday;
   DateTime? get streakStartDate => _streakStartDate;
   DateTime? get streakLatestDate => _streakLatestDate;
-
   List<String> get progressMonitors {
     if (_progressMonitors == null) {
       _progressMonitors = <String>[];
@@ -112,22 +107,6 @@ class FredericUser {
         .collection('users')
         .doc(uid)
         .update({'birthday': value == null ? null : Timestamp.fromDate(value)});
-  }
-
-  set goalsCount(int value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'goalscount': value});
-  }
-
-  set achievementsCount(int value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'achievementscount': value});
   }
 
   set progressMonitors(List<String> value) {
@@ -217,8 +196,6 @@ class FredericUser {
         data?['image'] ?? 'https://via.placeholder.com/300x300?text=profile';
     _weight = data?['weight'];
     _height = data?['height'];
-    _goalsCount = data?['goalscount'];
-    _achievementsCount = data?['achievementscount'];
     _birthday = data?['birthday']?.toDate();
     _progressMonitors =
         data?['progressmonitors']?.cast<String>() ?? const <String>[];
