@@ -54,17 +54,6 @@ class FredericWorkout {
   bool? _repeating;
 
   DateTime get startDate => _startDate ?? DateTime.now();
-  DateTime get startDateAdjusted {
-    DateTime today = DateTime.now();
-    DateTime end = startDate.add(Duration(days: period * 7));
-    if (today.isAfter(end) && repeating == false) return startDate;
-    print("OFFSET: ${_activities.getDayIndex(today)}");
-    return today.subtract(
-        Duration(days: today.difference(startDate).inDays % (period * 7)));
-    return today.subtract(Duration(days: _activities.getDayIndex(today)));
-    return today.subtract(today.difference(startDate));
-  }
-
   String get name => _name ?? 'Workout name';
   String get description => _description ?? 'Workout description';
   String get image =>
@@ -233,29 +222,6 @@ class FredericWorkout {
     updateActivitiesInDB();
   }
 
-  void swapDays(int first, int second) {
-    first++;
-    second++;
-    bool someChanges = false;
-    List<FredericWorkoutActivity> firstActivities =
-        _activities.activities[first].toList();
-    _activities.activities[first] = _activities.activities[second].toList();
-    _activities.activities[second] = firstActivities;
-
-    _activities.activities[first].forEach((element) {
-      element.changeWeekday(first);
-      someChanges = true;
-    });
-
-    _activities.activities[second].forEach((element) {
-      element.changeWeekday(second);
-      someChanges = true;
-    });
-    if (someChanges) {
-      updateActivitiesInDB();
-    }
-  }
-
   void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {
     List<FredericWorkoutActivity> list = _activities.activities[weekday];
 
@@ -324,14 +290,7 @@ class FredericWorkoutActivities {
     if (day.isAfter(end) && workout.repeating == false)
       return <FredericWorkoutActivity>[];
     int daysDiff = day.difference(start).inDays % (period * 7);
-    return activities[daysDiff + 1];
-  }
-
-  int getDayIndex(DateTime day) {
-    DateTime start = workout.startDate;
-    DateTime end = workout.startDate.add(Duration(days: period * 7));
-    if (day.isAfter(end) && workout.repeating == false) return -1;
-    return day.difference(start).inDays % (period * 7);
+    return activities[daysDiff + 1] + activities[0];
   }
 
   List<Map<String, dynamic>> toList() {

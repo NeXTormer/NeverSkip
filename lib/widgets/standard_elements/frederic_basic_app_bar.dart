@@ -3,13 +3,7 @@ import 'package:frederic/main.dart';
 
 class FredericBasicAppBar extends StatelessWidget {
   FredericBasicAppBar(
-      {required this.title,
-      this.subtitle,
-      this.leadingIcon,
-      this.backButton = false,
-      this.icon,
-      bool? rounded,
-      Key? key})
+      {required this.title, this.subtitle, this.icon, bool? rounded, Key? key})
       : super(key: key) {
     this.rounded = rounded ?? theme.isColorful;
   }
@@ -17,9 +11,7 @@ class FredericBasicAppBar extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? icon;
-  final Widget? leadingIcon;
   late final bool rounded;
-  final bool backButton;
 
   @override
   Widget build(BuildContext context) {
@@ -33,33 +25,20 @@ class FredericBasicAppBar extends StatelessWidget {
               : null),
       child: Padding(
           padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 16),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            if (backButton)
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                    padding: const EdgeInsets.only(left: 2, right: 4),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: theme.textColorColorfulBackground,
-                      size: 21,
-                    )),
-              ),
-            if (leadingIcon != null) leadingIcon!,
-            if (leadingIcon != null) SizedBox(width: 32),
+              const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 8),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (subtitle != null)
-                  Text(subtitle!,
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: theme.textColorColorfulBackground,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.6,
-                          fontSize: 13)),
-                if (subtitle != null) SizedBox(height: 8),
+                Text(subtitle ?? '',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: theme.textColorColorfulBackground,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 0.6,
+                        fontSize: 13)),
+                SizedBox(height: 8),
                 Text(title,
                     style: TextStyle(
                         fontFamily: 'Montserrat',
@@ -67,10 +46,9 @@ class FredericBasicAppBar extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.1,
                         fontSize: 17)),
-                if (subtitle != null) SizedBox(height: 4),
+                SizedBox(height: 4),
               ],
             ),
-            Expanded(child: Container()),
             if (icon != null) icon!
           ])),
     );

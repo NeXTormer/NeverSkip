@@ -17,11 +17,10 @@ class SmallActivityCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bestProgress = (activity.type == FredericActivityType.Weighted
-                ? setList?.bestWeight
-                : setList?.bestReps)
-            ?.toDouble() ??
-        0.toDouble();
+    int bestProgress = (activity.type == FredericActivityType.Weighted
+            ? setList?.bestWeight
+            : setList?.bestReps) ??
+        0;
     return FredericCard(
       onTap: onClick,
       width: MediaQuery.of(context).size.width / 2.3,
@@ -39,9 +38,11 @@ class SmallActivityCardContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
+                Container(
+                  width: 93,
                   child: Text(
                     activity.name,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: theme.greyTextColor,
                         fontSize: 10,
@@ -51,7 +52,7 @@ class SmallActivityCardContent extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${bestProgress.truncateToDouble() == bestProgress ? bestProgress.toInt() : bestProgress}',
+                      '$bestProgress',
                       style: TextStyle(
                           color: theme.textColor,
                           fontWeight: FontWeight.w600,

@@ -47,96 +47,91 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
   @override
   Widget build(BuildContext context) {
     final double padding = 0; //MediaQuery.of(context).size.width / 16;
-    try {
-      return SliverToBoxAdapter(
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
-          child: Column(
-            children: [
-              FredericHeading(
-                'Muscle Groups',
-              ),
-              Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ActivityMuscleGroupButton('All',
-                          key: allKey,
-                          rightPadding: padding,
-                          isActive: selectedIndex == 0, onPressed: () {
-                        setState(() {
-                          handleMuscleFilters(MuscleGroup.All);
-                          selectedIndex = 0;
-                        });
-                      }),
-                      ActivityMuscleGroupButton('Arms',
-                          key: armsKey,
-                          rightPadding: padding,
-                          isActive: selectedIndex == 1, onPressed: () {
-                        setState(() {
-                          handleMuscleFilters(MuscleGroup.Arms);
-                          selectedIndex = 1;
-                        });
-                      }),
-                      ActivityMuscleGroupButton('Chest',
-                          key: chestKey,
-                          rightPadding: padding,
-                          isActive: selectedIndex == 2,
-                          onPressed: () => setState(() {
-                                handleMuscleFilters(MuscleGroup.Chest);
-                                selectedIndex = 2;
-                              })),
-                      ActivityMuscleGroupButton('Back',
-                          key: backKey,
-                          rightPadding: padding,
-                          isActive: selectedIndex == 3,
-                          onPressed: () => setState(() {
-                                handleMuscleFilters(MuscleGroup.Back);
-                                selectedIndex = 3;
-                              })),
-                      ActivityMuscleGroupButton('Abs',
-                          key: absKey,
-                          rightPadding: padding,
-                          isActive: selectedIndex == 4,
-                          onPressed: () => setState(() {
-                                handleMuscleFilters(MuscleGroup.Abs);
-                                selectedIndex = 4;
-                              })),
-                      ActivityMuscleGroupButton('Legs',
-                          key: legsKey,
-                          rightPadding: padding,
-                          isActive: selectedIndex == 5,
-                          onPressed: () => setState(() {
-                                handleMuscleFilters(MuscleGroup.Legs);
-                                selectedIndex = 5;
-                              })),
-                      SizedBox(width: 12)
-                    ],
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
+        child: Column(
+          children: [
+            FredericHeading(
+              'Muscle Groups',
+            ),
+            Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ActivityMuscleGroupButton('All',
+                        key: allKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 0, onPressed: () {
+                      setState(() {
+                        handleMuscleFilters(MuscleGroup.All);
+                        selectedIndex = 0;
+                      });
+                    }),
+                    ActivityMuscleGroupButton('Arms',
+                        key: armsKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 1, onPressed: () {
+                      setState(() {
+                        handleMuscleFilters(MuscleGroup.Arms);
+                        selectedIndex = 1;
+                      });
+                    }),
+                    ActivityMuscleGroupButton('Chest',
+                        key: chestKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 2,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Chest);
+                              selectedIndex = 2;
+                            })),
+                    ActivityMuscleGroupButton('Back',
+                        key: backKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 3,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Back);
+                              selectedIndex = 3;
+                            })),
+                    ActivityMuscleGroupButton('Abs',
+                        key: absKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 4,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Abs);
+                              selectedIndex = 4;
+                            })),
+                    ActivityMuscleGroupButton('Legs',
+                        key: legsKey,
+                        rightPadding: padding,
+                        isActive: selectedIndex == 5,
+                        onPressed: () => setState(() {
+                              handleMuscleFilters(MuscleGroup.Legs);
+                              selectedIndex = 5;
+                            })),
+                    SizedBox(width: 12)
+                  ],
+                ),
+                AnimatedPositioned(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                  bottom: 0,
+                  left: keys[selectedIndex].positionedDifference(dotKey),
+                  child: Icon(
+                    Icons.circle,
+                    size: 8,
+                    color: theme.mainColor,
                   ),
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.ease,
-                    bottom: 0,
-                    left: keys[selectedIndex].positionedDifference(dotKey),
-                    child: Icon(
-                      Icons.circle,
-                      size: 8,
-                      color: theme.mainColor,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12),
-            ],
-          ),
+                ),
+              ],
+            ),
+            SizedBox(height: 12),
+          ],
         ),
-      );
-    } catch (e) {
-      print(e);
-      return Container();
-    }
+      ),
+    );
   }
 
   void handleMuscleFilters(MuscleGroup activeFilter) {

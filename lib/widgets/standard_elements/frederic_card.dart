@@ -8,7 +8,6 @@ class FredericCard extends StatelessWidget {
       {this.width,
       this.height,
       this.borderRadius = 10,
-      this.borderWidth = 1,
       this.padding,
       this.margin,
       this.child,
@@ -22,7 +21,6 @@ class FredericCard extends StatelessWidget {
   final double? width;
   final double? height;
   final double borderRadius;
-  final double borderWidth;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final Widget? child;
@@ -38,7 +36,7 @@ class FredericCard extends StatelessWidget {
     BoxDecoration decoration = BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         color: color ?? theme.cardBackgroundColor,
-        border: Border.all(color: theme.cardBorderColor, width: borderWidth));
+        border: Border.all(color: theme.cardBorderColor));
 
     Container container = Container(
         height: height,

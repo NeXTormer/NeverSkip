@@ -32,6 +32,14 @@ class FredericAnalytics {
     return analytics.logEvent(name: 'delete-goal');
   }
 
+  Future<void> logGoalSavedAsAchievement() {
+    return analytics.logEvent(name: 'goal-saved-as-achievement');
+  }
+
+  Future<void> logAchievementDeleted() {
+    return analytics.logEvent(name: 'delete-achievement');
+  }
+
   Future<void> logWorkoutCreated() {
     return analytics.logEvent(name: 'create-workout');
   }
