@@ -1,10 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/bottom_navigation_screen.dart';
 import 'package:frederic/screens/screens.dart';
