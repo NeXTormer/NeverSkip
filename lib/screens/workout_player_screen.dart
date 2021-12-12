@@ -24,7 +24,7 @@ class WorkoutPlayerScreen extends StatefulWidget {
 
 class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   WorkoutPlayerState playerState = WorkoutPlayerState();
-  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Start;
+  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Player;
 
   @override
   void initState() {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/bottom_navigation_screen.dart';
-import 'package:frederic/screens/onboarding_screen.dart';
 
 import 'backend/authentication/authentication_wrapper.dart';
 import 'misc/ExtraIcons.dart';
@@ -38,7 +37,6 @@ class FredericMainApp extends StatelessWidget {
         ],
       ),
       loginPage: LoginScreen(),
-      onboardingPage: OnboardingScreen(),
     );
   }
 }

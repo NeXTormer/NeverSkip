@@ -24,7 +24,10 @@ class FredericWorkout implements FredericDataObject {
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
 
-  FredericWorkout.create() : id = 'new' {
+  FredericWorkout.create()
+      : id = 'new',
+        _image =
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82' {
     _activities = FredericWorkoutActivities(this);
   }
 

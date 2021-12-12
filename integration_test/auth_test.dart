@@ -12,7 +12,7 @@ import 'robots/login_robot.dart';
 void main() async {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseAuth.instance.signOut();
+  await FirebaseAuth.instance.signOut();
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
 
@@ -28,6 +28,10 @@ void main() async {
     });
 
     testWidgets('login-and-delete', (WidgetTester tester) async {
+      await FirebaseAuth.instance.signOut();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
       app.main();
       await tester.pumpAndSettle();
       await loginRobot.login(tester);

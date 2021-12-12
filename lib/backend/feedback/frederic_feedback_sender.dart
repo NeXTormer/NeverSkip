@@ -5,6 +5,8 @@ class FredericFeedbackSender {
   static Future<void> sendDeleteFeedback(String message,
       List<String?> deleteReasonChoices, FredericUser user) async {
     if (message == 'integrationtest') return;
+    if (message == 'test') return;
+
     DocumentReference doc =
         FirebaseFirestore.instance.collection('feedback').doc(user.uid);
     return doc.set({

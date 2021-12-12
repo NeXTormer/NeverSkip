@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/main.dart';
 
 import 'frederic_auth_event.dart';
@@ -24,6 +25,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   late final StreakManager streakManager;
   final FredericBackend _backend;
+
+  bool firstUserSignUp = false;
 
   bool firestoreDataWasLoadedAtLeastOnce = false;
 
@@ -75,17 +78,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       _userStreamSubscription?.cancel();
     }
 
-    // print('=====TRANSITION======');
-    // print(transition);
-    // print('========END==========');
-
     super.onTransition(transition);
   }
 
   @override
   void onError(Object error, StackTrace stackTrace) {
     print('==========Frederic User Bloc Error =================');
-
     super.onError(error, stackTrace);
   }
 
@@ -117,6 +115,9 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       String? name,
       String? image,
       String? username}) async {
+    FredericBackend.instance.messageBus.add(
+        FredericConcurrencyMessage(FredericConcurrencyMessageType.UserSignUp));
+    firstUserSignUp = true;
     DocumentSnapshot<Map<String, dynamic>> defaultDoc = await FirebaseFirestore
         .instance
         .collection('defaults')

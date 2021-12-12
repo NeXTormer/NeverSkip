@@ -11,4 +11,5 @@ enum FredericConcurrencyMessageType {
   UserHasAuthenticated,
   CoreDataHasLoaded,
   Other,
+  UserSignUp,
 }
