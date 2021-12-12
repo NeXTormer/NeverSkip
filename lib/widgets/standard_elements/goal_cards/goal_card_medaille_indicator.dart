@@ -24,22 +24,16 @@ class _GoalCardMedailleIndicatorState extends State<GoalCardMedailleIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.network(
-      handleColorTheme(),
-      width: widget.size,
-      height: widget.size,
-      controller: _controller,
-      onLoaded: (composition) {
-        Future.delayed(
-          Duration(milliseconds: 200),
-          () {
-            _controller
-              ..duration = composition.duration
-              ..forward();
-          },
-        );
-      },
-    );
+    return Lottie.network(handleColorTheme(),
+        width: widget.size,
+        height: widget.size,
+        controller: _controller, onLoaded: (composition) {
+      Future.delayed(Duration(milliseconds: 200), () {
+        _controller
+          ..duration = composition.duration
+          ..forward();
+      });
+    });
   }
 
   String handleColorTheme() {
