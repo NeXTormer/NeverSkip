@@ -48,6 +48,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
     isRepeating = widget.repeating ?? widget.workout.repeating;
     return FredericCard(
         height: 114,
+        onLongPress: () => handleLongPress(context),
         onTap: widget.clickable
             ? () {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -96,18 +97,15 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Transform.scale(
-                                  scale: 0.88,
-                                  child: CupertinoSwitch(
-                                    key: ValueKey(widget.workout.workoutID),
-                                    value: isSelected,
-                                    activeColor: theme.mainColor,
-                                    onChanged: widget.workout.workoutID == 'new'
-                                        ? null
-                                        : (value) =>
-                                            handleSwitch(context, value),
-                                  ),
+                                padding:
+                                    const EdgeInsets.only(top: 4, right: 2),
+                                child: CupertinoSwitch(
+                                  key: ValueKey(widget.workout.workoutID),
+                                  value: isSelected,
+                                  activeColor: theme.mainColor,
+                                  onChanged: widget.workout.workoutID == 'new'
+                                      ? null
+                                      : (value) => handleSwitch(context, value),
                                 ),
                               )
                             ],
@@ -148,6 +146,29 @@ class _WorkoutCardState extends State<WorkoutCard> {
             )
           ],
         ));
+  }
+
+  void handleLongPress(BuildContext context) {
+    if (widget.workout.canEdit) {
+      FredericActionDialog.show(
+          context: context,
+          dialog: FredericActionDialog(
+            title: 'Confirm deletion',
+            actionText: 'Delete',
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                  'Do you want to delete this Workout Plan? This cannot be undone!',
+                  textAlign: TextAlign.center),
+            ),
+            onConfirm: () {
+              FredericBackend.instance.workoutManager
+                  .add(FredericWorkoutDeleteEvent(widget.workout));
+              Navigator.of(context).pop();
+            },
+            destructiveAction: true,
+          ));
+    }
   }
 
   void handleSwitch(BuildContext context, bool value) {

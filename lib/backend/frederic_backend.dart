@@ -5,6 +5,8 @@ import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
+import 'package:frederic/backend/database/firestore/firestore_activity_data_interface.dart';
+import 'package:frederic/backend/database/firestore/firestore_workout_data_interface.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
@@ -26,13 +28,29 @@ import 'backend.dart';
 class FredericBackend extends FredericMessageProcessor {
   FredericBackend() {
     _eventBus = FredericMessageBus();
+    FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
 
     _userManager = FredericUserManager(backend: this);
-    _activityManager = FredericActivityManager();
+
+    // === Activities
+    _activityManager = FredericActivityManager(
+        dataInterface: FirestoreActivityDataInterface(
+            firestoreInstance: firestoreInstance,
+            activitiesCollection: firestoreInstance.collection('activities')));
+
     _setManager = FredericSetManager();
-    _workoutManager = FredericWorkoutManager();
+
+    // === Workouts
+    _workoutManager = FredericWorkoutManager(
+        activityManager: _activityManager,
+        dataInterface: FirestoreWorkoutDataInterface(
+            firestoreInstance: firestoreInstance,
+            workoutsCollection: firestoreInstance.collection('workouts')));
+
     _goalManager = FredericGoalManager();
+
     _storageManager = FredericStorageManager(this);
+
     _analytics = FredericAnalytics();
 
     _registerEventProcessors();
@@ -79,6 +97,26 @@ class FredericBackend extends FredericMessageProcessor {
   DocumentReference<Map<String, dynamic>> _defaultsReference =
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
 
+  void loadData() async {
+    var profiler = FredericProfiler.track('FredericBackend::loadData()');
+
+    await waitUntilUserHasAuthenticated();
+
+    _defaults = FredericDefaults(await _defaultsReference.get());
+
+    _setManager.reload();
+    await _activityManager.reload();
+    await _workoutManager.reload();
+    await _goalManager.reload();
+
+    _waitUntilCoreDataHasLoaded.complete();
+    profiler.stop();
+  }
+
+  void _registerEventProcessors() {
+    messageBus.addMessageProcessor(this);
+  }
+
   @override
   bool acceptsMessage(FredericBaseMessage message) {
     return message is FredericConcurrencyMessage;
@@ -98,26 +136,6 @@ class FredericBackend extends FredericMessageProcessor {
           break;
       }
     }
-  }
-
-  void loadData() async {
-    var profiler = FredericProfiler.track('[Backend] load all data');
-
-    await waitUntilUserHasAuthenticated();
-
-    _defaults = FredericDefaults(await _defaultsReference.get());
-
-    _setManager.reload();
-    await _activityManager.reload();
-    await _workoutManager.reload();
-    await _goalManager.reload();
-
-    _waitUntilCoreDataHasLoaded.complete();
-    profiler.stop();
-  }
-
-  void _registerEventProcessors() {
-    messageBus.addMessageProcessor(this);
   }
 
   void dispose() {}

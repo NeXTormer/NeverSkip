@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 ///
@@ -12,36 +13,32 @@ import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 ///
 /// Must call loadActivities to load the activities.
 ///
-///
-class FredericWorkout {
-  FredericWorkout(DocumentSnapshot<Object?> snapshot, this._workoutManager)
-      : workoutID = snapshot.id {
-    var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
-    if (data == null) return;
-
-    _name = data['name'];
-    _description = data['description'];
-    _image = data['image'];
-    _owner = data['owner'];
-    _ownerName = data['ownername'];
-    _period = data['period'];
-    _repeating = data['repeating'];
-    _startDate = data['startdate']?.toDate();
-    _activitiesList = data['activities'];
-
-    _activities = FredericWorkoutActivities(this);
+class FredericWorkout implements FredericDataObject {
+  FredericWorkout.fromMap(String id, Map<String, dynamic> data) {
+    fromMap(id, data);
   }
+
+  FredericWorkout.noSuchWorkout(String id)
+      : this.id = id,
+        _name = 'No Such Workout found',
+        _image =
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
 
   FredericWorkout.create()
-      : workoutID = 'new',
-        _workoutManager = FredericBackend.instance.workoutManager {
+      : id = 'new',
+        _image =
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82' {
     _activities = FredericWorkoutActivities(this);
   }
 
-  final String workoutID;
-  final FredericWorkoutManager _workoutManager;
+  late final String id;
+
+  @deprecated
+  get workoutID => id;
 
   late FredericWorkoutActivities _activities;
+  void Function(FredericWorkout)? onUpdate;
+
   List<dynamic>? _activitiesList;
 
   DateTime? _startDate;
@@ -58,18 +55,15 @@ class FredericWorkout {
     DateTime today = DateTime.now();
     DateTime end = startDate.add(Duration(days: period * 7));
     if (today.isAfter(end) && repeating == false) return startDate;
-    print("OFFSET: ${_activities.getDayIndex(today)}");
     return today.subtract(
         Duration(days: today.difference(startDate).inDays % (period * 7)));
-    return today.subtract(Duration(days: _activities.getDayIndex(today)));
-    return today.subtract(today.difference(startDate));
   }
 
-  String get name => _name ?? 'Workout name';
+  String get name => _name ?? 'New Workout';
   String get description => _description ?? 'Workout description';
   String get image =>
       _image ??
-      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/defaultimages%2Fpush-up.png?alt=media&token=60cfa88e-4777-46fe-8005-5263c490c109';
+      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Floading.png?alt=media&token=4f99ab1f-c0bb-4881-b010-4c395b3206a1';
   String get owner => _owner ?? 'No owner';
   String get ownerName => _ownerName ?? (canEdit ? 'You' : 'Other');
 
@@ -81,74 +75,54 @@ class FredericWorkout {
 
   FredericWorkoutActivities get activities => _activities;
 
-  set name(String value) {
-    if (value.isNotEmpty && value != _name) {
-      FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutID)
-          .update({'name': value});
-      _name = value;
-      _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-    }
+  @override
+  void fromMap(String id, Map<String, dynamic> data) {
+    this.id = id;
+    _name = data['name'];
+    _description = data['description'];
+    _image = data['image'];
+    _owner = data['owner'];
+    _ownerName = data['ownername'];
+    _period = data['period'];
+    _repeating = data['repeating'];
+    _startDate = data['startdate']?.toDate();
+    _activitiesList = data['activities'];
+
+    _activities = FredericWorkoutActivities(this);
   }
 
-  set description(String value) {
-    if (value.isNotEmpty && value != _description) {
-      FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutID)
-          .update({'description': value});
-      _description = value;
-      _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-    }
+  @override
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'description': description,
+      'image': image,
+      'owner': FirebaseAuth.instance.currentUser?.uid,
+      'period': period,
+      'repeating': repeating,
+      'startdate': Timestamp.fromDate(startDate),
+      'activities': _activities.toList()
+    };
   }
 
-  set image(String value) {
-    if (value.isNotEmpty && value != _image) {
-      FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutID)
-          .update({'image': value});
-      _image = value;
-      _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-    }
+  void updateData(
+      {String? newName,
+      String? newDescription,
+      String? newImage,
+      int? newPeriod,
+      bool? newRepeating,
+      DateTime? newStartDate}) {
+    _name = newName ?? name;
+    _description = newDescription ?? description;
+    _image = newImage ?? image;
+    _period = newPeriod ?? period;
+    _repeating = newRepeating ?? repeating;
+    _startDate = newStartDate ?? startDate;
+
+    if (newPeriod != null) _activities.resizeForPeriod(newPeriod);
   }
 
-  set period(int value) {
-    if (value > 0 && value != period) {
-      FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutID)
-          .update({'period': value});
-      _period = value;
-      _activities.resizeForPeriod(value);
-      _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-    }
-  }
-
-  set startDate(DateTime value) {
-    if (value != _startDate) {
-      FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutID)
-          .update({'startdate': Timestamp.fromDate(value)});
-      _startDate = value;
-      _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-    }
-  }
-
-  set repeating(bool value) {
-    if (value != _activities.repeating) {
-      FirebaseFirestore.instance
-          .collection('workouts')
-          .doc(workoutID)
-          .update({'repeating': value});
-      _repeating = value;
-      _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-    }
-  }
-
-  Future<void> loadActivities() async {
+  Future<void> loadActivities(FredericActivityManager activityManager) async {
     if (_activitiesList == null) return;
     for (dynamic activityMap in _activitiesList!) {
       String? id = activityMap['activityid'];
@@ -158,57 +132,15 @@ class FredericWorkout {
 
       if (weekday <= period * 7 && id != null) {
         _activities.activities[weekday].add(FredericWorkoutActivity.fromMap(
-            await FredericBackend.instance.activityManager.getActivity(id),
-            activityMap));
+            await activityManager.getActivity(id), activityMap));
       }
     }
 
     for (var list in _activities.activities) list.sort();
 
-    _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
     return;
   }
 
-  //============================================================================
-  /// Saves the workout to the database. Only use when created with
-  /// FredericWorkout.create()
-  ///
-  void save(
-      {required String title,
-      required String description,
-      required String image,
-      required int period,
-      required bool repeating,
-      required DateTime startDate}) async {
-    if (workoutID != 'new') return;
-    CollectionReference workouts =
-        FirebaseFirestore.instance.collection('workouts');
-    var newWorkout = await workouts.add({
-      'name': title,
-      'description': description,
-      'image': image,
-      'owner': FirebaseAuth.instance.currentUser?.uid,
-      'period': period,
-      'repeating': repeating,
-      'startdate': Timestamp.fromDate(startDate)
-    });
-    var snapshot = await newWorkout.get();
-    _workoutManager.add(
-        FredericWorkoutCreateEvent(FredericWorkout(snapshot, _workoutManager)));
-  }
-
-  ///
-  /// Deletes the workout from the DB, don't call directly
-  ///
-  void delete() {
-    FirebaseFirestore.instance.collection('workouts').doc(workoutID).delete();
-  }
-
-  //============================================================================
-  /// Adds an activity to the workout on the specified weekday
-  /// Use this to add an activity instead of using activities.add() because
-  /// this also adds it to the DB
-  ///
   bool addActivity(FredericWorkoutActivity activity) {
     if (_activities.activities[activity.weekday].contains(activity)) {
       return false;
@@ -218,22 +150,17 @@ class FredericWorkout {
     }
     _activities.activities[activity.weekday]
         .add(activity..order = _activities.activities[activity.weekday].length);
-    updateActivitiesInDB();
+    onUpdate?.call(this);
     return true;
   }
 
-  //============================================================================
-  /// Removes an activity from the workout on the specified weekday
-  /// Use this to remove an activity instead of using activities.remove() because
-  /// this also removes it on the DB
-  ///
   void removeActivity(FredericWorkoutActivity activity, int weekday) {
     _activities.activities[weekday].remove(activity);
     updateOrderOfActivities(weekday);
-    updateActivitiesInDB();
+    onUpdate?.call(this);
   }
 
-  void swapDays(int first, int second) {
+  bool swapDays(int first, int second) {
     first++;
     second++;
     bool someChanges = false;
@@ -251,9 +178,8 @@ class FredericWorkout {
       element.changeWeekday(second);
       someChanges = true;
     });
-    if (someChanges) {
-      updateActivitiesInDB();
-    }
+    if (someChanges) onUpdate?.call(this);
+    return someChanges;
   }
 
   void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {
@@ -266,8 +192,7 @@ class FredericWorkout {
     final activity = list.removeAt(oldIndex);
     updateOrderOfActivities(weekday);
     list.insert(newIndex, activity);
-
-    updateActivitiesInDB();
+    onUpdate?.call(this);
   }
 
   void updateOrderOfActivities(int weekday) {
@@ -277,18 +202,9 @@ class FredericWorkout {
     }
   }
 
-  void updateActivitiesInDB() {
-    DocumentReference workoutReference =
-        FirebaseFirestore.instance.collection('workouts').doc(workoutID);
-
-    workoutReference.update({'activities': _activities.toList()});
-
-    _workoutManager.add(FredericWorkoutUpdateEvent(workoutID));
-  }
-
   @override
   String toString() {
-    return 'FredericWorkout[name: $_name, ID: $workoutID]';
+    return 'FredericWorkout[name: $_name, ID: $id]';
   }
 }
 

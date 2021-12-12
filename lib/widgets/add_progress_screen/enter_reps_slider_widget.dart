@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/add_progress_screen/small_text_card.dart';
+
+import 'add_progress_card.dart';
 
 class EnterRepsSliderWidget extends StatefulWidget {
   const EnterRepsSliderWidget({Key? key, required this.controller})

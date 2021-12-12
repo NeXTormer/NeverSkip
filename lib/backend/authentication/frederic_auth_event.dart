@@ -140,7 +140,7 @@ class FredericSignOutEvent extends FredericAuthEvent {
 
 class FredericUserDataChangedEvent extends FredericAuthEvent {
   FredericUserDataChangedEvent(this.snapshot);
-  final DocumentSnapshot<Map<String, dynamic>> snapshot;
+  final DocumentSnapshot<Map<String, dynamic>>? snapshot;
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {

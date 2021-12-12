@@ -10,7 +10,6 @@ class AdminSelectMuscleGroup extends StatelessWidget {
       required this.removeMuscleGroup,
       Key? key})
       : super(key: key);
-
   final List<FredericActivityMuscleGroup> muscleGroups;
   final void Function(FredericActivityMuscleGroup) addMuscleGroup;
   final void Function(FredericActivityMuscleGroup) removeMuscleGroup;

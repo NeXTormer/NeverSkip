@@ -17,21 +17,20 @@ class ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RotatedBox(
-      quarterTurns: vertical ? 3 : 0,
-      child: Container(
-          height: thickness,
-          width: length,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(100)),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: alternateColor
-                  ? theme.accentColorLight
-                  : theme.mainColorLight,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  alternateColor ? theme.accentColor : theme.mainColor),
-            ),
-          )),
-    );
+        quarterTurns: vertical ? 3 : 0,
+        child: Container(
+            height: thickness,
+            width: length,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(100)),
+              child: LinearProgressIndicator(
+                value: progress,
+                backgroundColor: alternateColor
+                    ? theme.accentColorLight
+                    : theme.mainColorLight,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    alternateColor ? theme.accentColor : theme.mainColor),
+              ),
+            )));
   }
 }

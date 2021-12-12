@@ -4,6 +4,7 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/settings_screen/change_single_attribute_screen.dart';
 import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
+// ignore: must_be_immutable
 class SettingsElement extends StatefulWidget {
   SettingsElement(
       {required this.text,
@@ -114,94 +115,90 @@ class _SettingsElementState extends State<SettingsElement> {
                 ),
               ),
             Expanded(
-              child: Container(
-                //color: Colors.red,
-                child: LayoutBuilder(builder: (context, constraints) {
-                  Size mainTextSize = _textSize(widget.text, mainTextStyle);
-                  Size subTextSize = widget.subText == null
-                      ? Size.square(0)
-                      : _textSize(widget.subText!, subTextStyle);
-                  const double padding = 30;
-                  double totalLength =
-                      mainTextSize.width + subTextSize.width + padding;
-                  int lines = totalLength ~/ constraints.maxWidth;
-                  lines++;
-                  bool mainTextTooLong = (mainTextSize.width + padding + 10) >
-                      constraints.maxWidth;
-                  return ConstrainedBox(
-                    constraints:
-                        BoxConstraints.tightFor(height: lines * 12 + 32),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.text,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: mainTextStyle,
+              child: LayoutBuilder(builder: (context, constraints) {
+                Size mainTextSize = _textSize(widget.text, mainTextStyle);
+                Size subTextSize = widget.subText == null
+                    ? Size.square(0)
+                    : _textSize(widget.subText!, subTextStyle);
+                const double padding = 30;
+                double totalLength =
+                    mainTextSize.width + subTextSize.width + padding;
+                int lines = totalLength ~/ constraints.maxWidth;
+                lines++;
+                // bool mainTextTooLong =
+                //     (mainTextSize.width + padding + 10) > constraints.maxWidth;
+                return ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(height: lines * 12 + 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.text,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: mainTextStyle,
+                            ),
+                          ),
+                          if (widget.subText != null && lines == 1)
+                            Text(
+                              widget.subText!,
+                              maxLines: 1,
+                              textAlign: TextAlign.right,
+                              style: subTextStyle,
+                            ),
+                          if (widget.subText != null && lines == 1)
+                            SizedBox(width: 6),
+                          if (widget.hasSwitch &&
+                              widget.defaultSwitchPosition == null)
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: theme.mainColor,
                               ),
                             ),
-                            if (widget.subText != null && lines == 1)
-                              Text(
+                          if (widget.hasSwitch &&
+                              widget.defaultSwitchPosition != null)
+                            CupertinoSwitch(
+                                value: switchState,
+                                onChanged: (state) async {
+                                  if (widget.onChanged == null ||
+                                      await widget.onChanged!(state)) {
+                                    setState(() {
+                                      switchState = state;
+                                    });
+                                  }
+                                },
+                                activeColor: theme.mainColor),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          if (widget.subText != null && lines == 2)
+                            Expanded(
+                              child: Text(
                                 widget.subText!,
                                 maxLines: 1,
-                                textAlign: TextAlign.right,
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.ellipsis,
                                 style: subTextStyle,
                               ),
-                            if (widget.subText != null && lines == 1)
-                              SizedBox(width: 6),
-                            if (widget.hasSwitch &&
-                                widget.defaultSwitchPosition == null)
-                              SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  color: theme.mainColor,
-                                ),
-                              ),
-                            if (widget.hasSwitch &&
-                                widget.defaultSwitchPosition != null)
-                              CupertinoSwitch(
-                                  value: switchState,
-                                  onChanged: (state) async {
-                                    if (widget.onChanged == null ||
-                                        await widget.onChanged!(state)) {
-                                      setState(() {
-                                        switchState = state;
-                                      });
-                                    }
-                                  },
-                                  activeColor: theme.mainColor),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            if (widget.subText != null && lines == 2)
-                              Expanded(
-                                child: Text(
-                                  widget.subText!,
-                                  maxLines: 1,
-                                  textAlign: TextAlign.left,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: subTextStyle,
-                                ),
-                              ),
-                            if (widget.subText != null && lines == 2)
-                              SizedBox(width: 18),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                }),
-              ),
+                            ),
+                          if (widget.subText != null && lines == 2)
+                            SizedBox(width: 18),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              }),
             ),
             if (!widget.hasSwitch && widget.clickable)
               Icon(

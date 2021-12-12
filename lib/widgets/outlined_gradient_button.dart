@@ -6,7 +6,6 @@ class OutlinedGradientButton extends StatelessWidget {
   final Widget? child;
   final VoidCallback _callback;
   final double _radius;
-  final double _padding;
 
   OutlinedGradientButton({
     required double strokeWidth,
@@ -15,11 +14,10 @@ class OutlinedGradientButton extends StatelessWidget {
     required Gradient gradient,
     this.child,
     required VoidCallback onPressed,
-  })   : this._painter = _GradientPainter(
+  })  : this._painter = _GradientPainter(
             strokeWidth: strokeWidth, radius: radius, gradient: gradient),
         this._callback = onPressed,
-        this._radius = radius,
-        this._padding = padding;
+        this._radius = radius;
 
   @override
   Widget build(BuildContext context) {

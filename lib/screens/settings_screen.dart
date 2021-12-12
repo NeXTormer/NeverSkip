@@ -7,6 +7,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/screens/onboarding_screen.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/specific_settings/color_theme_changer.dart';
@@ -36,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 10)),
             UserSettingsSegment(user),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
-            SettingsSegment(title: 'App Settings', elements: <SettingsElement>[
+            SettingsSegment(title: 'Customization', elements: <SettingsElement>[
               SettingsElement(
                 text: 'Color Theme',
                 subText: theme.name,
@@ -44,36 +45,38 @@ class SettingsScreen extends StatelessWidget {
                 changerTitle: 'Change the Color Theme',
                 icon: Icons.color_lens_outlined,
               ),
-              SettingsElement(
-                text: 'Werner',
-                subText: 'Enabled',
-                icon: Icons.description,
-              ),
-              SettingsElement(text: 'Reminder Notifications', hasSwitch: true),
-              SettingsElement(
-                text: 'Werner',
-                subText: 'Enabled',
-                icon: Icons.description,
-              ),
+              // SettingsElement(
+              //   text: 'Werner',
+              //   subText: 'Enabled',
+              //   icon: Icons.description,
+              // ),
+              // SettingsElement(text: 'Reminder Notifications', hasSwitch: true),
+              // SettingsElement(
+              //   text: 'Werner',
+              //   subText: 'Enabled',
+              //   icon: Icons.description,
+              // ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(title: 'Preferences', elements: <SettingsElement>[
               SettingsElement(
-                text: 'Werner',
-                subText: 'Enabled',
-                icon: Icons.description,
+                text: 'Show introduction',
+                clickable: true,
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (c) => OnboardingScreen())),
+                icon: Icons.add_to_home_screen_outlined,
               ),
-              SettingsElement(
-                text: 'Werner',
-                subText: 'Enabled',
-                icon: Icons.description,
-              ),
-              SettingsElement(text: 'Reminder Notifications', hasSwitch: true),
-              SettingsElement(
-                text: 'Werner',
-                subText: 'Enabled',
-                icon: Icons.description,
-              ),
+              // SettingsElement(
+              //   text: 'Werner',
+              //   subText: 'Enabled',
+              //   icon: Icons.description,
+              // ),
+              // SettingsElement(text: 'Reminder Notifications', hasSwitch: true),
+              // SettingsElement(
+              //   text: 'Werner',
+              //   subText: 'Enabled',
+              //   icon: Icons.description,
+              // ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             if (kDebugMode)

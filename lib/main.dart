@@ -47,7 +47,9 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
 
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    if (kReleaseMode) {
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    }
 
     if (_kTestingCrashlytics) {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
@@ -121,7 +123,7 @@ class _FredericBaseState extends State<FredericBase> {
         ],
         child: MaterialApp(
           showPerformanceOverlay: false,
-          title: 'Frederic',
+          title: 'NeverSkip Fitness',
           theme: ThemeData(
               primaryColor: theme.mainColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,

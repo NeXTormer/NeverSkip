@@ -7,6 +7,7 @@ class FredericBasicAppBar extends StatelessWidget {
       this.subtitle,
       this.leadingIcon,
       this.backButton = false,
+      this.bottomPadding = 16,
       this.icon,
       bool? rounded,
       Key? key})
@@ -18,6 +19,7 @@ class FredericBasicAppBar extends StatelessWidget {
   final String? subtitle;
   final Widget? icon;
   final Widget? leadingIcon;
+  final double bottomPadding;
   late final bool rounded;
   final bool backButton;
 
@@ -32,8 +34,8 @@ class FredericBasicAppBar extends StatelessWidget {
                   bottomLeft: Radius.circular(12))
               : null),
       child: Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 16),
+          padding: EdgeInsets.only(
+              left: 16, right: 16, top: 20, bottom: bottomPadding),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             if (backButton)
               GestureDetector(

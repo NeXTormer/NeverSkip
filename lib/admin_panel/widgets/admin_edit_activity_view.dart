@@ -99,8 +99,13 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
                                             child: AdminListIconScreen(
                                               onSelect: (icon) {
                                                 Navigator.of(ctx).pop();
-                                                widget.activity.image =
-                                                    icon.url;
+                                                widget.activity.updateData(
+                                                    newImage: icon.url);
+                                                FredericBackend
+                                                    .instance.activityManager
+                                                    .add(
+                                                        FredericActivityUpdateEvent(
+                                                            widget.activity));
                                                 setState(() {
                                                   selectedIcon = icon.url;
                                                 });
@@ -178,7 +183,7 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
 
   void saveData() {
     if (widget.activity.isEmpty) {
-      var activity = FredericActivity.create(
+      var activity = FredericActivity.make(
           name: nameController.text,
           description: descriptionController.text,
           image: selectedIcon ??
@@ -191,12 +196,15 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
           .add(FredericActivityCreateEvent(activity));
     } else {
       var activity = widget.activity;
-      activity.name = nameController.text;
-      activity.description = descriptionController.text;
-      activity.type = type;
-      activity.muscleGroups = muscleGroups;
-      activity.recommendedReps = repsController.value.toInt();
-      activity.recommendedSets = setsController.value.toInt();
+      activity.updateData(
+          newName: nameController.text,
+          newDescription: descriptionController.text,
+          newType: type,
+          newMuscleGroups: muscleGroups,
+          newRecommendedSets: setsController.value.toInt(),
+          newRecommendedReps: repsController.value.toInt());
+      FredericBackend.instance.activityManager
+          .add(FredericActivityUpdateEvent(activity));
     }
   }
 }

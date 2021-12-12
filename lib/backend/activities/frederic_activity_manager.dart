@@ -1,22 +1,20 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_data_interface.dart';
 
 ///
 /// Manages all Activities using the Bloc Pattern
 ///
 class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
-  FredericActivityManager()
+  FredericActivityManager({required this.dataInterface})
       : super(FredericActivityListData(
             <String>[], HashMap<String, FredericActivity>()));
 
-  final CollectionReference _activitiesCollection =
-      FirebaseFirestore.instance.collection('activities');
+  final FredericDataInterface<FredericActivity> dataInterface;
 
   HashMap<String, FredericActivity> _activities =
       HashMap<String, FredericActivity>();
@@ -31,24 +29,13 @@ class FredericActivityManager
   /// (Re)Loads all activities from the database
   ///
   Future<void> reload() async {
-    QuerySnapshot<Object?> global =
-        await _activitiesCollection.where('owner', isEqualTo: 'global').get();
-    QuerySnapshot<Object?> private = await _activitiesCollection
-        .where('owner', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .get();
-
     List<String> changed = <String>[];
     _activities.clear();
-
-    for (int i = 0; i < global.docs.length; i++) {
-      _activities[global.docs[i].id] = FredericActivity(global.docs[i]);
-      changed.add(global.docs[i].id);
+    List<FredericActivity> list = await dataInterface.get();
+    for (FredericActivity activity in list) {
+      _activities[activity.id] = activity;
+      changed.add(activity.id);
     }
-    for (int i = 0; i < private.docs.length; i++) {
-      _activities[private.docs[i].id] = FredericActivity(private.docs[i]);
-      changed.add(private.docs[i].id);
-    }
-
     add(FredericActivityEvent(changed));
     return;
   }
@@ -58,39 +45,22 @@ class FredericActivityManager
   ///
   Future<FredericActivity> getActivity(String id) async {
     if (_activities.containsKey(id)) return _activities[id]!;
-
-    DocumentSnapshot<Object?> snapshot =
-        await _activitiesCollection.doc(id).get();
-
-    if (snapshot.exists) {
-      _activities[id] = FredericActivity(snapshot);
-      return _activities[id]!;
-    }
-
-    return FredericActivity.empty();
+    return FredericActivity.noSuchActivity(id);
   }
 
   @override
   Stream<FredericActivityListData> mapEventToState(
       FredericActivityEvent event) async* {
     if (event is FredericActivityUpdateEvent) {
-      _activities[event.updated.activityID] = event.updated;
-      yield FredericActivityListData([event.updated.activityID], _activities);
+      await dataInterface.update(event.updated);
+      _activities[event.updated.id] = event.updated;
+      yield FredericActivityListData([event.updated.id], _activities);
     } else if (event is FredericActivityCreateEvent) {
-      DocumentReference newActivity = await _activitiesCollection.add({
-        'name': event.newActivity.name,
-        'description': event.newActivity.description,
-        'image': event.newActivity.image,
-        'recommendedsets': event.newActivity.recommendedSets,
-        'recommendedreps': event.newActivity.recommendedReps,
-        'owner': FirebaseAuth.instance.currentUser?.uid,
-        'musclegroup': FredericActivity.parseMuscleGroupListToStringList(
-            event.newActivity.muscleGroups)
-      });
-      DocumentSnapshot<Object?> newActivitySnapshot = await newActivity.get();
-      _activities[newActivity.id] = FredericActivity(newActivitySnapshot);
+      FredericActivity newActivity =
+          await dataInterface.create(event.newActivity);
+      _activities[newActivity.id] = newActivity;
       yield FredericActivityListData([newActivity.id], _activities);
-    } else if (event is FredericActivityEvent) {
+    } else {
       yield FredericActivityListData(event.changed, _activities);
     }
   }
@@ -115,15 +85,14 @@ class FredericActivityEvent {
 }
 
 class FredericActivityUpdateEvent extends FredericActivityEvent {
-  FredericActivityUpdateEvent(this.updated)
-      : super(<String>[updated.activityID]);
+  FredericActivityUpdateEvent(this.updated) : super(<String>[updated.id]);
 
   FredericActivity updated;
 }
 
 class FredericActivityCreateEvent extends FredericActivityEvent {
   FredericActivityCreateEvent(this.newActivity)
-      : super(<String>[newActivity.activityID]);
+      : super(<String>[newActivity.id]);
 
   FredericActivity newActivity;
 }

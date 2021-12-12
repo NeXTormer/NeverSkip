@@ -5,6 +5,7 @@ import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/screens/edit_activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_segment.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_screen_app_bar.dart';
 import 'package:frederic/widgets/activity_screen/activity_list_segment.dart';
@@ -33,7 +34,14 @@ class ActivityListScreen extends StatelessWidget {
       create: (context) => ActivityFilterController(),
       child: FredericScaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            CupertinoScaffold.showCupertinoModalBottomSheet(
+                enableDrag: true,
+                context: context,
+                builder: (newContext) {
+                  return EditActivityScreen(FredericActivity.create());
+                });
+          },
           child: Icon(
             Icons.post_add_outlined,
             color: Colors.white,

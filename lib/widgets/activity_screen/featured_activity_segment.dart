@@ -50,7 +50,6 @@ class FeaturedActivitySegment extends StatelessWidget {
                     itemBuilder: (context, index) {
                       FredericSetList setList =
                           setListData[activityList[index].activityID];
-                      // TODO Padding on scrolling
                       return Padding(
                         padding: EdgeInsets.only(
                           left: index == 0 ? 16 : 12,

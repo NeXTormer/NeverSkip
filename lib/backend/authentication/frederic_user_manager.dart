@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/main.dart';
 
 import 'frederic_auth_event.dart';
@@ -24,6 +25,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   late final StreakManager streakManager;
   final FredericBackend _backend;
+
+  bool firstUserSignUp = false;
 
   bool firestoreDataWasLoadedAtLeastOnce = false;
 
@@ -46,7 +49,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
-  //TODO: Add event to 'if' when implementing new login
+  //TODO: Add event to 'if' when implementing new login method
   @override
   void onTransition(
       Transition<FredericAuthEvent, FredericUser> transition) async {
@@ -61,18 +64,18 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
           .doc(transition.nextState.uid)
           .set({'last_login': Timestamp.now()}, SetOptions(merge: true));
 
-      _userStreamSubscription = FirebaseFirestore.instance
-          .collection('users')
-          .doc(transition.nextState.uid)
-          .snapshots()
-          .listen((snapshot) => add(FredericUserDataChangedEvent(snapshot)));
+      try {
+        _userStreamSubscription = FirebaseFirestore.instance
+            .collection('users')
+            .doc(transition.nextState.uid)
+            .snapshots()
+            .listen((snapshot) => add(FredericUserDataChangedEvent(snapshot)));
+      } catch (e) {
+        print('===============');
+        print(e);
+      }
     } else if (transition.event is FredericSignOutEvent) {
       _userStreamSubscription?.cancel();
-    }
-    if (false) {
-      print('==========Frederic User Transition==========');
-      print(transition);
-      print('============================================');
     }
 
     super.onTransition(transition);
@@ -81,7 +84,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   @override
   void onError(Object error, StackTrace stackTrace) {
     print('==========Frederic User Bloc Error =================');
-
     super.onError(error, stackTrace);
   }
 
@@ -113,6 +115,9 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       String? name,
       String? image,
       String? username}) async {
+    FredericBackend.instance.messageBus.add(
+        FredericConcurrencyMessage(FredericConcurrencyMessageType.UserSignUp));
+    firstUserSignUp = true;
     DocumentSnapshot<Map<String, dynamic>> defaultDoc = await FirebaseFirestore
         .instance
         .collection('defaults')

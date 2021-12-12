@@ -135,9 +135,8 @@ class _PasswordChangerState extends State<PasswordChanger> {
         email: FirebaseAuth.instance.currentUser!.email!,
         password: oldPassword);
 
-    UserCredential? userCredential;
     try {
-      userCredential = await FirebaseAuth.instance.currentUser!
+      await FirebaseAuth.instance.currentUser!
           .reauthenticateWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {

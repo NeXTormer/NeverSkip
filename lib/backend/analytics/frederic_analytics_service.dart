@@ -1,12 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 
 class FredericAnalytics {
-  final FirebaseAnalytics analytics = FirebaseAnalytics();
-
-  FirebaseAnalyticsObserver getAnalyticsObserver() =>
-      FirebaseAnalyticsObserver(analytics: analytics);
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   Future<void> enable() {
     return analytics.setAnalyticsCollectionEnabled(true);
@@ -14,6 +10,10 @@ class FredericAnalytics {
 
   Future<void> disable() {
     return analytics.setAnalyticsCollectionEnabled(false);
+  }
+
+  void logCurrentScreen(String screen) {
+    analytics.setCurrentScreen(screenName: screen);
   }
 
   Future<void> logLogin(String method) {
@@ -58,6 +58,10 @@ class FredericAnalytics {
 
   Future<void> logAddProgressOnCalendar() {
     return analytics.logEvent(name: 'add-progress-using-calendar');
+  }
+
+  Future<void> logAddProgressOnWorkoutPlayer() {
+    return analytics.logEvent(name: 'add-progress-using-workout-player');
   }
 
   Future<void> logCompleteCalendarDay() {
