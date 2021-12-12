@@ -209,6 +209,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             isComleted: false,
             isDeleted: false,
           );
+          FredericBackend.instance.userManager.state.goalsCount += 1;
           return;
         default:
           _showErrorMessage('Some error happened');
@@ -221,6 +222,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           ? dummyCurrentState
           : currentStateController.value;
       widget.goal.endState = endStateController.value;
+      widget.goal.startDate = selectedStartDate!;
+      widget.goal.endDate = selectedEndDate!;
     }
   }
 
