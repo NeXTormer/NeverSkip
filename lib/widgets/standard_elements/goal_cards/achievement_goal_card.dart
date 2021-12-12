@@ -10,8 +10,10 @@ import 'package:frederic/screens/achievement_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
+import 'package:frederic/widgets/standard_elements/goal_cards/goal_card_medaille_indicator.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AchievementGoalCard extends StatelessWidget {
@@ -59,11 +61,7 @@ class AchievementGoalCard extends StatelessWidget {
           Positioned(
             top: -3,
             left: 20,
-            child: Image.asset(
-              'assets/images/Medaille.png',
-              height: 25,
-              width: 25,
-            ),
+            child: GoalCardMedailleIndicator(size: 25),
           ),
         ],
       ),
