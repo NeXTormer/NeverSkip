@@ -93,7 +93,7 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
                       text: '"${widget.goal.title}"',
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
-                    TextSpan(text: 'to your achievements?'),
+                    TextSpan(text: ' to your achievements?'),
                   ]),
                   textAlign: TextAlign.center,
                 ),
@@ -132,21 +132,79 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
   }
 
   Widget buildLottiAssetAnimation(String path, double size) {
+    String _handleColorTheme() {
+      String path = '';
+      switch (theme.name) {
+        case 'Bright Blue':
+          path = 'https://assets8.lottiefiles.com/packages/lf20_dmjt525j.json';
+          break;
+        case 'Colorful Blue':
+          path = 'https://assets8.lottiefiles.com/packages/lf20_dmjt525j.json';
+          break;
+        case 'Dark Blue':
+          path = 'https://assets8.lottiefiles.com/packages/lf20_dmjt525j.json';
+          break;
+        case 'Bright Orange':
+          path = 'https://assets7.lottiefiles.com/packages/lf20_taihzebf.json';
+          break;
+        case 'Colorful Orange':
+          path = 'https://assets7.lottiefiles.com/packages/lf20_taihzebf.json';
+          break;
+        case 'Dark Orange':
+          path = 'https://assets7.lottiefiles.com/packages/lf20_taihzebf.json';
+          break;
+        case 'Bright Purple':
+          path = 'https://assets2.lottiefiles.com/packages/lf20_hvlcywbn.json';
+          break;
+        case 'Colorful Purple':
+          path = 'https://assets2.lottiefiles.com/packages/lf20_hvlcywbn.json';
+          break;
+        case 'Dark Purple':
+          path = 'https://assets2.lottiefiles.com/packages/lf20_hvlcywbn.json';
+          break;
+        case 'Bright Pink':
+          path = 'https://assets1.lottiefiles.com/packages/lf20_varjqj9x.json';
+          break;
+        case 'Colorful Pink':
+          path = 'https://assets1.lottiefiles.com/packages/lf20_varjqj9x.json';
+          break;
+        case 'Dark Pink':
+          path = 'https://assets1.lottiefiles.com/packages/lf20_varjqj9x.json';
+          break;
+        default:
+          path = 'https://assets8.lottiefiles.com/packages/lf20_dmjt525j.json';
+      }
+      return path;
+    }
+
     return Positioned.fill(
       top: _offset.value * (-180),
       child: Align(
         alignment: Alignment.center,
-        child: Lottie.asset(
-          path,
-          controller: _iconController,
-          onLoaded: (composition) {
-            _iconController
-              ..duration = composition.duration
-              ..forward();
-          },
-          width: size,
-          height: size,
-          repeat: false,
+        child: Stack(
+          fit: StackFit.loose,
+          children: [
+            Center(
+              child: CircleAvatar(
+                backgroundColor: theme.cardBackgroundColor,
+                radius: 55,
+              ),
+            ),
+            Center(
+              child: Lottie.network(
+                _handleColorTheme(),
+                controller: _iconController,
+                onLoaded: (composition) {
+                  _iconController
+                    ..duration = composition.duration
+                    ..forward();
+                },
+                width: size,
+                height: size,
+                repeat: false,
+              ),
+            ),
+          ],
         ),
       ),
     );

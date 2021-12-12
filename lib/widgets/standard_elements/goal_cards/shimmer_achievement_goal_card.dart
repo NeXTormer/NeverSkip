@@ -32,8 +32,20 @@ class ShimmerAchievementGoalCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(width: 80, height: 10, color: Colors.black),
-                          FredericChip('x days'),
+                          Container(
+                              width: 80, height: 10, color: Colors.black54),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
+                            child: Container(
+                              width: 32,
+                              height: 11,
+                            ),
+                          )
                         ],
                       ),
                       Padding(
@@ -44,17 +56,21 @@ class ShimmerAchievementGoalCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                    width: 20, height: 10, color: Colors.black),
+                                    width: 20,
+                                    height: 10,
+                                    color: Colors.black54),
                                 Container(
-                                    width: 20, height: 10, color: Colors.black),
+                                    width: 20,
+                                    height: 10,
+                                    color: Colors.black54),
                               ],
                             ),
                             SizedBox(height: 4),
                             Row(
                               children: [
                                 Expanded(
-                                  child:
-                                      Container(height: 8, color: Colors.black),
+                                  child: Container(
+                                      height: 8, color: Colors.black54),
                                 ),
                               ],
                             ),
