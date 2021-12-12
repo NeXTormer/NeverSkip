@@ -20,8 +20,8 @@ class AchievementStatsSegment extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildCircleWithTitleAndText('Avr. Workout Time', '30\nmin'),
-            _buildCircleWithTitleAndText('Avr. Workout Time', '30\nmin')
+            _buildCircleWithTitleAndText('Work in progress', 'xx\nmin'),
+            _buildCircleWithTitleAndText('Work in progress', 'xx\nmin')
           ],
         ),
       ),

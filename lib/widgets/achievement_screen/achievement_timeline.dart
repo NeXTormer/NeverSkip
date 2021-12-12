@@ -23,10 +23,6 @@ class _AchievementTimelineState extends State<AchievementTimeline>
   late AnimationController _controller;
   late Animation _animation;
 
-  // Delay in millisecond
-  int _delayDate = 500;
-  int _delayDays = 500;
-
   bool _visibleDates = false;
   bool _visibleWeek = false;
 
@@ -38,6 +34,9 @@ class _AchievementTimelineState extends State<AchievementTimeline>
   String _startMonthString = '';
   String _endMonthString = '';
   int _days = 0;
+
+  static int delayDateInMilliseconds = 500;
+  static int delayDaysInMilliseconds = 500;
 
   @override
   void initState() {
@@ -99,10 +98,12 @@ class _AchievementTimelineState extends State<AchievementTimeline>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            animatedDateOpacity('${_startDate!.day}\n$_startDayString',
+                delayDateInMilliseconds),
+            animatedDaysText(
+                '$_days Days', containerWidthDate, delayDaysInMilliseconds),
             animatedDateOpacity(
-                '${_startDate!.day}\n$_startDayString', _delayDate),
-            animatedDaysText('$_days Days', containerWidthDate, _delayDays),
-            animatedDateOpacity('${_endDate!.day}\n$_endDayString', _delayDate),
+                '${_endDate!.day}\n$_endDayString', delayDateInMilliseconds),
           ],
         ),
       ],

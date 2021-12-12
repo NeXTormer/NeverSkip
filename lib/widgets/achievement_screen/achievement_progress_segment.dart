@@ -22,7 +22,7 @@ class AchievementProgressSegment extends StatelessWidget {
         ),
         child: Column(
           children: [
-            buildSubHeading('Starting Level', Icons.alarm),
+            buildSubHeading('Starting Level', Icons.sports_volleyball),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
               child: Row(
@@ -34,7 +34,7 @@ class AchievementProgressSegment extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30),
-            buildSubHeading('Finish Level', Icons.ac_unit),
+            buildSubHeading('Finish Level', Icons.sports_mma_outlined),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
               child: Row(

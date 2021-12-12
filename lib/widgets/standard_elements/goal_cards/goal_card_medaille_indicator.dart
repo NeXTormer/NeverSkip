@@ -24,7 +24,6 @@ class _GoalCardMedailleIndicatorState extends State<GoalCardMedailleIndicator>
   Widget build(BuildContext context) {
     return Lottie.network(
         'https://assets9.lottiefiles.com/packages/lf20_nywmyj3y.json',
-        
         width: widget.size,
         height: widget.size,
         controller: _controller, onLoaded: (composition) {

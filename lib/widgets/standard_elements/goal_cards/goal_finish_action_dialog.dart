@@ -23,17 +23,21 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
   late Animation _size;
   bool buttonVisibility = false;
 
-  double startingIconSize = 200.0;
-  double endIconSizeRatio = 0;
+  static const int animationDelayInMilliseconds = 500;
 
+  static const double startingIconSize = 200.0;
+  static const double sizeToMatchIconToScreen = 120;
   static const double iconHeight = 70;
+
+  static double endIconSizeRatio = 0;
 
   @override
   void initState() {
-    endIconSizeRatio = startingIconSize - 120;
+    endIconSizeRatio = startingIconSize - sizeToMatchIconToScreen;
     _iconController = AnimationController(vsync: this);
     _offsetController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this,
+        duration: const Duration(milliseconds: animationDelayInMilliseconds));
 
     _offset =
         CurvedAnimation(parent: _offsetController, curve: Curves.decelerate)
@@ -69,7 +73,7 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
               borderRadius: BorderRadius.circular(16),
               color: theme.cardBackgroundColor),
           child: AnimatedOpacity(
-            duration: Duration(milliseconds: 500),
+            duration: Duration(milliseconds: animationDelayInMilliseconds),
             opacity: buttonVisibility ? 1.0 : 0.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,

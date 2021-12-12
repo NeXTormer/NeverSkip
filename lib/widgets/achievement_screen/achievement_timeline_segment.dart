@@ -6,6 +6,8 @@ class AchievementTimelineSegment extends StatelessWidget {
   const AchievementTimelineSegment(this.goal, {Key? key}) : super(key: key);
   final FredericGoal goal;
 
+  static final int waitForOtherAnimationsToLoad = 1000;
+
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
@@ -21,7 +23,7 @@ class AchievementTimelineSegment extends StatelessWidget {
               goal,
               length: adjustedProgressBarLength,
               height: 5,
-              delayInMillisecond: 1000,
+              delayInMillisecond: waitForOtherAnimationsToLoad,
             ),
           ),
         ],
