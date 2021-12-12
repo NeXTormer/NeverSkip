@@ -81,7 +81,6 @@ class _FredericSliverAppBarHeaderDelegate
                 padding: const EdgeInsets.only(
                     left: 16, right: 16, top: 16, bottom: 6),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (leading != null) leading!,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:intl/intl.dart';
 
@@ -101,7 +102,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
                             border: Border.all(
                                 color: theme.cardBorderColor, width: 0.6)),
                         child: FredericCard(
-                          child: _WeekDaysSliderDayButton(
+                          child: WeekDaysSliderDayButton(
                               dayIndex: index,
                               selectedDate: selectedDayIndex,
                               date: date),
@@ -196,106 +197,5 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         ),
       ),
     );
-  }
-}
-
-///
-/// Contains the two designs (whether selected or not)
-/// of the WeekDaysSliderDayButton.
-///
-class _WeekDaysSliderDayButton extends StatelessWidget {
-  _WeekDaysSliderDayButton(
-      {required this.dayIndex,
-      required this.selectedDate,
-      required this.date,
-      this.dayWidth});
-
-  final int dayIndex;
-  final int selectedDate;
-  final DateTime date;
-  final double? dayWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
-    return selectedDate == dayIndex
-        ? Container(
-            width: width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: theme.mainColor.withOpacity(0.1),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('${date.day}',
-                    style: TextStyle(
-                      color: theme.mainColorInText,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.1,
-                      fontSize: 17,
-                    )),
-                Text(
-                  '${numToWeekday(date.weekday)}',
-                  style: TextStyle(
-                    color: theme.mainColorInText.withOpacity(0.7),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.6,
-                    fontSize: 13,
-                  ),
-                )
-              ],
-            ),
-          )
-        : Container(
-            width: width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: theme.cardBackgroundColor,
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 3),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('${date.day}',
-                    style: TextStyle(
-                      color: theme.textColor,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0.1,
-                      fontSize: 17,
-                    )),
-                Text(
-                  '${numToWeekday(date.weekday)}',
-                  style: TextStyle(
-                    color: theme.textColor.withOpacity(0.8),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.6,
-                    fontSize: 13,
-                  ),
-                )
-              ],
-            ),
-          );
-  }
-
-  String numToWeekday(num number) {
-    switch (number % 7) {
-      case 0:
-        return 'Sun';
-      case 1:
-        return 'Mon';
-      case 2:
-        return 'Tue';
-      case 3:
-        return 'Wed';
-      case 4:
-        return 'Thu';
-      case 5:
-        return 'Fri';
-      case 6:
-        return 'Sat';
-      default:
-        return number.toString();
-    }
   }
 }

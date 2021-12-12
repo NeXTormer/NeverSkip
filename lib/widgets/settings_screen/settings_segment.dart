@@ -29,7 +29,6 @@ class SettingsSegment extends StatelessWidget {
             FredericCard(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: List.generate(
                     elements.length + (elements.length - 1),
                     (index) => index % 2 == 1
