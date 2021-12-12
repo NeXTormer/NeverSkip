@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
-import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:frederic/widgets/standard_elements/progress_bar.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerNormalGoalCard extends StatelessWidget {
@@ -28,8 +26,20 @@ class ShimmerNormalGoalCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(width: 80, height: 10, color: Colors.black),
-                          FredericChip('x days'),
+                          Container(
+                              width: 80, height: 10, color: Colors.black54),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100))),
+                            child: Container(
+                              width: 32,
+                              height: 11,
+                            ),
+                          )
                         ],
                       ),
                       Column(
@@ -40,9 +50,13 @@ class ShimmerNormalGoalCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                    width: 10, height: 10, color: Colors.black),
+                                    width: 10,
+                                    height: 10,
+                                    color: Colors.black54),
                                 Container(
-                                    width: 10, height: 10, color: Colors.black),
+                                    width: 10,
+                                    height: 10,
+                                    color: Colors.black54),
                               ],
                             ),
                           ),
@@ -50,7 +64,7 @@ class ShimmerNormalGoalCard extends StatelessWidget {
                             children: [
                               Expanded(
                                 child:
-                                    Container(height: 8, color: Colors.black),
+                                    Container(height: 8, color: Colors.black54),
                               ),
                             ],
                           )

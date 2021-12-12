@@ -13,7 +13,7 @@ class FredericSet implements Comparable {
 
   FredericSet.fromMap(Map<String, dynamic> map)
       : reps = map['reps'],
-        weight = map['value'] {
+        weight = map['value'].round() {
     Timestamp ts = map['timestamp'];
     timestamp = ts.toDate();
   }
