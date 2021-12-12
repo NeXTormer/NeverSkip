@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenAppbar(user),
               ProgressIndicatorSegment(),
               GoalSegment(),
-              TrainingVolumeChartSegment(),
               AchievementSegment(),
+              TrainingVolumeChartSegment(),
             ],
           );
         },

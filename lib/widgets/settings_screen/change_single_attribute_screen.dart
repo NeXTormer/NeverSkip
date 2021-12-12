@@ -34,7 +34,10 @@ class _ChangeSingleAttributeScreenState
           slivers: [
             SliverToBoxAdapter(
                 child: FredericBasicAppBar(
-                    title: widget.title, subtitle: widget.subtitle)),
+              title: widget.title,
+              subtitle: widget.subtitle,
+              backButton: true,
+            )),
             if (theme.isMonotone) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
             if (widget.infoText != null)
