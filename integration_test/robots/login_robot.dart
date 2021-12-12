@@ -35,15 +35,19 @@ class LoginRobot {
     await tester.tap(find.byType(FredericButton));
 
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Skip'));
+
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
+
+    await tester.pumpAndSettle();
 
     expect(find.text('Personal records'), findsOneWidget);
   }
 
   Future<void> login(WidgetTester tester) async {
-    if (find.text('Log In').allCandidates.length == 1) {
-      await tester.tap(find.text('Log In'));
-      await tester.pumpAndSettle();
-    }
+    await tester.tap(find.text('Log In'));
+    await tester.pumpAndSettle();
 
     expect(find.text('Welcome Back'), findsOneWidget);
 
