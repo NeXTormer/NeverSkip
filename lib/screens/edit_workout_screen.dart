@@ -91,7 +91,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
       onPressed: () => showActivityList(context),
       child: Icon(
         Icons.post_add_outlined,
-        color: Colors.white,
+        color: theme.textColorColorfulBackground,
       ),
     );
   }

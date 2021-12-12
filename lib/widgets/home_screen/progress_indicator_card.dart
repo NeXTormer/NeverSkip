@@ -27,7 +27,7 @@ class ProgressIndicatorCard extends StatelessWidget {
         .toDouble();
     return FredericCard(
         height: 65,
-        width: 200,
+        width: 160,
         onTap: () {
           if (activity != null)
             CupertinoScaffold.showCupertinoModalBottomSheet(

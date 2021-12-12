@@ -133,7 +133,6 @@ class _WeekdaysSliderState extends State<WeekdaysSlider> {
                               child: WeekDaysSliderDayCard(
                                 onSwap: (first, second) {
                                   widget.workout.swapDays(first, second);
-                                  handleChangeDay(second + (week * 7));
                                 },
                                 dayIndex: index + (week * 7),
                                 isDraggable: widget.workout.canEdit,
