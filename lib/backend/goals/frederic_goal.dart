@@ -83,7 +83,9 @@ class FredericGoal {
   bool? _isDeleted;
 
   String get title => _title ?? 'Goal';
-  String get image => _image ?? 'https://via.placeholder.com/400x400?text=Goal';
+  String get image =>
+      _image ??
+      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fgoal.png?alt=media&token=ad607f8b-1af9-4fa2-9bf9-6bdbde6251a9';
   String get activityID => _activityID ?? '';
   String get unit => _unit ?? '';
   num get startState => _startState ?? 0;
