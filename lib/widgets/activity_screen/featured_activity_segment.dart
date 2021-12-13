@@ -32,9 +32,9 @@ class FeaturedActivitySegment extends StatelessWidget {
           BlocBuilder<FredericActivityManager, FredericActivityListData>(
             buildWhen: (current, next) => true,
             builder: (context, data) {
-              List<FredericActivity> activityList = List.of(
-                  data.activities.values.where((element) =>
-                      featuredActivities.contains(element.activityID)));
+              List<FredericActivity> activityList = List.of(data
+                  .activities.values
+                  .where((element) => featuredActivities.contains(element.id)));
               return BlocBuilder<FredericSetManager, FredericSetListData>(
                   buildWhen: (current, next) {
                 return next.changedActivities
@@ -49,7 +49,7 @@ class FeaturedActivitySegment extends StatelessWidget {
                     itemCount: activityList.length,
                     itemBuilder: (context, index) {
                       FredericSetList setList =
-                          setListData[activityList[index].activityID];
+                          setListData[activityList[index].id];
                       return Padding(
                         padding: EdgeInsets.only(
                           left: index == 0 ? 16 : 12,

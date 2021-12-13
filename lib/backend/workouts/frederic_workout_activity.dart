@@ -40,7 +40,7 @@ class FredericWorkoutActivity implements Comparable {
 
   Map<String, dynamic> toMap() {
     return {
-      'activityid': activity.activityID,
+      'activityid': activity.id,
       'weekday': weekday,
       'order': order,
       'sets': _sets,

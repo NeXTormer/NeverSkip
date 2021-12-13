@@ -5,12 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
-import 'package:frederic/screens/activity_list_screen.dart';
-import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/screens/screens.dart';
-import 'package:frederic/extensions.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -195,7 +193,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           break;
         case FormError.Success:
           widget.goal.save(
-            activityID: dummyActivity == null ? '' : dummyActivity!.activityID,
+            activityID: dummyActivity == null ? '' : dummyActivity!.id,
             title: titleController.text,
             image: dummyActivity != null
                 ? dummyActivity!.image
@@ -244,9 +242,9 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                     titleController.text = activity.name;
                   }
                   currentStateController.value =
-                      widget.sets![dummyActivity!.activityID].bestWeight == 0
-                          ? widget.sets![dummyActivity!.activityID].bestReps
-                          : widget.sets![dummyActivity!.activityID].bestWeight;
+                      widget.sets![dummyActivity!.id].bestWeight == 0
+                          ? widget.sets![dummyActivity!.id].bestReps
+                          : widget.sets![dummyActivity!.id].bestWeight;
                   dummyCurrentState = currentStateController.value;
                   startStateController.value = currentStateController.value;
 
@@ -402,7 +400,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 children: [
                   ActivityCard(
                     dummyActivity!,
-                    setList: widget.sets![dummyActivity!.activityID],
+                    setList: widget.sets![dummyActivity!.id],
                     onClick: () {},
                     type: ActivityCardType.Small,
                   ),

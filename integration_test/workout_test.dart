@@ -81,33 +81,32 @@ void main() async {
       expect(find.text('Peter Workout'), findsOneWidget);
     });
 
-    if (false)
-      testWidgets('edit-workout', (WidgetTester tester) async {
-        app.main();
-        await tester.pumpAndSettle();
-
-        await navRobot.gotoWorkoutScreen(tester);
-
-        final workout = find.text('Peter Workout');
-
-        await tester.tap(workout);
-        await tester.pumpAndSettle();
-        await tester.tap(find.byType(Icon).first);
-        await tester.pumpAndSettle();
-
-        await navRobot.enterTexts(
-            tester, ['Herbert Workout', 'Herbert Workout Description'], 0);
-
-        await tester.tap(find.text('Save').first);
-
-        await tester.pumpAndSettle();
-        await tester.pumpAndSettle();
-        await tester.pumpAndSettle();
-
-        //TODO: to one screen back
-
-        expect(find.text('Herbert Workout'), findsOneWidget);
-      });
+    // testWidgets('edit-workout', (WidgetTester tester) async {
+    //   app.main();
+    //   await tester.pumpAndSettle();
+    //
+    //   await navRobot.gotoWorkoutScreen(tester);
+    //
+    //   final workout = find.text('Peter Workout');
+    //
+    //   await tester.tap(workout);
+    //   await tester.pumpAndSettle();
+    //   await tester.tap(find.byType(Icon).first);
+    //   await tester.pumpAndSettle();
+    //
+    //   await navRobot.enterTexts(
+    //       tester, ['Herbert Workout', 'Herbert Workout Description'], 0);
+    //
+    //   await tester.tap(find.text('Save').first);
+    //
+    //   await tester.pumpAndSettle();
+    //   await tester.pumpAndSettle();
+    //   await tester.pumpAndSettle();
+    //
+    //   //TODO: to one screen back
+    //
+    //   expect(find.text('Herbert Workout'), findsOneWidget);
+    // });
 
     testWidgets('delete-workout', (WidgetTester tester) async {
       app.main();

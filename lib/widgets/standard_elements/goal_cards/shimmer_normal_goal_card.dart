@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
-import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:shimmer/shimmer.dart';
 

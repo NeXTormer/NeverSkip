@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
@@ -13,7 +10,6 @@ import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card_medaille_indicator.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
-import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AchievementGoalCard extends StatelessWidget {

@@ -4,9 +4,7 @@ import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
 import 'package:frederic/admin_panel/screens/admin_list_icon_screen.dart';
 import 'package:frederic/admin_panel/widgets/admin_select_activity_type.dart';
 import 'package:frederic/admin_panel/widgets/admin_select_muscle_group.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
-import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/edit_workout_activity_card.dart';
@@ -51,8 +49,7 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FredericActivityManager, FredericActivityListData>(
-      buildWhen: (current, next) =>
-          next.changed.contains(widget.activity.activityID),
+      buildWhen: (current, next) => next.changed.contains(widget.activity.id),
       builder: (context, activityListData) => FredericCard(
         child: Align(
           alignment: Alignment.topCenter,

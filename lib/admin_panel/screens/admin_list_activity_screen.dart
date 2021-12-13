@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/admin_panel/widgets/admin_data_table.dart';
 import 'package:frederic/admin_panel/widgets/admin_edit_activity_view.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
-import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
@@ -113,7 +111,7 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
               child: expanded
                   ? AdminEditActivityView(
                       highlightedActivity!,
-                      key: ValueKey<String>(highlightedActivity!.activityID),
+                      key: ValueKey<String>(highlightedActivity!.id),
                     )
                   : null)
         ],

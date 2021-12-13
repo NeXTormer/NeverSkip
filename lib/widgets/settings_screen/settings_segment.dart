@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';

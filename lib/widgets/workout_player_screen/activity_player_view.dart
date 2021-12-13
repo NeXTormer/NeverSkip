@@ -53,8 +53,8 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FredericSetManager, FredericSetListData>(
-        buildWhen: (current, next) => next.changedActivities
-            .contains(widget.activity.activity.activityID),
+        buildWhen: (current, next) =>
+            next.changedActivities.contains(widget.activity.activity.id),
         builder: (context, setListData) {
           return Container(
             height: widget.constraints.maxHeight,
@@ -86,7 +86,7 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                           activity: widget.activity.activity,
                           onSave: () => saveProgress(playerState),
                           suggestions: widget.showSmartSuggestions
-                              ? setListData[widget.activity.activity.activityID]
+                              ? setListData[widget.activity.activity.id]
                                   .getSuggestions(
                                       weighted: widget.activity.activity.type ==
                                           FredericActivityType.Weighted,
@@ -124,7 +124,7 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
     FredericSet set = FredericSet(reps, weight, DateTime.now());
     playerState.addProgress(widget.activity.activity, set);
     FredericBackend.instance.setManager
-        .addSet(widget.activity.activity.activityID, set);
+        .addSet(widget.activity.activity.id, set);
 
     FredericBackend.instance.analytics.logAddProgressOnWorkoutPlayer();
   }

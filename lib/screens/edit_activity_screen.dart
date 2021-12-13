@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/edit_activity_screen/activity_muscle_group_selector.dart';
@@ -71,7 +70,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool editing = widget.activity.activityID != 'new';
+    final bool editing = widget.activity.id != 'new';
 
     return FredericScaffold(
         body: CustomScrollView(
@@ -239,7 +238,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   }
 
   void saveData() {
-    if (widget.activity.activityID == 'new') {
+    if (widget.activity.id == 'new') {
       FredericBackend.instance.activityManager.add(FredericActivityCreateEvent(
           FredericActivity.make(
               name: name,

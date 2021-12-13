@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:frederic/backend/activities/frederic_activity_manager.dart';
 import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
@@ -16,7 +15,6 @@ import 'package:frederic/backend/util/event_bus/frederic_message_processor.dart'
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/util/toast_manager.dart';
 import 'package:frederic/backend/util/wait_for_x.dart';
-import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 
 import 'backend.dart';

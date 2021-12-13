@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
@@ -79,8 +78,8 @@ class ProgressIndicatorSegment extends StatelessWidget {
                 var monitors = FredericBackend
                     .instance.userManager.state.progressMonitors
                     .toList();
-                if (!monitors.contains(activity.activityID)) {
-                  monitors.add(activity.activityID);
+                if (!monitors.contains(activity.id)) {
+                  monitors.add(activity.id);
                   FredericBackend.instance.userManager.state.progressMonitors =
                       monitors.toList();
                   Navigator.of(context).pop();

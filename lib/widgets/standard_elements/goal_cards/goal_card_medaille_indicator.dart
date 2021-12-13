@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/theme/frederic_theme.dart';
 import 'package:lottie/lottie.dart';
 
 class GoalCardMedailleIndicator extends StatefulWidget {

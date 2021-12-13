@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
@@ -6,7 +5,6 @@ import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_system_message.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
-import 'package:frederic/backend/workouts/frederic_workout_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/workout_player_screen.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
@@ -45,7 +43,7 @@ class CalendarDay extends StatelessWidget {
       if (setListData != null) {
         for (int i = 0; i < activitiesDueToday.length; i++) {
           FredericSetList setList =
-              setListData![activitiesDueToday[i].activity.activityID];
+              setListData![activitiesDueToday[i].activity.id];
           bool activityFinished = setList.wasActiveToday();
           completedActivityToday[i] = activityFinished;
           if (activityFinished == false) {

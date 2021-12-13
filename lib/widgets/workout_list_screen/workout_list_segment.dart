@@ -23,9 +23,9 @@ class WorkoutListSegment extends StatelessWidget {
               .where((element) => element.name.contains(searchTerm.searchTerm))
               .where((element) {
             if (active) {
-              return user.activeWorkouts.contains(element.workoutID);
+              return user.activeWorkouts.contains(element.id);
             } else {
-              return !user.activeWorkouts.contains(element.workoutID);
+              return !user.activeWorkouts.contains(element.id);
             }
           }).toList();
           return SliverList(
@@ -33,7 +33,7 @@ class WorkoutListSegment extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: WorkoutCard(workouts[index],
-                  key: ValueKey(workouts[index].workoutID)),
+                  key: ValueKey(workouts[index].id)),
             );
           }, childCount: workouts.length));
         });

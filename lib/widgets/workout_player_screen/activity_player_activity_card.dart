@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';

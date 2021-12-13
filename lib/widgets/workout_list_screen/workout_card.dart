@@ -39,7 +39,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
   @override
   void initState() {
     isSelected = FredericBackend.instance.userManager.state.activeWorkouts
-        .contains(widget.workout.workoutID);
+        .contains(widget.workout.id);
     super.initState();
   }
 
@@ -54,7 +54,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CupertinoScaffold(
                             body: EditWorkoutScreen(
-                          widget.workout.workoutID,
+                          widget.workout.id,
                           defaultPage: widget.workout.activities
                               .getDayIndex(DateTime.now()),
                         ))));
@@ -100,10 +100,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
                                 padding:
                                     const EdgeInsets.only(top: 4, right: 2),
                                 child: CupertinoSwitch(
-                                  key: ValueKey(widget.workout.workoutID),
+                                  key: ValueKey(widget.workout.id),
                                   value: isSelected,
                                   activeColor: theme.mainColor,
-                                  onChanged: widget.workout.workoutID == 'new'
+                                  onChanged: widget.workout.id == 'new'
                                       ? null
                                       : (value) => handleSwitch(context, value),
                                 ),
@@ -185,14 +185,14 @@ class _WorkoutCardState extends State<WorkoutCard> {
                 FredericBackend.instance.userManager.state.activeWorkouts;
             if (value) {
               FredericBackend.instance.userManager
-                  .addActiveWorkout(widget.workout.workoutID);
+                  .addActiveWorkout(widget.workout.id);
               // if (!activeWorkouts.contains(widget.workout.workoutID)) {
               //   activeWorkouts.add(widget.workout.workoutID);
               // }
               isSelected = true;
             } else {
-              if (activeWorkouts.contains(widget.workout.workoutID)) {
-                activeWorkouts.remove(widget.workout.workoutID);
+              if (activeWorkouts.contains(widget.workout.id)) {
+                activeWorkouts.remove(widget.workout.id);
               }
               isSelected = false;
             }

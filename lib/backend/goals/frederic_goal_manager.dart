@@ -67,7 +67,7 @@ class FredericGoalManager
       _goalsCollection.doc(event.goal.goalID).delete();
       _goals.remove(event.goal.goalID);
       yield FredericGoalListData(event.changed, _goals);
-    } else if (event is FredericGoalEvent) {
+    } else {
       yield FredericGoalListData(event.changed, _goals);
     }
   }
