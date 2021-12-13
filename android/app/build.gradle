@@ -66,6 +66,10 @@ android {
    buildTypes {
        release {
            signingConfig signingConfigs.release
+//           Enable this to add debug symbols to the application binary
+//           ndk {
+//               debugSymbolLevel 'SYMBOL_TABLE'
+//           }
        }
    }
 }
@@ -80,3 +84,4 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
     implementation 'com.google.firebase:firebase-analytics'
 }
+

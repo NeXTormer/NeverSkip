@@ -32,18 +32,17 @@ class WorkoutPlayerState extends ChangeNotifier {
   void setupProgressBar(List<FredericWorkoutActivity> activities) {
     sets.clear();
     for (var activity in activities) {
-      if (sets.containsKey(activity.activity.activityID)) {
-        sets[activity.activity.activityID]?.totalSets += activity.sets;
+      if (sets.containsKey(activity.activity.id)) {
+        sets[activity.activity.id]?.totalSets += activity.sets;
       } else {
-        sets[activity.activity.activityID] = SetTracker()
-          ..totalSets = activity.sets;
+        sets[activity.activity.id] = SetTracker()..totalSets = activity.sets;
       }
       _totalSets += activity.sets;
     }
   }
 
   void addProgress(FredericActivity activity, FredericSet set) {
-    SetTracker? tracker = sets[activity.activityID];
+    SetTracker? tracker = sets[activity.id];
     if (tracker != null) {
       if (tracker.finishedSets < tracker.totalSets) {
         tracker.finishedSets++;
@@ -56,7 +55,7 @@ class WorkoutPlayerState extends ChangeNotifier {
   }
 
   void removeProgress(FredericActivity activity, FredericSet set) {
-    SetTracker? tracker = sets[activity.activityID];
+    SetTracker? tracker = sets[activity.id];
     if (tracker != null) {
       if (tracker.finishedSets > 0) {
         tracker.finishedSets--;

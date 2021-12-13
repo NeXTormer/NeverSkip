@@ -22,12 +22,11 @@ class ActivityPlayerSetSegment extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FredericSetManager, FredericSetListData>(
         buildWhen: (current, next) =>
-            next.changedActivities.contains(activity.activity.activityID),
+            next.changedActivities.contains(activity.activity.id),
         builder: (context, setListData) {
           double itemExtent = 60;
 
-          var todaysSets =
-              setListData[activity.activity.activityID].getTodaysSets();
+          var todaysSets = setListData[activity.activity.id].getTodaysSets();
 
           int numberOfSetsTODO = activity.sets;
           int numberOfSetsDone = todaysSets.length;
@@ -70,7 +69,7 @@ class ActivityPlayerSetSegment extends StatelessWidget {
                     child:
                         NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
-                        overscroll.disallowGlow();
+                        overscroll.disallowIndicator();
                         return true;
                       },
                       child: ListView.builder(

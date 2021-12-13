@@ -3,8 +3,6 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../frederic_chip.dart';
-
 class ShimmerAchievementGoalCard extends StatelessWidget {
   const ShimmerAchievementGoalCard({Key? key}) : super(key: key);
 

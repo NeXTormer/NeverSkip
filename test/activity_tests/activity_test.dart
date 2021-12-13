@@ -3,7 +3,7 @@ import 'package:frederic/backend/activities/frederic_activity.dart';
 
 import '../mock_database/test_activity_data_interface.dart';
 
-void runActivityTests() {
+void main() {
   group('Basic backend tests', () {
     TestActivityDataInterface activityDataInterface =
         TestActivityDataInterface();

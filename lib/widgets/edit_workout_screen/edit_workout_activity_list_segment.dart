@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -127,8 +125,8 @@ class _EditWorkoutActivityListSegmentState
         label: 'Undo',
         onPressed: () {
           if (latestDeletion != null) {
-            FredericBackend.instance.workoutManager.state
-                .workouts[widget.workout.workoutID]
+            FredericBackend
+                .instance.workoutManager.state.workouts[widget.workout.id]
                 ?.addActivity(FredericWorkoutActivity(
                     activity: latestDeletion!, weekday: weekday + 1));
           }

@@ -25,71 +25,71 @@ class FredericAnalytics {
   }
 
   Future<void> logGoalCreated() {
-    return analytics.logEvent(name: 'create-goal');
+    return analytics.logEvent(name: 'create_goal');
   }
 
   Future<void> logGoalDeleted() {
-    return analytics.logEvent(name: 'delete-goal');
+    return analytics.logEvent(name: 'delete_goal');
   }
 
   Future<void> logGoalSavedAsAchievement() {
-    return analytics.logEvent(name: 'goal-saved-as-achievement');
+    return analytics.logEvent(name: 'goal_saved_as_achievement');
   }
 
   Future<void> logAchievementDeleted() {
-    return analytics.logEvent(name: 'delete-achievement');
+    return analytics.logEvent(name: 'delete_achievement');
   }
 
   Future<void> logWorkoutCreated() {
-    return analytics.logEvent(name: 'create-workout');
+    return analytics.logEvent(name: 'create_workout');
   }
 
   Future<void> logWorkoutSaved() {
-    return analytics.logEvent(name: 'save-workout');
+    return analytics.logEvent(name: 'save_workout');
   }
 
   Future<void> logWorkoutDeleted() {
-    return analytics.logEvent(name: 'delete-workout');
+    return analytics.logEvent(name: 'delete_workout');
   }
 
   Future<void> logAddProgressOnActivity() {
-    return analytics.logEvent(name: 'add-progress-using-activity');
+    return analytics.logEvent(name: 'add_progress_using_activity');
   }
 
   Future<void> logAddProgressOnCalendar() {
-    return analytics.logEvent(name: 'add-progress-using-calendar');
+    return analytics.logEvent(name: 'add_progress_using_calendar');
   }
 
   Future<void> logAddProgressOnWorkoutPlayer() {
-    return analytics.logEvent(name: 'add-progress-using-workout-player');
+    return analytics.logEvent(name: 'add_progress_using_workout_player');
   }
 
   Future<void> logCompleteCalendarDay() {
-    return analytics.logEvent(name: 'complete-calendar-day');
+    return analytics.logEvent(name: 'complete_calendar_day');
   }
 
   Future<void> logEnableCustomWorkout() {
-    return analytics.logEvent(name: 'enable-custom-workout');
+    return analytics.logEvent(name: 'enable_custom_workout');
   }
 
   Future<void> logEnableGlobalWorkout() {
-    return analytics.logEvent(name: 'enable-global-workout');
+    return analytics.logEvent(name: 'enable_global_workout');
   }
 
   Future<void> logDisableCustomWorkout() {
-    return analytics.logEvent(name: 'disable-custom-workout');
+    return analytics.logEvent(name: 'disable_custom_workout');
   }
 
   Future<void> logDisableGlobalWorkout() {
-    return analytics.logEvent(name: 'disable-global-workout');
+    return analytics.logEvent(name: 'disable_global_workout');
   }
 
   Future<void> logEnterSettingsScreen() {
-    return analytics.setCurrentScreen(screenName: 'settings-screen');
+    return analytics.setCurrentScreen(screenName: 'settings_screen');
   }
 
   Future<void> logEnterUserSettingsScreen() {
-    return analytics.setCurrentScreen(screenName: 'user-settings-screen');
+    return analytics.setCurrentScreen(screenName: 'user_settings_screen');
   }
 
   Future<void> logEnterHomeScreen() {
@@ -98,6 +98,6 @@ class FredericAnalytics {
 
   Future<void> logChangeColorTheme(FredericColorTheme theme) {
     return analytics.logEvent(
-        name: 'change-color-theme', parameters: {'theme': theme.name});
+        name: 'change_color_theme', parameters: {'theme': theme.name});
   }
 }

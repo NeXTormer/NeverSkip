@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';

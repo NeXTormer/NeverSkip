@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
@@ -98,10 +97,10 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
           Expanded(
             child: BlocBuilder<FredericSetManager, FredericSetListData>(
                 buildWhen: (current, next) =>
-                    next.hasChanged(widget.activity.activityID),
+                    next.hasChanged(widget.activity.id),
                 builder: (context, setListData) {
                   List<FredericSet> sets =
-                      setListData[widget.activity.activityID].getLatestSets();
+                      setListData[widget.activity.id].getLatestSets();
                   if (sets.isEmpty) {
                     controller.setRepsAndWeight(RepsWeightSuggestion(
                         widget.activity.recommendedReps, 30));
@@ -110,7 +109,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                         RepsWeightSuggestion(sets[0].reps, sets[0].weight));
                   }
                   List<RepsWeightSuggestion> suggestions =
-                      setListData[widget.activity.activityID].getSuggestions(
+                      setListData[widget.activity.id].getSuggestions(
                           weighted: widget.activity.type ==
                               FredericActivityType.Weighted,
                           recommendedReps: widget.activity.recommendedReps);
@@ -164,8 +163,8 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
     int reps = controller.reps;
     double weight = controller.weight;
 
-    FredericBackend.instance.setManager.addSet(
-        widget.activity.activityID, FredericSet(reps, weight, DateTime.now()));
+    FredericBackend.instance.setManager
+        .addSet(widget.activity.id, FredericSet(reps, weight, DateTime.now()));
 
     if (widget.openedFromCalendar) {
       FredericBackend.instance.analytics.logAddProgressOnCalendar();

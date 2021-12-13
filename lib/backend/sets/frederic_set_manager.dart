@@ -120,7 +120,7 @@ class FredericSetListData {
 
   List<FredericSet> getTodaysSets(FredericActivity activity, [DateTime? day]) {
     day = day ?? DateTime.now();
-    FredericSetList setList = this[activity.activityID];
+    FredericSetList setList = this[activity.id];
 
     return setList.getTodaysSets(day);
   }
