@@ -3,8 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: FredericCI
-
+name: FredericCI_Unit_Tests
 
 on:
   push:
@@ -34,10 +33,12 @@ jobs:
     
     - run: flutter analyze .
     - run: flutter test
-    # - run: flutter build apk
-    
-    # Upload generated apk to the artifacts.
-    - uses: actions/upload-artifact@v1
-      with:
-        name: release-apk
-        path: build/app/outputs/apk/release/app-release.apk
+
+
+#     - run: flutter build apk
+#
+#     Upload generated apk to the artifacts.
+#    - uses: actions/upload-artifact@v1
+#      with:
+#        name: release-apk
+#        path: build/app/outputs/apk/release/app-release.apk
