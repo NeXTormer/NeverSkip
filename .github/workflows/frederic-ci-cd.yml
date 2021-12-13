@@ -12,7 +12,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    #    runs-on: ubuntu-latest
 
     steps:
     # Setup Java environment in order to build the Android app.
