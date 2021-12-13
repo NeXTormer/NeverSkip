@@ -66,6 +66,7 @@ android {
    buildTypes {
        release {
            signingConfig signingConfigs.release
+//           Enable this to add debug symbols to the application binary
 //           ndk {
 //               debugSymbolLevel 'SYMBOL_TABLE'
 //           }
