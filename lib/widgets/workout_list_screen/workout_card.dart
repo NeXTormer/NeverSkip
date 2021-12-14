@@ -46,6 +46,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
   @override
   Widget build(BuildContext context) {
     isRepeating = widget.repeating ?? widget.workout.repeating;
+
     return FredericCard(
         height: 114,
         onLongPress: () => handleLongPress(context),
