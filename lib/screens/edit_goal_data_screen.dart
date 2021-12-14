@@ -11,6 +11,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
+import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
@@ -74,13 +75,18 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   @override
   void initState() {
     startDateText = formatDateTime(widget.goal.startDate);
-    endDateText = formatDateTime(widget.goal.endDate);
+    endDateText = widget.isNewGoal
+        ? DateTime.now().add(Duration(days: 7)).formattedEuropean()
+        : formatDateTime(widget.goal.endDate);
     titleController.text = widget.goal.title;
     startStateController.value = widget.goal.startState;
     currentStateController.value = widget.goal.currentState;
     endStateController.value = widget.goal.endState;
+    unitSliderController.value = widget.goal.unit;
     selectedStartDate = widget.goal.startDate;
-    selectedEndDate = widget.goal.endDate;
+    selectedEndDate = widget.isNewGoal
+        ? DateTime.now().add(Duration(days: 7))
+        : widget.goal.endDate;
     dummyCurrentState = widget.goal.currentState;
 
     if (widget.goal.activityID != '') {
@@ -127,12 +133,37 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
-                  // TODO Implement better datepicker
-                  buildDatePickerRow('Start Date', Datepicker.Start),
-                  buildDatePickerRow('End Date', Datepicker.End),
+                  buildDatePickerRow('Start Date', Datepicker.Start,
+                      initialDate: DateTime.now()),
+                  buildDatePickerRow(
+                    'End Date',
+                    Datepicker.End,
+                    initialDate: DateTime.now().add(
+                      Duration(days: 7),
+                    ),
+                  ),
                 ],
               ),
             ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 2,
+                      child: FredericButton(
+                          widget.isNewGoal ? 'Create' : 'Save', onPressed: () {
+                        saveData();
+                        Navigator.of(context).pop();
+                      })),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 16),
           ),
         ],
       ),
@@ -222,6 +253,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
       widget.goal.endState = endStateController.value;
       widget.goal.startDate = selectedStartDate!;
       widget.goal.endDate = selectedEndDate!;
+      widget.goal.unit = unitSliderController.value;
     }
   }
 
@@ -315,9 +347,11 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     return SliverToBoxAdapter(
       child: Container(
         height: 70,
+        width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: GoalCard(
           widget.goal,
+          type: GoalCardType.Normal,
           sets: widget.sets ?? null,
           endDate: selectedEndDate,
           startDate: selectedStartDate,
@@ -360,7 +394,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         ),
         child: Column(
           children: [
-            buildSubHeading('Start', Icons.star_outline),
+            buildSubHeading('Start', Icons.sports_volleyball),
             SizedBox(height: 12),
             NumberWheel(
               controller: startStateController,
@@ -369,7 +403,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               startingIndex: startStateController.value.ceil() + 1,
             ),
             SizedBox(height: 12),
-            buildSubHeading('End', Icons.star_outline),
+            buildSubHeading('End', Icons.sports_mma),
             SizedBox(height: 12),
             NumberWheel(
               controller: endStateController,
@@ -381,6 +415,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             if (!trackActivity) buildSubHeading('Unit', Icons.alarm),
             if (!trackActivity)
               UnitSlider(
+                startingUnit: Unit.Sets,
                 controller: unitSliderController,
                 itemWidth: 0.15,
               ),
@@ -513,10 +548,12 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
-  Widget buildDatePickerRow(String text, Datepicker datepicker) {
+  Widget buildDatePickerRow(String text, Datepicker datepicker,
+      {required DateTime initialDate}) {
     bool datepickerStatus = datepicker == Datepicker.Start
         ? startDatepickerOpened
         : endDatepickerOpened;
+
     return Column(
       children: [
         Row(
@@ -557,7 +594,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             border: Border.all(color: theme.cardBorderColor),
           ),
           child: FredericDatePicker(
-            initialDate: DateTime.now(),
+            initialDate: initialDate,
             onDateChanged: (date) {
               datepicker == Datepicker.Start
                   ? selectedStartDate = date
@@ -580,6 +617,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     endStateController.dispose();
     currentStateController.dispose();
     titleController.dispose();
+    unitSliderController.dispose();
     super.dispose();
   }
 }

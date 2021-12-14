@@ -66,13 +66,26 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          Text(widget.activity.activity.name,
-                              style: TextStyle(
-                                  //textBaseline: TextBaseline.alphabetic,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: theme.textColor)),
+                          widget.editable
+                              ? Container(
+                                  width: 200,
+                                  child: Text(widget.activity.activity.name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          //textBaseline: TextBaseline.alphabetic,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: theme.textColor)),
+                                )
+                              : Text(widget.activity.activity.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      //textBaseline: TextBaseline.alphabetic,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: theme.textColor)),
                           Expanded(child: Container()),
                         ]),
                         Row(

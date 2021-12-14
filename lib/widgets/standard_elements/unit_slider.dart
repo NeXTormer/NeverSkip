@@ -25,10 +25,27 @@ class _UnitSliderState extends State<UnitSlider> {
   void initState() {
     controller = PageController(
       viewportFraction: widget.itemWidth,
-      initialPage: widget.startingUnit.index,
+      initialPage: setStartPage(widget.controller.value),
       keepPage: false,
     );
     super.initState();
+  }
+
+  int setStartPage(String text) {
+    switch (text) {
+      case 'kg':
+        return 0;
+      case 'km':
+        return 1;
+      case '#':
+        return 2;
+      case 'reps':
+        return 3;
+      case 'sets':
+        return 4;
+      default:
+        return 0;
+    }
   }
 
   @override
