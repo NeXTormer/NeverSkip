@@ -23,10 +23,11 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FredericUserManager, FredericUser>(
-        buildWhen: (previous, next) =>
-            previous.authenticated != next.authenticated,
+        buildWhen: (previous, next) => previous.authState != next.authState,
         builder: (context, user) {
-          return user.authenticated ? widget.homePage : widget.loginPage;
+          return user.authState == FredericAuthState.Authenticated
+              ? widget.homePage
+              : widget.loginPage;
         });
   }
 }

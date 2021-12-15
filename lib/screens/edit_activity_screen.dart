@@ -140,7 +140,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
               text: editing ? widget.activity.description : '',
               icon: null,
               maxLines: 3,
-              maxLength: 110,
+              maxLength: 240,
               height: 80,
               verticalContentPadding: 12,
             ),

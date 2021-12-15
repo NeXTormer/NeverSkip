@@ -7,23 +7,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
+import 'package:frederic/backend/database/frederic_auth_interface.dart';
 import 'package:frederic/main.dart';
 
 import 'frederic_auth_event.dart';
 
 class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
-  FredericUserManager({required FredericBackend backend})
+  FredericUserManager(
+      {required FredericBackend backend, required this.authInterface})
       : _backend = backend,
-        super(FredericUser('', waiting: true)) {
+        super(FredericUser('', authState: FredericAuthState.NotAuthenticated)) {
+    streakManager = StreakManager(this, _backend);
+
     FirebaseAuth.instance.authStateChanges().listen((userdata) {
       if (userdata != null) {
-        add(FredericRestoreLoginStatusEvent(userdata.uid));
+        add(FredericRestoreLoginStatusEvent(userdata));
       }
     });
-    streakManager = StreakManager(this, _backend);
   }
 
   late final StreakManager streakManager;
+  final FredericAuthInterface authInterface;
   final FredericBackend _backend;
 
   bool firstUserSignUp = false;
@@ -35,11 +39,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
-    if (event is FredericRestoreLoginStatusEvent) {
-      if (state.waiting == true) {
-        yield await event.process(this);
-      }
-    } else if (event is FredericUserDataChangedEvent) {
+    if (event is FredericUserDataChangedEvent) {
       yield await event.process(this);
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
@@ -47,6 +47,16 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     } else {
       yield await event.process(this);
     }
+    if (event is FredericRestoreLoginStatusEvent ||
+        event is FredericEmailLoginEvent ||
+        event is FredericOAuthSignInEvent) {
+      FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+          FredericConcurrencyMessageType.UserHasAuthenticated));
+    }
+  }
+
+  void userDataChanged() {
+    add(FredericUserDataChangedEvent());
   }
 
   //TODO: Add event to 'if' when implementing new login method
@@ -58,19 +68,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
             transition.event is FredericOAuthSignInEvent ||
             transition.event is FredericRestoreLoginStatusEvent) &&
         transition.nextState.uid != '') {
-      // Info: maybe remove async and await for this call for better performance
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(transition.nextState.uid)
-          .set({'last_login': Timestamp.now()}, SetOptions(merge: true));
-
-      try {
-        _userStreamSubscription = FirebaseFirestore.instance
-            .collection('users')
-            .doc(transition.nextState.uid)
-            .snapshots()
-            .listen((snapshot) => add(FredericUserDataChangedEvent(snapshot)));
-      } catch (e) {
+      try {} catch (e) {
         print('===============');
         print(e);
       }
@@ -78,6 +76,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       _userStreamSubscription?.cancel();
     }
 
+    print("USER TRANSITION");
+    print("event: ${transition.event}");
+    print('current: ${transition.currentState.activeWorkouts}');
+    print("===");
+    print('next: ${transition.nextState.activeWorkouts}');
+    print('\n\n');
     super.onTransition(transition);
   }
 
@@ -94,20 +98,11 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   }
 
   void addActiveWorkout(String workoutID) {
-    List<String> activeWorkoutsList = state.activeWorkouts.toList();
-
-    if (!activeWorkoutsList.contains(workoutID)) {
-      activeWorkoutsList.add(workoutID);
-      state.activeWorkouts = activeWorkoutsList.toList();
-    }
+    state.addActiveWorkout(workoutID);
   }
 
   void removeActiveWorkout(String workoutID) {
-    List<String> activeWorkoutsList = state.activeWorkouts;
-    if (activeWorkoutsList.contains(workoutID)) {
-      activeWorkoutsList.remove(workoutID);
-      state.activeWorkouts = activeWorkoutsList;
-    }
+    state.removeActiveWorkout(workoutID);
   }
 
   Future<void> createUserEntryInDB(
@@ -118,31 +113,5 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     FredericBackend.instance.messageBus.add(
         FredericConcurrencyMessage(FredericConcurrencyMessageType.UserSignUp));
     firstUserSignUp = true;
-    DocumentSnapshot<Map<String, dynamic>> defaultDoc = await FirebaseFirestore
-        .instance
-        .collection('defaults')
-        .doc('default_user')
-        .get();
-
-    return FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'name': name ?? defaultDoc.data()?['name'] ?? '',
-      'image': image ?? defaultDoc.data()?['image'] ?? '',
-      'username': username ?? null,
-      'uid': uid,
-      'activeworkouts': defaultDoc.data()?['activeworkouts'] ?? <String>[],
-      'progressmonitors': defaultDoc.data()?['progressmonitors'] ?? <String>[],
-      'streakstart': null,
-      'streaklatest': null,
-    });
-  }
-
-  Future<void> deleteUser(bool confirm) async {
-    if (!confirm) return;
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(state.uid)
-        .delete();
-    await FirebaseAuth.instance.currentUser!.delete();
-    return;
   }
 }

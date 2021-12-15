@@ -119,8 +119,9 @@ class _AccountDeleterState extends State<AccountDeleter> {
                     List<String?>.generate(mcController.selectedElements.length,
                         (index) => mcController.selectedElements[index].info),
                     user);
-                await FredericBackend.instance.userManager
-                    .deleteUser(confirmed);
+                //TODO:
+                await FredericBackend.instance.userManager.authInterface
+                    .deleteAccount(user, '');
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.clear();
                 FredericBase.forceFullRestart(context);

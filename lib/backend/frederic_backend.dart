@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
-import 'package:frederic/backend/database/firestore/firestore_activity_data_interface.dart';
-import 'package:frederic/backend/database/firestore/firestore_workout_data_interface.dart';
+import 'package:frederic/backend/database/firebase/firebase_auth_interface.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
@@ -18,6 +18,8 @@ import 'package:frederic/backend/util/wait_for_x.dart';
 import 'package:frederic/main.dart';
 
 import 'backend.dart';
+import 'database/firebase/firestore_activity_data_interface.dart';
+import 'database/firebase/firestore_workout_data_interface.dart';
 
 ///
 /// Main class of the Backend. Manages everything related to storing and loading
@@ -27,8 +29,14 @@ class FredericBackend extends FredericMessageProcessor {
   FredericBackend() {
     _eventBus = FredericMessageBus();
     FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
+    FirebaseAuth firebaseAuthInstance = FirebaseAuth.instance;
 
-    _userManager = FredericUserManager(backend: this);
+    // === User Authentication
+    FirebaseAuthInterface firebaseAuthInterface = FirebaseAuthInterface(
+        firebaseAuthInstance: firebaseAuthInstance,
+        firestoreInstance: firestoreInstance);
+    _userManager = FredericUserManager(
+        backend: this, authInterface: firebaseAuthInterface);
 
     // === Activities
     _activityManager = FredericActivityManager(

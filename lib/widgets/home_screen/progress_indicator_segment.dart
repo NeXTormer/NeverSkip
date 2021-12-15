@@ -7,7 +7,6 @@ import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
-import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -75,24 +74,20 @@ class ProgressIndicatorSegment extends StatelessWidget {
             child: ActivityListScreen(
               isSelector: true,
               onSelect: (activity) {
-                var monitors = FredericBackend
-                    .instance.userManager.state.progressMonitors
-                    .toList();
-                if (!monitors.contains(activity.id)) {
-                  monitors.add(activity.id);
-                  FredericBackend.instance.userManager.state.progressMonitors =
-                      monitors.toList();
-                  Navigator.of(context).pop();
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (ctx) => FredericActionDialog(
-                            title: 'This activity is already monitored.',
-                            infoOnly: true,
-                            onConfirm: () => Navigator.of(ctx).pop(),
-                          ));
-                }
-              },
+                FredericBackend.instance.userManager.state
+                    .addProgressMonitor(activity.id);
+                Navigator.of(context).pop();
+              }, //TODO:
+              // else {
+              //   showDialog(
+              //       context: context,
+              //       builder: (ctx) => FredericActionDialog(
+              //             title: 'This activity is already monitored.',
+              //             infoOnly: true,
+              //             onConfirm: () => Navigator.of(ctx).pop(),
+              //           ));
+              // }
+
               title: 'All exercises',
               subtitle: 'Select a new personal record display',
             )));

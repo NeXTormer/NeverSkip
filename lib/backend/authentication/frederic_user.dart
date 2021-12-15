@@ -1,27 +1,27 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
-///
-/// Ephemeral state
-/// Represents the user of the app
-/// Not mutable, managed by FredericUserManager Bloc
-///
 class FredericUser {
-  FredericUser(
-    this.uid, {
-    DocumentSnapshot<Map<String, dynamic>>? snapshot,
-    this.statusMessage = '',
-    this.waiting = false,
-  }) {
-    _insertDocumentSnapshot(snapshot);
+  FredericUser(this.id, {this.statusMessage = '', required this.authState}) {
     _calculateDerivedAttributes();
   }
 
-  final String uid;
+  FredericUser.fromMap(this.id, String? email, Map<String, dynamic> data)
+      : _email = email,
+        authState = FredericAuthState.Authenticated,
+        statusMessage = '' {
+    fromMap(id, email, data);
+  }
+
+  //TODO: make final or late final
+  String id;
+  @deprecated
+  String get uid => id;
+
   final String statusMessage;
+  FredericAuthState authState;
+
   String? _email;
   String? _name;
   String? _username;
@@ -31,15 +31,14 @@ class FredericUser {
   int? _currentStreak;
   int? _goalsCount;
   int? _achievementsCount;
-  bool waiting;
   bool? _hasCompletedStreakToday;
-  DateTime? _birthday;
-  DateTime? _streakStartDate;
-  DateTime? _streakLatestDate;
   List<String>? _activeWorkouts;
   List<String>? _progressMonitors;
+  DateTime? birthday;
+  DateTime? streakStartDate;
+  DateTime? streakLatestDate;
 
-  bool get authenticated => uid != '';
+  bool get authenticated => authState == FredericAuthState.Authenticated;
   bool get finishedLoading => _name != null;
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
@@ -53,9 +52,6 @@ class FredericUser {
   int get streak => _currentStreak ?? 0;
   int get goalsCount => _goalsCount ?? 0;
   int get achievementsCount => _achievementsCount ?? 0;
-  DateTime? get birthday => _birthday;
-  DateTime? get streakStartDate => _streakStartDate;
-  DateTime? get streakLatestDate => _streakLatestDate;
 
   List<String> get progressMonitors {
     if (_progressMonitors == null) {
@@ -78,99 +74,8 @@ class FredericUser {
   }
 
   String get birthdayFormatted {
-    if (_birthday == null) return 'Empty';
-    return _birthday!.formattedEuropean();
-  }
-
-  set name(String value) {
-    if (uid == '') return;
-    if (value == name) return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .update({'name': value});
-    }
-  }
-
-  set username(String value) {
-    if (uid == '') return;
-    if (value == username) return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .update({'username': value});
-    }
-  }
-
-  set birthday(DateTime? value) {
-    if (uid == '') return;
-    if (value == birthday) return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'birthday': value == null ? null : Timestamp.fromDate(value)});
-  }
-
-  set goalsCount(int value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'goalscount': value});
-  }
-
-  set achievementsCount(int value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'achievementscount': value});
-  }
-
-  set progressMonitors(List<String> value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'progressmonitors': value});
-  }
-
-  set activeWorkouts(List<String> value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({'activeworkouts': value});
-  }
-
-  set image(String value) {
-    if (uid == '') return;
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .update({'image': value});
-    }
-  }
-
-  set streakStartDate(DateTime? value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'streakstart': value == null
-          ? null
-          : Timestamp.fromDate(DateTime(value.year, value.month, value.day))
-    });
-  }
-
-  set streakLatestDate(DateTime? value) {
-    if (uid == '') return;
-    FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'streaklatest': value == null
-          ? null
-          : Timestamp.fromDate(DateTime(value.year, value.month, value.day))
-    });
+    if (birthday == null) return 'Empty';
+    return birthday!.formattedEuropean();
   }
 
   bool streakLatestDateWasTodayOrYesterday() {
@@ -182,6 +87,77 @@ class FredericUser {
     return (streakLatestDate?.isNotSameDay(now) ?? true) &&
         (streakLatestDate?.isNotSameDay(now.subtract(Duration(days: 1))) ??
             true);
+  }
+
+  set name(String value) => _name = value;
+  set username(String value) => _username = value;
+  set goalsCount(int value) => _goalsCount = value;
+  set achievementsCount(int value) => _achievementsCount = value;
+  set image(String value) => _image = value;
+
+  void fromMap(String id, String? email, Map<String, dynamic> data) {
+    this.id = id;
+
+    _email = email;
+    _name = data['name'] ?? '';
+    _username = data['username'] ?? '';
+    _image =
+        data['image'] ?? 'https://via.placeholder.com/300x300?text=profile';
+    _weight = data['weight'];
+    _height = data['height'];
+    _goalsCount = data['goalscount'];
+    _achievementsCount = data['achievementscount'];
+    birthday = data['birthday']?.toDate();
+    _progressMonitors = data['progressmonitors']?.cast<String>() ?? <String>[];
+    _activeWorkouts = data['activeworkouts']?.cast<String>() ?? <String>[];
+    streakStartDate = data['streakstart']?.toDate();
+    streakLatestDate = data['streaklatest']?.toDate();
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': _name,
+      'username': _username,
+      'image': _image,
+      'weight': _weight,
+      'goalscount': _goalsCount,
+      'achievementscount': _achievementsCount,
+      'birthday': birthday,
+      'progressmonitors': _progressMonitors,
+      'activeworkouts': _activeWorkouts,
+      'streakstart': streakStartDate,
+      'streaklatest': streakLatestDate
+    };
+  }
+
+  void addProgressMonitor(String monitor) {
+    if (_progressMonitors == null) _progressMonitors = <String>[];
+    if (!_progressMonitors!.contains(monitor)) {
+      _progressMonitors!.add(monitor);
+    }
+  }
+
+  void removeProgressMonitor(String monitor) {
+    if (_progressMonitors == null) {
+      _progressMonitors = <String>[];
+    } else {
+      _progressMonitors!.remove(monitor);
+    }
+  }
+
+  void addActiveWorkout(String workout) {
+    if (_activeWorkouts == null) _activeWorkouts = <String>[];
+    if (!_activeWorkouts!.contains(workout)) {
+      _activeWorkouts!.add(workout);
+    }
+  }
+
+  void removeActiveWorkout(String workout) {
+    if (_activeWorkouts == null) {
+      _activeWorkouts = <String>[];
+    } else {
+      _activeWorkouts!.remove(workout);
+    }
   }
 
   Future<bool> hasActivitiesOnDay(DateTime day) async {
@@ -204,51 +180,30 @@ class FredericUser {
     return false;
   }
 
-  void _insertDocumentSnapshot(
-      DocumentSnapshot<Map<String, dynamic>>? snapshot) {
-    if (snapshot?.data() == null) return;
-    Map<String, dynamic>? data = snapshot!.data();
-
-    _email = FirebaseAuth.instance.currentUser?.email ?? '';
-    _name = data?['name'] ?? '';
-    _username = data?['username'] ?? '';
-    _image =
-        data?['image'] ?? 'https://via.placeholder.com/300x300?text=profile';
-    _weight = data?['weight'];
-    _height = data?['height'];
-    _goalsCount = data?['goalscount'];
-    _achievementsCount = data?['achievementscount'];
-    _birthday = data?['birthday']?.toDate();
-    _progressMonitors =
-        data?['progressmonitors']?.cast<String>() ?? const <String>[];
-    _activeWorkouts =
-        data?['activeworkouts']?.cast<String>() ?? const <String>[];
-    _streakStartDate = data?['streakstart']?.toDate();
-    _streakLatestDate = data?['streaklatest']?.toDate();
-  }
-
   void _calculateDerivedAttributes() {
     _calculateStreak();
   }
 
   void _calculateStreak() {
-    if (_streakStartDate == null) return;
+    if (streakStartDate == null) return;
     if (streakLatestDateWasTodayOrYesterday()) {
       _currentStreak =
-          _streakLatestDate!.difference(_streakStartDate!).inDays + 1;
+          streakLatestDate!.difference(streakStartDate!).inDays + 1;
     }
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other);
+    return false;
   }
 
   @override
   String toString() {
-    return 'FredericUser[$uid, $name, waiting: $waiting, authenticated: $authenticated]';
+    return 'FredericUser[$id, $name]';
   }
 
   @override
   int get hashCode => super.hashCode;
 }
+
+enum FredericAuthState { Authenticated, NotAuthenticated }
