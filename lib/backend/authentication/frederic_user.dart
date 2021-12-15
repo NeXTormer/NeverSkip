@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
 import 'package:image_picker/image_picker.dart';
@@ -133,7 +132,6 @@ class FredericUser {
     };
   }
 
-  @protected
   void addProgressMonitor(String monitor) {
     if (_progressMonitors == null) _progressMonitors = <String>[];
     if (!_progressMonitors!.contains(monitor)) {
@@ -141,7 +139,6 @@ class FredericUser {
     }
   }
 
-  @protected
   void removeProgressMonitor(String monitor) {
     if (_progressMonitors == null) {
       _progressMonitors = <String>[];
@@ -150,7 +147,6 @@ class FredericUser {
     }
   }
 
-  @protected
   void addActiveWorkout(String workout) {
     if (_activeWorkouts == null) _activeWorkouts = <String>[];
     if (!_activeWorkouts!.contains(workout)) {
@@ -158,7 +154,6 @@ class FredericUser {
     }
   }
 
-  @protected
   void removeActiveWorkout(String workout) {
     if (_activeWorkouts == null) {
       _activeWorkouts = <String>[];

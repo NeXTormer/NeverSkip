@@ -80,11 +80,6 @@ class FredericSignOutEvent extends FredericAuthEvent {
 class FredericUserDataChangedEvent extends FredericAuthEvent {
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    // if (!userManager.firestoreDataWasLoadedAtLeastOnce) {
-    //   userManager.firestoreDataWasLoadedAtLeastOnce = true;
-    // FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
-    //     FredericConcurrencyMessageType.UserHasAuthenticated));
-    // }
     return userManager.state;
   }
 }

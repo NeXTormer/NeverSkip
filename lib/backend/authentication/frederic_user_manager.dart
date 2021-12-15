@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,9 +33,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   bool firestoreDataWasLoadedAtLeastOnce = false;
 
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
-      _userStreamSubscription;
-
   @override
   Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
     if (event is FredericUserDataChangedEvent) {
@@ -52,6 +48,9 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
         event is FredericOAuthSignInEvent) {
       FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
           FredericConcurrencyMessageType.UserHasAuthenticated));
+    }
+    if (event is FredericEmailSignupEvent) {
+      firstUserSignUp = true;
     }
   }
 
@@ -73,8 +72,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
         print('===============');
         print(e);
       }
-    } else if (transition.event is FredericSignOutEvent) {
-      _userStreamSubscription?.cancel();
     }
 
     print("USER TRANSITION");
@@ -93,7 +90,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   }
 
   void signOut(BuildContext context) async {
-    await _userStreamSubscription?.cancel();
     FirebaseAuth.instance.signOut();
     FredericBase.forceFullRestart(context);
   }
@@ -116,7 +112,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     userDataChanged();
   }
 
-  // ignore: invalid_use_of_protected_member
+  // ignore
   void removeProgressMonitor(String id) {
     state.removeProgressMonitor(id);
     userDataChanged();
