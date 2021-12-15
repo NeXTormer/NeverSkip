@@ -29,9 +29,14 @@ class AdminUserModel implements DataTableElement<AdminUserModel> {
         ),
       ),
       DataColumn(
-        label: Text(
-          'User ID',
-          style: TextStyle(fontStyle: FontStyle.italic),
+        label: GestureDetector(
+          onTap: () {
+            //FirebaseFirestore.instance.collection('users').doc(id).delete();
+          },
+          child: Text(
+            'User ID',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
         ),
       ),
       DataColumn(

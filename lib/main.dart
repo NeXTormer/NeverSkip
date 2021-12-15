@@ -98,8 +98,8 @@ class _FredericBaseState extends State<FredericBase> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight
+      if (kDebugMode) DeviceOrientation.landscapeLeft,
+      if (kDebugMode) DeviceOrientation.landscapeRight
     ]);
 
     if (getIt.isRegistered<FredericBackend>())

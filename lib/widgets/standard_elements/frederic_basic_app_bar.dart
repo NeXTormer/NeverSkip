@@ -9,6 +9,7 @@ class FredericBasicAppBar extends StatelessWidget {
       this.backButton = false,
       this.bottomPadding = 16,
       this.icon,
+      this.height,
       bool? rounded,
       Key? key})
       : super(key: key) {
@@ -20,12 +21,14 @@ class FredericBasicAppBar extends StatelessWidget {
   final Widget? icon;
   final Widget? leadingIcon;
   final double bottomPadding;
+  final double? height;
   late final bool rounded;
   final bool backButton;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       decoration: BoxDecoration(
           color: theme.isColorful ? theme.mainColor : theme.backgroundColor,
           borderRadius: rounded

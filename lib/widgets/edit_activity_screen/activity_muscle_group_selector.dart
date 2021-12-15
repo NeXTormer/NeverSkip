@@ -44,7 +44,7 @@ class ActivityMuscleGroupSelector extends StatelessWidget {
         onTap: () =>
             selected ? removeMuscleGroup(group) : addMuscleGroup(group),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        color: selected ? theme.mainColor : Colors.white,
+        color: selected ? theme.mainColor : theme.cardBackgroundColor,
         child: Center(
             child: Text(
           name,

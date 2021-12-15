@@ -46,6 +46,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
   @override
   Widget build(BuildContext context) {
     isRepeating = widget.repeating ?? widget.workout.repeating;
+
     return FredericCard(
         height: 114,
         onLongPress: () => handleLongPress(context),
@@ -181,23 +182,16 @@ class _WorkoutCardState extends State<WorkoutCard> {
           closeOnConfirm: true,
           childText: 'Do you want to ${action.toLowerCase()} the workout?',
           onConfirm: () => setState(() {
-            List<String> activeWorkouts =
-                FredericBackend.instance.userManager.state.activeWorkouts;
             if (value) {
               FredericBackend.instance.userManager
                   .addActiveWorkout(widget.workout.id);
-              // if (!activeWorkouts.contains(widget.workout.workoutID)) {
-              //   activeWorkouts.add(widget.workout.workoutID);
-              // }
               isSelected = true;
             } else {
-              if (activeWorkouts.contains(widget.workout.id)) {
-                activeWorkouts.remove(widget.workout.id);
-              }
+              FredericBackend.instance.userManager
+                  .removeActiveWorkout(widget.workout.id);
               isSelected = false;
             }
-            FredericBackend.instance.userManager.state.activeWorkouts =
-                activeWorkouts;
+            FredericBackend.instance.userManager.userDataChanged();
           }),
         ));
   }
