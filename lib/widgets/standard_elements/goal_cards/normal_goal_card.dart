@@ -55,7 +55,7 @@ class NormalGoalCard extends StatefulWidget {
 
 class _NormalGoalCard extends State<NormalGoalCard> {
   String? title;
-  String unit = 'kg';
+  String unit = '';
 
   num? startState;
   num? currentState;
@@ -65,6 +65,7 @@ class _NormalGoalCard extends State<NormalGoalCard> {
 
   @override
   void initState() {
+    unit = widget.goal.unit;
     if (widget.startStateController != null &&
         widget.startStateController != null &&
         widget.currentStateController != null &&
@@ -100,9 +101,6 @@ class _NormalGoalCard extends State<NormalGoalCard> {
         });
       });
     }
-    // WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-    //   checkIfGoalIsCompleted();
-    // });
     super.initState();
   }
 
@@ -121,6 +119,7 @@ class _NormalGoalCard extends State<NormalGoalCard> {
     if (mounted && widget.interactable) checkIfGoalIsCompleted();
 
     return Stack(
+      fit: widget.interactable ? StackFit.loose : StackFit.expand,
       children: [
         FredericCard(
           shimmer: isCompleted ? true : false,
@@ -174,12 +173,12 @@ class _NormalGoalCard extends State<NormalGoalCard> {
                                 Expanded(
                                   child: buildProgressBarText(
                                       startState ?? widget.goal.startState,
-                                      '${widget.goal.unit}'),
+                                      '${widget.interactable ? widget.goal.unit : unit}'),
                                 ),
                                 Flexible(
                                   child: buildProgressBarText(
                                       endState ?? widget.goal.endState,
-                                      '${widget.goal.unit}'),
+                                      '${widget.interactable ? widget.goal.unit : unit}'),
                                 ),
                               ],
                             ),

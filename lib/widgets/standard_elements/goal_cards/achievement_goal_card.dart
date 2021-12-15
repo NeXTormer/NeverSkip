@@ -56,7 +56,7 @@ class AchievementGoalCard extends StatelessWidget {
           ),
           Positioned(
             top: -3,
-            left: 20,
+            left: 23,
             child: GoalCardMedailleIndicator(size: 25),
           ),
         ],
