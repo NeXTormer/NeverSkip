@@ -59,27 +59,15 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     add(FredericUserDataChangedEvent());
   }
 
-  //TODO: Add event to 'if' when implementing new login method
   @override
   void onTransition(
       Transition<FredericAuthEvent, FredericUser> transition) async {
-    if ((transition.event is FredericEmailLoginEvent ||
-            transition.event is FredericEmailSignupEvent ||
-            transition.event is FredericOAuthSignInEvent ||
-            transition.event is FredericRestoreLoginStatusEvent) &&
-        transition.nextState.id != '') {
-      try {} catch (e) {
-        print('===============');
-        print(e);
-      }
-    }
-
-    print("USER TRANSITION");
-    print("event: ${transition.event}");
-    print('current: ${transition.currentState.activeWorkouts}');
-    print("===");
-    print('next: ${transition.nextState.activeWorkouts}');
-    print('\n\n');
+    // print("USER TRANSITION");
+    // print("event: ${transition.event}");
+    // print('current: ${transition.currentState.activeWorkouts}');
+    // print("===");
+    // print('next: ${transition.nextState.activeWorkouts}');
+    // print('\n\n');
     super.onTransition(transition);
   }
 
@@ -94,25 +82,21 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     FredericBase.forceFullRestart(context);
   }
 
-  // ignore: invalid_use_of_protected_member
   void addActiveWorkout(String workoutID) {
     state.addActiveWorkout(workoutID);
     userDataChanged();
   }
 
-  // ignore: invalid_use_of_protected_member
   void removeActiveWorkout(String workoutID) {
     state.removeActiveWorkout(workoutID);
     userDataChanged();
   }
 
-  // ignore: invalid_use_of_protected_member
   void addProgressMonitor(String id) {
     state.addProgressMonitor(id);
     userDataChanged();
   }
 
-  // ignore
   void removeProgressMonitor(String id) {
     state.removeProgressMonitor(id);
     userDataChanged();

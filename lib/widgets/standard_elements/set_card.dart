@@ -30,71 +30,53 @@ class _SetCardState extends State<SetCard> {
       padding: deleted
           ? const EdgeInsets.symmetric(horizontal: 16)
           : const EdgeInsets.only(left: 16, right: 16, top: 10),
-      child: FredericCard(
-          animated: true,
-          duration: widget.animationDuration,
-          padding: const EdgeInsets.all(8),
-          height: deleted ? 0 : 51,
-          onLongPress: () {
-            showDialog(
-                context: context,
-                builder: (context) => FredericActionDialog(
-                      title: 'Confirm deletion',
-                      actionText: 'Delete',
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(
-                            'Do you want to delete this set? This cannot be undone!',
-                            textAlign: TextAlign.center),
-                      ),
-                      onConfirm: () => handleDelete(context),
-                      destructiveAction: true,
-                    ));
-          },
-          onTap: () {},
-          child: deleted
-              ? null
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: theme.mainColorLight),
-                      child: Icon(
-                        ExtraIcons.statistics,
-                        color: theme.mainColorInText,
-                        size: 18,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${widget.set.reps}',
-                          style: TextStyle(
-                              color: theme.textColor,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.5,
-                              fontSize: 14),
+      child: FittedBox(
+        fit: BoxFit.fitWidth,
+        child: FredericCard(
+            animated: true,
+            duration: widget.animationDuration,
+            padding: const EdgeInsets.all(8),
+            height: deleted ? 0 : 51,
+            onLongPress: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => FredericActionDialog(
+                        title: 'Confirm deletion',
+                        actionText: 'Delete',
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                              'Do you want to delete this set? This cannot be undone!',
+                              textAlign: TextAlign.center),
                         ),
-                        SizedBox(width: 3),
-                        Text('reps',
-                            style: TextStyle(
-                                color: theme.textColor,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 0.5,
-                                fontSize: 12)),
-                        if (widget.activity.type ==
-                            FredericActivityType.Weighted) ...[
-                          SizedBox(width: 10),
-                          FredericVerticalDivider(length: 16),
-                          SizedBox(width: 10),
+                        onConfirm: () => handleDelete(context),
+                        destructiveAction: true,
+                      ));
+            },
+            onTap: () {},
+            child: deleted
+                ? null
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: theme.mainColorLight),
+                        child: Icon(
+                          ExtraIcons.statistics,
+                          color: theme.mainColorInText,
+                          size: 18,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
                           Text(
-                            '${widget.set.weight}',
+                            '${widget.set.reps}',
                             style: TextStyle(
                                 color: theme.textColor,
                                 fontWeight: FontWeight.w600,
@@ -102,40 +84,67 @@ class _SetCardState extends State<SetCard> {
                                 fontSize: 14),
                           ),
                           SizedBox(width: 3),
-                          Text(widget.activity.progressUnit,
+                          Text('reps',
                               style: TextStyle(
                                   color: theme.textColor,
                                   fontWeight: FontWeight.w500,
                                   letterSpacing: 0.5,
                                   fontSize: 12)),
-                        ]
-                      ],
-                    ),
-                    Expanded(
-                      child: Container(),
-                    ),
-                    Text(
-                      '${DateFormat.yMMMd().format(widget.set.timestamp.toLocal())}',
-                      style: TextStyle(
-                          color: theme.textColor,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.4,
-                          fontSize: 14),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '${DateFormat.Hm().format(widget.set.timestamp.toLocal())}',
-                      style: TextStyle(
-                          color: theme.textColor,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.3,
-                          fontSize: 14),
-                    ),
-                    SizedBox(width: 12),
-                    Icon(ExtraIcons.calendar,
-                        color: theme.mainColorInText, size: 22),
-                  ],
-                )),
+                          if (widget.activity.type ==
+                              FredericActivityType.Weighted) ...[
+                            SizedBox(width: 10),
+                            FredericVerticalDivider(length: 16),
+                            SizedBox(width: 10),
+                            Text(
+                              '${widget.set.weight}',
+                              style: TextStyle(
+                                  color: theme.textColor,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.5,
+                                  fontSize: 14),
+                            ),
+                            SizedBox(width: 3),
+                            Text(widget.activity.progressUnit,
+                                style: TextStyle(
+                                    color: theme.textColor,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 0.5,
+                                    fontSize: 12)),
+                          ]
+                        ],
+                      ),
+                      // Expanded(
+                      //   child: Container(),
+                      // ),
+                      SizedBox(width: 32),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${DateFormat.yMMMd().format(widget.set.timestamp.toLocal())}',
+                            style: TextStyle(
+                                color: theme.textColor,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.4,
+                                fontSize: 14),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            '${DateFormat.Hm().format(widget.set.timestamp.toLocal())}',
+                            style: TextStyle(
+                                color: theme.textColor,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.3,
+                                fontSize: 14),
+                          ),
+                          SizedBox(width: 12),
+                          Icon(ExtraIcons.calendar,
+                              color: theme.mainColorInText, size: 22),
+                        ],
+                      ),
+                    ],
+                  )),
+      ),
     );
   }
 

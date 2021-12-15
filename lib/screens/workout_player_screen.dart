@@ -10,6 +10,8 @@ import 'package:frederic/widgets/workout_player_screen/workout_player_start_view
 import 'package:frederic/widgets/workout_player_screen/workout_player_view.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
+
 enum WorkoutPlayerViewType { Start, End, Player }
 
 class WorkoutPlayerScreen extends StatefulWidget {
@@ -61,8 +63,8 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                 ],
               );
             }),
-            SizedBox(height: 10),
-            FredericDivider(),
+            if (theme.isMonotone) SizedBox(height: 10),
+            if (theme.isMonotone) FredericDivider(),
             Flexible(
               child: LayoutBuilder(builder: (context, constraints) {
                 return AnimatedSwitcher(

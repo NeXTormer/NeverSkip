@@ -23,42 +23,73 @@ class AddProgressCard extends StatelessWidget {
   final List<RepsWeightSuggestion>? suggestions;
   final void Function() onSave;
 
+  final double fullWidth = 382;
+
   @override
   Widget build(BuildContext context) {
     bool hasSuggestions = suggestions?.isNotEmpty ?? false;
 
-    return ChangeNotifierProvider<AddProgressController>.value(
-      value: controller,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: theme.cardBackgroundColor,
-            border: Border.all(color: theme.cardBorderColor)),
-        child: Column(
+    return LayoutBuilder(builder: (context, constraints) {
+      double scalingFactor = constraints.maxWidth / fullWidth;
+      print('Scaling Factor: $scalingFactor');
+      return Transform.scale(
+        alignment: Alignment.topLeft,
+        scale: scalingFactor,
+        child: Row(
           children: [
-            buildSubHeading('Repetitions', Icons.repeat_outlined),
-            SizedBox(height: 12),
-            EnterRepsCounterWidget(),
-            if (activity.type == FredericActivityType.Weighted) ...[
-              SizedBox(height: 12),
-              buildSubHeading('Weight', ExtraIcons.dumbbell),
-              SizedBox(height: 12),
-              EnterWeightWidget(),
-            ],
-            if (hasSuggestions) SizedBox(height: 8),
-            if (hasSuggestions)
-              buildSubHeading('Smart Suggestions', Icons.smart_button_outlined),
-            if (hasSuggestions) SizedBox(height: 8),
-            if (hasSuggestions) RepsWeightSmartSuggestions(suggestions!),
-            Padding(
-              padding: const EdgeInsets.only(left: 0, right: 0, top: 16),
-              child: FredericButton('Save', onPressed: onSave),
-            )
+            ConstrainedBox(
+              constraints: BoxConstraints.tightFor(width: fullWidth),
+              child: StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    return LayoutBuilder(builder: (context, cs) {
+                      print('Inner constraints: $cs');
+                      return ChangeNotifierProvider<
+                          AddProgressController>.value(
+                        value: controller,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: theme.cardBackgroundColor,
+                              border: Border.all(color: theme.cardBorderColor)),
+                          child: Column(
+                            children: [
+                              buildSubHeading(
+                                  'Repetitions', Icons.repeat_outlined),
+                              SizedBox(height: 12),
+                              EnterRepsCounterWidget(),
+                              if (activity.type ==
+                                  FredericActivityType.Weighted) ...[
+                                SizedBox(height: 12),
+                                buildSubHeading('Weight', ExtraIcons.dumbbell),
+                                SizedBox(height: 12),
+                                EnterWeightWidget(),
+                              ],
+                              if (hasSuggestions) SizedBox(height: 8),
+                              if (hasSuggestions)
+                                buildSubHeading('Smart Suggestions',
+                                    Icons.smart_button_outlined),
+                              if (hasSuggestions) SizedBox(height: 8),
+                              if (hasSuggestions)
+                                RepsWeightSmartSuggestions(suggestions!),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 0, right: 0, top: 16),
+                                child:
+                                    FredericButton('Save', onPressed: onSave),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  }),
+            ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget buildSubHeading(String title, IconData icon) {

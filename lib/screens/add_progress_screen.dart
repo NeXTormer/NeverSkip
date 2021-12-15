@@ -149,7 +149,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                               (context, index) =>
                                   SetCard(sets[index], widget.activity),
                               childCount: sets.length)),
-                      SliverToBoxAdapter(child: SizedBox(height: 12))
+                      SliverToBoxAdapter(child: SizedBox(height: 50))
                     ],
                   );
                 }),

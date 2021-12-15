@@ -183,12 +183,12 @@ class _SetCard extends StatelessWidget {
                     ),
                     SizedBox(width: 16),
                     if (last)
-                      Text('You completed this exercise today!',
+                      Text('Done!',
                           style: TextStyle(
                               color: theme.textColor,
                               fontWeight: FontWeight.w500,
                               letterSpacing: 0.5,
-                              fontSize: 12)),
+                              fontSize: 14)),
                     if (!last)
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.end,

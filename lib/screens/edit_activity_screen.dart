@@ -4,6 +4,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/edit_activity_screen/activity_muscle_group_selector.dart';
 import 'package:frederic/widgets/edit_activity_screen/activity_type_selector.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/dummy_activity_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_divider.dart';
@@ -70,7 +71,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool editing = widget.activity.id != 'new';
+    final bool editing = widget.activity.id != '';
 
     return FredericScaffold(
         body: CustomScrollView(
@@ -221,12 +222,30 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericButton(
-              editing ? 'Save' : 'Add',
-              onPressed: () {
-                saveData();
-                Navigator.of(context).pop();
-              },
+            child: Row(
+              children: [
+                if (editing)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: FredericButton(
+                        'Delete',
+                        mainColor: theme.negativeColor,
+                        onPressed: () => delete(context),
+                      ),
+                    ),
+                  ),
+                Expanded(
+                  flex: 2,
+                  child: FredericButton(
+                    editing ? 'Save' : 'Add',
+                    onPressed: () {
+                      saveData();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -261,5 +280,19 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
       FredericBackend.instance.activityManager
           .add(FredericActivityUpdateEvent(widget.activity));
     }
+  }
+
+  void delete(BuildContext context) {
+    FredericActionDialog.show(
+        context: context,
+        dialog: FredericActionDialog(
+          onConfirm: () {},
+          title: 'Confirm deletion',
+          destructiveAction: true,
+          child: Text(
+              //'Do you want to delete the activity? This cannot be undone!',
+              'Work in Progress :)',
+              textAlign: TextAlign.center),
+        ));
   }
 }
