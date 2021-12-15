@@ -6,10 +6,11 @@ abstract class FredericAuthInterface {
       {required String email, required String name, required String password});
   Future<FredericUser> logIn({required String email, required String password});
   Future<FredericUser> logInOAuth(OAuthCredential credential);
-  Future<FredericUser> getUserData(String uid);
+  Future<FredericUser> getUserData(String uid, String email);
   Future<void> logOut();
 
   Future<void> update(FredericUser user);
-  Future<void> changePassword(FredericUser user, String currentPassword);
-  Future<void> deleteAccount(FredericUser user, String currentPassword);
+  Future<bool> reAuthenticate(FredericUser user, String password);
+  Future<void> changePassword(FredericUser user, String newPassword);
+  Future<void> deleteAccount(FredericUser user);
 }

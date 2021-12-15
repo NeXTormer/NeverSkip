@@ -16,7 +16,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   FredericUserManager(
       {required FredericBackend backend, required this.authInterface})
       : _backend = backend,
-        super(FredericUser('', authState: FredericAuthState.NotAuthenticated)) {
+        super(FredericUser.noAuth()) {
     streakManager = StreakManager(this, _backend);
 
     FirebaseAuth.instance.authStateChanges().listen((userdata) {
@@ -56,6 +56,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   }
 
   void userDataChanged() {
+    authInterface.update(state);
     add(FredericUserDataChangedEvent());
   }
 
@@ -67,7 +68,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
             transition.event is FredericEmailSignupEvent ||
             transition.event is FredericOAuthSignInEvent ||
             transition.event is FredericRestoreLoginStatusEvent) &&
-        transition.nextState.uid != '') {
+        transition.nextState.id != '') {
       try {} catch (e) {
         print('===============');
         print(e);
@@ -97,12 +98,28 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     FredericBase.forceFullRestart(context);
   }
 
+  // ignore: invalid_use_of_protected_member
   void addActiveWorkout(String workoutID) {
     state.addActiveWorkout(workoutID);
+    userDataChanged();
   }
 
+  // ignore: invalid_use_of_protected_member
   void removeActiveWorkout(String workoutID) {
     state.removeActiveWorkout(workoutID);
+    userDataChanged();
+  }
+
+  // ignore: invalid_use_of_protected_member
+  void addProgressMonitor(String id) {
+    state.addProgressMonitor(id);
+    userDataChanged();
+  }
+
+  // ignore: invalid_use_of_protected_member
+  void removeProgressMonitor(String id) {
+    state.removeProgressMonitor(id);
+    userDataChanged();
   }
 
   Future<void> createUserEntryInDB(

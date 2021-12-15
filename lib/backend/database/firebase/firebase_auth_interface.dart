@@ -10,13 +10,26 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   final FirebaseFirestore firestoreInstance;
 
   @override
-  Future<void> changePassword(FredericUser user, String currentPassword) {
+  Future<void> changePassword(FredericUser user, String newPassword) {
     // TODO: implement changePassword
     throw UnimplementedError();
   }
 
   @override
-  Future<void> deleteAccount(FredericUser user, String currentPassword) async {
+  Future<bool> reAuthenticate(FredericUser user, String password) async {
+    AuthCredential cred =
+        EmailAuthProvider.credential(email: user.email, password: password);
+    bool success = false;
+    try {
+      await FirebaseAuth.instance.currentUser
+          ?.reauthenticateWithCredential(cred);
+      success = true;
+    } on FirebaseAuthException {}
+    return success;
+  }
+
+  @override
+  Future<void> deleteAccount(FredericUser user) async {
     await firestoreInstance.collection('users').doc(user.id).delete();
     await FirebaseAuth.instance.currentUser?.delete();
   }
@@ -29,23 +42,24 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user == null)
-        return FredericUser('',
-            statusMessage: 'Login Error. Try Again later.',
-            authState: FredericAuthState.NotAuthenticated);
-      return getUserData(userCredential.user!.uid);
+        return FredericUser.noAuth(
+          statusMessage: 'Login Error. Try Again later.',
+        );
+      return getUserData(
+          userCredential.user!.uid, userCredential.user!.email ?? '');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        return FredericUser('',
-            statusMessage: 'The email does not exist.',
-            authState: FredericAuthState.NotAuthenticated);
+        return FredericUser.noAuth(
+          statusMessage: 'The email does not exist.',
+        );
       } else if (e.code == 'wrong-password') {
-        return FredericUser('',
-            statusMessage: 'Wrong password.',
-            authState: FredericAuthState.NotAuthenticated);
+        return FredericUser.noAuth(
+          statusMessage: 'Wrong password.',
+        );
       }
-      return FredericUser('',
-          statusMessage: 'Invalid credentials',
-          authState: FredericAuthState.NotAuthenticated);
+      return FredericUser.noAuth(
+        statusMessage: 'Invalid credentials',
+      );
     }
   }
 
@@ -64,33 +78,35 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     if (userCredential.additionalUserInfo?.isNewUser ?? true) {
       return _createDBEntry(
           id: userCredential.user!.uid,
+          email: userCredential.user?.email ?? 'error-no-email',
           name: name,
           image: image,
           username: userCredential.additionalUserInfo?.username);
     } else {
       if (userCredential.user == null)
-        return FredericUser('',
-            statusMessage: 'Login Error. Try Again later.',
-            authState: FredericAuthState.NotAuthenticated);
-      return getUserData(userCredential.user!.uid);
+        return FredericUser.noAuth(
+          statusMessage: 'Login Error. Try Again later.',
+        );
+      return getUserData(
+          userCredential.user!.uid, userCredential.user!.email ?? '');
     }
   }
 
   @override
-  Future<FredericUser> getUserData(String uid) async {
+  Future<FredericUser> getUserData(String uid, String email) async {
     DocumentSnapshot<Map<String, dynamic>> userDocument =
         await firestoreInstance.collection('users').doc(uid).get();
 
     if (!userDocument.exists)
-      return FredericUser('',
-          statusMessage: 'Login Error. Please contact support. [Error UDNF]',
-          authState: FredericAuthState.NotAuthenticated);
+      return FredericUser.noAuth(
+        statusMessage: 'Login Error. Please contact support. [Error UDNF]',
+      );
     firestoreInstance
         .collection('users')
         .doc(uid)
         .update({'last_login': Timestamp.now()});
 
-    return FredericUser.fromMap(uid, null, userDocument.data()!);
+    return FredericUser.fromMap(uid, email, userDocument.data()!);
   }
 
   @override
@@ -112,27 +128,20 @@ class FirebaseAuthInterface implements FredericAuthInterface {
             name: name,
             email: userCredential.user!.email ?? '');
       } else {
-        return FredericUser('',
-            authState: FredericAuthState.NotAuthenticated,
+        return FredericUser.noAuth(
             statusMessage: 'Sign up error. Please contact support.');
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        return FredericUser('',
-            authState: FredericAuthState.NotAuthenticated,
-            statusMessage: 'The password is too weak.');
+        return FredericUser.noAuth(statusMessage: 'The password is too weak.');
       }
       if (e.code == 'email-already-in-use') {
-        return FredericUser('',
-            authState: FredericAuthState.NotAuthenticated,
+        return FredericUser.noAuth(
             statusMessage: 'This email address is already used');
       }
-      return FredericUser('',
-          authState: FredericAuthState.NotAuthenticated,
-          statusMessage: 'Sign up error. [${e.code}]');
+      return FredericUser.noAuth(statusMessage: 'Sign up error. [${e.code}]');
     } catch (e) {
-      return FredericUser('',
-          authState: FredericAuthState.NotAuthenticated,
+      return FredericUser.noAuth(
           statusMessage: 'Sign up error. Please contact support. [SUOE]');
     }
   }
@@ -147,7 +156,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
 
   Future<FredericUser> _createDBEntry(
       {required String id,
-      String? email,
+      required String email,
       String? name,
       String? image,
       String? username}) async {
@@ -170,8 +179,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     final userDocument =
         await firestoreInstance.collection('users').doc(id).get();
     if (userDocument.data() == null)
-      return FredericUser('',
-          authState: FredericAuthState.NotAuthenticated,
+      return FredericUser.noAuth(
           statusMessage:
               'Sign up Error. Please contact support. [Error UDNFAS]');
     return FredericUser.fromMap(id, email, userDocument.data()!);

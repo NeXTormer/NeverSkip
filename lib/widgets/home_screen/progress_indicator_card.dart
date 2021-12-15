@@ -44,7 +44,7 @@ class ProgressIndicatorCard extends StatelessWidget {
               context: context,
               builder: (context) => FredericActionDialog(
                     onConfirm: () {
-                      FredericBackend.instance.userManager.state
+                      FredericBackend.instance.userManager
                           .removeProgressMonitor(sets.activityID);
                       Navigator.of(context).pop();
                     },

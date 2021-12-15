@@ -40,16 +40,14 @@ class _AccountDeleterState extends State<AccountDeleter> {
               icon: Icons.vpn_key_outlined,
               isPasswordField: true,
               onSubmit: (value) async {
-                AuthCredential cred = EmailAuthProvider.credential(
-                    email: user.email, password: value);
                 bool success = false;
                 setState(() {
                   loading = true;
                 });
                 try {
-                  await FirebaseAuth.instance.currentUser
-                      ?.reauthenticateWithCredential(cred);
-                  success = true;
+                  success = await FredericBackend
+                      .instance.userManager.authInterface
+                      .reAuthenticate(user, value);
                 } on FirebaseAuthException catch (e) {
                   print(e);
                   setState(() {
@@ -121,7 +119,7 @@ class _AccountDeleterState extends State<AccountDeleter> {
                     user);
                 //TODO:
                 await FredericBackend.instance.userManager.authInterface
-                    .deleteAccount(user, '');
+                    .deleteAccount(user);
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.clear();
                 FredericBase.forceFullRestart(context);

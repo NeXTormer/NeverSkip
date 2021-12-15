@@ -8,7 +8,7 @@ class FredericFeedbackSender {
     if (message == 'test') return;
 
     DocumentReference doc =
-        FirebaseFirestore.instance.collection('feedback').doc(user.uid);
+        FirebaseFirestore.instance.collection('feedback').doc(user.id);
     return doc.set({
       'email': user.email,
       'name': user.name,

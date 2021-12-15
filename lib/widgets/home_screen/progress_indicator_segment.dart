@@ -74,7 +74,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
             child: ActivityListScreen(
               isSelector: true,
               onSelect: (activity) {
-                FredericBackend.instance.userManager.state
+                FredericBackend.instance.userManager
                     .addProgressMonitor(activity.id);
                 Navigator.of(context).pop();
               }, //TODO:

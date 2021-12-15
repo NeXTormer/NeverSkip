@@ -16,7 +16,7 @@ class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) {
-    return userManager.authInterface.getUserData(user.uid);
+    return userManager.authInterface.getUserData(user.uid, user.email ?? '');
   }
 }
 
@@ -73,7 +73,7 @@ class FredericSignOutEvent extends FredericAuthEvent {
     FredericBackend.instance.analytics.analytics.logEvent(name: 'sign-out');
     FredericBackend.instance.dispose();
     await userManager.authInterface.logOut();
-    return FredericUser('', authState: FredericAuthState.NotAuthenticated);
+    return FredericUser.noAuth();
   }
 }
 

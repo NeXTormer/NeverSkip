@@ -16,7 +16,7 @@ class FredericStorageManager {
       Uint8List? imageData = await _convertXFileToRawJPEG(image);
       if (imageData == null) return null;
       Reference reference = FirebaseStorage.instance
-          .ref('userdata/${backend.userManager.state.uid}/$name');
+          .ref('userdata/${backend.userManager.state.id}/$name');
       await reference.putData(imageData);
       return reference.getDownloadURL();
     } on FirebaseException catch (exception) {

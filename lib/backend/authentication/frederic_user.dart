@@ -1,17 +1,20 @@
+import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FredericUser {
-  FredericUser(this.id, {this.statusMessage = '', required this.authState}) {
-    _calculateDerivedAttributes();
-  }
+  FredericUser.noAuth({this.statusMessage = ''})
+      : id = '',
+        authState = FredericAuthState.NotAuthenticated,
+        _email = 'noauth';
 
-  FredericUser.fromMap(this.id, String? email, Map<String, dynamic> data)
+  FredericUser.fromMap(this.id, String email, Map<String, dynamic> data)
       : _email = email,
         authState = FredericAuthState.Authenticated,
         statusMessage = '' {
     fromMap(id, email, data);
+    _calculateDerivedAttributes();
   }
 
   //TODO: make final or late final
@@ -22,7 +25,7 @@ class FredericUser {
   final String statusMessage;
   FredericAuthState authState;
 
-  String? _email;
+  String _email;
   String? _name;
   String? _username;
   String? _image;
@@ -42,7 +45,7 @@ class FredericUser {
   bool get finishedLoading => _name != null;
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
-  String get email => _email ?? '';
+  String get email => _email;
   String get name => _name ?? '';
   String get username => _username ?? '';
   String get image =>
@@ -95,7 +98,7 @@ class FredericUser {
   set achievementsCount(int value) => _achievementsCount = value;
   set image(String value) => _image = value;
 
-  void fromMap(String id, String? email, Map<String, dynamic> data) {
+  void fromMap(String id, String email, Map<String, dynamic> data) {
     this.id = id;
 
     _email = email;
@@ -130,6 +133,7 @@ class FredericUser {
     };
   }
 
+  @protected
   void addProgressMonitor(String monitor) {
     if (_progressMonitors == null) _progressMonitors = <String>[];
     if (!_progressMonitors!.contains(monitor)) {
@@ -137,6 +141,7 @@ class FredericUser {
     }
   }
 
+  @protected
   void removeProgressMonitor(String monitor) {
     if (_progressMonitors == null) {
       _progressMonitors = <String>[];
@@ -145,6 +150,7 @@ class FredericUser {
     }
   }
 
+  @protected
   void addActiveWorkout(String workout) {
     if (_activeWorkouts == null) _activeWorkouts = <String>[];
     if (!_activeWorkouts!.contains(workout)) {
@@ -152,6 +158,7 @@ class FredericUser {
     }
   }
 
+  @protected
   void removeActiveWorkout(String workout) {
     if (_activeWorkouts == null) {
       _activeWorkouts = <String>[];
