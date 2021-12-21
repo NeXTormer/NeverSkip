@@ -182,6 +182,7 @@ class _AdminEditActivityViewState extends State<AdminEditActivityView> {
     if (widget.activity.isEmpty) {
       var activity = FredericActivity.make(
           name: nameController.text,
+          owner: 'global',
           description: descriptionController.text,
           image: selectedIcon ??
               'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe',

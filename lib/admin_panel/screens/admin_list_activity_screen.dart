@@ -64,7 +64,7 @@ class _AdminListActivityScreenState extends State<AdminListActivityScreen> {
                               onTap: () {
                                 setState(() {
                                   highlightedActivity =
-                                      FredericActivity.template();
+                                      FredericActivity.globalTemplate();
                                   expanded = true;
                                 });
                               },
