@@ -3,11 +3,10 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: FredericCI_Basic_Tests
+name: basic_tests
 
 on:
   push:
-  pull_request:
 
 jobs:
   analyze:
