@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 
 jobs:
-  build:
+  build_aab:
 
     runs-on: self-hosted
 
@@ -52,6 +52,25 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         tag: ${{ env.GIT_TAG_NAME }}
-        name: ${{ env.GIT_TAG_NAME }}+${{github.run_number}}
+        name: APPBUNDLE
         path: build/app/outputs/bundle/release/app-release.aab
+
+  # release_android_beta:
+  #   name: Release Android Artifacts to beta track
+  #   needs: [build_aab]
+  #   runs-on: self-hosted
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: Get APPBUNDLE from Artifacts
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: APPBUNDLE
+  #     - name: Release APPBUNDLE to internal track
+  #       uses: r0adkll/upload-google-play@v1
+  #       with:
+  #         serviceAccountJsonPlainText: ${{ secrets.GOOGLE_SERVICE_JSONKEY }}
+  #         packageName: io.hawkford.fredericapp
+  #         releaseFile: app-release.aab
+  #         track: beta
+  #         whatsNewDirectory: distribution/whatsnew
 

@@ -7,6 +7,10 @@ name: basic_tests
 
 on:
   push:
+    branches: 
+      - main
+      - dev
+  pull_request:
 
 jobs:
   analyze:
