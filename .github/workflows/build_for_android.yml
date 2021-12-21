@@ -33,7 +33,7 @@ jobs:
         gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/key.properties.asc > android/key.properties
     
     - name: Get Tag name (version code)
-      uses: olegtarasov/get-tag@v2
+      uses: olegtarasov/get-tag@v2.1
       id: tagName
       with:
         tagRegex: 'v([0-9]+.[0-9]+.[0-9]+)' # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
