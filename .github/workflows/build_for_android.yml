@@ -2,8 +2,8 @@ name: build_for_android
 
 on:
   push:
-#    tag:
-#      - "v*.*.*"
+    tag:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -32,6 +32,24 @@ jobs:
         gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/release.keystore.asc > android/app/release.keystore
         gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/key.properties.asc > android/key.properties
 
+    - uses: olegtarasov/get-tag@v2 # that generate $GIT_TAG_NAME env
+        id: tagName
+        with:
+          tagRegex: 'v([0-9]+.[0-9]+.[0-9]+)' # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+          tagRegexGroup: 1 # Optional. Default is 1.
+
     - name: Build AAB
-      run: flutter build appbundle --release
+      run: flutter build appbundle --release --build-name $GIT_TAG_NAME --build-number ${{ github.run_number }}
+
+    - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/release/*.aab"
+          token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
+
+    - name: Save APPBUNDLE to Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: APPBUNDLE
+          path: build/app/outputs/bundle/release/app-release.aab
 
