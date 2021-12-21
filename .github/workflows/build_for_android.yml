@@ -40,7 +40,7 @@ jobs:
         tagRegexGroup: 1 # Optional. Default is 1.
 
     - name: Build AAB
-      run: flutter build appbundle --release --build-name $GIT_TAG_NAME --build-number "${{ github.run_number }}"
+      run: flutter build appbundle --release --build-number "${{ github.run_number }}" --build-name $GIT_TAG_NAME
 
     - name: Create Github Release
       uses: ncipollo/release-action@v1
