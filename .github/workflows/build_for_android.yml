@@ -25,5 +25,5 @@ jobs:
     
     - run: flutter pub get
     - run: |
-        echo "${{ secrets.FREDERIC_ANDROID_RELEASE_KEYSTORE }}" > android/release.keystore.asc
-        gpg -d --passphrase "${{ secrets.FREDERIC_ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > android/release.keystore
+        echo "${{ secrets.ANDROID_RELEASE_KEYSTORE }}" > android/release.keystore.asc
+        gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > android/release.keystore
