@@ -10,6 +10,7 @@ jobs:
 
     runs-on: self-hosted
 
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
     # Setup Java environment in order to build the Android app.
     - uses: actions/checkout@v1
