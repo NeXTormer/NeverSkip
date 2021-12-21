@@ -94,19 +94,23 @@ class FirebaseAuthInterface implements FredericAuthInterface {
 
   @override
   Future<FredericUser> getUserData(String uid, String email) async {
-    DocumentSnapshot<Map<String, dynamic>> userDocument =
-        await firestoreInstance.collection('users').doc(uid).get();
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDocument =
+          await firestoreInstance.collection('users').doc(uid).get();
 
-    if (!userDocument.exists)
-      return FredericUser.noAuth(
-        statusMessage: 'Login Error. Please contact support. [Error UDNF]',
-      );
-    firestoreInstance
-        .collection('users')
-        .doc(uid)
-        .update({'last_login': Timestamp.now()});
+      if (!userDocument.exists)
+        return FredericUser.noAuth(
+          statusMessage: 'Login Error. Please contact support. [Error UDNF]',
+        );
+      firestoreInstance
+          .collection('users')
+          .doc(uid)
+          .update({'last_login': Timestamp.now()});
 
-    return FredericUser.fromMap(uid, email, userDocument.data()!);
+      return FredericUser.fromMap(uid, email, userDocument.data()!);
+    } catch (e) {
+      return FredericUser.noAuth();
+    }
   }
 
   @override

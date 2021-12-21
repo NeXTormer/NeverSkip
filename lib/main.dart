@@ -101,6 +101,11 @@ class _FredericBaseState extends State<FredericBase> {
   void initState() {
     _key = UniqueKey();
 
+    initData();
+    super.initState();
+  }
+
+  void initData() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       if (kDebugMode) DeviceOrientation.landscapeLeft,
@@ -110,8 +115,6 @@ class _FredericBaseState extends State<FredericBase> {
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
-
-    super.initState();
   }
 
   @override
@@ -171,6 +174,7 @@ class _FredericBaseState extends State<FredericBase> {
   void forceRestart() {
     setState(() {
       _key = UniqueKey();
+      initData();
     });
   }
 
