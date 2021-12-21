@@ -24,6 +24,14 @@ jobs:
         flutter-version: '2.8.0'
     
     - run: flutter pub get
+
+    - name: Dectypt keys
     - run: |
         echo "${{ secrets.ANDROID_RELEASE_KEYSTORE }}" > android/release.keystore.asc
-        gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > android/release.keystore
+        echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties.asc
+        gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/release.keystore.asc > android/release.keystore
+        gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/key.properties.asc > android/key.properties
+
+    - name: Build AAB
+    - run: flutter build appbundle --release
+
