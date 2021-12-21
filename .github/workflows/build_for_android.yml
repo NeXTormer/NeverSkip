@@ -1,8 +1,9 @@
 name: build_for_android
 
 on:
-  tag:
-    - "v*.*.*"
+  push:
+    tag:
+      - "v*.*.*"
 
 jobs:
   build:
