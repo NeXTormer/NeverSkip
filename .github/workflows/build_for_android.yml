@@ -51,6 +51,7 @@ jobs:
     - name: Save APPBUNDLE to Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: APPBUNDLE
+        tag: ${{ env.GIT_TAG_NAME }}
+        name: ${{ env.GIT_TAG_NAME }}+${{github.run_number}}
         path: build/app/outputs/bundle/release/app-release.aab
 
