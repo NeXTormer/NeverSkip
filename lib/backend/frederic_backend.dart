@@ -60,6 +60,7 @@ class FredericBackend extends FredericMessageProcessor {
     _analytics = FredericAnalytics();
 
     _registerEventProcessors();
+    loadData();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
@@ -104,9 +105,11 @@ class FredericBackend extends FredericMessageProcessor {
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
 
   void loadData() async {
-    var profiler = FredericProfiler.track('FredericBackend::loadData()');
-
+    final profiler = FredericProfiler.track('FredericBackend::loadData()');
+    final userProfiler =
+        FredericProfiler.track('FredericBackend::loadData::waitForUser()');
     await waitUntilUserHasAuthenticated();
+    userProfiler.stop();
 
     _defaults = FredericDefaults(await _defaultsReference.get());
 
@@ -133,10 +136,10 @@ class FredericBackend extends FredericMessageProcessor {
     if (message is FredericConcurrencyMessage) {
       switch (message.type) {
         case FredericConcurrencyMessageType.CoreDataHasLoaded:
+          _waitUntilCoreDataHasLoaded.complete();
           break;
         case FredericConcurrencyMessageType.UserHasAuthenticated:
           _waitUntilUserHasAuthenticated.complete();
-          loadData();
           break;
         default:
           break;

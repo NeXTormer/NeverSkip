@@ -142,7 +142,7 @@ class FredericActivity
       'recommendedreps': recommendedReps,
       'recommendedsets': recommendedSets,
       'type': parseTypeToString(type),
-      'muslegroup': parseMuscleGroupListToStringList(muscleGroups)
+      'musclegroup': parseMuscleGroupListToStringList(muscleGroups)
     };
   }
 
