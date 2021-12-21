@@ -14,6 +14,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
@@ -62,11 +63,13 @@ void main() async {
     //await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '');
     await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 
+    final colorThemeProfiler = FredericProfiler.track('load color theme');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Object? themeID = preferences.get('colortheme');
     if (themeID != null && themeID is int) {
       _colorTheme = FredericColorTheme.find(themeID);
     }
+    colorThemeProfiler.stop();
 
     runApp(FredericBase());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
@@ -92,10 +95,17 @@ class FredericBase extends StatefulWidget {
 }
 
 class _FredericBaseState extends State<FredericBase> {
-  Key _key = UniqueKey();
+  Key? _key;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    _key = UniqueKey();
+
+    initData();
+    super.initState();
+  }
+
+  void initData() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       if (kDebugMode) DeviceOrientation.landscapeLeft,
@@ -105,7 +115,10 @@ class _FredericBaseState extends State<FredericBase> {
     if (getIt.isRegistered<FredericBackend>())
       getIt.unregister<FredericBackend>();
     getIt.registerSingleton<FredericBackend>(FredericBackend());
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       key: _key,
       child: MultiBlocProvider(
@@ -161,10 +174,18 @@ class _FredericBaseState extends State<FredericBase> {
   void forceRestart() {
     setState(() {
       _key = UniqueKey();
+      initData();
     });
   }
 
   void forceRebuild() {
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    if (getIt.isRegistered<FredericBackend>())
+      getIt.unregister<FredericBackend>();
+    super.dispose();
   }
 }

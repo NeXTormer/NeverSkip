@@ -257,7 +257,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   }
 
   void saveData() {
-    if (widget.activity.id == 'new') {
+    if (widget.activity.id == '') {
       FredericBackend.instance.activityManager.add(FredericActivityCreateEvent(
           FredericActivity.make(
               name: name,
@@ -266,6 +266,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
               recommendedReps: repsController.value.toInt(),
               recommendedSets: setsController.value.toInt(),
               muscleGroups: muscleGroups,
+              owner: FredericBackend.instance.userManager.state.id,
               type: type)));
     } else {
       widget.activity.updateData(

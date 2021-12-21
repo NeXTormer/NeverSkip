@@ -37,7 +37,8 @@ class ActivityListScreen extends StatelessWidget {
                 enableDrag: true,
                 context: context,
                 builder: (newContext) {
-                  return EditActivityScreen(FredericActivity.create());
+                  return EditActivityScreen(FredericActivity.create(
+                      FredericBackend.instance.userManager.state.id));
                 });
           },
           child: Icon(

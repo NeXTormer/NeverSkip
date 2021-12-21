@@ -18,6 +18,8 @@ class FirestoreActivityDataInterface
 
   @override
   Future<FredericActivity> createFromMap(Map<String, dynamic> data) async {
+    print('-------------------------------');
+    print('Creating new activity with data: $data');
     DocumentReference<Map<String, dynamic>> newActivity =
         await activitiesCollection.add(data);
     DocumentSnapshot<Map<String, dynamic>> snapshot = await newActivity.get();

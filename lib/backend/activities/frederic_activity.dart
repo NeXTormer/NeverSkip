@@ -22,17 +22,20 @@ class FredericActivity
   ///
   /// Constructs an empty Activity, used for creating a new Activity
   ///
-  FredericActivity.create()
+  FredericActivity.create(String ownerID)
       : id = '',
         _name = 'New activity',
         _description = '',
+        _owner = ownerID,
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe';
 
   ///
   /// Constructs an Activity Template, used for creating a new Activity
   ///
-  FredericActivity.template()
+  /// _only use in admin panel_
+  ///
+  FredericActivity.globalTemplate()
       : id = '',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Floading.png?alt=media&token=4f99ab1f-c0bb-4881-b010-4c395b3206a1';
@@ -50,20 +53,22 @@ class FredericActivity
   ///
   FredericActivity.make(
       {required String name,
+      required String owner,
       required String description,
       required String image,
       required int recommendedReps,
       required int recommendedSets,
       required List<FredericActivityMuscleGroup> muscleGroups,
       required FredericActivityType type})
-      : id = 'new-activity',
+      : id = '',
         _name = name,
         _description = description,
         _image = image,
         _recommendedReps = recommendedReps,
         _recommendedSets = recommendedSets,
         _muscleGroups = muscleGroups,
-        _type = type;
+        _type = type,
+        _owner = owner;
 
   late final String id;
 
@@ -137,7 +142,7 @@ class FredericActivity
       'recommendedreps': recommendedReps,
       'recommendedsets': recommendedSets,
       'type': parseTypeToString(type),
-      'muslegroup': parseMuscleGroupListToStringList(muscleGroups)
+      'musclegroup': parseMuscleGroupListToStringList(muscleGroups)
     };
   }
 
@@ -160,13 +165,24 @@ class FredericActivity
 
   bool matchFilterController(ActivityFilterController controller) {
     bool match = false;
+
     if (!controller.types[_type]!) return false;
     for (var value in controller.muscleGroups.entries) {
       if (value.value) {
         if (_muscleGroups.contains(value.key)) match = true;
       }
     }
-    if (controller.muscleGroups.entries.isEmpty) match = true;
+
+    //TODO: optimize
+    if (controller.muscleGroups.values.every((element) => element == false)) {
+      match = true;
+    }
+    if (controller.muscleGroups.values.every((element) => element == true)) {
+      match = true;
+    }
+    if (controller.muscleGroups.entries.isEmpty) {
+      match = true;
+    }
     if (match) {
       if (controller.searchText == '') {
         return true;
