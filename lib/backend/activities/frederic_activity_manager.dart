@@ -10,11 +10,11 @@ import 'package:frederic/backend/database/frederic_data_interface.dart';
 ///
 class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
-  FredericActivityManager({required this.dataInterface})
+  FredericActivityManager()
       : super(FredericActivityListData(
             <String>[], HashMap<String, FredericActivity>()));
 
-  final FredericDataInterface<FredericActivity> dataInterface;
+  late final FredericDataInterface<FredericActivity> dataInterface;
 
   HashMap<String, FredericActivity> _activities =
       HashMap<String, FredericActivity>();
@@ -24,6 +24,9 @@ class FredericActivityManager
   }
 
   Iterable<FredericActivity> get allActivities => state.activities.values;
+
+  void setDataInterface(FredericDataInterface<FredericActivity> interface) =>
+      dataInterface = interface;
 
   ///
   /// (Re)Loads all activities from the database

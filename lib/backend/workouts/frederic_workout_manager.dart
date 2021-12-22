@@ -11,15 +11,14 @@ import 'package:frederic/backend/database/frederic_data_interface.dart';
 ///
 class FredericWorkoutManager
     extends Bloc<FredericWorkoutEvent, FredericWorkoutListData> {
-  FredericWorkoutManager(
-      {required this.dataInterface, required this.activityManager})
+  FredericWorkoutManager({required this.activityManager})
       : _workouts = HashMap<String, FredericWorkout>(),
         super(FredericWorkoutListData(
             HashMap<String, FredericWorkout>(), <String>[]));
 
   HashMap<String, FredericWorkout> _workouts;
 
-  final FredericDataInterface<FredericWorkout> dataInterface;
+  late final FredericDataInterface<FredericWorkout> dataInterface;
   final FredericActivityManager activityManager;
 
   FredericWorkout? operator [](String value) {
@@ -27,6 +26,9 @@ class FredericWorkoutManager
   }
 
   HashMap<String, FredericWorkout> get workouts => state.workouts;
+
+  void setDataInterface(FredericDataInterface<FredericWorkout> interface) =>
+      dataInterface = interface;
 
   Future<void> reload() async {
     List<FredericWorkout> workouts = await dataInterface.get();

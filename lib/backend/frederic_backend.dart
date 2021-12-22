@@ -18,8 +18,7 @@ import 'package:frederic/backend/util/wait_for_x.dart';
 import 'package:frederic/main.dart';
 
 import 'backend.dart';
-import 'database/firebase/firestore_activity_data_interface.dart';
-import 'database/firebase/firestore_workout_data_interface.dart';
+import 'database/firebase/firestore_caching_data_interface.dart';
 
 ///
 /// Main class of the Backend. Manages everything related to storing and loading
@@ -28,42 +27,32 @@ import 'database/firebase/firestore_workout_data_interface.dart';
 class FredericBackend extends FredericMessageProcessor {
   FredericBackend() {
     _eventBus = FredericMessageBus();
-    FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
+    firestoreInstance = FirebaseFirestore.instance;
     FirebaseAuth firebaseAuthInstance = FirebaseAuth.instance;
 
     // === User Authentication
     FirebaseAuthInterface firebaseAuthInterface = FirebaseAuthInterface(
         firebaseAuthInstance: firebaseAuthInstance,
         firestoreInstance: firestoreInstance);
+
     _userManager = FredericUserManager(
         backend: this, authInterface: firebaseAuthInterface);
 
-    // === Activities
-    _activityManager = FredericActivityManager(
-        dataInterface: FirestoreActivityDataInterface(
-            firestoreInstance: firestoreInstance,
-            activitiesCollection: firestoreInstance.collection('activities')));
+    _activityManager = FredericActivityManager();
+    _workoutManager = FredericWorkoutManager(activityManager: _activityManager);
 
     _setManager = FredericSetManager();
-
-    // === Workouts
-    _workoutManager = FredericWorkoutManager(
-        activityManager: _activityManager,
-        dataInterface: FirestoreWorkoutDataInterface(
-            firestoreInstance: firestoreInstance,
-            workoutsCollection: firestoreInstance.collection('workouts')));
-
     _goalManager = FredericGoalManager();
-
     _storageManager = FredericStorageManager(this);
-
     _analytics = FredericAnalytics();
 
     _registerEventProcessors();
-    loadData();
+    _initialize();
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
+
+  late final FirebaseFirestore firestoreInstance;
 
   late final FredericUserManager _userManager;
   FredericUserManager get userManager => _userManager;
@@ -104,7 +93,7 @@ class FredericBackend extends FredericMessageProcessor {
   DocumentReference<Map<String, dynamic>> _defaultsReference =
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
 
-  void loadData() async {
+  void _initialize() async {
     final profiler = FredericProfiler.track('FredericBackend::loadData()');
     final userProfiler =
         FredericProfiler.track('FredericBackend::loadData::waitForUser()');
@@ -114,12 +103,53 @@ class FredericBackend extends FredericMessageProcessor {
     _defaults = FredericDefaults(await _defaultsReference.get());
 
     _setManager.reload();
-    await _activityManager.reload();
-    await _workoutManager.reload();
-    await _goalManager.reload();
+    await _initializeActivities();
+    await _initializeWorkouts();
+    await _initializeGoals();
 
     _waitUntilCoreDataHasLoaded.complete();
     profiler.stop();
+  }
+
+  Future<void> _initializeActivities() {
+    _activityManager.setDataInterface(
+        FirestoreCachingDataInterface<FredericActivity>(
+            firestoreInstance: firestoreInstance,
+            collectionReference: firestoreInstance.collection('activities'),
+            name: 'activities',
+            generateObject: (id, data) => FredericActivity.fromMap(id, data),
+            queries: [
+          firestoreInstance
+              .collection('activities')
+              .where('owner', isEqualTo: 'global'),
+          firestoreInstance
+              .collection('activities')
+              .where('owner', isEqualTo: _userManager.state.id)
+        ]));
+    return _activityManager.reload();
+  }
+
+  Future<void> _initializeWorkouts() {
+    _workoutManager
+        .setDataInterface(FirestoreCachingDataInterface<FredericWorkout>(
+      firestoreInstance: firestoreInstance,
+      collectionReference: firestoreInstance.collection('workouts'),
+      generateObject: (id, data) => FredericWorkout.fromMap(id, data),
+      name: 'workouts',
+      queries: [
+        firestoreInstance
+            .collection('workouts')
+            .where('owner', isEqualTo: 'global'),
+        firestoreInstance
+            .collection('workouts')
+            .where('owner', isEqualTo: _userManager.state.id)
+      ],
+    ));
+    return _workoutManager.reload();
+  }
+
+  Future<void> _initializeGoals() {
+    return _goalManager.reload();
   }
 
   void _registerEventProcessors() {
