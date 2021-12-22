@@ -16,13 +16,16 @@ import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 class FredericWorkout implements FredericDataObject {
   FredericWorkout.fromMap(String id, Map<String, dynamic> data) {
     fromMap(id, data);
+    _activities = FredericWorkoutActivities(this);
   }
 
   FredericWorkout.noSuchWorkout(String id)
       : this.id = id,
         _name = 'No Such Workout found',
         _image =
-            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a' {
+    _activities = FredericWorkoutActivities(this);
+  }
 
   FredericWorkout.create()
       : id = 'new',
@@ -36,6 +39,7 @@ class FredericWorkout implements FredericDataObject {
   @deprecated
   get workoutID => id;
 
+  bool _activitiesLoaded = false;
   late FredericWorkoutActivities _activities;
   void Function(FredericWorkout)? onUpdate;
 
@@ -97,11 +101,11 @@ class FredericWorkout implements FredericDataObject {
       'name': name,
       'description': description,
       'image': image,
-      'owner': FirebaseAuth.instance.currentUser?.uid,
+      'owner': _owner,
       'period': period,
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate),
-      'activities': _activities.toList()
+      'activities': _activitiesLoaded ? _activities.toList() : _activitiesList
     };
   }
 
@@ -124,6 +128,8 @@ class FredericWorkout implements FredericDataObject {
 
   Future<void> loadActivities(FredericActivityManager activityManager) async {
     if (_activitiesList == null) return;
+    _activities = FredericWorkoutActivities(this);
+
     for (dynamic activityMap in _activitiesList!) {
       String? id = activityMap['activityid'];
       num? weekdayRaw = activityMap['weekday'];
@@ -132,12 +138,12 @@ class FredericWorkout implements FredericDataObject {
 
       if (weekday <= period * 7 && id != null) {
         _activities.activities[weekday].add(FredericWorkoutActivity.fromMap(
-            await activityManager.getActivity(id), activityMap));
+            await activityManager.getActivity(id), Map.from(activityMap)));
       }
     }
 
     for (var list in _activities.activities) list.sort();
-
+    _activitiesLoaded = true;
     return;
   }
 

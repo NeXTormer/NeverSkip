@@ -12,6 +12,8 @@ import 'package:frederic/admin_panel/backend/admin_backend.dart';
 import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/type_adapters/frederic_universal_type_adapter.dart';
+import 'package:frederic/backend/database/type_adapters/timestamp_type_adapter.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
@@ -19,6 +21,7 @@ import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
@@ -58,9 +61,16 @@ void main() async {
       await FirebaseCrashlytics.instance
           .setCrashlyticsCollectionEnabled(!kDebugMode);
     }
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    //await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: '');
+
+    // == Hive ==
+    await Hive.initFlutter();
+    //await Hive.deleteBoxFromDisk('workouts');
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
+        create: (id, data) => FredericActivity.fromMap(id, data)));
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,
+        create: (id, data) => FredericWorkout.fromMap(id, data)));
+    Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
+
     await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 
     final colorThemeProfiler = FredericProfiler.track('load color theme');
