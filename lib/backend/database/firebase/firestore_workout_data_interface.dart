@@ -4,6 +4,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_interface.dart';
 import 'package:hive/hive.dart';
 
+@Deprecated('only use for debugging')
 class FirestoreWorkoutDataInterface
     implements FredericDataInterface<FredericWorkout> {
   FirestoreWorkoutDataInterface(

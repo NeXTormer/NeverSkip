@@ -17,7 +17,7 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
   CollectionReference<Map<String, dynamic>> collectionReference;
   List<Query<Map<String, dynamic>>> queries;
   FirebaseFirestore firestoreInstance;
-  T Function(String id, Map<String, dynamic> data) generateObject;
+  Future<T> Function(String id, Map<String, dynamic> data) generateObject;
 
   Box<T>? _box;
 
@@ -28,22 +28,27 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
 
   @override
   Future<T> createFromMap(Map<String, dynamic> data) async {
-    DocumentReference<Map<String, dynamic>> newActivity =
+    DocumentReference<Map<String, dynamic>> newObjectReference =
         await collectionReference.add(data);
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await newActivity.get();
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await newObjectReference.get();
     if (snapshot.data() == null)
       throw Exception('Creation of Activity has Failed!');
-    return generateObject(snapshot.id, snapshot.data()!);
+    T newObject = await generateObject(snapshot.id, snapshot.data()!);
+    _box!.put(newObject.id, newObject);
+    return newObject;
   }
 
   @override
-  Future<void> delete(T object) {
-    return collectionReference.doc(object.id).delete();
+  Future<void> delete(T object) async {
+    await _box!.delete(object.id);
+    await collectionReference.doc(object.id).delete();
   }
 
   @override
   Future<T> update(T object) async {
     await collectionReference.doc(object.id).update(object.toMap());
+    await _box!.put(object.id, object);
     return object;
   }
 
@@ -74,7 +79,7 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
       for (int i = 0; i < querySnapshot.docs.length; i++) {
         var doc = querySnapshot.docs[i];
         if (doc.data() == null) continue;
-        final object = generateObject(doc.id, doc.data()!);
+        final object = await generateObject(doc.id, doc.data()!);
         data.add(object);
         entries[doc.id] = object;
       }

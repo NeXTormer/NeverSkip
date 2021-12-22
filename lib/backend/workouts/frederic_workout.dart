@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 ///
@@ -30,16 +31,13 @@ class FredericWorkout implements FredericDataObject {
   FredericWorkout.create()
       : id = 'new',
         _image =
-            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82' {
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82',
+        _owner = FredericBackend.instance.userManager.state.id {
     _activities = FredericWorkoutActivities(this);
   }
 
   late final String id;
 
-  @deprecated
-  get workoutID => id;
-
-  bool _activitiesLoaded = false;
   late FredericWorkoutActivities _activities;
   void Function(FredericWorkout)? onUpdate;
 
@@ -105,7 +103,7 @@ class FredericWorkout implements FredericDataObject {
       'period': period,
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate),
-      'activities': _activitiesLoaded ? _activities.toList() : _activitiesList
+      'activities': _activities.toList()
     };
   }
 
@@ -128,6 +126,7 @@ class FredericWorkout implements FredericDataObject {
 
   Future<void> loadActivities(FredericActivityManager activityManager) async {
     if (_activitiesList == null) return;
+    final profiler = FredericProfiler.track('Workout::loadActivities()');
     _activities = FredericWorkoutActivities(this);
 
     for (dynamic activityMap in _activitiesList!) {
@@ -143,7 +142,7 @@ class FredericWorkout implements FredericDataObject {
     }
 
     for (var list in _activities.activities) list.sort();
-    _activitiesLoaded = true;
+    profiler.stop();
     return;
   }
 
