@@ -124,7 +124,7 @@ class FredericWorkout implements FredericDataObject {
     if (newPeriod != null) _activities.resizeForPeriod(newPeriod);
   }
 
-  Future<void> loadActivities(FredericActivityManager activityManager) async {
+  void loadActivities(FredericActivityManager activityManager) {
     if (_activitiesList == null) return;
     final profiler = FredericProfiler.track('Workout::loadActivities()');
     _activities = FredericWorkoutActivities(this);
@@ -137,13 +137,12 @@ class FredericWorkout implements FredericDataObject {
 
       if (weekday <= period * 7 && id != null) {
         _activities.activities[weekday].add(FredericWorkoutActivity.fromMap(
-            await activityManager.getActivity(id), Map.from(activityMap)));
+            activityManager.getActivity(id), Map.from(activityMap)));
       }
     }
 
     for (var list in _activities.activities) list.sort();
     profiler.stop();
-    return;
   }
 
   bool addActivity(FredericWorkoutActivity activity) {
@@ -262,6 +261,7 @@ class FredericWorkoutActivities {
         list.add(activityInList.toMap());
       }
     }
+
     return list;
   }
 

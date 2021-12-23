@@ -117,8 +117,7 @@ class FredericBackend extends FredericMessageProcessor {
             firestoreInstance: firestoreInstance,
             collectionReference: firestoreInstance.collection('activities'),
             name: 'activities',
-            generateObject: (id, data) async =>
-                FredericActivity.fromMap(id, data),
+            generateObject: (id, data) => FredericActivity.fromMap(id, data),
             queries: [
           firestoreInstance
               .collection('activities')
@@ -135,9 +134,9 @@ class FredericBackend extends FredericMessageProcessor {
         .setDataInterface(FirestoreCachingDataInterface<FredericWorkout>(
       firestoreInstance: firestoreInstance,
       collectionReference: firestoreInstance.collection('workouts'),
-      generateObject: (id, data) async {
+      generateObject: (id, data) {
         final workout = FredericWorkout.fromMap(id, data);
-        await workout.loadActivities(activityManager);
+        workout.loadActivities(activityManager);
         return workout;
       },
       name: 'workouts',

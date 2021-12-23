@@ -43,10 +43,7 @@ class FredericActivityManager
     return;
   }
 
-  ///
-  /// Returns an Activity using its id. Loads the Activity if needed.
-  ///
-  Future<FredericActivity> getActivity(String id) async {
+  FredericActivity getActivity(String id) {
     if (_activities.containsKey(id)) return _activities[id]!;
     return FredericActivity.noSuchActivity(id);
   }

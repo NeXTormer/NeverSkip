@@ -47,7 +47,7 @@ class FredericWorkoutManager
   }
 
   Future<void> loadActivitiesForOneWorkout(FredericWorkout workout) async {
-    await workout.loadActivities(activityManager);
+    workout.loadActivities(activityManager);
     add(FredericWorkoutEvent([workout.id]));
     return;
   }
