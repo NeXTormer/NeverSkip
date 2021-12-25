@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,8 @@ class FredericActivityManager
   HashMap<String, FredericActivity> _activities =
       HashMap<String, FredericActivity>();
 
+  bool _canFullReload = true;
+
   FredericActivity? operator [](String value) {
     return state.activities[value];
   }
@@ -31,16 +34,29 @@ class FredericActivityManager
   ///
   /// (Re)Loads all activities from the database
   ///
-  Future<void> reload() async {
+  Future<void> reload([bool fullReloadFromDB = false]) async {
     List<String> changed = <String>[];
     _activities.clear();
-    List<FredericActivity> list = await dataInterface.get();
+    List<FredericActivity> list =
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
     for (FredericActivity activity in list) {
       _activities[activity.id] = activity;
       changed.add(activity.id);
     }
     add(FredericActivityEvent(changed));
     return;
+  }
+
+  Future<void> triggerManualFullReload() async {
+    if (_canFullReload) {
+      _canFullReload = false;
+      Timer(Duration(seconds: 5), () {
+        _canFullReload = true;
+      });
+      return reload(true);
+    } else {
+      return Future.delayed(Duration(milliseconds: 50));
+    }
   }
 
   FredericActivity getActivity(String id) {

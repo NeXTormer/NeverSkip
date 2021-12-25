@@ -64,7 +64,7 @@ void main() async {
 
     // == Hive ==
     await Hive.initFlutter();
-    await Hive.deleteBoxFromDisk('workouts');
+    // await Hive.deleteBoxFromDisk('workouts');
     Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
         create: (id, data) => FredericActivity.fromMap(id, data)));
     Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,

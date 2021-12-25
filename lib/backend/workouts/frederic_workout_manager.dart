@@ -17,6 +17,7 @@ class FredericWorkoutManager
             HashMap<String, FredericWorkout>(), <String>[]));
 
   HashMap<String, FredericWorkout> _workouts;
+  bool _canFullReload = true;
 
   late final FredericDataInterface<FredericWorkout> dataInterface;
   final FredericActivityManager activityManager;
@@ -30,10 +31,12 @@ class FredericWorkoutManager
   void setDataInterface(FredericDataInterface<FredericWorkout> interface) =>
       dataInterface = interface;
 
-  Future<void> reload() async {
-    List<FredericWorkout> workouts = await dataInterface.get();
+  Future<void> reload([bool fullReloadFromDB = false]) async {
+    List<FredericWorkout> workouts =
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
     List<String> changed = <String>[];
 
+    _workouts.clear();
     for (var workout in workouts) {
       changed.add(workout.id);
       workout.loadActivities(activityManager);
@@ -44,6 +47,18 @@ class FredericWorkoutManager
     add(FredericWorkoutEvent(changed));
 
     return;
+  }
+
+  Future<void> triggerManualFullReload() async {
+    if (_canFullReload) {
+      _canFullReload = false;
+      Timer(Duration(seconds: 5), () {
+        _canFullReload = true;
+      });
+      return reload(true);
+    } else {
+      return Future.delayed(Duration(milliseconds: 50));
+    }
   }
 
   Future<void> loadActivitiesForOneWorkout(FredericWorkout workout) async {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -35,6 +36,11 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
             BlocBuilder<FredericUserManager, FredericUser>(
                 builder: (context, user) =>
                     WorkoutListAppbar(searchTerm, user: user)),
+            CupertinoSliverRefreshControl(
+              refreshTriggerPullDistance: 90,
+              refreshIndicatorExtent: 40,
+              onRefresh: () => FredericBackend.instance.workoutManager.reload(),
+            ),
             SliverPadding(padding: const EdgeInsets.only(top: 8)),
             SliverToBoxAdapter(
                 child: Padding(

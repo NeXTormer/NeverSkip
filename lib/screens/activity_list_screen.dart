@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -65,6 +66,12 @@ class ActivityListScreen extends StatelessWidget {
                       filterController: filter,
                       isSelector: isSelector,
                       onSelect: onSelect,
+                    ),
+                    CupertinoSliverRefreshControl(
+                      refreshTriggerPullDistance: 90,
+                      refreshIndicatorExtent: 40,
+                      onRefresh: () =>
+                          FredericBackend.instance.activityManager.reload(),
                     ),
                     FeaturedActivitySegment(
                       'Featured',
