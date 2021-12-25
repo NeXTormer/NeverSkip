@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/util/toast_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_activity_screen.dart';
 import 'package:frederic/widgets/activity_screen/activity_filter_segment.dart';
@@ -70,8 +71,10 @@ class ActivityListScreen extends StatelessWidget {
                     CupertinoSliverRefreshControl(
                       refreshTriggerPullDistance: 90,
                       refreshIndicatorExtent: 40,
-                      onRefresh: () =>
-                          FredericBackend.instance.activityManager.reload(),
+                      onRefresh: () async {
+                        await FredericBackend.instance.activityManager
+                          .triggerManualFullReload();
+                      },
                     ),
                     FeaturedActivitySegment(
                       'Featured',

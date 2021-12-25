@@ -29,7 +29,7 @@ class FredericWorkout implements FredericDataObject {
   }
 
   FredericWorkout.create()
-      : id = 'new',
+      : id = '',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82',
         _owner = FredericBackend.instance.userManager.state.id {
@@ -70,6 +70,8 @@ class FredericWorkout implements FredericDataObject {
   String get ownerName => _ownerName ?? (canEdit ? 'You' : 'Other');
 
   bool get repeating => _repeating ?? false;
+
+  // TODO: remove call to FirebaseAuth singleton, remove dependency
   bool get canEdit => owner == FirebaseAuth.instance.currentUser?.uid;
 
   /// period of the workout in weeks

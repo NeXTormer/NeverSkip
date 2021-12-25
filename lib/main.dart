@@ -62,14 +62,18 @@ void main() async {
           .setCrashlyticsCollectionEnabled(!kDebugMode);
     }
 
-    // == Hive ==
+    // == Hive == Register Adapters ==
     await Hive.initFlutter();
     // await Hive.deleteBoxFromDisk('workouts');
-    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
-        create: (id, data) => FredericActivity.fromMap(id, data)));
-    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,
-        create: (id, data) => FredericWorkout.fromMap(id, data)));
-    Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
+    if (!Hive.isAdapterRegistered(1))
+      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
+          create: (id, data) => FredericActivity.fromMap(id, data)));
+    if (!Hive.isAdapterRegistered(2))
+      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,
+          create: (id, data) => FredericWorkout.fromMap(id, data)));
+    if (!Hive.isAdapterRegistered(100))
+      Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
+    // == Hive == End ==
 
     await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 

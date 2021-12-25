@@ -19,7 +19,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EditWorkoutDataScreen extends StatefulWidget {
   EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key) {
-    isNewWorkout = workout.id == 'new';
+    isNewWorkout = workout.id == '';
     FredericBackend.instance.analytics.analytics
         .setCurrentScreen(screenName: 'edit-workout-data-screen');
   }
@@ -252,7 +252,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   SizedBox(height: 16),
                   Row(
                     children: [
-                      if (widget.workout.canEdit)
+                      if (widget.workout.canEdit && !widget.isNewWorkout)
                         Expanded(
                             flex: 1,
                             child: FredericButton(
@@ -287,7 +287,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                               },
                               inverted: true,
                             )),
-                      if (widget.workout.canEdit) SizedBox(width: 16),
+                      if (widget.workout.canEdit && !widget.isNewWorkout)
+                        SizedBox(width: 16),
                       Expanded(
                           flex: 2,
                           child: FredericButton(

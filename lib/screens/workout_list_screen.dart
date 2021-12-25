@@ -39,7 +39,8 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
             CupertinoSliverRefreshControl(
               refreshTriggerPullDistance: 90,
               refreshIndicatorExtent: 40,
-              onRefresh: () => FredericBackend.instance.workoutManager.reload(),
+              onRefresh: () => FredericBackend.instance.workoutManager
+                  .triggerManualFullReload(),
             ),
             SliverPadding(padding: const EdgeInsets.only(top: 8)),
             SliverToBoxAdapter(
