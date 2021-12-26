@@ -31,6 +31,8 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   String name = '';
   String description = '';
 
+  bool deleteButtonLoading = false;
+
   FredericActivityType type = FredericActivityType.Weighted;
 
   List<FredericActivityMuscleGroup> muscleGroups =
@@ -284,16 +286,32 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
   }
 
   void delete(BuildContext context) {
-    FredericActionDialog.show(
+    showDialog(
         context: context,
-        dialog: FredericActionDialog(
-          onConfirm: () {},
-          title: 'Confirm deletion',
-          destructiveAction: true,
-          child: Text(
-              //'Do you want to delete the activity? This cannot be undone!',
-              'Work in Progress :)',
-              textAlign: TextAlign.center),
-        ));
+        builder: (ctx) => Center(
+              child: Material(
+                color: Colors.transparent,
+                child: FredericActionDialog(
+                  onConfirm: () async {
+                    setState(() {
+                      deleteButtonLoading = true;
+                    });
+                    await FredericBackend.instance.activityManager
+                        .deleteActivity(widget.activity);
+                    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    });
+                  },
+                  title: 'Confirm deletion',
+                  destructiveAction: true,
+                  child: deleteButtonLoading
+                      ? CircularProgressIndicator()
+                      : Text(
+                          'Do you want to delete the Exercise? This cannot be undone!',
+                          textAlign: TextAlign.center),
+                ),
+              ),
+            ));
   }
 }

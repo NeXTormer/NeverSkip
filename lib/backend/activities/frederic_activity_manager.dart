@@ -64,6 +64,14 @@ class FredericActivityManager
     return FredericActivity.noSuchActivity(id);
   }
 
+  Future<void> deleteActivity(FredericActivity activity) async {
+    if (activity.canEdit) {
+      _activities.remove(activity.id);
+      await dataInterface.delete(activity);
+      add(FredericActivityEvent([activity.id]));
+    }
+  }
+
   @override
   Stream<FredericActivityListData> mapEventToState(
       FredericActivityEvent event) async* {

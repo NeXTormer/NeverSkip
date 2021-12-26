@@ -27,7 +27,6 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   Widget build(BuildContext context) {
     return FredericScaffold(
       floatingActionButton: buildAlternativeAddWorkoutButton(context),
-      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: ChangeNotifierProvider<WorkoutSearchTerm>(
         create: (context) => searchTerm,
         child: CustomScrollView(
@@ -37,7 +36,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
                 builder: (context, user) =>
                     WorkoutListAppbar(searchTerm, user: user)),
             CupertinoSliverRefreshControl(
-              refreshTriggerPullDistance: 90,
+              refreshTriggerPullDistance: 200,
               refreshIndicatorExtent: 40,
               onRefresh: () => FredericBackend.instance.workoutManager
                   .triggerManualFullReload(),
