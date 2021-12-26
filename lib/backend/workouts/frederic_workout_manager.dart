@@ -61,12 +61,6 @@ class FredericWorkoutManager
     }
   }
 
-  Future<void> loadActivitiesForOneWorkout(FredericWorkout workout) async {
-    workout.loadActivities(activityManager);
-    add(FredericWorkoutEvent([workout.id]));
-    return;
-  }
-
   void updateWorkoutInDB(FredericWorkout workout) {
     dataInterface.update(workout);
     add(FredericWorkoutUpdateEvent(workout.id));

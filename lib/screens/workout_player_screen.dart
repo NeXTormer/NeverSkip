@@ -26,7 +26,7 @@ class WorkoutPlayerScreen extends StatefulWidget {
 
 class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   WorkoutPlayerState playerState = WorkoutPlayerState();
-  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Player;
+  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Start;
 
   @override
   void initState() {
@@ -49,7 +49,19 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                   FredericBasicAppBar(
                     title: playerState.getCurrentTime(),
                     subtitle: 'Current workout time and progress',
-                    icon: Icon(Icons.pause),
+                    icon: currentView == WorkoutPlayerViewType.Player
+                        ? GestureDetector(
+                            onTap: () {
+                              if (playerState.timerActive) {
+                                playerState.pauseTimer();
+                              } else {
+                                playerState.resumeTimer();
+                              }
+                            },
+                            child: playerState.timerActive
+                                ? Icon(Icons.pause, size: 32)
+                                : Icon(Icons.play_arrow, size: 32))
+                        : null,
                     bottomPadding: 2,
                   ),
                   Padding(
@@ -68,7 +80,9 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
             Flexible(
               child: LayoutBuilder(builder: (context, constraints) {
                 return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
                   child: currentView == WorkoutPlayerViewType.Player
                       ? WorkoutPlayerView(
                           changeView: changeView,
@@ -92,6 +106,11 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   }
 
   void changeView(WorkoutPlayerViewType type) {
+    if (type == WorkoutPlayerViewType.Player) {
+      playerState.resumeTimer();
+    } else if (type == WorkoutPlayerViewType.End) {
+      playerState.pauseTimer();
+    }
     setState(() {
       currentView = type;
     });

@@ -7,6 +7,8 @@ import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 class WorkoutPlayerState extends ChangeNotifier {
   Timer? timer;
 
+  bool get timerActive => timer?.isActive ?? false;
+
   int _elapsedSeconds = 0;
   int get elapsedSeconds => _elapsedSeconds;
   set elapsedSeconds(int value) {
@@ -73,12 +75,14 @@ class WorkoutPlayerState extends ChangeNotifier {
   }
 
   void resumeTimer() {
-    if (timer == null)
-      timer = Timer.periodic(Duration(seconds: 1), _timerHandler);
+    timer?.cancel();
+    timer = Timer.periodic(Duration(seconds: 1), _timerHandler);
+    notifyListeners();
   }
 
   void pauseTimer() {
     timer?.cancel();
+    notifyListeners();
   }
 
   void _timerHandler(timer) {
@@ -86,7 +90,11 @@ class WorkoutPlayerState extends ChangeNotifier {
   }
 
   String getCurrentTime() {
-    return '${(_elapsedSeconds ~/ 60)}:${_elapsedSeconds % 60}';
+    return '${_elapsedSeconds >= 60 * 60 ? _elapsedSeconds ~/ (60 * 60) : ''}${_elapsedSeconds >= 60 * 60 ? ':' : ''}${(_elapsedSeconds ~/ 60).toString().padLeft(2, '0')}:${(_elapsedSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
+  String getCurrentTimeFancy() {
+    return '${_elapsedSeconds >= 60 * 60 ? _elapsedSeconds ~/ (60 * 60) : ''}${_elapsedSeconds >= 60 * 60 ? 'hours, ' : ''}${(_elapsedSeconds ~/ 60)} minutes and ${_elapsedSeconds % 60} seconds';
   }
 
   @override

@@ -33,6 +33,7 @@ class _WorkoutPlayerViewState extends State<WorkoutPlayerView> {
         itemBuilder: (context, index) {
           return ActivityPlayerView(
             widget.activities[index],
+            onTapEnd: () => widget.changeView(WorkoutPlayerViewType.End),
             nextActivity: index + 1 == (numberOfActivities)
                 ? null
                 : widget.activities[index + 1],
@@ -41,4 +42,6 @@ class _WorkoutPlayerViewState extends State<WorkoutPlayerView> {
           );
         });
   }
+
+  void showEndView() {}
 }

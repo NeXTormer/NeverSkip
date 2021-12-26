@@ -128,7 +128,7 @@ class FredericWorkout implements FredericDataObject {
 
   void loadActivities(FredericActivityManager activityManager) {
     if (_activitiesList == null) return;
-    final profiler = FredericProfiler.track('Workout::loadActivities()');
+    final profiler = FredericProfiler.track('Workout::loadActivities');
     _activities = FredericWorkoutActivities(this);
 
     for (dynamic activityMap in _activitiesList!) {

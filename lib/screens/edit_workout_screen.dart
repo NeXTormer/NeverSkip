@@ -48,7 +48,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
           if (workout == null) {
             Navigator.of(context).pop();
-            print('Workout not found');
             return Container();
           }
           return FredericScaffold(

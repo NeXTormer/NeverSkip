@@ -157,11 +157,12 @@ class _CalendarMonthCard extends StatelessWidget {
 
 class CalendarActivityCard extends StatelessWidget {
   CalendarActivityCard(this.activity,
-      {this.completed = false, this.indicator = false});
+      {this.completed = false, this.indicator = false, this.onTap});
 
   final FredericWorkoutActivity activity;
   final bool indicator;
   final bool completed;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +179,7 @@ class CalendarActivityCard extends StatelessWidget {
           SizedBox(width: 8),
           Expanded(
               child: CalendarActivityCardContent(activity,
+                  onClick: onTap,
                   state: completed
                       ? ActivityCardState.Green
                       : ActivityCardState.Normal))

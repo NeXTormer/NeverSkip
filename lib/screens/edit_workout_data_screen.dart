@@ -270,12 +270,11 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                                 .add(FredericWorkoutDeleteEvent(
                                                     widget.workout));
 
-                                            // Navigator.of(context).pop();
                                             WidgetsBinding.instance
                                                 ?.addPostFrameCallback(
                                                     (timeStamp) {
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
+                                              Navigator.of(ctx).pop();
+                                              Navigator.of(ctx).pop();
                                             });
                                           },
                                           title: 'Confirm deletion',
