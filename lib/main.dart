@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -29,15 +30,15 @@ final getIt = GetIt.instance;
 FredericColorTheme _colorTheme = FredericColorTheme.blue();
 FredericColorTheme get theme => _colorTheme;
 
-const bool _kTestingCrashlytics = true;
-
 void main() async {
+  final timeUntilRunApp = FredericProfiler.track('time until runApp()');
   LicenseRegistry.addLicense(() async* {
     final license =
         await rootBundle.loadString('assets/fonts/Montserrat/OFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
+  // == Record all errors outside a Flutter context ==
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
     final List<dynamic> errorAndStacktrace = pair;
     await FirebaseCrashlytics.instance.recordError(
@@ -46,25 +47,20 @@ void main() async {
     );
   }).sendPort);
 
-  //TODO: Check this code
+  // == Record all errors within a Flutter context ==
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
 
+    // == Crashlytics & Performance ==
     if (kReleaseMode) {
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     }
 
-    if (_kTestingCrashlytics) {
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    } else {
-      await FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(!kDebugMode);
-    }
+    // == Crashlytics & Performance == End ==
 
     // == Hive == Register Adapters ==
     await Hive.initFlutter();
-    // await Hive.deleteBoxFromDisk('workouts');
     if (!Hive.isAdapterRegistered(1))
       Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
           create: (id, data) => FredericActivity.fromMap(id, data)));
@@ -75,8 +71,7 @@ void main() async {
       Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
     // == Hive == End ==
 
-    await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
-
+    // == Load Startup Preferences ==
     final colorThemeProfiler = FredericProfiler.track('load color theme');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Object? themeID = preferences.get('colortheme');
@@ -84,7 +79,20 @@ void main() async {
       _colorTheme = FredericColorTheme.find(themeID);
     }
     colorThemeProfiler.stop();
+    // == Load Startup Preferences == End ==
 
+    // == Disable Analytics in debug mode
+    if (kDebugMode) {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+      await FirebasePerformance.instance.setPerformanceCollectionEnabled(false);
+    } else {
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+      await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+    }
+
+    timeUntilRunApp.stop();
     runApp(FredericBase());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }

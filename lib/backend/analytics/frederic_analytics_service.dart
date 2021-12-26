@@ -1,15 +1,21 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 
 class FredericAnalytics {
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  Future<void> enable() {
-    return analytics.setAnalyticsCollectionEnabled(true);
+  Future<void> enable() async {
+    await analytics.setAnalyticsCollectionEnabled(true);
+    await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+    return FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   }
 
-  Future<void> disable() {
-    return analytics.setAnalyticsCollectionEnabled(false);
+  Future<void> disable() async {
+    await analytics.setAnalyticsCollectionEnabled(false);
+    await FirebasePerformance.instance.setPerformanceCollectionEnabled(false);
+    return FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   }
 
   void logCurrentScreen(String screen) {
