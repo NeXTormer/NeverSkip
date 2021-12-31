@@ -147,6 +147,9 @@ class FredericWorkout implements FredericDataObject {
     profiler.stop();
   }
 
+  ///
+  /// Use this to add an activity to the workout
+  ///
   bool addActivity(FredericWorkoutActivity activity) {
     if (_activities.activities[activity.weekday].contains(activity)) {
       return false;
@@ -160,35 +163,39 @@ class FredericWorkout implements FredericDataObject {
     return true;
   }
 
+  ///
+  /// Use this to remove an activity from the workout
+  ///
   void removeActivity(FredericWorkoutActivity activity, int weekday) {
     _activities.activities[weekday].remove(activity);
-    updateOrderOfActivities(weekday);
+    _updateOrderOfActivities(weekday);
     onUpdate?.call(this);
   }
 
-  bool swapDays(int first, int second) {
-    first++;
-    second++;
+  bool swapDays(int firstWeekday, int secondWeekday) {
+    firstWeekday++;
+    secondWeekday++;
     bool someChanges = false;
     List<FredericWorkoutActivity> firstActivities =
-        _activities.activities[first].toList();
-    _activities.activities[first] = _activities.activities[second].toList();
-    _activities.activities[second] = firstActivities;
+        _activities.activities[firstWeekday].toList();
+    _activities.activities[firstWeekday] =
+        _activities.activities[secondWeekday].toList();
+    _activities.activities[secondWeekday] = firstActivities;
 
-    _activities.activities[first].forEach((element) {
-      element.changeWeekday(first);
+    _activities.activities[firstWeekday].forEach((element) {
+      element.changeWeekday(firstWeekday);
       someChanges = true;
     });
 
-    _activities.activities[second].forEach((element) {
-      element.changeWeekday(second);
+    _activities.activities[secondWeekday].forEach((element) {
+      element.changeWeekday(secondWeekday);
       someChanges = true;
     });
     if (someChanges) onUpdate?.call(this);
     return someChanges;
   }
 
-  void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {
+  void reorderActivity(int weekday, int oldIndex, int newIndex) {
     List<FredericWorkoutActivity> list = _activities.activities[weekday];
 
     if (oldIndex < newIndex) {
@@ -196,12 +203,12 @@ class FredericWorkout implements FredericDataObject {
       newIndex -= 1;
     }
     final activity = list.removeAt(oldIndex);
-    updateOrderOfActivities(weekday);
+    _updateOrderOfActivities(weekday);
     list.insert(newIndex, activity);
     onUpdate?.call(this);
   }
 
-  void updateOrderOfActivities(int weekday) {
+  void _updateOrderOfActivities(int weekday) {
     List<FredericWorkoutActivity> list = _activities.activities[weekday];
     for (int i = 0; i < list.length; i++) {
       list[i].order = i;
@@ -234,9 +241,23 @@ class FredericWorkoutActivities {
   List<List<FredericWorkoutActivity>> get activities => _activities;
   List<FredericWorkoutActivity> get everyday => activities[0];
 
-  void resizeForPeriod(int value) {
-    while (_activities.length <= ((value * 7))) {
+  int get totalNumberOfActivities {
+    int totalActivities = 0;
+    for (int i = 0; i <= period * 7; i++) {
+      totalActivities += activities[i].length;
+    }
+    return totalActivities;
+  }
+
+  void resizeForPeriod(int newPeriodInWeeks) {
+    while (_activities.length <= ((newPeriodInWeeks * 7))) {
       _activities.add(<FredericWorkoutActivity>[]);
+    }
+  }
+
+  void trimForPeriod(int periodInWeeks) {
+    while (_activities.length > (periodInWeeks * 7) + 1) {
+      _activities.removeLast();
     }
   }
 

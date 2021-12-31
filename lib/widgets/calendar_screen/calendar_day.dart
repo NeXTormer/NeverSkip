@@ -4,6 +4,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_system_message.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/workout_player_screen.dart';
@@ -26,7 +27,7 @@ class CalendarDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var profiler = FredericProfiler.track('build calendar day');
+    final profiler = FredericProfiler.track('build calendar day');
     DateTime day = DateTime.now().add(Duration(days: index));
     List<FredericWorkoutActivity> activitiesDueToday =
         <FredericWorkoutActivity>[];
@@ -58,7 +59,7 @@ class CalendarDay extends StatelessWidget {
             description: 'Calendar day completed'));
       }
     }
-    //profiler.stop();
+    profiler.stop();
 
     return Container(
         padding:
