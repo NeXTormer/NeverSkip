@@ -9,6 +9,7 @@ class FredericBasicAppBar extends StatelessWidget {
       this.backButton = false,
       this.bottomPadding = 16,
       this.icon,
+      this.extraSpace,
       this.height,
       bool? rounded,
       Key? key})
@@ -24,6 +25,7 @@ class FredericBasicAppBar extends StatelessWidget {
   final double? height;
   late final bool rounded;
   final bool backButton;
+  final Widget? extraSpace;
 
   @override
   Widget build(BuildContext context) {
@@ -39,45 +41,51 @@ class FredericBasicAppBar extends StatelessWidget {
       child: Padding(
           padding: EdgeInsets.only(
               left: 16, right: 16, top: 20, bottom: bottomPadding),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            if (backButton)
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                    padding: const EdgeInsets.only(left: 2, right: 4),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: theme.textColorColorfulBackground,
-                      size: 21,
-                    )),
-              ),
-            if (leadingIcon != null) leadingIcon!,
-            if (leadingIcon != null) SizedBox(width: 32),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (subtitle != null)
-                  Text(subtitle!,
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
+          child: Column(
+            children: [
+              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                if (backButton)
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                        padding: const EdgeInsets.only(left: 2, right: 4),
+                        child: Icon(
+                          Icons.arrow_back_ios,
                           color: theme.textColorColorfulBackground,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.6,
-                          fontSize: 13)),
-                if (subtitle != null) SizedBox(height: 8),
-                Text(title,
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: theme.textColorColorfulBackground,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.1,
-                        fontSize: 17)),
-                if (subtitle != null) SizedBox(height: 4),
-              ],
-            ),
-            Expanded(child: Container()),
-            if (icon != null) icon!
-          ])),
+                          size: 21,
+                        )),
+                  ),
+                if (leadingIcon != null) leadingIcon!,
+                if (leadingIcon != null) SizedBox(width: 32),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (subtitle != null)
+                        Text(subtitle!,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: theme.textColorColorfulBackground,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.6,
+                                fontSize: 13)),
+                      if (subtitle != null) SizedBox(height: 8),
+                      Text(title,
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: theme.textColorColorfulBackground,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.1,
+                              fontSize: 17)),
+                      if (subtitle != null) SizedBox(height: 4),
+                    ],
+                  ),
+                ),
+                if (icon != null) icon!
+              ]),
+              if (extraSpace != null) extraSpace!,
+            ],
+          )),
     );
   }
 }

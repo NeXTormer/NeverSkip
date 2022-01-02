@@ -48,6 +48,17 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                 children: [
                   FredericBasicAppBar(
                     title: playerState.getCurrentTime(),
+                    height: 90,
+                    extraSpace: Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: AnimatedProgressBar(
+                        duration: const Duration(milliseconds: 100),
+                        progress: playerState.getProgress(),
+                        backgroundColor: theme.isColorful ? Colors.white : null,
+                        alternateColor: true,
+                        length: double.infinity,
+                      ),
+                    ),
                     subtitle: 'Current workout time and progress',
                     icon: currentView == WorkoutPlayerViewType.Player
                         ? GestureDetector(
@@ -59,19 +70,19 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                               }
                             },
                             child: playerState.timerActive
-                                ? Icon(Icons.pause, size: 32)
-                                : Icon(Icons.play_arrow, size: 32))
+                                ? Icon(Icons.pause,
+                                    size: 32,
+                                    color: theme.textColorColorfulBackground)
+                                : Icon(Icons.play_arrow,
+                                    size: 32,
+                                    color: theme.textColorColorfulBackground))
                         : null,
                     bottomPadding: 2,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: AnimatedProgressBar(
-                      duration: const Duration(milliseconds: 100),
-                      progress: playerState.getProgress(),
-                      length: double.infinity,
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //   child: ,
+                  // ),
                 ],
               );
             }),
