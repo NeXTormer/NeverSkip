@@ -31,7 +31,6 @@ class AddProgressCard extends StatelessWidget {
 
     return LayoutBuilder(builder: (context, constraints) {
       double scalingFactor = constraints.maxWidth / fullWidth;
-      print('Scaling Factor: $scalingFactor');
       return Transform.scale(
         alignment: Alignment.topLeft,
         scale: scalingFactor,
@@ -43,7 +42,6 @@ class AddProgressCard extends StatelessWidget {
                   stream: null,
                   builder: (context, snapshot) {
                     return LayoutBuilder(builder: (context, cs) {
-                      print('Inner constraints: $cs');
                       return ChangeNotifierProvider<
                           AddProgressController>.value(
                         value: controller,

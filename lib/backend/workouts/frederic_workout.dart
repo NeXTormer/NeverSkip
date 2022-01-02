@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 ///
@@ -16,25 +17,26 @@ import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 class FredericWorkout implements FredericDataObject {
   FredericWorkout.fromMap(String id, Map<String, dynamic> data) {
     fromMap(id, data);
+    _activities = FredericWorkoutActivities(this);
   }
 
   FredericWorkout.noSuchWorkout(String id)
       : this.id = id,
         _name = 'No Such Workout found',
         _image =
-            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a' {
+    _activities = FredericWorkoutActivities(this);
+  }
 
   FredericWorkout.create()
-      : id = 'new',
+      : id = '',
         _image =
-            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82' {
+            'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82',
+        _owner = FredericBackend.instance.userManager.state.id {
     _activities = FredericWorkoutActivities(this);
   }
 
   late final String id;
-
-  @deprecated
-  get workoutID => id;
 
   late FredericWorkoutActivities _activities;
   void Function(FredericWorkout)? onUpdate;
@@ -68,6 +70,8 @@ class FredericWorkout implements FredericDataObject {
   String get ownerName => _ownerName ?? (canEdit ? 'You' : 'Other');
 
   bool get repeating => _repeating ?? false;
+
+  // TODO: remove call to FirebaseAuth singleton, remove dependency
   bool get canEdit => owner == FirebaseAuth.instance.currentUser?.uid;
 
   /// period of the workout in weeks
@@ -97,7 +101,7 @@ class FredericWorkout implements FredericDataObject {
       'name': name,
       'description': description,
       'image': image,
-      'owner': FirebaseAuth.instance.currentUser?.uid,
+      'owner': _owner,
       'period': period,
       'repeating': repeating,
       'startdate': Timestamp.fromDate(startDate),
@@ -122,8 +126,11 @@ class FredericWorkout implements FredericDataObject {
     if (newPeriod != null) _activities.resizeForPeriod(newPeriod);
   }
 
-  Future<void> loadActivities(FredericActivityManager activityManager) async {
+  void loadActivities(FredericActivityManager activityManager) {
     if (_activitiesList == null) return;
+    final profiler = FredericProfiler.track('Workout::loadActivities');
+    _activities = FredericWorkoutActivities(this);
+
     for (dynamic activityMap in _activitiesList!) {
       String? id = activityMap['activityid'];
       num? weekdayRaw = activityMap['weekday'];
@@ -132,15 +139,17 @@ class FredericWorkout implements FredericDataObject {
 
       if (weekday <= period * 7 && id != null) {
         _activities.activities[weekday].add(FredericWorkoutActivity.fromMap(
-            await activityManager.getActivity(id), activityMap));
+            activityManager.getActivity(id), Map.from(activityMap)));
       }
     }
 
     for (var list in _activities.activities) list.sort();
-
-    return;
+    profiler.stop();
   }
 
+  ///
+  /// Use this to add an activity to the workout
+  ///
   bool addActivity(FredericWorkoutActivity activity) {
     if (_activities.activities[activity.weekday].contains(activity)) {
       return false;
@@ -154,35 +163,39 @@ class FredericWorkout implements FredericDataObject {
     return true;
   }
 
+  ///
+  /// Use this to remove an activity from the workout
+  ///
   void removeActivity(FredericWorkoutActivity activity, int weekday) {
     _activities.activities[weekday].remove(activity);
-    updateOrderOfActivities(weekday);
+    _updateOrderOfActivities(weekday);
     onUpdate?.call(this);
   }
 
-  bool swapDays(int first, int second) {
-    first++;
-    second++;
+  bool swapDays(int firstWeekday, int secondWeekday) {
+    firstWeekday++;
+    secondWeekday++;
     bool someChanges = false;
     List<FredericWorkoutActivity> firstActivities =
-        _activities.activities[first].toList();
-    _activities.activities[first] = _activities.activities[second].toList();
-    _activities.activities[second] = firstActivities;
+        _activities.activities[firstWeekday].toList();
+    _activities.activities[firstWeekday] =
+        _activities.activities[secondWeekday].toList();
+    _activities.activities[secondWeekday] = firstActivities;
 
-    _activities.activities[first].forEach((element) {
-      element.changeWeekday(first);
+    _activities.activities[firstWeekday].forEach((element) {
+      element.changeWeekday(firstWeekday);
       someChanges = true;
     });
 
-    _activities.activities[second].forEach((element) {
-      element.changeWeekday(second);
+    _activities.activities[secondWeekday].forEach((element) {
+      element.changeWeekday(secondWeekday);
       someChanges = true;
     });
     if (someChanges) onUpdate?.call(this);
     return someChanges;
   }
 
-  void changeOrderOfActivity(int weekday, int oldIndex, int newIndex) {
+  void reorderActivity(int weekday, int oldIndex, int newIndex) {
     List<FredericWorkoutActivity> list = _activities.activities[weekday];
 
     if (oldIndex < newIndex) {
@@ -190,12 +203,12 @@ class FredericWorkout implements FredericDataObject {
       newIndex -= 1;
     }
     final activity = list.removeAt(oldIndex);
-    updateOrderOfActivities(weekday);
+    _updateOrderOfActivities(weekday);
     list.insert(newIndex, activity);
     onUpdate?.call(this);
   }
 
-  void updateOrderOfActivities(int weekday) {
+  void _updateOrderOfActivities(int weekday) {
     List<FredericWorkoutActivity> list = _activities.activities[weekday];
     for (int i = 0; i < list.length; i++) {
       list[i].order = i;
@@ -228,9 +241,23 @@ class FredericWorkoutActivities {
   List<List<FredericWorkoutActivity>> get activities => _activities;
   List<FredericWorkoutActivity> get everyday => activities[0];
 
-  void resizeForPeriod(int value) {
-    while (_activities.length <= ((value * 7))) {
+  int get totalNumberOfActivities {
+    int totalActivities = 0;
+    for (int i = 0; i <= period * 7; i++) {
+      totalActivities += activities[i].length;
+    }
+    return totalActivities;
+  }
+
+  void resizeForPeriod(int newPeriodInWeeks) {
+    while (_activities.length <= ((newPeriodInWeeks * 7))) {
       _activities.add(<FredericWorkoutActivity>[]);
+    }
+  }
+
+  void trimForPeriod(int periodInWeeks) {
+    while (_activities.length > (periodInWeeks * 7) + 1) {
+      _activities.removeLast();
     }
   }
 
@@ -257,6 +284,7 @@ class FredericWorkoutActivities {
         list.add(activityInList.toMap());
       }
     }
+
     return list;
   }
 

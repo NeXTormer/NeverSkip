@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,14 +11,16 @@ import 'package:frederic/backend/database/frederic_data_interface.dart';
 ///
 class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
-  FredericActivityManager({required this.dataInterface})
+  FredericActivityManager()
       : super(FredericActivityListData(
             <String>[], HashMap<String, FredericActivity>()));
 
-  final FredericDataInterface<FredericActivity> dataInterface;
+  late final FredericDataInterface<FredericActivity> dataInterface;
 
   HashMap<String, FredericActivity> _activities =
       HashMap<String, FredericActivity>();
+
+  bool _canFullReload = true;
 
   FredericActivity? operator [](String value) {
     return state.activities[value];
@@ -25,13 +28,17 @@ class FredericActivityManager
 
   Iterable<FredericActivity> get allActivities => state.activities.values;
 
+  void setDataInterface(FredericDataInterface<FredericActivity> interface) =>
+      dataInterface = interface;
+
   ///
   /// (Re)Loads all activities from the database
   ///
-  Future<void> reload() async {
+  Future<void> reload([bool fullReloadFromDB = false]) async {
     List<String> changed = <String>[];
     _activities.clear();
-    List<FredericActivity> list = await dataInterface.get();
+    List<FredericActivity> list =
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
     for (FredericActivity activity in list) {
       _activities[activity.id] = activity;
       changed.add(activity.id);
@@ -40,12 +47,29 @@ class FredericActivityManager
     return;
   }
 
-  ///
-  /// Returns an Activity using its id. Loads the Activity if needed.
-  ///
-  Future<FredericActivity> getActivity(String id) async {
+  Future<void> triggerManualFullReload() async {
+    if (_canFullReload) {
+      _canFullReload = false;
+      Timer(Duration(seconds: 5), () {
+        _canFullReload = true;
+      });
+      return reload(true);
+    } else {
+      return Future.delayed(Duration(milliseconds: 50));
+    }
+  }
+
+  FredericActivity getActivity(String id) {
     if (_activities.containsKey(id)) return _activities[id]!;
     return FredericActivity.noSuchActivity(id);
+  }
+
+  Future<void> deleteActivity(FredericActivity activity) async {
+    if (activity.canEdit) {
+      _activities.remove(activity.id);
+      await dataInterface.delete(activity);
+      add(FredericActivityEvent([activity.id]));
+    }
   }
 
   @override

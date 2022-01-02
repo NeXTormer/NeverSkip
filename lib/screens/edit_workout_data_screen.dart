@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -19,7 +18,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EditWorkoutDataScreen extends StatefulWidget {
   EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key) {
-    isNewWorkout = workout.id == 'new';
+    isNewWorkout = workout.id == '';
     FredericBackend.instance.analytics.analytics
         .setCurrentScreen(screenName: 'edit-workout-data-screen');
   }
@@ -75,11 +74,6 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
         });
       });
     });
-
-    for (List<FredericWorkoutActivity> list
-        in widget.workout.activities.activities) {
-      totalActivities += list.length;
-    }
 
     super.initState();
   }
@@ -207,7 +201,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                     children: [
                       Text('Number of activities'),
                       Expanded(child: Container()),
-                      Text('$totalActivities'),
+                      Text(
+                          '${widget.workout.activities.totalNumberOfActivities}'),
                       SizedBox(width: 5)
                     ],
                   ),
@@ -252,7 +247,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   SizedBox(height: 16),
                   Row(
                     children: [
-                      if (widget.workout.canEdit)
+                      if (widget.workout.canEdit && !widget.isNewWorkout)
                         Expanded(
                             flex: 1,
                             child: FredericButton(
@@ -270,12 +265,11 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                                 .add(FredericWorkoutDeleteEvent(
                                                     widget.workout));
 
-                                            // Navigator.of(context).pop();
                                             WidgetsBinding.instance
                                                 ?.addPostFrameCallback(
                                                     (timeStamp) {
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context).pop();
+                                              Navigator.of(ctx).pop();
+                                              Navigator.of(ctx).pop();
                                             });
                                           },
                                           title: 'Confirm deletion',
@@ -287,7 +281,8 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                               },
                               inverted: true,
                             )),
-                      if (widget.workout.canEdit) SizedBox(width: 16),
+                      if (widget.workout.canEdit && !widget.isNewWorkout)
+                        SizedBox(width: 16),
                       Expanded(
                           flex: 2,
                           child: FredericButton(

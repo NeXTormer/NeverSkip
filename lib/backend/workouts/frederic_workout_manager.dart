@@ -11,15 +11,15 @@ import 'package:frederic/backend/database/frederic_data_interface.dart';
 ///
 class FredericWorkoutManager
     extends Bloc<FredericWorkoutEvent, FredericWorkoutListData> {
-  FredericWorkoutManager(
-      {required this.dataInterface, required this.activityManager})
+  FredericWorkoutManager({required this.activityManager})
       : _workouts = HashMap<String, FredericWorkout>(),
         super(FredericWorkoutListData(
             HashMap<String, FredericWorkout>(), <String>[]));
 
   HashMap<String, FredericWorkout> _workouts;
+  bool _canFullReload = true;
 
-  final FredericDataInterface<FredericWorkout> dataInterface;
+  late final FredericDataInterface<FredericWorkout> dataInterface;
   final FredericActivityManager activityManager;
 
   FredericWorkout? operator [](String value) {
@@ -28,10 +28,15 @@ class FredericWorkoutManager
 
   HashMap<String, FredericWorkout> get workouts => state.workouts;
 
-  Future<void> reload() async {
-    List<FredericWorkout> workouts = await dataInterface.get();
+  void setDataInterface(FredericDataInterface<FredericWorkout> interface) =>
+      dataInterface = interface;
+
+  Future<void> reload([bool fullReloadFromDB = false]) async {
+    List<FredericWorkout> workouts =
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
     List<String> changed = <String>[];
 
+    _workouts.clear();
     for (var workout in workouts) {
       changed.add(workout.id);
       workout.loadActivities(activityManager);
@@ -44,10 +49,16 @@ class FredericWorkoutManager
     return;
   }
 
-  Future<void> loadActivitiesForOneWorkout(FredericWorkout workout) async {
-    await workout.loadActivities(activityManager);
-    add(FredericWorkoutEvent([workout.id]));
-    return;
+  Future<void> triggerManualFullReload() async {
+    if (_canFullReload) {
+      _canFullReload = false;
+      Timer(Duration(seconds: 5), () {
+        _canFullReload = true;
+      });
+      return reload(true);
+    } else {
+      return Future.delayed(Duration(milliseconds: 50));
+    }
   }
 
   void updateWorkoutInDB(FredericWorkout workout) {

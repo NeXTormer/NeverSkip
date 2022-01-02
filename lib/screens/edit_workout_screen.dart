@@ -18,7 +18,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workoutID, {this.defaultPage = 0}) {
     FredericBackend.instance.analytics.analytics
-        .setCurrentScreen(screenName: 'edit-workout-screen');
+        .setCurrentScreen(screenName: 'edit_workout_screen');
   }
 
   final String workoutID;
@@ -48,15 +48,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           FredericWorkout? workout = workoutListData.workouts[widget.workoutID];
           if (workout == null) {
             Navigator.of(context).pop();
-            print('Workout not found');
             return Container();
           }
           return FredericScaffold(
             floatingActionButton: workout.canEdit
                 ? buildAlternativeAddExerciseButton(width, 44)
                 : null,
-            // floatingActionButtonLocation:
-            //     FloatingActionButtonLocation.centerDocked,
             body: Column(
               children: [
                 EditWorkoutHeader(workout),
@@ -70,7 +67,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     workout: workout),
                 SizedBox(height: 8),
                 FredericDivider(),
-                //SizedBox(height: 8),
                 EditWorkoutActivityListSegment(
                     workout: workout,
                     pageController: pageController,

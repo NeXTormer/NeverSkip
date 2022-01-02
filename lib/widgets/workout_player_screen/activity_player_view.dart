@@ -16,6 +16,7 @@ class ActivityPlayerView extends StatefulWidget {
   const ActivityPlayerView(this.activity,
       {required this.pageController,
       required this.constraints,
+      required this.onTapEnd,
       this.nextActivity,
       this.showSmartSuggestions = true,
       Key? key})
@@ -28,6 +29,8 @@ class ActivityPlayerView extends StatefulWidget {
 
   final BoxConstraints constraints;
   final PageController pageController;
+
+  final void Function() onTapEnd;
 
   @override
   State<ActivityPlayerView> createState() => _ActivityPlayerViewState();
@@ -102,6 +105,7 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                         disabled: !finished.value,
                         onTap: () {
                           if (widget.nextActivity == null) {
+                            widget.onTapEnd();
                           } else {
                             widget.pageController.nextPage(
                                 duration: Duration(milliseconds: 300),

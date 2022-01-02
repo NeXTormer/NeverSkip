@@ -31,7 +31,7 @@ class _SetCardState extends State<SetCard> {
           ? const EdgeInsets.symmetric(horizontal: 16)
           : const EdgeInsets.only(left: 16, right: 16, top: 10),
       child: FittedBox(
-        fit: BoxFit.fitWidth,
+        fit: deleted ? BoxFit.scaleDown : BoxFit.fitWidth,
         child: FredericCard(
             animated: true,
             duration: widget.animationDuration,

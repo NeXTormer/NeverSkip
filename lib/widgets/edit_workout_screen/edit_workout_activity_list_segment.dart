@@ -67,7 +67,7 @@ class _EditWorkoutActivityListSegmentState
                         onReorder: (oldIndex, newIndex) {
                           currentlyDragging = false;
                           if (workoutIsEditable) {
-                            widget.workout.changeOrderOfActivity(
+                            widget.workout.reorderActivity(
                                 weekday + 1, oldIndex, newIndex);
                           }
                         },

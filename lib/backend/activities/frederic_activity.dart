@@ -5,12 +5,6 @@ import 'package:frederic/main.dart';
 import 'package:frederic/state/activity_filter_controller.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
-///
-/// Represents a single Activity.
-/// Changes made using the classes properties are automatically updated in the
-/// database and on all listeners of the ActivityManager-Bloc.
-/// Setters only work on Proper activities.
-///
 class FredericActivity
     implements DataTableElement<FredericActivity>, FredericDataObject {
   FredericActivity();

@@ -26,7 +26,7 @@ class WorkoutPlayerScreen extends StatefulWidget {
 
 class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   WorkoutPlayerState playerState = WorkoutPlayerState();
-  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Player;
+  WorkoutPlayerViewType currentView = WorkoutPlayerViewType.Start;
 
   @override
   void initState() {
@@ -48,18 +48,41 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                 children: [
                   FredericBasicAppBar(
                     title: playerState.getCurrentTime(),
+                    height: 90,
+                    extraSpace: Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: AnimatedProgressBar(
+                        duration: const Duration(milliseconds: 100),
+                        progress: playerState.getProgress(),
+                        backgroundColor: theme.isColorful ? Colors.white : null,
+                        alternateColor: true,
+                        length: double.infinity,
+                      ),
+                    ),
                     subtitle: 'Current workout time and progress',
-                    icon: Icon(Icons.pause),
+                    icon: currentView == WorkoutPlayerViewType.Player
+                        ? GestureDetector(
+                            onTap: () {
+                              if (playerState.timerActive) {
+                                playerState.pauseTimer();
+                              } else {
+                                playerState.resumeTimer();
+                              }
+                            },
+                            child: playerState.timerActive
+                                ? Icon(Icons.pause,
+                                    size: 32,
+                                    color: theme.textColorColorfulBackground)
+                                : Icon(Icons.play_arrow,
+                                    size: 32,
+                                    color: theme.textColorColorfulBackground))
+                        : null,
                     bottomPadding: 2,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: AnimatedProgressBar(
-                      duration: const Duration(milliseconds: 100),
-                      progress: playerState.getProgress(),
-                      length: double.infinity,
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //   child: ,
+                  // ),
                 ],
               );
             }),
@@ -68,7 +91,9 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
             Flexible(
               child: LayoutBuilder(builder: (context, constraints) {
                 return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
                   child: currentView == WorkoutPlayerViewType.Player
                       ? WorkoutPlayerView(
                           changeView: changeView,
@@ -92,6 +117,11 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
   }
 
   void changeView(WorkoutPlayerViewType type) {
+    if (type == WorkoutPlayerViewType.Player) {
+      playerState.resumeTimer();
+    } else if (type == WorkoutPlayerViewType.End) {
+      playerState.pauseTimer();
+    }
     setState(() {
       currentView = type;
     });
