@@ -260,7 +260,14 @@ class CalendarTimeLine extends StatelessWidget {
 }
 
 class _CalendarDayCard extends StatelessWidget {
-  _CalendarDayCard(this.day, this.activities, [this.completed = false]);
+  ///
+  /// For some reason, when this.completed is an optional argument,
+  /// the app throws an error when rendering this widget, but only
+  /// when tracking the widget rebuilds in flutter performance
+  ///
+  /// very odd
+  ///
+  _CalendarDayCard(this.day, this.activities, this.completed);
   final DateTime day;
   final completed;
   final List<FredericWorkoutActivity> activities;
@@ -268,6 +275,7 @@ class _CalendarDayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           height: 66,
