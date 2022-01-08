@@ -14,8 +14,7 @@ class FredericSet implements Comparable {
   FredericSet.fromMap(Map<String, dynamic> map)
       : reps = map['reps'],
         weight = map['value']?.toDouble() {
-    Timestamp ts = map['timestamp'];
-    timestamp = ts.toDate();
+    timestamp = map['timestamp']?.toDate();
   }
 
   final int reps;
@@ -28,7 +27,11 @@ class FredericSet implements Comparable {
   }
 
   Map<String, dynamic> asMap() {
-    return {'reps': reps, 'value': weight, 'timestamp': timestamp};
+    return {
+      'reps': reps,
+      'value': weight,
+      'timestamp': Timestamp.fromDate(timestamp)
+    };
   }
 
   bool operator ==(other) {

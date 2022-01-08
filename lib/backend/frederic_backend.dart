@@ -7,6 +7,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/firebase/firebase_auth_interface.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
+import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_base_message.dart';
@@ -102,7 +103,7 @@ class FredericBackend extends FredericMessageProcessor {
 
     _defaults = FredericDefaults(await _defaultsReference.get());
 
-    _setManager.reload();
+    await _initializeSets();
     await _initializeActivities();
     await _initializeWorkouts();
     await _initializeGoals();
@@ -150,6 +151,18 @@ class FredericBackend extends FredericMessageProcessor {
       ],
     ));
     return _workoutManager.reload();
+  }
+
+  Future<void> _initializeSets() {
+    _setManager.setDataInterface(FirestoreCachingDataInterface(
+        name: 'Sets',
+        collectionReference: firestoreInstance
+            .collection('users')
+            .doc(_userManager.state.id)
+            .collection('sets'),
+        firestoreInstance: firestoreInstance,
+        generateObject: (id, data) => FredericSetDocument.fromMap(id, data)));
+    return _setManager.reload();
   }
 
   Future<void> _initializeGoals() {

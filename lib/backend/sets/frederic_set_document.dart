@@ -33,18 +33,23 @@ class FredericSetDocument implements Comparable, FredericDataObject {
 
     List<dynamic> setList = data['sets'] ?? [];
 
-    for (Map<String, dynamic> map in setList) {
-      sets.add(FredericSet.fromMap(map));
+    for (final set in setList) {
+      sets.add(FredericSet.fromMap(Map.from(set)));
     }
   }
 
   @override
   Map<String, dynamic> toMap() {
+    assert(_activityID != '', 'ActivityID can\'t be empty');
     List<Map<String, dynamic>> setMapList = <Map<String, dynamic>>[];
     for (FredericSet set in sets) {
       setMapList.add(set.asMap());
     }
-    return <String, dynamic>{'sets': setMapList};
+    return <String, dynamic>{
+      'activityid': _activityID,
+      'month': _month,
+      'sets': setMapList
+    };
   }
 
   static int calculateMonth(DateTime timestamp) {
