@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -8,11 +9,12 @@ import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dar
 import 'package:intl/intl.dart';
 
 class SetCard extends StatefulWidget {
-  SetCard(this.set, this.activity)
+  SetCard(this.set, this.activity, {this.greyedIfNotToday = false})
       : super(key: ValueKey<DateTime>(set.timestamp));
 
   final FredericSet set;
   final FredericActivity activity;
+  final bool greyedIfNotToday;
 
   final Duration animationDuration = const Duration(milliseconds: 200);
 
@@ -22,6 +24,15 @@ class SetCard extends StatefulWidget {
 
 class _SetCardState extends State<SetCard> {
   bool deleted = false;
+  bool greyed = false;
+
+  @override
+  void initState() {
+    greyed = (widget.greyedIfNotToday &&
+        widget.set.timestamp.isNotSameDay(DateTime.now()));
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +75,14 @@ class _SetCardState extends State<SetCard> {
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: theme.mainColorLight),
+                            color: greyed
+                                ? theme.greyColor.withAlpha(70)
+                                : theme.mainColorLight),
                         child: Icon(
                           ExtraIcons.statistics,
-                          color: theme.mainColorInText,
+                          color: greyed
+                              ? theme.greyTextColor
+                              : theme.mainColorInText,
                           size: 18,
                         ),
                       ),
@@ -139,7 +154,10 @@ class _SetCardState extends State<SetCard> {
                           ),
                           SizedBox(width: 12),
                           Icon(ExtraIcons.calendar,
-                              color: theme.mainColorInText, size: 22),
+                              color: greyed
+                                  ? theme.greyTextColor
+                                  : theme.mainColorInText,
+                              size: 22),
                         ],
                       ),
                     ],

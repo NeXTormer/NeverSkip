@@ -8,10 +8,15 @@ import '../../state/activity_filter_controller.dart';
 
 class ActivityListSegment extends StatelessWidget {
   ActivityListSegment(
-      {required this.filterController, this.onTap, this.isSelector = false});
+      {required this.filterController,
+      this.onTap,
+      this.onLongPress,
+      this.isSelector = false});
 
   final ActivityFilterController filterController;
   final void Function(FredericActivity)? onTap;
+  final void Function(FredericActivity)? onLongPress;
+
   final bool isSelector;
 
   @override
@@ -28,8 +33,12 @@ class ActivityListSegment extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ActivityCard(
                   list[index],
+                  addProgressOnLongPress: isSelector,
                   onClick:
                       onTap == null ? null : () => onTap?.call(list[index]),
+                  onLongPress: onLongPress == null
+                      ? null
+                      : () => onLongPress?.call(list[index]),
                 ),
               );
             },

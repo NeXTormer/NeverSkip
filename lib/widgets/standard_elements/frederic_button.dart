@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
 
 class FredericButton extends StatelessWidget {
@@ -9,6 +10,7 @@ class FredericButton extends StatelessWidget {
       this.inverted = false,
       this.loading = false,
       this.fontSize = 15,
+      this.haptics = false,
       this.fontWeight = FontWeight.w600}) {
     this.mainColor = mainColor ?? theme.mainColor;
     this.textColor = textColor ??
@@ -22,6 +24,7 @@ class FredericButton extends StatelessWidget {
   final String text;
   final bool inverted;
   final bool loading;
+  final bool haptics;
   final double fontSize;
   final FontWeight fontWeight;
 
@@ -30,7 +33,14 @@ class FredericButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: loading ? null : onPressed,
+      onTap: () {
+        if (haptics) {
+          HapticFeedback.selectionClick();
+        }
+        if (!loading) {
+          onPressed.call();
+        }
+      },
       child: Container(
         width: double.infinity,
         height: height,

@@ -23,7 +23,9 @@ class ActivityCard extends StatelessWidget {
       Key? key,
       this.setList,
       this.onClick,
+      this.onLongPress,
       this.state = ActivityCardState.Normal,
+      this.addProgressOnLongPress = false,
       this.addButton = false,
       Color? mainColor,
       Color? accentColor})
@@ -42,8 +44,10 @@ class ActivityCard extends StatelessWidget {
   late final Color accentColor;
 
   final bool addButton;
+  final bool addProgressOnLongPress;
 
-  final Function? onClick;
+  final void Function()? onClick;
+  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
