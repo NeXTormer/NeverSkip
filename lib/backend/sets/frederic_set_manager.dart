@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,8 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   late final FredericDataInterface<FredericSetDocument> dataInterface;
 
+  bool _canFullReload = true;
+
   FredericSetList operator [](String value) {
     if (!_sets.containsKey(value)) _sets[value] = FredericSetList.create(value);
     return _sets[value]!;
@@ -31,6 +34,18 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   void setDataInterface(FredericDataInterface<FredericSetDocument> interface) =>
       dataInterface = interface;
+
+  Future<void> triggerManualFullReload() async {
+    if (_canFullReload) {
+      _canFullReload = false;
+      Timer(Duration(seconds: 5), () {
+        _canFullReload = true;
+      });
+      return reload(true);
+    } else {
+      return Future.delayed(Duration(milliseconds: 50));
+    }
+  }
 
   @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {

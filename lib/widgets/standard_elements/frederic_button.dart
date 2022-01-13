@@ -25,12 +25,12 @@ class FredericButton extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
 
-  final Function onPressed;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed as void Function()?,
+      onTap: loading ? null : onPressed,
       child: Container(
         width: double.infinity,
         height: height,

@@ -94,6 +94,12 @@ class FredericBackend extends FredericMessageProcessor {
   DocumentReference<Map<String, dynamic>> _defaultsReference =
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
 
+  Future<void> reloadCachesFromDatabase() async {
+    await activityManager.triggerManualFullReload();
+    await workoutManager.triggerManualFullReload();
+    await setManager.triggerManualFullReload();
+  }
+
   void _initialize() async {
     final profiler = FredericProfiler.track('FredericBackend::loadData()');
     final userProfiler =

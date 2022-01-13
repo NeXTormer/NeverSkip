@@ -67,14 +67,6 @@ class ActivityListScreen extends StatelessWidget {
                       isSelector: isSelector,
                       onSelect: onSelect,
                     ),
-                    CupertinoSliverRefreshControl(
-                      refreshTriggerPullDistance: 200,
-                      refreshIndicatorExtent: 40,
-                      onRefresh: () async {
-                        await FredericBackend.instance.activityManager
-                            .triggerManualFullReload();
-                      },
-                    ),
                     FeaturedActivitySegment(
                       'Featured',
                       FredericBackend.instance.defaults.featuredActivities,
