@@ -25,7 +25,7 @@ import 'database/firebase/firestore_caching_data_interface.dart';
 /// Main class of the Backend. Manages everything related to storing and loading
 /// data form the DB or the device, and handles sign in / sign up.
 ///
-class FredericBackend extends FredericMessageProcessor {
+class FredericBackend implements FredericMessageProcessor {
   FredericBackend() {
     _eventBus = FredericMessageBus();
     firestoreInstance = FirebaseFirestore.instance;
