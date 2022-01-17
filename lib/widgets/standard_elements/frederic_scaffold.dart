@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frederic/main.dart';
 
 class FredericScaffold extends StatelessWidget {
   const FredericScaffold(
@@ -16,14 +15,25 @@ class FredericScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //extendBodyBehindAppBar: true,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      backgroundColor:
-          theme.isColorful ? theme.mainColor : theme.backgroundColor,
+      // backgroundColor:
+      //     theme.isColorful ? theme.mainColor : theme.backgroundColor,
+      backgroundColor: Colors.transparent,
       body: SafeArea(
-        child: Container(
-          color: theme.backgroundColor,
-          child: body,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              'assets/images/theme/background1.png',
+              fit: BoxFit.cover,
+            ),
+            Container(
+              //color: theme.backgroundColor,
+              child: body,
+            ),
+          ],
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
@@ -37,7 +39,8 @@ class FredericCard extends StatelessWidget {
   Widget build(BuildContext context) {
     BoxDecoration decoration = BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        color: color ?? theme.cardBackgroundColor,
+        color: Colors.white54,
+        //color: color ?? theme.cardBackgroundColor,
         border: borderWidth == 0
             ? null
             : Border.all(color: theme.cardBorderColor, width: borderWidth));
@@ -73,7 +76,7 @@ class FredericCard extends StatelessWidget {
           margin: margin,
           decoration: decoration,
           child: container);
-    else
+    else {
       return Stack(
         fit: StackFit.passthrough,
         children: [
@@ -92,14 +95,24 @@ class FredericCard extends StatelessWidget {
               baseColor: Colors.yellow.shade50,
               highlightColor: Colors.white,
             ),
-          Container(
-            width: width,
-            height: height,
-            margin: margin,
-            decoration: decoration,
-            child: container,
+          ConstrainedBox(
+            constraints: BoxConstraints.tightFor(width: width, height: height),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                child: Container(
+                  width: width,
+                  height: height,
+                  margin: margin,
+                  decoration: decoration,
+                  child: container,
+                ),
+              ),
+            ),
           ),
         ],
       );
+    }
   }
 }

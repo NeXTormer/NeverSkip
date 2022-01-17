@@ -105,6 +105,7 @@ flutter:
     - assets/images/introduction_screen_3.png
     - assets/images/google/google_logo_light.png
     - assets/images/Medaille.png
+    - assets/images/theme/background1.png
 
   fonts:
      - family: ExtraIcons
