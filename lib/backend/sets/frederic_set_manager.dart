@@ -1,11 +1,10 @@
+import 'dart:async';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/charts/weekly_training_volume_chart_data.dart';
-import 'package:frederic/backend/database/frederic_database_document.dart';
+import 'package:frederic/backend/database/frederic_data_interface.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 
@@ -24,27 +23,33 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   HashMap<String, FredericSetList> _sets = HashMap<String, FredericSetList>();
 
-  CollectionReference<Map<String, dynamic>> get setsCollection =>
-      FirebaseFirestore.instance
-          .collection('users/${FirebaseAuth.instance.currentUser?.uid}/sets');
+  late final FredericDataInterface<FredericSetDocument> dataInterface;
+
+  bool _canFullReload = true;
 
   FredericSetList operator [](String value) {
-    if (!_sets.containsKey(value))
-      _sets[value] = FredericSetList(value, this)..loadData(2);
+    if (!_sets.containsKey(value)) _sets[value] = FredericSetList.create(value);
     return _sets[value]!;
   }
 
-  @override
-  void onTransition(
-      Transition<FredericSetEvent, FredericSetListData> transition) {
-    // print('============');
-    // print(transition);
-    // print('============');
-    super.onTransition(transition);
+  void setDataInterface(FredericDataInterface<FredericSetDocument> interface) =>
+      dataInterface = interface;
+
+  Future<void> triggerManualFullReload() async {
+    if (_canFullReload) {
+      _canFullReload = false;
+      Timer(Duration(seconds: 5), () {
+        _canFullReload = true;
+      });
+      return reload(true);
+    } else {
+      return Future.delayed(Duration(milliseconds: 50));
+    }
   }
 
   @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
+    print(event);
     yield FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
@@ -52,52 +57,38 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     );
   }
 
-  void reload() {
-    loadAllSets(2);
-  }
-
-  void addSet(String activityID, FredericSet set) {
-    state[activityID].addSetLocally(set);
-    weeklyTrainingVolumeChartData.addSet(set);
-  }
-
-  void deleteSet(String activityID, FredericSet set) {
-    state[activityID].deleteSetLocally(set);
-    weeklyTrainingVolumeChartData.removeSet(set);
-  }
-
-  void loadAllSets(int monthsToLoad) async {
-    int lastMonth = currentMonth - (monthsToLoad - 1);
-    QuerySnapshot<Map<String, dynamic>> snapshot = await setsCollection
-        .where('month', isGreaterThanOrEqualTo: lastMonth)
-        .get();
-
+  Future<void> reload([bool fullReloadFromDB = false]) async {
     _sets.clear();
-    HashMap<String, List<FredericDatabaseDocument>> documentMap =
-        HashMap<String, List<FredericDatabaseDocument>>();
-    for (var doc in snapshot.docs) {
-      String activityID = doc.data()['activityid'];
-      if (!documentMap.containsKey(activityID)) {
-        documentMap[activityID] = <FredericDatabaseDocument>[];
+    HashMap<String, List<FredericSetDocument>> documentMap =
+        HashMap<String, List<FredericSetDocument>>();
+
+    final documents =
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
+    for (var doc in documents) {
+      if (!documentMap.containsKey(doc.activityID)) {
+        documentMap[doc.activityID] = <FredericSetDocument>[];
       }
-      documentMap[activityID]!
-          .add(FredericDatabaseDocument(doc.id, doc.data()));
+      documentMap[doc.activityID]!.add(doc);
     }
 
     for (var entry in documentMap.entries) {
-      _sets[entry.key] =
-          FredericSetList.fromStorageDocumentList(entry.key, entry.value, this);
+      _sets[entry.key] = FredericSetList.fromDocuments(entry.key, entry.value);
     }
 
     weeklyTrainingVolumeChartData.initialize(_sets);
     add(FredericSetEvent(documentMap.keys.toList()));
   }
 
-  void _loadOrAddNewSet(String id) {
-    if (!_sets.containsKey(id)) {
-      _sets[id] = FredericSetList(id, this)..loadData(2);
-    }
-    add(FredericSetEvent(<String>[id]));
+  void addSet(String activityID, FredericSet set) async {
+    await state[activityID].addSet(set, dataInterface);
+    weeklyTrainingVolumeChartData.addSet(set);
+    add(FredericSetEvent([activityID]));
+  }
+
+  void deleteSet(String activityID, FredericSet set) async {
+    await state[activityID].deleteSet(set, dataInterface);
+    weeklyTrainingVolumeChartData.removeSet(set);
+    add(FredericSetEvent([activityID]));
   }
 }
 
@@ -112,8 +103,7 @@ class FredericSetListData {
 
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {
-      FredericBackend.instance.setManager._loadOrAddNewSet(value);
-      return FredericSetList(value, FredericBackend.instance.setManager);
+      sets[value] = FredericSetList.create(value);
     }
     return sets[value]!;
   }
@@ -136,4 +126,9 @@ class FredericSetListData {
 class FredericSetEvent {
   FredericSetEvent(this.changedActivities);
   final List<String> changedActivities;
+
+  bool operator ==(other) => false;
+
+  @override
+  int get hashCode => changedActivities.hashCode;
 }

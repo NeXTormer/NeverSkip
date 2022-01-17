@@ -7,6 +7,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/firebase/firebase_auth_interface.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
+import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_base_message.dart';
@@ -24,7 +25,7 @@ import 'database/firebase/firestore_caching_data_interface.dart';
 /// Main class of the Backend. Manages everything related to storing and loading
 /// data form the DB or the device, and handles sign in / sign up.
 ///
-class FredericBackend extends FredericMessageProcessor {
+class FredericBackend implements FredericMessageProcessor {
   FredericBackend() {
     _eventBus = FredericMessageBus();
     firestoreInstance = FirebaseFirestore.instance;
@@ -93,6 +94,12 @@ class FredericBackend extends FredericMessageProcessor {
   DocumentReference<Map<String, dynamic>> _defaultsReference =
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
 
+  Future<void> reloadCachesFromDatabase() async {
+    await activityManager.triggerManualFullReload();
+    await workoutManager.triggerManualFullReload();
+    await setManager.triggerManualFullReload();
+  }
+
   void _initialize() async {
     final profiler = FredericProfiler.track('FredericBackend::loadData()');
     final userProfiler =
@@ -102,7 +109,7 @@ class FredericBackend extends FredericMessageProcessor {
 
     _defaults = FredericDefaults(await _defaultsReference.get());
 
-    _setManager.reload();
+    await _initializeSets();
     await _initializeActivities();
     await _initializeWorkouts();
     await _initializeGoals();
@@ -150,6 +157,18 @@ class FredericBackend extends FredericMessageProcessor {
       ],
     ));
     return _workoutManager.reload();
+  }
+
+  Future<void> _initializeSets() {
+    _setManager.setDataInterface(FirestoreCachingDataInterface(
+        name: 'Sets',
+        collectionReference: firestoreInstance
+            .collection('users')
+            .doc(_userManager.state.id)
+            .collection('sets'),
+        firestoreInstance: firestoreInstance,
+        generateObject: (id, data) => FredericSetDocument.fromMap(id, data)));
+    return _setManager.reload();
   }
 
   Future<void> _initializeGoals() {

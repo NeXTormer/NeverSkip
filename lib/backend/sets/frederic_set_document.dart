@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 
 ///
@@ -8,44 +7,49 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 /// The month is calculated as the number of months starting from Jan 2021.
 ///   For example: August 2021 is 8, January 2022 is 13
 ///
-class FredericSetDocument extends Comparable {
-  FredericSetDocument(
-      this.documentID, this.month, this.activityID, List<FredericSet> sets)
-      : _sets = sets {
-    _documentReference = FirebaseFirestore.instance.doc(
-        'users/${FirebaseAuth.instance.currentUser?.uid}/sets/$documentID');
+class FredericSetDocument implements Comparable, FredericDataObject {
+  FredericSetDocument(this.id, List<FredericSet> sets) : sets = sets;
+
+  FredericSetDocument.fromMap(this.id, Map<String, dynamic> data) {
+    fromMap(id, data);
   }
 
-  final String documentID;
-  final int month;
-  final String activityID;
+  @deprecated
+  String get documentID => id;
+  String get activityID => _activityID;
+  int get month => _month;
 
-  late final DocumentReference _documentReference;
+  final String id;
 
-  List<FredericSet> _sets;
+  int _month = 0;
+  String _activityID = '';
 
-  List<FredericSet> get sets => _sets;
+  List<FredericSet> sets = <FredericSet>[];
 
-  bool addSet(FredericSet set) {
-    if (calculateMonth(set.timestamp) != month) return false;
-    _sets.add(set);
-    _writeToDatabase();
-    return true;
+  @override
+  void fromMap(String id, Map<String, dynamic> data) {
+    _activityID = data['activityid'] ?? '';
+    _month = data['month'] ?? 0;
+
+    List<dynamic> setList = data['sets'] ?? [];
+
+    for (final set in setList) {
+      sets.add(FredericSet.fromMap(Map.from(set)));
+    }
   }
 
-  bool deleteSet(FredericSet set) {
-    if (calculateMonth(set.timestamp) != month) return false;
-    _sets.remove(set);
-    _writeToDatabase();
-    return true;
-  }
-
-  void _writeToDatabase() {
+  @override
+  Map<String, dynamic> toMap() {
+    assert(_activityID != '', 'ActivityID can\'t be empty');
     List<Map<String, dynamic>> setMapList = <Map<String, dynamic>>[];
-    for (FredericSet set in _sets) {
+    for (FredericSet set in sets) {
       setMapList.add(set.asMap());
     }
-    _documentReference.update({'sets': setMapList});
+    return <String, dynamic>{
+      'activityid': _activityID,
+      'month': _month,
+      'sets': setMapList
+    };
   }
 
   static int calculateMonth(DateTime timestamp) {

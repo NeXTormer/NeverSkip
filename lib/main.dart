@@ -16,6 +16,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/type_adapters/frederic_universal_type_adapter.dart';
 import 'package:frederic/backend/database/type_adapters/timestamp_type_adapter.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
+import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/frederic_admin_panel.dart';
@@ -67,9 +68,14 @@ void main() async {
     if (!Hive.isAdapterRegistered(2))
       Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,
           create: (id, data) => FredericWorkout.fromMap(id, data)));
+    if (!Hive.isAdapterRegistered(3))
+      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSetDocument>(3,
+          create: (id, data) => FredericSetDocument.fromMap(id, data)));
     if (!Hive.isAdapterRegistered(100))
       Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
     // == Hive == End ==
+
+    //await Hive.deleteBoxFromDisk('Sets');
 
     // == Load Startup Preferences ==
     final colorThemeProfiler = FredericProfiler.track('load color theme');

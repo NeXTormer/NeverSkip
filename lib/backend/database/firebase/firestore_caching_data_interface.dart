@@ -9,14 +9,14 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
   FirestoreCachingDataInterface({
     required this.name,
     required this.collectionReference,
-    required this.queries,
+    this.queries,
     required this.firestoreInstance,
     required this.generateObject,
   });
 
   String name;
   CollectionReference<Map<String, dynamic>> collectionReference;
-  List<Query<Map<String, dynamic>>> queries;
+  List<Query<Map<String, dynamic>>>? queries;
   FirebaseFirestore firestoreInstance;
   T Function(String id, Map<String, dynamic> data) generateObject;
 
@@ -86,9 +86,12 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
     List<T> data = <T>[];
     Map<String, T> entries = <String, T>{};
 
-    for (final query in queries) {
+    if (queries == null) {
+      queries = [collectionReference.orderBy('month')];
+    }
+    for (final query in queries!) {
       QuerySnapshot<Map<String, dynamic>?> querySnapshot = await query.get();
-      final profiler = FredericProfiler.track('Parse Query');
+      final profiler = FredericProfiler.track('Parse $name Query');
       for (int i = 0; i < querySnapshot.docs.length; i++) {
         var doc = querySnapshot.docs[i];
         if (doc.data() == null) continue;
@@ -98,6 +101,7 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
       }
       profiler.stop();
     }
+
     _box!.putAll(entries);
     return data;
   }
