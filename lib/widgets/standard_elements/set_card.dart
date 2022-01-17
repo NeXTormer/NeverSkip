@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -8,11 +9,12 @@ import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dar
 import 'package:intl/intl.dart';
 
 class SetCard extends StatefulWidget {
-  SetCard(this.set, this.activity)
+  SetCard(this.set, this.activity, {this.greenIfToday = false})
       : super(key: ValueKey<DateTime>(set.timestamp));
 
   final FredericSet set;
   final FredericActivity activity;
+  final bool greenIfToday;
 
   final Duration animationDuration = const Duration(milliseconds: 200);
 
@@ -22,6 +24,15 @@ class SetCard extends StatefulWidget {
 
 class _SetCardState extends State<SetCard> {
   bool deleted = false;
+  bool green = false;
+
+  @override
+  void initState() {
+    green =
+        (widget.greenIfToday && widget.set.timestamp.isSameDay(DateTime.now()));
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +42,7 @@ class _SetCardState extends State<SetCard> {
           ? const EdgeInsets.symmetric(horizontal: 16)
           : const EdgeInsets.only(left: 16, right: 16, top: 10),
       child: FittedBox(
-        fit: BoxFit.fitWidth,
+        fit: deleted ? BoxFit.scaleDown : BoxFit.fitWidth,
         child: FredericCard(
             animated: true,
             duration: widget.animationDuration,
@@ -64,10 +75,14 @@ class _SetCardState extends State<SetCard> {
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: theme.mainColorLight),
+                            color: green
+                                ? theme.positiveColorLight
+                                : theme.mainColorLight),
                         child: Icon(
                           ExtraIcons.statistics,
-                          color: theme.mainColorInText,
+                          color: green
+                              ? theme.positiveColor
+                              : theme.mainColorInText,
                           size: 18,
                         ),
                       ),
@@ -113,9 +128,6 @@ class _SetCardState extends State<SetCard> {
                           ]
                         ],
                       ),
-                      // Expanded(
-                      //   child: Container(),
-                      // ),
                       SizedBox(width: 32),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -139,7 +151,10 @@ class _SetCardState extends State<SetCard> {
                           ),
                           SizedBox(width: 12),
                           Icon(ExtraIcons.calendar,
-                              color: theme.mainColorInText, size: 22),
+                              color: green
+                                  ? theme.positiveColor
+                                  : theme.mainColorInText,
+                              size: 22),
                         ],
                       ),
                     ],

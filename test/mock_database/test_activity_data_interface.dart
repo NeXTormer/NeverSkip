@@ -62,4 +62,10 @@ class TestActivityDataInterface
     database[object.id] = object;
     return object;
   }
+
+  @override
+  Future<List<FredericActivity>> reload() {
+    // TODO: implement reload
+    throw UnimplementedError();
+  }
 }

@@ -4,12 +4,16 @@ import 'package:frederic/misc/ExtraIcons.dart';
 
 class FredericHeading extends StatelessWidget {
   const FredericHeading(this.heading,
-      {this.onPressed, this.subHeading, this.icon = ExtraIcons.dots});
+      {this.onPressed,
+      this.subHeading,
+      this.icon = ExtraIcons.dots,
+      this.fontSize = 15});
 
   final Function? onPressed;
   final String heading;
   final String? subHeading;
   final IconData icon;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class FredericHeading extends StatelessWidget {
             Text(heading,
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontSize: fontSize,
                     color: theme.textColor,
                     letterSpacing: 0.6)),
             if (showSubHeading) SizedBox(width: 8),

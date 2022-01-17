@@ -4,6 +4,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/event_bus/frederic_system_message.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/workout_player_screen.dart';
@@ -26,7 +27,7 @@ class CalendarDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //var profiler = FredericProfiler.track('build calendar day');
+    final profiler = FredericProfiler.track('build calendar day');
     DateTime day = DateTime.now().add(Duration(days: index));
     List<FredericWorkoutActivity> activitiesDueToday =
         <FredericWorkoutActivity>[];
@@ -58,7 +59,7 @@ class CalendarDay extends StatelessWidget {
             description: 'Calendar day completed'));
       }
     }
-    //profiler.stop();
+    profiler.stop();
 
     return Container(
         padding:
@@ -157,11 +158,12 @@ class _CalendarMonthCard extends StatelessWidget {
 
 class CalendarActivityCard extends StatelessWidget {
   CalendarActivityCard(this.activity,
-      {this.completed = false, this.indicator = false});
+      {this.completed = false, this.indicator = false, this.onTap});
 
   final FredericWorkoutActivity activity;
   final bool indicator;
   final bool completed;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +180,7 @@ class CalendarActivityCard extends StatelessWidget {
           SizedBox(width: 8),
           Expanded(
               child: CalendarActivityCardContent(activity,
+                  onClick: onTap,
                   state: completed
                       ? ActivityCardState.Green
                       : ActivityCardState.Normal))
@@ -257,7 +260,14 @@ class CalendarTimeLine extends StatelessWidget {
 }
 
 class _CalendarDayCard extends StatelessWidget {
-  _CalendarDayCard(this.day, this.activities, [this.completed = false]);
+  ///
+  /// For some reason, when this.completed is an optional argument,
+  /// the app throws an error when rendering this widget, but only
+  /// when tracking the widget rebuilds in flutter performance
+  ///
+  /// very odd
+  ///
+  _CalendarDayCard(this.day, this.activities, this.completed);
   final DateTime day;
   final completed;
   final List<FredericWorkoutActivity> activities;
@@ -265,6 +275,7 @@ class _CalendarDayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           height: 66,

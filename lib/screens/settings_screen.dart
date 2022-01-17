@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/widgets/settings_screen/reload_caches_from_db_dialog.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
 import 'package:frederic/widgets/settings_screen/specific_settings/color_theme_changer.dart';
@@ -65,17 +67,16 @@ class SettingsScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (c) => OnboardingScreen())),
                 icon: Icons.add_to_home_screen_outlined,
               ),
-              // SettingsElement(
-              //   text: 'Werner',
-              //   subText: 'Enabled',
-              //   icon: Icons.description,
-              // ),
-              // SettingsElement(text: 'Reminder Notifications', hasSwitch: true),
-              // SettingsElement(
-              //   text: 'Werner',
-              //   subText: 'Enabled',
-              //   icon: Icons.description,
-              // ),
+            ]),
+            SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
+            SettingsSegment(title: 'Actions', elements: <SettingsElement>[
+              SettingsElement(
+                text: 'Reload caches from Database',
+                clickable: true,
+                onTap: () => ReloadCachesFromDBDialog.show(
+                    context: context, dialog: ReloadCachesFromDBDialog()),
+                icon: Icons.refresh_rounded,
+              ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             if (kDebugMode)
@@ -85,6 +86,11 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.speed,
                   changerTitle: 'Profiling data',
                   changeAttributeWidget: FredericProfiler.evaluateAsWidget(),
+                ),
+                SettingsElement(
+                  text: 'Crash the app',
+                  icon: Icons.announcement_outlined,
+                  onTap: () => FirebaseCrashlytics.instance.crash(),
                 ),
               ])
           ],

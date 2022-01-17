@@ -11,6 +11,8 @@ import 'package:frederic/widgets/standard_elements/frederic_sliver_app_bar.dart'
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 
 class CalendarScreen extends StatelessWidget {
+  CalendarScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FredericScaffold(

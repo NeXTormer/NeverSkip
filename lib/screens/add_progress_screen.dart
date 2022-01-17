@@ -146,8 +146,9 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                       )),
                       SliverList(
                           delegate: SliverChildBuilderDelegate(
-                              (context, index) =>
-                                  SetCard(sets[index], widget.activity),
+                              (context, index) => SetCard(
+                                  sets[index], widget.activity,
+                                  greenIfToday: true),
                               childCount: sets.length)),
                       SliverToBoxAdapter(child: SizedBox(height: 50))
                     ],

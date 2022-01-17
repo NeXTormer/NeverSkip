@@ -1,6 +1,4 @@
 abstract class FredericDataObject {
-  FredericDataObject();
-
   String get id;
 
   void fromMap(String id, Map<String, dynamic> data);

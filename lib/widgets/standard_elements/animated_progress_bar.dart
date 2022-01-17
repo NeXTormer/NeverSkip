@@ -8,6 +8,7 @@ class AnimatedProgressBar extends ImplicitlyAnimatedWidget {
       required Duration duration,
       this.vertical = false,
       this.alternateColor = false,
+      this.backgroundColor,
       this.thickness = 6,
       this.length = 180})
       : super(duration: duration, curve: Curves.easeIn);
@@ -17,6 +18,7 @@ class AnimatedProgressBar extends ImplicitlyAnimatedWidget {
   final double progress;
   final bool vertical;
   final bool alternateColor;
+  final Color? backgroundColor;
 
   @override
   _AnimatedProgressBarState createState() => _AnimatedProgressBarState();
@@ -42,9 +44,10 @@ class _AnimatedProgressBarState
                 builder: (context, value, child) {
                   return LinearProgressIndicator(
                     value: valueTween?.evaluate(this.animation),
-                    backgroundColor: widget.alternateColor
-                        ? theme.accentColorLight
-                        : theme.mainColorLight,
+                    backgroundColor: widget.backgroundColor ??
+                        (widget.alternateColor
+                            ? theme.accentColorLight
+                            : theme.mainColorLight),
                     valueColor: AlwaysStoppedAnimation<Color>(
                         widget.alternateColor
                             ? theme.accentColor
