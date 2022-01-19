@@ -34,6 +34,7 @@ class FredericUser {
   int? _goalsCount;
   int? _achievementsCount;
   bool? _hasCompletedStreakToday;
+  bool? _shouldReloadData;
   List<String>? _activeWorkouts;
   List<String>? _progressMonitors;
   DateTime? birthday;
@@ -44,6 +45,7 @@ class FredericUser {
   bool get finishedLoading => _name != null;
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
+  bool get shouldReloadFromDB => _shouldReloadData ?? false;
   String get email => _email;
   String get name => _name ?? '';
   String get username => _username ?? '';
@@ -96,6 +98,7 @@ class FredericUser {
   set goalsCount(int value) => _goalsCount = value;
   set achievementsCount(int value) => _achievementsCount = value;
   set image(String value) => _image = value;
+  set shouldReloadFromDB(bool value) => _shouldReloadData = value;
 
   void fromMap(String id, String email, Map<String, dynamic> data) {
     this.id = id;
@@ -114,6 +117,7 @@ class FredericUser {
     _activeWorkouts = data['activeworkouts']?.cast<String>() ?? <String>[];
     streakStartDate = data['streakstart']?.toDate();
     streakLatestDate = data['streaklatest']?.toDate();
+    _shouldReloadData = data['should_reload_data'];
   }
 
   Map<String, dynamic> toMap() {
@@ -128,7 +132,8 @@ class FredericUser {
       'progressmonitors': _progressMonitors,
       'activeworkouts': _activeWorkouts,
       'streakstart': streakStartDate,
-      'streaklatest': streakLatestDate
+      'streaklatest': streakLatestDate,
+      'should_reload_data': _shouldReloadData,
     };
   }
 
