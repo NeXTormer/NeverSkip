@@ -8,6 +8,7 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/theme/background_generator/background_generator_test_screen.dart';
 import 'package:frederic/widgets/settings_screen/reload_caches_from_db_dialog.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
@@ -76,6 +77,13 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () => ReloadCachesFromDBDialog.show(
                     context: context, dialog: ReloadCachesFromDBDialog()),
                 icon: Icons.refresh_rounded,
+              ),
+              SettingsElement(
+                text: 'Show test screen',
+                clickable: true,
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (c) => BackgroundGeneratorTestScreen())),
+                icon: Icons.memory,
               ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),

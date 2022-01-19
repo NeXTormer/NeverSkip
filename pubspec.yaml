@@ -65,6 +65,8 @@ dependencies:
 
   date_format: ^2.0.2
 
+  fast_noise: ^1.0.1
+
 
 dev_dependencies:
   integration_test:

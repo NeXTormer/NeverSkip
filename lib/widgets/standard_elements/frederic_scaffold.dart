@@ -25,9 +25,11 @@ class FredericScaffold extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              'assets/images/theme/background1.png',
-              fit: BoxFit.cover,
+            Positioned(
+              child: Image.asset(
+                'assets/images/theme/background1.png',
+                fit: BoxFit.cover,
+              ),
             ),
             Container(
               //color: theme.backgroundColor,
