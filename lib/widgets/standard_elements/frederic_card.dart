@@ -7,7 +7,7 @@ class FredericCard extends StatelessWidget {
   const FredericCard(
       {this.width,
       this.height,
-      this.borderRadius = 10,
+      this.borderRadius = 14,
       this.borderWidth = 1,
       this.padding,
       this.margin,

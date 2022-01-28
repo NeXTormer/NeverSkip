@@ -34,7 +34,7 @@ class PictureIcon extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
               color: theme.mainColorLight),
         ),
       );
@@ -44,7 +44,7 @@ class PictureIcon extends StatelessWidget {
         child: Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), color: accentColor),
+                borderRadius: BorderRadius.circular(10), color: accentColor),
             child: CachedNetworkImage(imageUrl: url!, color: mainColor)),
       );
     return AspectRatio(
@@ -52,7 +52,7 @@ class PictureIcon extends StatelessWidget {
       child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8), color: accentColor),
+              borderRadius: BorderRadius.circular(10), color: accentColor),
           child: Icon(
             icon,
             color: mainColor,
