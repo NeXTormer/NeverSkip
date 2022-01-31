@@ -5,9 +5,18 @@ import 'package:frederic/backend/database/frederic_auth_interface.dart';
 
 class FirebaseAuthInterface implements FredericAuthInterface {
   FirebaseAuthInterface(
-      {required this.firebaseAuthInstance, required this.firestoreInstance});
+      {required this.firebaseAuthInstance, required this.firestoreInstance}) {
+    firebaseAuthInstance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        _onUpdateData?.call(
+            FredericUser.only(user.uid, user.email ?? 'no-mail'), true);
+      }
+    });
+  }
   final FirebaseAuth firebaseAuthInstance;
   final FirebaseFirestore firestoreInstance;
+
+  void Function(FredericUser, bool)? _onUpdateData;
 
   @override
   Future<void> changePassword(FredericUser user, String newPassword) {
@@ -106,6 +115,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           .collection('users')
           .doc(uid)
           .update({'last_login': Timestamp.now()});
+      userDocument.data()!['wenrer'] = 'pete';
 
       return FredericUser.fromMap(uid, email, userDocument.data()!);
     } catch (e) {
@@ -187,5 +197,11 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           statusMessage:
               'Sign up Error. Please contact support. [Error UDNFAS]');
     return FredericUser.fromMap(id, email, userDocument.data()!);
+  }
+
+  @override
+  void registerDataChangedListener(
+      void Function(FredericUser user, bool restoreLoginStatus) onDataChanged) {
+    _onUpdateData = onDataChanged;
   }
 }

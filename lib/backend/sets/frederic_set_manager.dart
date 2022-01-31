@@ -49,7 +49,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
-    print(event);
     yield FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,

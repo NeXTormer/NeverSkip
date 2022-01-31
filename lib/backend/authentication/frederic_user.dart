@@ -16,6 +16,11 @@ class FredericUser {
     _calculateDerivedAttributes();
   }
 
+  FredericUser.only(this.id, String email)
+      : _email = email,
+        statusMessage = 'only to restore login state',
+        authState = FredericAuthState.Other;
+
   //TODO: make final or late final
   String id;
   @deprecated
@@ -213,4 +218,4 @@ class FredericUser {
   int get hashCode => super.hashCode;
 }
 
-enum FredericAuthState { Authenticated, NotAuthenticated }
+enum FredericAuthState { Authenticated, NotAuthenticated, Other }

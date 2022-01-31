@@ -17,12 +17,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       : _backend = backend,
         super(FredericUser.noAuth()) {
     streakManager = StreakManager(this, _backend);
-
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        add(FredericRestoreLoginStatusEvent(user));
-      }
-    });
+    authInterface.registerDataChangedListener(handleUserDataUpdate);
   }
 
   late final StreakManager streakManager;
@@ -51,6 +46,14 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
     if (event is FredericEmailSignupEvent) {
       firstUserSignUp = true;
+    }
+  }
+
+  void handleUserDataUpdate(FredericUser user, bool restoreLogin) {
+    if (restoreLogin) {
+      add(FredericRestoreLoginStatusEvent(user));
+    } else {
+      add(FredericUserDataChangedEvent(user));
     }
   }
 

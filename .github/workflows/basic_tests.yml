@@ -14,7 +14,7 @@ on:
 
 jobs:
   analyze:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     steps:
     # Setup Java environment in order to build the Android app.
