@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/database/frederic_auth_interface.dart';
+import 'package:hive/hive.dart';
 
 class FirebaseAuthInterface implements FredericAuthInterface {
   FirebaseAuthInterface(
@@ -12,11 +13,16 @@ class FirebaseAuthInterface implements FredericAuthInterface {
             FredericUser.only(user.uid, user.email ?? 'no-mail'), true);
       }
     });
+
+    Hive.openBox<Map<dynamic, dynamic>>(_name).then((value) => _box = value);
   }
   final FirebaseAuth firebaseAuthInstance;
   final FirebaseFirestore firestoreInstance;
 
   void Function(FredericUser, bool)? _onUpdateData;
+
+  final String _name = 'userdata';
+  Box<Map<dynamic, dynamic>>? _box;
 
   @override
   Future<void> changePassword(FredericUser user, String newPassword) {
@@ -101,8 +107,8 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     }
   }
 
-  @override
-  Future<FredericUser> getUserData(String uid, String email) async {
+  Future<FredericUser> _reloadUserData(
+      String uid, String email, bool callCallback) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> userDocument =
           await firestoreInstance.collection('users').doc(uid).get();
@@ -115,12 +121,35 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           .collection('users')
           .doc(uid)
           .update({'last_login': Timestamp.now()});
-      userDocument.data()!['wenrer'] = 'pete';
 
-      return FredericUser.fromMap(uid, email, userDocument.data()!);
+      if (_box == null) _box = await Hive.openBox(_name);
+      _box!.put(0, Map.from(userDocument.data()!));
+
+      final user = FredericUser.fromMap(uid, email, userDocument.data()!);
+      if (callCallback) {
+        _onUpdateData?.call(user, false);
+      }
+      print('got data from db');
+      return user;
     } catch (e) {
       return FredericUser.noAuth();
     }
+  }
+
+  @override
+  Future<FredericUser> getUserData(String uid, String email) async {
+    _box = await Hive.openBox(_name);
+    if (_box?.isEmpty ?? true) return _reloadUserData(uid, email, false);
+    final data = _box?.get(0);
+    if (data != null) {
+      print('loading data form db');
+      _reloadUserData(uid, email, true); // NO AWAIT
+      print('returning cached data');
+      return FredericUser.fromMap(uid, email, Map<String, dynamic>.from(data));
+    }
+
+    print('return without cache');
+    return _reloadUserData(uid, email, false);
   }
 
   @override

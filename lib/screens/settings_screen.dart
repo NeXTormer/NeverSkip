@@ -79,7 +79,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
-            if (kDebugMode)
+            if (kDebugMode || user.isDeveloper)
               SettingsSegment(title: 'Debug', elements: <SettingsElement>[
                 SettingsElement(
                   text: 'Show profiling data',

@@ -40,6 +40,7 @@ class FredericUser {
   int? _achievementsCount;
   bool? _hasCompletedStreakToday;
   bool? _shouldReloadData;
+  bool? _isDeveloper;
   List<String>? _activeWorkouts;
   List<String>? _progressMonitors;
   DateTime? birthday;
@@ -51,6 +52,7 @@ class FredericUser {
   bool get hasStreak => streak != 0;
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
   bool get shouldReloadFromDB => _shouldReloadData ?? false;
+  bool get isDeveloper => _isDeveloper ?? false;
   String get email => _email;
   String get name => _name ?? '';
   String get username => _username ?? '';
@@ -123,6 +125,7 @@ class FredericUser {
     streakStartDate = data['streakstart']?.toDate();
     streakLatestDate = data['streaklatest']?.toDate();
     _shouldReloadData = data['should_reload_data'];
+    _isDeveloper = data['is_developer'];
   }
 
   Map<String, dynamic> toMap() {
