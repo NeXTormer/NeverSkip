@@ -34,6 +34,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       yield await event.process(this);
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
+        // don't call userDataChanged() here, it will create a memory leak
       });
     } else {
       yield await event.process(this);
@@ -59,6 +60,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   void userDataChanged() {
     authInterface.update(state);
+    state.calculateDerivedAttributes();
     add(FredericUserDataChangedEvent());
   }
 

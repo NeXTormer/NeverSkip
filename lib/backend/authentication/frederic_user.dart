@@ -13,7 +13,7 @@ class FredericUser {
         authState = FredericAuthState.Authenticated,
         statusMessage = '' {
     fromMap(id, email, data);
-    _calculateDerivedAttributes();
+    calculateDerivedAttributes();
   }
 
   FredericUser.only(this.id, String email)
@@ -195,7 +195,7 @@ class FredericUser {
     return false;
   }
 
-  void _calculateDerivedAttributes() {
+  void calculateDerivedAttributes() {
     _calculateStreak();
   }
 
