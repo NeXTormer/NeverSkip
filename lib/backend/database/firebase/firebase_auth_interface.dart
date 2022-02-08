@@ -129,7 +129,6 @@ class FirebaseAuthInterface implements FredericAuthInterface {
       if (callCallback) {
         _onUpdateData?.call(user, false);
       }
-      print('got data from db');
       return user;
     } catch (e) {
       return FredericUser.noAuth();
@@ -142,13 +141,9 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     if (_box?.isEmpty ?? true) return _reloadUserData(uid, email, false);
     final data = _box?.get(0);
     if (data != null) {
-      print('loading data form db');
       _reloadUserData(uid, email, true); // NO AWAIT
-      print('returning cached data');
       return FredericUser.fromMap(uid, email, Map<String, dynamic>.from(data));
     }
-
-    print('return without cache');
     return _reloadUserData(uid, email, false);
   }
 

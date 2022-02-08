@@ -325,6 +325,38 @@ class FredericColorTheme {
       this.greyTextColor = const Color(0xFFC4C4C4),
       this.cardBorderColor = Colors.transparent});
 
+  FredericColorTheme.fromColor(Color color, bool dark) {
+    ColorScheme scheme = ColorScheme.fromSeed(
+        seedColor: color,
+        brightness: dark ? Brightness.dark : Brightness.light);
+    bool colorful = dark || false;
+    this.name = "Custom";
+    this.uid = 999;
+
+    this.mainColor = scheme.primary;
+    this.mainColorInText = scheme.primary;
+    this.mainColorLight = scheme.primary.withAlpha(15);
+    this.accentColor = scheme.secondary;
+    this.accentColorLight = scheme.secondary.withAlpha(15);
+    this.positiveColor = scheme.tertiary;
+    this.positiveColorLight = scheme.tertiary.withAlpha(15);
+    this.negativeColor = scheme.error;
+    this.negativeColorLight = scheme.error.withAlpha(15);
+    this.dividerColor = scheme.outline;
+    this.backgroundColor = scheme.background;
+    this.cardBackgroundColor = scheme.tertiary.withOpacity(0.038);
+    this.greyColor = scheme.onSurface;
+    this.disabledGreyColor = const Color(0x66A5A5A5);
+    this.textColor = scheme.onBackground;
+    this.textColorBright = Colors.black;
+    this.textColorColorfulBackground =
+        colorful ? scheme.onPrimary : scheme.onBackground;
+    this.isDark = dark;
+    this.isColorful = colorful;
+    this.greyTextColor = const Color(0xFFC4C4C4);
+    this.cardBorderColor = Colors.transparent;
+  }
+
   static FredericColorTheme find(int id) {
     switch (id) {
       case 1:
@@ -406,33 +438,33 @@ class FredericColorTheme {
     return _allThemes;
   }
 
-  final String name;
-  final int uid;
+  late final String name;
+  late final int uid;
 
-  final bool isDark;
-  final bool isColorful;
+  late final bool isDark;
+  late final bool isColorful;
 
-  final Color mainColor;
-  final Color mainColorLight;
-  final Color accentColor;
-  final Color accentColorLight;
-  final Color positiveColor;
-  final Color positiveColorLight;
-  final Color negativeColor;
-  final Color negativeColorLight;
+  late final Color mainColor;
+  late final Color mainColorLight;
+  late final Color accentColor;
+  late final Color accentColorLight;
+  late final Color positiveColor;
+  late final Color positiveColorLight;
+  late final Color negativeColor;
+  late final Color negativeColorLight;
 
-  final Color dividerColor;
-  final Color backgroundColor;
-  final Color cardBackgroundColor;
-  final Color greyColor;
-  final Color disabledGreyColor;
+  late final Color dividerColor;
+  late final Color backgroundColor;
+  late final Color cardBackgroundColor;
+  late final Color greyColor;
+  late final Color disabledGreyColor;
 
-  final Color mainColorInText;
-  final Color textColor;
-  final Color textColorBright;
-  final Color textColorColorfulBackground;
-  final Color greyTextColor;
-  final Color cardBorderColor;
+  late final Color mainColorInText;
+  late final Color textColor;
+  late final Color textColorBright;
+  late final Color textColorColorfulBackground;
+  late final Color greyTextColor;
+  late final Color cardBorderColor;
 
   bool get isBright => !isDark;
   bool get isMonotone => !isColorful;

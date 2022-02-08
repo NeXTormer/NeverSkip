@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/screens/history_screen.dart';
 import 'package:frederic/widgets/home_screen/misc_list_item.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 
@@ -17,6 +18,8 @@ class MiscStuffSegment extends StatelessWidget {
             MiscListItem(
               text: 'History',
               icon: Icons.history,
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (c) => HistoryScreen())),
             )
           ],
         ),
