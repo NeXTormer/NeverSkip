@@ -41,7 +41,7 @@ class FredericSetList {
 
   // TODO: make _setDocuments an ordered list to optimize it?
   List<FredericSet> getLatestSets([int count = 6]) {
-    final profiler = FredericProfiler.track('get latest sets');
+    final profiler = FredericProfiler.track('Get latest sets. Count: $count');
     List<FredericSet> sets = <FredericSet>[];
     _setDocuments.sort();
     int documentIndex = 0;

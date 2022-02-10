@@ -107,6 +107,20 @@ class FredericSetListData {
     return sets[value]!;
   }
 
+  /// TODO: Caching
+  Map<String, List<FredericSet>> getSetHistoryByDay(DateTime day) {
+    final Map<String, List<FredericSet>> setsOnDay =
+        <String, List<FredericSet>>{};
+
+    sets.forEach((activity, setList) {
+      final daySets = setList.getTodaysSets(day);
+      if (daySets.isNotEmpty) {
+        setsOnDay[activity] = daySets;
+      }
+    });
+    return setsOnDay;
+  }
+
   List<FredericSet> getTodaysSets(FredericActivity activity, [DateTime? day]) {
     day = day ?? DateTime.now();
     FredericSetList setList = this[activity.id];

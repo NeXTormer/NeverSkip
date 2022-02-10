@@ -56,14 +56,18 @@ class _CalendarActivityCardContentState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          Text(widget.activity.activity.name,
-                              style: TextStyle(
-                                  //textBaseline: TextBaseline.alphabetic,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: theme.textColor)),
-                          Expanded(child: Container()),
+                          Flexible(
+                            child: Text(widget.activity.activity.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    //textBaseline: TextBaseline.alphabetic,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: theme.textColor)),
+                          ),
+                          //Expanded(child: Container()),
                         ]),
                         Row(
                           children: [

@@ -8,6 +8,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/frederic_auth_interface.dart';
 import 'package:frederic/main.dart';
+import 'package:hive/hive.dart';
 
 import 'frederic_auth_event.dart';
 
@@ -85,6 +86,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   void signOut(BuildContext context) async {
     // await here is really important!
     await FirebaseAuth.instance.signOut();
+    await Hive.deleteFromDisk();
     FredericBase.forceFullRestart(context);
   }
 
