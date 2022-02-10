@@ -61,7 +61,10 @@ class UserSettingsScreen extends StatelessWidget {
                 changeAttributeWidget: TextAttributeChanger(
                   placeholder: 'Name',
                   currentValue: () => user.name,
-                  updateValue: (newValue) => user.name = newValue,
+                  updateValue: (newValue) {
+                    user.name = newValue;
+                    FredericBackend.instance.userManager.userDataChanged();
+                  },
                 ),
               ),
               SettingsElement(
@@ -74,7 +77,10 @@ class UserSettingsScreen extends StatelessWidget {
                 changeAttributeWidget: TextAttributeChanger(
                   placeholder: 'Username',
                   currentValue: () => user.username,
-                  updateValue: (newValue) => user.username = newValue,
+                  updateValue: (newValue) {
+                    user.username = newValue;
+                    FredericBackend.instance.userManager.userDataChanged();
+                  },
                 ),
               ),
               SettingsElement(
@@ -83,8 +89,13 @@ class UserSettingsScreen extends StatelessWidget {
                 icon: Icons.person,
                 changeAttributeWidget: ImageAttributeChanger(
                     currentValue: () => user.image,
-                    updateValue: (imageFile) =>
-                        user.updateProfilePicture(imageFile)),
+                    updateValue: (imageFile) async {
+                      bool success = await user.updateProfilePicture(imageFile);
+                      if (success) {
+                        FredericBackend.instance.userManager.userDataChanged();
+                      }
+                      return success;
+                    }),
               ),
               SettingsElement(
                   text: 'Date of Birth',
@@ -94,7 +105,10 @@ class UserSettingsScreen extends StatelessWidget {
                   changerTitle: 'Update your birthday',
                   changeAttributeWidget: DateTimeAttributeChanger(
                     currentValue: () => user.birthday,
-                    updateValue: (newDate) => user.birthday = newDate,
+                    updateValue: (newDate) {
+                      user.birthday = newDate;
+                      FredericBackend.instance.userManager.userDataChanged();
+                    },
                   ),
                   icon: Icons.cake_outlined),
               SettingsElement(

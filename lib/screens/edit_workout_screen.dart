@@ -57,8 +57,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             body: Column(
               children: [
                 EditWorkoutHeader(workout),
-                if (theme.isBright) SizedBox(height: 8),
-                if (theme.isBright) FredericDivider(),
+                if (theme.isMonotone) SizedBox(height: 8),
+                if (theme.isMonotone) FredericDivider(),
                 SizedBox(height: 8),
                 WeekdaysSliderSegment(
                     defaultSelectedIndex: widget.defaultPage,

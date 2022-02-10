@@ -2,12 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/database/frederic_auth_interface.dart';
+import 'package:hive/hive.dart';
 
 class FirebaseAuthInterface implements FredericAuthInterface {
   FirebaseAuthInterface(
-      {required this.firebaseAuthInstance, required this.firestoreInstance});
+      {required this.firebaseAuthInstance, required this.firestoreInstance}) {
+    firebaseAuthInstance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        _onUpdateData?.call(
+            FredericUser.only(user.uid, user.email ?? 'no-mail'), true);
+      }
+    });
+
+    Hive.openBox<Map<dynamic, dynamic>>(_name).then((value) => _box = value);
+  }
   final FirebaseAuth firebaseAuthInstance;
   final FirebaseFirestore firestoreInstance;
+
+  void Function(FredericUser, bool)? _onUpdateData;
+
+  final String _name = 'userdata';
+  Box<Map<dynamic, dynamic>>? _box;
 
   @override
   Future<void> changePassword(FredericUser user, String newPassword) {
@@ -92,8 +107,8 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     }
   }
 
-  @override
-  Future<FredericUser> getUserData(String uid, String email) async {
+  Future<FredericUser> _reloadUserData(
+      String uid, String email, bool callCallback) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> userDocument =
           await firestoreInstance.collection('users').doc(uid).get();
@@ -107,10 +122,29 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           .doc(uid)
           .update({'last_login': Timestamp.now()});
 
-      return FredericUser.fromMap(uid, email, userDocument.data()!);
+      if (_box == null) _box = await Hive.openBox(_name);
+      _box!.put(0, Map.from(userDocument.data()!));
+
+      final user = FredericUser.fromMap(uid, email, userDocument.data()!);
+      if (callCallback) {
+        _onUpdateData?.call(user, false);
+      }
+      return user;
     } catch (e) {
       return FredericUser.noAuth();
     }
+  }
+
+  @override
+  Future<FredericUser> getUserData(String uid, String email) async {
+    _box = await Hive.openBox(_name);
+    if (_box?.isEmpty ?? true) return _reloadUserData(uid, email, false);
+    final data = _box?.get(0);
+    if (data != null) {
+      _reloadUserData(uid, email, true); // NO AWAIT
+      return FredericUser.fromMap(uid, email, Map<String, dynamic>.from(data));
+    }
+    return _reloadUserData(uid, email, false);
   }
 
   @override
@@ -187,5 +221,11 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           statusMessage:
               'Sign up Error. Please contact support. [Error UDNFAS]');
     return FredericUser.fromMap(id, email, userDocument.data()!);
+  }
+
+  @override
+  void registerDataChangedListener(
+      void Function(FredericUser user, bool restoreLoginStatus) onDataChanged) {
+    _onUpdateData = onDataChanged;
   }
 }

@@ -53,6 +53,7 @@ class CalendarDay extends StatelessWidget {
         }
       }
 
+      print('build today'); // leave in to check for loops
       if (dayFinished && activitiesDueToday.isNotEmpty) {
         FredericBackend.instance.messageBus.add(FredericSystemMessage(
             type: FredericSystemMessageType.CalendarDayCompleted,

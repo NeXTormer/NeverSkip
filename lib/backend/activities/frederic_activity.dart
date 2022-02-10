@@ -36,7 +36,9 @@ class FredericActivity
 
   FredericActivity.noSuchActivity(String id)
       : this.id = id,
-        _name = 'No Such Activity found',
+        _name = 'Activity not found',
+        _description = 'Maybe this activity has been deleted.',
+        _owner = 'global',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
 

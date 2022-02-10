@@ -75,10 +75,12 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
               elevation: 0,
               backgroundColor:
                   theme.isColorful ? theme.mainColor : theme.backgroundColor,
-              selectedItemColor:
-                  theme.isColorful ? Colors.white : theme.accentColor,
-              unselectedItemColor:
-                  theme.isColorful ? Colors.white : theme.mainColor,
+              selectedItemColor: theme.isColorful
+                  ? theme.textColorColorfulBackground
+                  : theme.accentColor,
+              unselectedItemColor: theme.isColorful
+                  ? theme.textColorColorfulBackground
+                  : theme.mainColor,
               showUnselectedLabels: true,
               type: BottomNavigationBarType.fixed,
               currentIndex: currentIndex,

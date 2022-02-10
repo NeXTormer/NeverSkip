@@ -49,7 +49,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   @override
   Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
-    print(event);
     yield FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
@@ -106,6 +105,20 @@ class FredericSetListData {
       sets[value] = FredericSetList.create(value);
     }
     return sets[value]!;
+  }
+
+  /// TODO: Caching
+  Map<String, List<FredericSet>> getSetHistoryByDay(DateTime day) {
+    final Map<String, List<FredericSet>> setsOnDay =
+        <String, List<FredericSet>>{};
+
+    sets.forEach((activity, setList) {
+      final daySets = setList.getTodaysSets(day);
+      if (daySets.isNotEmpty) {
+        setsOnDay[activity] = daySets;
+      }
+    });
+    return setsOnDay;
   }
 
   List<FredericSet> getTodaysSets(FredericActivity activity, [DateTime? day]) {

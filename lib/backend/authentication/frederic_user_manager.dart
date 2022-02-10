@@ -8,6 +8,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/frederic_auth_interface.dart';
 import 'package:frederic/main.dart';
+import 'package:hive/hive.dart';
 
 import 'frederic_auth_event.dart';
 
@@ -17,12 +18,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       : _backend = backend,
         super(FredericUser.noAuth()) {
     streakManager = StreakManager(this, _backend);
-
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        add(FredericRestoreLoginStatusEvent(user));
-      }
-    });
+    authInterface.registerDataChangedListener(handleUserDataUpdate);
   }
 
   late final StreakManager streakManager;
@@ -39,6 +35,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       yield await event.process(this);
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
+        // don't call userDataChanged() here, it will create a memory leak
       });
     } else {
       yield await event.process(this);
@@ -54,8 +51,17 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
+  void handleUserDataUpdate(FredericUser user, bool restoreLogin) {
+    if (restoreLogin) {
+      add(FredericRestoreLoginStatusEvent(user));
+    } else {
+      add(FredericUserDataChangedEvent(user));
+    }
+  }
+
   void userDataChanged() {
     authInterface.update(state);
+    state.calculateDerivedAttributes();
     add(FredericUserDataChangedEvent());
   }
 
@@ -80,6 +86,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   void signOut(BuildContext context) async {
     // await here is really important!
     await FirebaseAuth.instance.signOut();
+    await Hive.deleteFromDisk();
     FredericBase.forceFullRestart(context);
   }
 

@@ -49,6 +49,7 @@ class NormalActivityCardContent extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +71,6 @@ class NormalActivityCardContent extends StatelessWidget {
                       )
                   ],
                 ),
-                SizedBox(height: 6),
                 RichText(
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(

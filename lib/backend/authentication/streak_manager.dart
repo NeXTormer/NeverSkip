@@ -23,14 +23,18 @@ class StreakManager {
 
   void _handleCompleteDay() {
     if (!userManager.state.finishedLoading) return;
+    final now = DateTime.now();
+    //if (userManager.state.streakLatestDate?.isSameDay(now) ?? false) return;
+
     if (userManager.state.hasStreak) {
-      if (userManager.state.streakLatestDate?.isNotSameDay(DateTime.now()) ??
-          true) {
-        userManager.state.streakLatestDate = DateTime.now();
+      if (userManager.state.streakLatestDate?.isNotSameDay(now) ?? true) {
+        userManager.state.streakLatestDate = now;
+        userManager.userDataChanged();
       }
     } else {
-      userManager.state.streakLatestDate = DateTime.now();
-      userManager.state.streakStartDate = DateTime.now();
+      userManager.state.streakLatestDate = now;
+      userManager.state.streakStartDate = now;
+      userManager.userDataChanged();
     }
   }
 

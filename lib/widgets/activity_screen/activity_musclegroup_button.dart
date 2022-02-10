@@ -27,7 +27,7 @@ class ActivityMuscleGroupButton extends StatelessWidget {
             child: Text(
               label,
               style: TextStyle(
-                color: isActive ? theme.mainColor : theme.greyColor,
+                color: isActive ? theme.mainColor : theme.textColor,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,
                 fontSize: 12,

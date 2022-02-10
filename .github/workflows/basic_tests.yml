@@ -14,7 +14,7 @@ on:
 
 jobs:
   analyze:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     steps:
     # Setup Java environment in order to build the Android app.
@@ -27,14 +27,14 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable'
-        flutter-version: '2.8.0'
+        flutter-version: '2.10.0'
     
     - run: flutter pub get
     - run: flutter format --set-exit-if-changed .
     - run: flutter analyze .
 
   unit_test:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     steps:
       # Setup Java environment in order to build the Android app.
@@ -47,7 +47,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'stable'
-          flutter-version: '2.8.0'
+          flutter-version: '2.10.0'
 
       - run: flutter pub get
       - run: flutter test

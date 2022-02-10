@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 final getIt = GetIt.instance;
 
 FredericColorTheme _colorTheme = FredericColorTheme.blue();
+//FredericColorTheme _theme = FredericColorTheme.fromColor(Colors.brown, true);
 FredericColorTheme get theme => _colorTheme;
 
 void main() async {

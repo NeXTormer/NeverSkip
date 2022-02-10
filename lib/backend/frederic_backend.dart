@@ -109,16 +109,21 @@ class FredericBackend implements FredericMessageProcessor {
 
     _defaults = FredericDefaults(await _defaultsReference.get());
 
+    bool reloadFromDB =
+        _userManager.state.shouldReloadFromDB || _defaults!.alwaysReloadFromDB;
+    _userManager.state.shouldReloadFromDB = false;
+    _userManager.userDataChanged();
+
     await _initializeSets();
-    await _initializeActivities();
-    await _initializeWorkouts();
+    await _initializeActivities(reloadFromDB);
+    await _initializeWorkouts(reloadFromDB);
     await _initializeGoals();
 
     _waitUntilCoreDataHasLoaded.complete();
     profiler.stop();
   }
 
-  Future<void> _initializeActivities() {
+  Future<void> _initializeActivities(bool reloadFromDB) {
     _activityManager.setDataInterface(
         FirestoreCachingDataInterface<FredericActivity>(
             firestoreInstance: firestoreInstance,
@@ -133,10 +138,10 @@ class FredericBackend implements FredericMessageProcessor {
               .collection('activities')
               .where('owner', isEqualTo: _userManager.state.id)
         ]));
-    return _activityManager.reload();
+    return _activityManager.reload(reloadFromDB);
   }
 
-  Future<void> _initializeWorkouts() {
+  Future<void> _initializeWorkouts(bool reloadFromDB) {
     _workoutManager
         .setDataInterface(FirestoreCachingDataInterface<FredericWorkout>(
       firestoreInstance: firestoreInstance,
@@ -156,7 +161,7 @@ class FredericBackend implements FredericMessageProcessor {
             .where('owner', isEqualTo: _userManager.state.id)
       ],
     ));
-    return _workoutManager.reload();
+    return _workoutManager.reload(reloadFromDB);
   }
 
   Future<void> _initializeSets() {
@@ -208,10 +213,14 @@ class FredericDefaults {
     _featuredActivities =
         document.data()?['featured_activities']?.cast<String>() ??
             const <String>[];
+    _alwaysReloadFromDB = document.data()?['always_reload_from_db'];
   }
 
   FredericDefaults.empty();
 
   List<String>? _featuredActivities;
+  bool? _alwaysReloadFromDB;
+
   List<String> get featuredActivities => _featuredActivities ?? <String>[];
+  bool get alwaysReloadFromDB => _alwaysReloadFromDB ?? false;
 }

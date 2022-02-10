@@ -16,10 +16,8 @@ class EnterWeightWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SmallTextCard('-2.5',
-              width: 60,
-              height: 42,
-              onTap: () => handleButton(-2.5, controller)),
+          SmallTextCard('-1',
+              width: 60, height: 42, onTap: () => handleButton(-1, controller)),
           SmallTextCard('-5',
               width: 60, height: 42, onTap: () => handleButton(-5, controller)),
           SmallTextCard(
@@ -32,8 +30,8 @@ class EnterWeightWidget extends StatelessWidget {
           ),
           SmallTextCard('+5',
               width: 60, height: 42, onTap: () => handleButton(5, controller)),
-          SmallTextCard('+2.5',
-              width: 60, height: 42, onTap: () => handleButton(2.5, controller))
+          SmallTextCard('+1',
+              width: 60, height: 42, onTap: () => handleButton(1, controller))
         ],
       ));
     });

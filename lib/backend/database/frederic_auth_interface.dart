@@ -9,6 +9,9 @@ abstract class FredericAuthInterface {
   Future<FredericUser> getUserData(String uid, String email);
   Future<void> logOut();
 
+  void registerDataChangedListener(
+      void Function(FredericUser, bool) onDataChanged);
+
   Future<void> update(FredericUser user);
   Future<bool> reAuthenticate(FredericUser user, String password);
   Future<void> changePassword(FredericUser user, String newPassword);

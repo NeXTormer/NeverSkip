@@ -74,7 +74,7 @@ class _SetCardState extends State<SetCard> {
                       Container(
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(8),
                             color: green
                                 ? theme.positiveColorLight
                                 : theme.mainColorLight),

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../frederic_backend.dart';
@@ -12,11 +13,15 @@ abstract class FredericAuthEvent {
 
 class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
   FredericRestoreLoginStatusEvent(this.user);
-  User user;
+  FredericUser user;
 
   @override
-  Future<FredericUser> process(FredericUserManager userManager) {
-    return userManager.authInterface.getUserData(user.uid, user.email ?? '');
+  Future<FredericUser> process(FredericUserManager userManager) async {
+    final tracker = FredericProfiler.track("GetUserData persistent");
+    FredericUser u =
+        await userManager.authInterface.getUserData(user.id, user.email);
+    tracker.stop();
+    return u;
   }
 }
 
@@ -78,8 +83,12 @@ class FredericSignOutEvent extends FredericAuthEvent {
 }
 
 class FredericUserDataChangedEvent extends FredericAuthEvent {
+  FredericUserDataChangedEvent([this.newData]);
+
+  FredericUser? newData;
+
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    return userManager.state;
+    return newData ?? userManager.state;
   }
 }
