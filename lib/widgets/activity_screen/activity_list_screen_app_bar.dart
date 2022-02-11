@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
@@ -51,7 +52,7 @@ class _ActivityListScreenAppBarState extends State<ActivityListScreenAppBar> {
         child: Column(
           children: [
             FredericTextField(
-              'Search...',
+              tr('search_field'),
               onSuffixIconTap: () {
                 setState(() {
                   textController.text = '';

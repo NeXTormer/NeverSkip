@@ -4,8 +4,9 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:intl/intl.dart';
 
 class HistoryDateCard extends StatelessWidget {
-  HistoryDateCard(this.date, {Key? key, this.formatString = 'd MMMM, y'})
-      : format = DateFormat(formatString),
+  HistoryDateCard(this.date,
+      {String? locale, Key? key, this.formatString = 'd MMMM, y'})
+      : format = DateFormat(formatString, locale),
         super(key: key);
   final DateTime date;
   final String formatString;

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/widgets/history_screen/history_activity_card.dart';
@@ -17,7 +18,7 @@ class HistoryDay extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
         child: Column(
           children: [
-            HistoryDateCard(day),
+            HistoryDateCard(day, locale: context.locale.languageCode),
             const SizedBox(height: 8),
             for (final x in sets.entries)
               Padding(

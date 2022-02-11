@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
@@ -54,7 +55,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 2),
                     child: Text(
-                      'Exercise Progress',
+                      tr('progress.add_progress_title'),
                       style: TextStyle(
                           fontFamily: 'Montserrat',
                           color: theme.textColorColorfulBackground,
@@ -72,7 +73,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          'Save',
+                          tr('save'),
                           style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: theme.isColorful
@@ -123,7 +124,8 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                           child: Padding(
                         padding: const EdgeInsets.only(
                             left: 16, right: 16, top: 16, bottom: 16),
-                        child: FredericHeading('Current Performance'),
+                        child: FredericHeading.translate(
+                            'progress.current_performance'),
                       )),
                       SliverToBoxAdapter(
                         child: Padding(
@@ -142,7 +144,8 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                           child: Padding(
                         padding: const EdgeInsets.only(
                             left: 16, right: 16, top: 16, bottom: 16),
-                        child: FredericHeading('Previous Performance'),
+                        child: FredericHeading.translate(
+                            'progress.previous_performance'),
                       )),
                       SliverList(
                           delegate: SliverChildBuilderDelegate(
@@ -220,7 +223,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(widget.activity.name,
+                Text(
+                    widget.activity
+                        .getNameLocalized(context.locale.languageCode),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -230,7 +235,9 @@ class __DisplayActivityCardState extends State<_DisplayActivityCard> {
                         fontSize: 17)),
                 SizedBox(height: 4),
                 Flexible(
-                  child: Text(widget.activity.description,
+                  child: Text(
+                      widget.activity
+                          .getDescriptionLocalized(context.locale.languageCode),
                       maxLines: expanded ? 6 : 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

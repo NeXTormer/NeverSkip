@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,9 @@ class _CalendarActivityCardContentState
                       children: [
                         Row(children: [
                           Flexible(
-                            child: Text(widget.activity.activity.name,
+                            child: Text(
+                                widget.activity.activity.getNameLocalized(
+                                    context.locale.languageCode),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

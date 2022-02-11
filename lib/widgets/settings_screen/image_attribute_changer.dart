@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
@@ -51,10 +52,9 @@ class _ImageAttributeChangerState extends State<ImageAttributeChanger> {
               ),
             ),
           SizedBox(height: 32),
-          Text(
-              'Your new profile picture may not be immediately visible in the app. If your profile pictures doesn\'t change within a few seconds you can restart the app.'),
+          Text(tr('settings.picture.description')),
           SizedBox(height: 24),
-          FredericButton('Upload new Image', inverted: true,
+          FredericButton(tr('settings.picture.button'), inverted: true,
               onPressed: () async {
             ImagePicker picker = ImagePicker();
             XFile? file = await picker.pickImage(source: ImageSource.gallery);

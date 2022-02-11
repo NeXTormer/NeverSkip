@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
@@ -69,7 +70,9 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                           widget.editable
                               ? Container(
                                   width: 200,
-                                  child: Text(widget.activity.activity.name,
+                                  child: Text(
+                                      widget.activity.activity.getNameLocalized(
+                                          context.locale.languageCode),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           //textBaseline: TextBaseline.alphabetic,
@@ -78,7 +81,9 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                                           fontWeight: FontWeight.w500,
                                           color: theme.textColor)),
                                 )
-                              : Text(widget.activity.activity.name,
+                              : Text(
+                                  widget.activity.activity.getNameLocalized(
+                                      context.locale.languageCode),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       //textBaseline: TextBaseline.alphabetic,

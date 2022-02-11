@@ -1,0 +1,184 @@
+{
+  "home":
+  {
+    "title": "Let's find you a Workout!",
+    "subtitle": "Good {}, {}!",
+    "personal_records": "Personal Records",
+    "my_goals": "My Goals",
+    "training_volume_chart_title": "This week's training",
+    "training_volume_chart_subtitle": "training volume",
+    "achievements": "My Achievements",
+    "other": "Other",
+    "history_button": "History",
+    "time_of_day":
+    {
+      "morning": "morning",
+      "day": "day",
+      "afternoon": "afternoon",
+      "evening": "evening"
+    },
+    "navbar": "Home"
+  },
+  "calendar":
+  {
+    "title": "Upcoming Exercises",
+    "subtitle": "Let's get to Work!",
+    "navbar": "Calendar"
+  },
+  "exercises":
+  {
+    "title": "All Exercises",
+    "subtitle": "Find an Exercise",
+    "featured": "Featured",
+    "muscle_groups":
+    {
+      "title": "Muscle Groups",
+      "all": "All",
+      "arms": "Arms",
+      "chest": "Chest",
+      "back": "Back",
+      "abs": "Abs",
+      "legs": "Legs"
+    },
+    "navbar": "Exercises"
+  },
+  "workouts":
+  {
+    "title": "All Workout Plans",
+    "subtitle": "Find your perfect Workout Plan",
+    "enabled": "Active",
+    "disabled": "Other",
+    "navbar": "Workouts"
+  },
+  "progress":
+  {
+    "add_progress_title": "Exercise Progress",
+    "current_performance": "Current Performance",
+    "previous_performance": "Previous Performance",
+    "smart_suggestions": "Smart Suggestions",
+    "repetitions": {
+      "one": "Repetition",
+      "other": "Repetitions"
+    },
+    "weight": "Weight",
+    "reps":
+    {
+      "one": "Rep",
+      "other": "Reps"
+    },
+    "sets": {
+      "one": "Set",
+      "other": "Sets"
+    }
+  },
+  "dates": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "short":
+    {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    }
+  },
+  "settings":
+  {
+    "title": "Settings",
+    "subtitle": "Make it fit your needs perfectly",
+    "account_subtitle": "Manage your User Account",
+    "account_title": "User Settings",
+    "customization": "Customization",
+    "empty": "Empty",
+    "color_theme":
+    {
+      "title": "Color Theme",
+      "changer_title": "Change the Color Theme"
+    },
+    "preferences": "Preferences",
+    "show_onboarding": "Show Introduction",
+    "actions": "Actions",
+    "reload_caches": "Reload caches from Database",
+    "user":
+    {
+      "your_data": "Your Data",
+      "name":
+      {
+        "title": "Name",
+        "changer_title": "Change your name"
+      },
+      "picture":
+      {
+        "title": "Profile Picture",
+        "button": "Uplaod new image",
+        "changer_title": "Upload a new Profile Picture",
+        "description": "Your new profile picture may not be immediately visible in the app. If your profile picture doesn't change within a few seconds you can restart the app."
+      },
+      "date_of_birth":
+      {
+        "title": "Date of Birth",
+        "changer_title": "Update your birthday",
+        "description": "Your birthday is used to calculate your current age.",
+      },
+      "email_address_title": "E-Mail Address",
+      "sign_out":
+      {
+        "title": "Sign Out",
+        "text": "Do you want to sign out?"
+      },
+      "change_password":
+      {
+        "title": "Change Password",
+        "changer_title": "Change your Password",
+        "current": "Current Password",
+        "current_field": "Enter your current password",
+        "new": "New Password",
+        "new_field": "Enter your new password",
+        "repeat": "Repeat new Password",
+        "repeat_field": "Repeat your new password",
+        "button": "Change Password",
+        "success": "Password successfully changed!",
+        "no_user": "User does not exist!",
+        "fill_all_fields": "Please fill out all fields",
+        "no_match": "The passwords to not match",
+        "wrong_password": "Wrong password",
+        "other_error": "Other error {}.",
+        "weak_password": "Weak password!"
+      },
+      "delete_account":
+      {
+        "title": "Delete Account",
+        "changer_title": "Delete Account",
+        "description": "Do you really want to delete your account? This action can not be undone and ALL your data will be lost!",
+        "enter_pw_title": "Enter your password below to make sure its you.",
+        "enter_pw_field": "Enter your password",
+        "reason":
+        {
+          "title": "Please tell us why you want to delete your account.",
+          "complicated": "Its too complicated",
+          "no_need": "I don't need it",
+          "not_enough_features": "It doesn't do everything I need",
+          "not_working": "It didn't work as expected",
+          "performance_issues": "Performance issues or lag",
+          "bugs": "Too many errors/bugs"
+        },
+        "optional_feedback": "Optional Feedback",
+        "contact": "If you have any issues of suggestions we would love to hear from you at office@hawkford.io.",
+        "button": "Delete account forever"
+      }
+    }
+  },
+  "save": "Save",
+  "cancel": "Cancel",
+  "close": "Close",
+  "search_field": "Search...",
+  "app_name": "NeverSkip Fitness"
+}

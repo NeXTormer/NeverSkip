@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,8 +27,8 @@ class CalendarScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               slivers: [
                 FredericSliverAppBar(
-                  title: 'Upcoming Exercises',
-                  subtitle: 'Let\'s get to Work',
+                  title: tr('calendar.title'),
+                  subtitle: tr('calendar.subtitle'),
                   icon: StreakIcon(
                       user: user, onColorfulBackground: theme.isColorful),
                 ),

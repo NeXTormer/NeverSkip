@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_musclegroup_button.dart';
@@ -54,15 +55,14 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
               const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
           child: Column(
             children: [
-              FredericHeading(
-                'Muscle Groups',
-              ),
+              FredericHeading.translate('exercises.muscle_groups.title'),
               Stack(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ActivityMuscleGroupButton('All',
+                      ActivityMuscleGroupButton(
+                          tr('exercises.muscle_groups.all'),
                           key: allKey,
                           rightPadding: padding,
                           isActive: selectedIndex == 0, onPressed: () {
@@ -71,7 +71,8 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                           selectedIndex = 0;
                         });
                       }),
-                      ActivityMuscleGroupButton('Arms',
+                      ActivityMuscleGroupButton(
+                          tr('exercises.muscle_groups.arms'),
                           key: armsKey,
                           rightPadding: padding,
                           isActive: selectedIndex == 1, onPressed: () {
@@ -80,7 +81,8 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                           selectedIndex = 1;
                         });
                       }),
-                      ActivityMuscleGroupButton('Chest',
+                      ActivityMuscleGroupButton(
+                          tr('exercises.muscle_groups.chest'),
                           key: chestKey,
                           rightPadding: padding,
                           isActive: selectedIndex == 2,
@@ -88,7 +90,8 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                                 handleMuscleFilters(MuscleGroup.Chest);
                                 selectedIndex = 2;
                               })),
-                      ActivityMuscleGroupButton('Back',
+                      ActivityMuscleGroupButton(
+                          tr('exercises.muscle_groups.back'),
                           key: backKey,
                           rightPadding: padding,
                           isActive: selectedIndex == 3,
@@ -96,7 +99,8 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                                 handleMuscleFilters(MuscleGroup.Back);
                                 selectedIndex = 3;
                               })),
-                      ActivityMuscleGroupButton('Abs',
+                      ActivityMuscleGroupButton(
+                          tr('exercises.muscle_groups.abs'),
                           key: absKey,
                           rightPadding: padding,
                           isActive: selectedIndex == 4,
@@ -104,7 +108,8 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
                                 handleMuscleFilters(MuscleGroup.Abs);
                                 selectedIndex = 4;
                               })),
-                      ActivityMuscleGroupButton('Legs',
+                      ActivityMuscleGroupButton(
+                          tr('exercises.muscle_groups.legs'),
                           key: legsKey,
                           rightPadding: padding,
                           isActive: selectedIndex == 5,

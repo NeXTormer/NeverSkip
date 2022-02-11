@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -8,6 +9,13 @@ class FredericHeading extends StatelessWidget {
       this.subHeading,
       this.icon = ExtraIcons.dots,
       this.fontSize = 15});
+
+  FredericHeading.translate(String key,
+      {this.onPressed,
+      this.subHeading,
+      this.icon = ExtraIcons.dots,
+      this.fontSize = 15})
+      : heading = tr(key);
 
   final Function? onPressed;
   final String heading;

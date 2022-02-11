@@ -72,7 +72,9 @@ class FredericActivity
   String get activityID => id;
 
   String? _name;
+  String? _name_de;
   String? _description;
+  String? _description_de;
   String? _image;
   String? _owner;
   int? _recommendedSets;
@@ -110,11 +112,25 @@ class FredericActivity
     return '';
   }
 
+  String getNameLocalized([String language = 'en']) {
+    if (canEdit) return name;
+    if (language == 'de') return _name_de ?? _name ?? '';
+    return _name ?? '';
+  }
+
+  String getDescriptionLocalized([String language = 'en']) {
+    if (canEdit) return description;
+    if (language == 'de') return _description_de ?? _description ?? '';
+    return _description ?? '';
+  }
+
   @override
   void fromMap(String id, Map<String, dynamic> data) {
     this.id = id;
     _name = data['name'];
+    _name_de = data['name_de'];
     _description = data['description'];
+    _description_de = data['description_de'];
     _image = data['image'];
     _owner = data['owner'];
     _recommendedReps = data['recommendedreps'];
@@ -131,8 +147,10 @@ class FredericActivity
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'name': name,
-      'description': description,
+      'name': _name ?? '',
+      'name_de': _name_de ?? '',
+      'description': _description ?? '',
+      'description_de': _description_de ?? '',
       'image': image,
       'owner': owner,
       'recommendedreps': recommendedReps,

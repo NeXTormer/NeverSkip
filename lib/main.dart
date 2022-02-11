@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -52,6 +53,7 @@ void main() async {
   // == Record all errors within a Flutter context ==
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await EasyLocalization.ensureInitialized();
     await Firebase.initializeApp();
 
     // == Crashlytics & Performance ==
@@ -100,7 +102,12 @@ void main() async {
     }
 
     timeUntilRunApp.stop();
-    runApp(FredericBase());
+    runApp(EasyLocalization(
+        supportedLocales: [Locale('en'), Locale('de')],
+        fallbackLocale: Locale('en'),
+        useOnlyLangCode: true,
+        path: 'assets/translations',
+        child: FredericBase()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
@@ -166,19 +173,16 @@ class _FredericBaseState extends State<FredericBase> {
         child: MaterialApp(
           showPerformanceOverlay: false,
           title: 'NeverSkip Fitness',
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
           theme: ThemeData(
               primaryColor: theme.mainColor,
               brightness: theme.isBright ? Brightness.light : Brightness.dark,
               fontFamily: 'Montserrat',
-              textTheme: TextTheme(
-                headline1: TextStyle(
-                    color: const Color(0xFF272727),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.6,
-                    fontSize: 13),
-              ),
               colorScheme: ColorScheme.fromSwatch().copyWith(
                   secondary: theme.accentColor,
+                  primary: theme.mainColor,
                   brightness:
                       theme.isBright ? Brightness.light : Brightness.dark)),
           home: OrientationBuilder(

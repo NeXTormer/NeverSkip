@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
@@ -50,7 +51,7 @@ class UserSettingsSegment extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Manage your User Account',
+                            tr('settings.account_subtitle'),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

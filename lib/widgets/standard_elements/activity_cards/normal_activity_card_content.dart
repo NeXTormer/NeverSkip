@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/edit_activity_screen.dart';
 import 'package:frederic/widgets/standard_elements/circular_plus_icon.dart';
@@ -55,7 +56,7 @@ class NormalActivityCardContent extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${activity.name}',
+                      '${activity.getNameLocalized(context.locale.languageCode)}',
                       style: TextStyle(
                         color: theme.textColor,
                         fontWeight: FontWeight.w600,
@@ -79,7 +80,8 @@ class NormalActivityCardContent extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           letterSpacing: 0.2,
                           fontSize: 12),
-                      text: '${activity.description}'),
+                      text:
+                          '${activity.getDescriptionLocalized(context.locale.languageCode)}'),
                 ),
               ],
             ),

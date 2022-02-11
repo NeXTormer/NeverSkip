@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
@@ -23,7 +24,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
         Padding(
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 6, bottom: 8),
-          child: FredericHeading('Personal records',
+          child: FredericHeading(tr('home.personal_records'),
               icon: Icons.add,
               onPressed: () => addNewProgressIndicator(context)),
         ),

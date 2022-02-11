@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,10 +40,10 @@ class _PasswordChangerState extends State<PasswordChanger> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                FredericHeading('Current Password'),
+                FredericHeading(tr('settings.change_password.current')),
                 SizedBox(height: 6),
                 FredericTextField(
-                  'Enter your current password',
+                  tr('settings.change_password.current_field'),
                   isPasswordField: true,
                   brightContents: theme.isDark,
                   controller: oldPasswordController,
@@ -50,10 +51,10 @@ class _PasswordChangerState extends State<PasswordChanger> {
                   icon: null,
                 ),
                 SizedBox(height: 16),
-                FredericHeading('New Password'),
+                FredericHeading(tr('settings.change_password.new')),
                 SizedBox(height: 6),
                 FredericTextField(
-                  'Enter your new password',
+                  tr('settings.change_password.new_field'),
                   brightContents: theme.isDark,
                   isPasswordField: true,
                   controller: newPasswordController,
@@ -61,10 +62,10 @@ class _PasswordChangerState extends State<PasswordChanger> {
                   icon: null,
                 ),
                 SizedBox(height: 16),
-                FredericHeading('Repeat new password'),
+                FredericHeading(tr('settings.change_password.repeat')),
                 SizedBox(height: 6),
                 FredericTextField(
-                  'Repeat your new password',
+                  tr('settings.change_password.repeat_field'),
                   brightContents: theme.isDark,
                   isPasswordField: true,
                   controller: newPasswordRepeatController,
@@ -80,17 +81,17 @@ class _PasswordChangerState extends State<PasswordChanger> {
                 if (finished)
                   Align(
                     alignment: Alignment.center,
-                    child: Text('Password successfully changed!',
+                    child: Text(tr('settings.change_password.success'),
                         style: TextStyle(
                             color: theme.positiveColor, fontSize: 16)),
                   ),
                 SizedBox(height: 12),
                 if (finished)
-                  FredericButton('Close',
+                  FredericButton(tr('close'),
                       onPressed: () => Navigator.of(context).pop()),
                 if (finished) SizedBox(height: 16),
                 if (!finished)
-                  FredericButton('Change Password',
+                  FredericButton(tr('settings.change_password.button'),
                       onPressed: () => buttonHandler(context), loading: loading)
               ],
             ));
@@ -106,7 +107,7 @@ class _PasswordChangerState extends State<PasswordChanger> {
     if (oldPassword.isEmpty || password.isEmpty || passwordConfirm.isEmpty) {
       setState(() {
         hasError = true;
-        errorText = 'Please fill out all fields';
+        errorText = tr('settings.change_password.fill_all_fields');
       });
       return;
     }
@@ -114,7 +115,7 @@ class _PasswordChangerState extends State<PasswordChanger> {
     if (password != passwordConfirm) {
       setState(() {
         hasError = true;
-        errorText = 'The passwords do not match.';
+        errorText = tr('settings.change_password.no_match');
       });
       return;
     }
@@ -123,7 +124,7 @@ class _PasswordChangerState extends State<PasswordChanger> {
         FirebaseAuth.instance.currentUser!.email == null) {
       setState(() {
         hasError = true;
-        errorText = 'User does not exist!';
+        errorText = tr('settings.change_password.no_user');
       });
       return;
     }
@@ -142,13 +143,13 @@ class _PasswordChangerState extends State<PasswordChanger> {
       if (e.code == 'wrong-password') {
         setState(() {
           hasError = true;
-          errorText = 'Wrong password';
+          errorText = tr('settings.change_password.wrong_password');
           loading = false;
         });
       }
       setState(() {
         hasError = true;
-        errorText = 'Other error: ${e.code}';
+        errorText = tr('settings.change_password.other_error', args: [e.code]);
         loading = false;
       });
       return;
@@ -161,7 +162,7 @@ class _PasswordChangerState extends State<PasswordChanger> {
       if (e.code == 'weak-password') {
         setState(() {
           hasError = true;
-          errorText = 'Weak new password!';
+          errorText = tr('settings.change_password.weak_password');
           loading = false;
         });
         return;

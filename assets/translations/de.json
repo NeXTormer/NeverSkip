@@ -1,0 +1,97 @@
+{
+  "home":
+  {
+    "title": "Finde deine Übungen!",
+    "subtitle": "Guten {}, {}!",
+    "personal_records": "Persönliche Bestleistungen",
+    "my_goals": "Meine Ziele",
+    "training_volume_chart_title": "Aktuelle Woche",
+    "training_volume_chart_subtitle": "Trainingsvolumen",
+    "achievements": "Meine Errungenschaften",
+    "other": "Weitere",
+    "history_button": "Verlauf",
+    "time_of_day":
+    {
+      "morning": "Morgen",
+      "day": "Tag",
+      "afternoon": "Nachmittag",
+      "evening": "Abend"
+    },
+    "navbar": "Home"
+  },
+  "calendar":
+  {
+    "title": "Anstehende Übungen",
+    "subtitle": "Auf Gehts!",
+    "navbar": "Kalender"
+  },
+  "exercises":
+  {
+    "title": "Alle Übungen",
+    "subtitle": "Finde eine Übung",
+    "featured": "Featured",
+    "muscle_groups":
+    {
+      "title": "Muskelgruppen",
+      "all": "Alle",
+      "arms": "Arme",
+      "chest": "Brust",
+      "back": "Rücken",
+      "abs": "Bauch",
+      "legs": "Beine"
+    },
+    "navbar": "Übungen"
+  },
+  "workouts":
+  {
+    "title": "Alle Workoutpläne",
+    "subtitle": "Finde deinen optimalen Workoutplan",
+    "enabled": "Aktiv",
+    "disabled": "Andere",
+    "navbar": "Workouts"
+  },
+  "progress":
+  {
+    "add_progress_title": "Übungsfortschritt",
+    "current_performance": "Aktuelle Leistung",
+    "previous_performance": "Letzte Leistungen",
+    "smart_suggestions": "Intelligente Vorschläge",
+    "repetitions": {
+      "one": "Wiederholung",
+      "other": "Wiederholungen"
+    },
+    "weight": "Gewicht",
+    "reps":
+    {
+      "one": "WH",
+      "other": "WH"
+    },
+    "sets": {
+      "one": "Set",
+      "other": "Sets"
+    }
+  },
+  "dates": {
+    "monday": "Montag",
+    "tuesday": "Dienstag",
+    "wednesday": "Mittwoch",
+    "thursday": "Donnerstag",
+    "friday": "Freitag",
+    "saturday": "Samstag",
+    "sunday": "Sonntag",
+    "short":
+    {
+      "monday": "Mon",
+      "tuesday": "Die",
+      "wednesday": "Mit",
+      "thursday": "Don",
+      "friday": "Fre",
+      "saturday": "Sam",
+      "sunday": "Son"
+    }
+  },
+  "save": "Speichern",
+  "cancel": "Abbruch",
+  "search_field": "Suchen...",
+  "app_name": "NeverSkip Fitness"
+}

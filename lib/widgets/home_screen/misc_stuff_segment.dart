@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/history_screen.dart';
 import 'package:frederic/widgets/home_screen/misc_list_item.dart';
@@ -13,10 +14,10 @@ class MiscStuffSegment extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: [
-            FredericHeading('Other'),
+            FredericHeading.translate('home.other'),
             SizedBox(height: 12),
             MiscListItem(
-              text: 'History',
+              text: tr('home.history_button'),
               icon: Icons.history,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (c) => HistoryScreen())),

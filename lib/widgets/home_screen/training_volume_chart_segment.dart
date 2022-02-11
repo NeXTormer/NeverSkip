@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
@@ -18,8 +19,8 @@ class TrainingVolumeChartSegment extends StatelessWidget {
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 22, bottom: 8),
           child: FredericHeading(
-            'This week\'s activities',
-            subHeading: 'training volume',
+            tr('home.training_volume_chart_title'),
+            subHeading: tr('home.training_volume_chart_subtitle'),
           ),
         ),
         Padding(
@@ -57,13 +58,20 @@ class TrainingVolumeChartSegment extends StatelessWidget {
                       ],
                     ),
                   ),
-                  buildWeekBar('Mon', volume[0] / highest, 0),
-                  buildWeekBar('Tue', volume[1] / highest, 1),
-                  buildWeekBar('Wed', volume[2] / highest, 2),
-                  buildWeekBar('Thu', volume[3] / highest, 3),
-                  buildWeekBar('Fri', volume[4] / highest, 4),
-                  buildWeekBar('Sat', volume[5] / highest, 5),
-                  buildWeekBar('Sun', volume[6] / highest, 6),
+                  buildWeekBar(
+                      tr('dates.short.monday'), volume[0] / highest, 0),
+                  buildWeekBar(
+                      tr('dates.short.tuesday'), volume[1] / highest, 1),
+                  buildWeekBar(
+                      tr('dates.short.wednesday'), volume[2] / highest, 2),
+                  buildWeekBar(
+                      tr('dates.short.thursday'), volume[3] / highest, 3),
+                  buildWeekBar(
+                      tr('dates.short.friday'), volume[4] / highest, 4),
+                  buildWeekBar(
+                      tr('dates.short.saturday'), volume[5] / highest, 5),
+                  buildWeekBar(
+                      tr('dates.short.sunday'), volume[6] / highest, 6),
                 ],
               )),
             );
