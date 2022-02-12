@@ -84,7 +84,7 @@ class UserSettingsScreen extends StatelessWidget {
               //   ),
               // ),
               SettingsElement(
-                text: tr('settings.picture.title'),
+                text: tr('settings.user.picture.title'),
                 changerTitle: tr('settings.picture.changer_title'),
                 icon: Icons.person,
                 changeAttributeWidget: ImageAttributeChanger(
@@ -98,10 +98,10 @@ class UserSettingsScreen extends StatelessWidget {
                     }),
               ),
               SettingsElement(
-                  text: tr('settings.date_of_birth.title'),
+                  text: tr('settings.user.date_of_birth.title'),
                   subText: user.birthdayFormatted,
-                  infoText: tr('settings.date_of_birth.description'),
-                  changerTitle: tr('settings.date_of_birth.changer_title'),
+                  infoText: tr('settings.user.date_of_birth.description'),
+                  changerTitle: tr('settings.user.date_of_birth.changer_title'),
                   changeAttributeWidget: DateTimeAttributeChanger(
                     currentValue: () => user.birthday,
                     updateValue: (newDate) {
@@ -111,7 +111,7 @@ class UserSettingsScreen extends StatelessWidget {
                   ),
                   icon: Icons.cake_outlined),
               SettingsElement(
-                text: tr('settings.email_address_title'),
+                text: tr('settings.user.email_address_title'),
                 subText: FirebaseAuth.instance.currentUser?.email,
                 icon: Icons.mail_outline_rounded,
                 clickable: false,
@@ -122,25 +122,25 @@ class UserSettingsScreen extends StatelessWidget {
                 future: SharedPreferences.getInstance(),
                 builder: (context, preferences) {
                   return SettingsSegment(
-                      title: 'Privacy Settings',
+                      title: tr('settings.privacy_settings'),
                       elements: <SettingsElement>[
-                        SettingsElement(
-                            text: 'Discoverable by others',
-                            icon: Icons.security,
-                            hasSwitch: true,
-                            defaultSwitchPosition: true),
-                        SettingsElement(
-                            text: 'Publish Streak',
-                            icon: Icons.local_fire_department_outlined,
-                            defaultSwitchPosition: true,
-                            hasSwitch: true),
-                        SettingsElement(
-                            text: 'Manage Friends',
-                            icon: Icons.people,
-                            subText: '7 Friends'),
+                        // SettingsElement(
+                        //     text: 'Discoverable by others',
+                        //     icon: Icons.security,
+                        //     hasSwitch: true,
+                        //     defaultSwitchPosition: true),
+                        // SettingsElement(
+                        //     text: 'Publish Streak',
+                        //     icon: Icons.local_fire_department_outlined,
+                        //     defaultSwitchPosition: true,
+                        //     hasSwitch: true),
+                        // SettingsElement(
+                        //     text: 'Manage Friends',
+                        //     icon: Icons.people,
+                        //     subText: '7 Friends'),
                         SettingsElement(
                           key: UniqueKey(),
-                          text: 'Share Anonymous Analytics',
+                          text: tr('settings.share_analytics'),
                           icon: Icons.analytics_outlined,
                           hasSwitch: true,
                           defaultSwitchPosition: () {
@@ -178,32 +178,33 @@ class UserSettingsScreen extends StatelessWidget {
                 }),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(
-                title: tr('settings.date_of_birth.title'),
+                title: tr('settings.actions'),
                 elements: <SettingsElement>[
                   SettingsElement(
-                      text: tr('settings.sign_out.title'),
+                      text: tr('settings.user.sign_out.title'),
                       icon: Icons.exit_to_app,
                       onTap: () {
                         FredericActionDialog.show(
                             context: context,
                             dialog: FredericActionDialog(
-                                title: tr('settings.sign_out.text'),
+                                title: tr('settings.user.sign_out.text'),
                                 onConfirm: () => FredericBackend
                                     .instance.userManager
                                     .signOut(context)));
                       }),
                   SettingsElement(
-                    text: tr('settings.change_password.title'),
-                    changerTitle: tr('settings.change_password.changer_title'),
+                    text: tr('settings.user.change_password.title'),
+                    changerTitle:
+                        tr('settings.user.change_password.changer_title'),
                     icon: Icons.vpn_key_outlined,
                     changeAttributeWidget: PasswordChanger(),
                   ),
                   SettingsElement(
-                    text: 'Delete Account',
+                    text: tr('settings.user.delete_account.title'),
                     icon: Icons.delete_forever,
-                    infoText:
-                        'Do you really want to delete your account? This action can not be undone!',
-                    changerTitle: 'Delete Account',
+                    infoText: tr('settings.user.delete_account.description'),
+                    changerTitle:
+                        tr('settings.user.delete_account.changer_title'),
                     changeAttributeWidget: AccountDeleter(),
                   ),
                 ]),

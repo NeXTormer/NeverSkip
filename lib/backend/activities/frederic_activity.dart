@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
@@ -18,7 +19,7 @@ class FredericActivity
   ///
   FredericActivity.create(String ownerID)
       : id = '',
-        _name = 'New activity',
+        _name = tr('misc.new_activity'),
         _description = '',
         _owner = ownerID,
         _image =
@@ -36,8 +37,8 @@ class FredericActivity
 
   FredericActivity.noSuchActivity(String id)
       : this.id = id,
-        _name = 'Activity not found',
-        _description = 'Maybe this activity has been deleted.',
+        _name = tr('misc.activity_not_found'),
+        _description = tr('misc.activity_not_found_description'),
         _owner = 'global',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';

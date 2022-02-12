@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/main.dart';
@@ -17,10 +18,12 @@ class ActivityTypeSelector extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildElement('Weighted', selected == FredericActivityType.Weighted,
+          buildElement(
+              tr('misc.weighted'),
+              selected == FredericActivityType.Weighted,
               FredericActivityType.Weighted),
           buildElement(
-              'Calisthenics',
+              tr('misc.calisthenics'),
               selected == FredericActivityType.Calisthenics,
               FredericActivityType.Calisthenics)
         ],

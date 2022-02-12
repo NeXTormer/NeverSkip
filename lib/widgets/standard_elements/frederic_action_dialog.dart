@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
@@ -6,7 +7,7 @@ class FredericActionDialog extends StatelessWidget {
   const FredericActionDialog(
       {this.child,
       this.title,
-      this.actionText = 'Confirm',
+      this.actionText,
       this.childText,
       required this.onConfirm,
       this.destructiveAction = false,
@@ -22,7 +23,7 @@ class FredericActionDialog extends StatelessWidget {
 
   final Widget? child;
   final String? title;
-  final String actionText;
+  final String? actionText;
   final String? childText;
   final bool destructiveAction;
   final bool infoOnly;
@@ -67,7 +68,7 @@ class FredericActionDialog extends StatelessWidget {
                       padding: EdgeInsets.only(
                           left: 12, right: 12, bottom: 12, top: 8),
                       child: FredericButton(
-                        'Okay',
+                        tr('okay'),
                         onPressed: () => Navigator.of(context).pop(true),
                       ),
                     ),
@@ -78,7 +79,7 @@ class FredericActionDialog extends StatelessWidget {
                           child: Container(
                               padding:
                                   EdgeInsets.only(left: 12, bottom: 12, top: 8),
-                              child: FredericButton('Cancel',
+                              child: FredericButton(tr('cancel'),
                                   onPressed: () =>
                                       Navigator.of(context).pop(false),
                                   inverted: true)),
@@ -88,7 +89,7 @@ class FredericActionDialog extends StatelessWidget {
                               padding: EdgeInsets.only(
                                   right: 12, bottom: 12, left: 12, top: 8),
                               child: FredericButton(
-                                actionText,
+                                actionText ?? tr('confirm'),
                                 onPressed: () {
                                   onConfirm();
                                   if (closeOnConfirm) {

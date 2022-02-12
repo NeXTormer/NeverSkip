@@ -45,7 +45,7 @@
   "workouts":
   {
     "title": "Alle Workoutpläne",
-    "subtitle": "Finde deinen optimalen Workoutplan",
+    "subtitle": "Finde deinen Workoutplan",
     "enabled": "Aktiv",
     "disabled": "Andere",
     "navbar": "Workouts"
@@ -67,8 +67,8 @@
       "other": "WH"
     },
     "sets": {
-      "one": "Set",
-      "other": "Sets"
+      "one": "Satz",
+      "other": "Sätze"
     }
   },
   "dates": {
@@ -90,8 +90,154 @@
       "sunday": "Son"
     }
   },
+  "settings":
+  {
+    "title": "Einstellungen",
+    "subtitle": "App Einstellungen und Accountverwaltung",
+    "account_subtitle": "Benutzereinstellungen",
+    "account_title": "Accountverwaltung",
+    "customization": "Personalisierung",
+    "empty": "Leer",
+    "color_theme":
+    {
+      "title": "Farbschema",
+      "changer_title": "Farbschema ändern"
+    },
+    "preferences": "Einstellungen",
+    "privacy_settings": "Privatsphäre",
+    "share_analytics": "Analytikdaten teilen",
+    "show_onboarding": "Einführung anzeigen",
+    "actions": "Aktionen",
+    "reload_caches": "Caches neu laden",
+    "user":
+    {
+      "your_data": "Deine Daten",
+      "name":
+      {
+        "title": "Name",
+        "changer_title": "Name ändern"
+      },
+      "picture":
+      {
+        "title": "Profilfoto",
+        "button": "Neues Foto wählen",
+        "changer_title": "Neues Profilfoto hochladen",
+        "description": "Dein neues Profilfoto ist vielleicht nicht sofort sichtbar. Falls es nach einigen Sekunden noch nicht da ist, kannst Du die App neustarten."
+      },
+      "date_of_birth":
+      {
+        "title": "Geburtsdatum",
+        "changer_title": "Geburtsdatum ändern",
+        "description": "Mit deinem Geburtsdatum wird dein aktuelles Alter berechnet"
+      },
+      "email_address_title": "E-Mail Adresse",
+      "sign_out":
+      {
+        "title": "Abmelden",
+        "text": "Willst Du Dich abmelden?"
+      },
+      "change_password":
+      {
+        "title": "Passwort ändern",
+        "changer_title": "Passwort ändern",
+        "current": "Aktuelles Passwort",
+        "current_field": "Aktuelles Passwort eingeben",
+        "new": "Neues Passwort",
+        "new_field": "Neues Passwort eingeben",
+        "repeat": "Neues Passwort wiederholen",
+        "repeat_field": "Gib das neue Passwort erneut ein",
+        "button": "Passwort ändern",
+        "success": "Dein Passwort wurde geändert!",
+        "no_user": "Benutzer existiert nicht.",
+        "fill_all_fields": "Bitte fülle alle Felder aus.",
+        "no_match": "Die Passwörter stimmen nicht überein.",
+        "wrong_password": "Falsches Passwort.",
+        "other_error": "Anderer Fehler {}.",
+        "weak_password": "Das Passwort ist zu schwach.",
+        "invalid_email": "Die E-Mail ist ungültig."
+      },
+      "delete_account":
+      {
+        "title": "Account löschen",
+        "changer_title": "Account löschen",
+        "description": "Willst du deinen Account wirklich löschen? All deine Daten gehen für immer verloren.",
+        "enter_pw_title": "Gib dein Passwort ein um sicherzugehen, dass Du es bist.",
+        "enter_pw_field": "Passwort eingeben",
+        "reason":
+        {
+          "title": "Bitte sag uns wieso du deinen Account löschen möchtest.",
+          "complicated": "Die App ist zu kompliziert",
+          "no_need": "Ich brauche die App nicht",
+          "not_enough_features": "Die App kann nicht was ich brauche",
+          "not_working_as_expected": "Die App ist nicht wie erwartet",
+          "performance_issues": "Performanceprobleme oder Lag",
+          "bugs": "Zu viele Fehler/Bugs"
+        },
+        "optional_feedback": "Optionales Feedback",
+        "contact": "Wenn du einen Fehler gefunden hast oder sonstige Wünsche hast würden wir uns freuen wenn du uns auf office@hawkford.io bescheid gibst :)",
+        "button": "Account für immer löschen"
+      }
+    }
+  },
+  "login":
+  {
+    "title": "Willkommen zurück",
+    "title_signup": "Erstelle deinen Account",
+    "subtitle": "Logge Dich ein und bleib gesund indem du deine Ziele und Pläne verfolgst.",
+    "subtitle_signup": "Melde dich an um Fit und Gesund zu werden, indem du deine Ziele und Pläne verfolgst.",
+    "have_account": "Du hast schon einen Account?",
+    "not_have_account": "Du hast noch keinen Account?",
+    "log_in": "Einloggen",
+    "sign_up": "Anmelden",
+    "sign_up_google": "Mit Google anmelden",
+    "log_in_google": "Mit Google anmelden",
+    "sign_up_email": "Mit E-Mail anmelden",
+    "log_in_email": "Mit E-Mail einloggen",
+    "password": "Passwort",
+    "confirm_password": "Passwort bestätigen",
+    "forgot_password": "Passwort vergessen?",
+    "agree_tc_1": "Ich stimme den ",
+    "agree_tc_2": "Geschäftsbedingungen",
+    "agree_tc_3": " dieser App zu.",
+    "need_to_accept_tc": "Du musst die Geschäftsbedingungen akzeptieren um diese App zu nutzen."
+  },
+  "misc":
+  {
+    "new_activity": "Neue Übung",
+    "new_workout": "Neues Workout",
+    "activity_not_found": "Übung nicht gefunden",
+    "activity_not_found_description": "Vielleicht wurde diese Übung gelöscht",
+    "workout_not_found": "Workout nicht gefunden",
+    "workout_not_found_description": "Vielleicht wurde dieses Workout gelöscht",
+    "create_workout": "Neues Workout erstellen",
+    "edit_workout": "Dein Workout bearbeiten",
+    "create_activity": "Neue Übung erstellen",
+    "edit_activity": "Deine Übung bearbeiten",
+    "name": "Name",
+    "description": "Beschreibung",
+    "duration": "Dauer",
+    "week": "Woche",
+    "weeks": "Wochen",
+    "repeating": "Wiederholend",
+    "number_of_activities": "Anzahl von Übungen im Workout",
+    "start_day": "Anfangstag",
+    "type": "Typ",
+    "weighted": "Gewichte",
+    "calisthenics": "Calisthenics",
+    "recommended_reps": "Empfohlene Widerholungen",
+    "recommended_sets": "Empfohlene Sätze",
+    "delete_activity": "Willst du diese Übung löschen?",
+    "delete_workout": "Willst du dieses Workout löschen?",
+    "set_reps_and_sets": "Stelle deine gewünschten Wiederholungen und Sätze für diese Übung ein."
+  },
+  "create": "Erstellen",
   "save": "Speichern",
+  "okay": "Okay",
+  "confirm": "Bestätigen",
   "cancel": "Abbruch",
+  "delete": "Löschen",
+  "confirm_delete": "Löschen bestätigen",
+  "close": "Schließen",
   "search_field": "Suchen...",
   "app_name": "NeverSkip Fitness"
 }

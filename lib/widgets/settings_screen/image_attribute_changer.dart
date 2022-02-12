@@ -52,9 +52,9 @@ class _ImageAttributeChangerState extends State<ImageAttributeChanger> {
               ),
             ),
           SizedBox(height: 32),
-          Text(tr('settings.picture.description')),
+          Text(tr('settings.user.picture.description')),
           SizedBox(height: 24),
-          FredericButton(tr('settings.picture.button'), inverted: true,
+          FredericButton(tr('settings.user.picture.button'), inverted: true,
               onPressed: () async {
             ImagePicker picker = ImagePicker();
             XFile? file = await picker.pickImage(source: ImageSource.gallery);

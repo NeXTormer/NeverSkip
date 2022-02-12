@@ -40,10 +40,10 @@ class _PasswordChangerState extends State<PasswordChanger> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                FredericHeading(tr('settings.change_password.current')),
+                FredericHeading(tr('settings.user.change_password.current')),
                 SizedBox(height: 6),
                 FredericTextField(
-                  tr('settings.change_password.current_field'),
+                  tr('settings.user.change_password.current_field'),
                   isPasswordField: true,
                   brightContents: theme.isDark,
                   controller: oldPasswordController,
@@ -51,10 +51,10 @@ class _PasswordChangerState extends State<PasswordChanger> {
                   icon: null,
                 ),
                 SizedBox(height: 16),
-                FredericHeading(tr('settings.change_password.new')),
+                FredericHeading(tr('settings.user.change_password.new')),
                 SizedBox(height: 6),
                 FredericTextField(
-                  tr('settings.change_password.new_field'),
+                  tr('settings.user.change_password.new_field'),
                   brightContents: theme.isDark,
                   isPasswordField: true,
                   controller: newPasswordController,
@@ -62,10 +62,10 @@ class _PasswordChangerState extends State<PasswordChanger> {
                   icon: null,
                 ),
                 SizedBox(height: 16),
-                FredericHeading(tr('settings.change_password.repeat')),
+                FredericHeading(tr('settings.user.change_password.repeat')),
                 SizedBox(height: 6),
                 FredericTextField(
-                  tr('settings.change_password.repeat_field'),
+                  tr('settings.user.change_password.repeat_field'),
                   brightContents: theme.isDark,
                   isPasswordField: true,
                   controller: newPasswordRepeatController,
@@ -81,7 +81,7 @@ class _PasswordChangerState extends State<PasswordChanger> {
                 if (finished)
                   Align(
                     alignment: Alignment.center,
-                    child: Text(tr('settings.change_password.success'),
+                    child: Text(tr('settings.user.change_password.success'),
                         style: TextStyle(
                             color: theme.positiveColor, fontSize: 16)),
                   ),
@@ -91,7 +91,7 @@ class _PasswordChangerState extends State<PasswordChanger> {
                       onPressed: () => Navigator.of(context).pop()),
                 if (finished) SizedBox(height: 16),
                 if (!finished)
-                  FredericButton(tr('settings.change_password.button'),
+                  FredericButton(tr('settings.user.change_password.button'),
                       onPressed: () => buttonHandler(context), loading: loading)
               ],
             ));

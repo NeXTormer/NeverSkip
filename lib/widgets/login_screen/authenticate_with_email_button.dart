@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_auth_event.dart';
@@ -58,8 +59,8 @@ class _AuthenticateWithEmailButtonState
   @override
   Widget build(BuildContext context) {
     buttonText = expanded
-        ? (widget.login ? 'Log in' : 'Sign up')
-        : (widget.login ? 'Log in with E-Mail' : 'Sign up with E-Mail');
+        ? (widget.login ? tr('login.log_in') : tr('login.sign_up'))
+        : (widget.login ? tr('login.log_in_email') : tr('login.sign_up_email'));
     if (loading) {
       if (widget.hasError) {
         loading = false;
@@ -87,14 +88,14 @@ class _AuthenticateWithEmailButtonState
                       icon: ExtraIcons.mail, controller: emailController),
                   SizedBox(height: 10),
                   FredericTextField(
-                    'Password',
+                    tr('login.password'),
                     icon: ExtraIcons.lock,
                     isPasswordField: true,
                     controller: passwordController,
                   ),
                   if (!widget.login) SizedBox(height: 10),
                   if (!widget.login)
-                    FredericTextField('Confirm password',
+                    FredericTextField(tr('login.confirm_password'),
                         isPasswordField: true,
                         icon: ExtraIcons.lock,
                         controller: passwordConfirmationController),
@@ -110,7 +111,7 @@ class _AuthenticateWithEmailButtonState
                           }));
                         },
                         child: Text(
-                          'Forgot password?',
+                          tr('login.forgot_password'),
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w400,
@@ -128,22 +129,25 @@ class _AuthenticateWithEmailButtonState
                         children: [
                           buildCheckBox(),
                           SizedBox(width: 6),
-                          Text('I agree to the ',
-                              style: TextStyle(
-                                  fontSize: 11, color: theme.textColor)),
+                          Text('login.agree_tc_1',
+                                  style: TextStyle(
+                                      fontSize: 11, color: theme.textColor))
+                              .tr(),
                           GestureDetector(
                             onTap: () {
                               launch(widget.termsAndContidionsURL);
                             },
-                            child: Text('Terms & Conditions',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 11,
-                                    color: theme.textColor)),
+                            child: Text('login.agree_tc_2',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11,
+                                        color: theme.textColor))
+                                .tr(),
                           ),
-                          Text(' of this app.',
-                              style: TextStyle(
-                                  fontSize: 11, color: theme.textColor))
+                          Text('login.agree_tc_3',
+                                  style: TextStyle(
+                                      fontSize: 11, color: theme.textColor))
+                              .tr()
                         ],
                       ),
                     ),
@@ -196,7 +200,7 @@ class _AuthenticateWithEmailButtonState
 
     if (widget.login) {
       if (email.isEmpty || password.isEmpty) {
-        widget.onError('Please enter your email and password.');
+        widget.onError(tr('settings.user.change_password.fill_all_fields'));
         return;
       }
       widget.onError(null);
@@ -210,26 +214,25 @@ class _AuthenticateWithEmailButtonState
           password.isEmpty ||
           passwordConfirm.isEmpty ||
           name.isEmpty) {
-        widget.onError('Please fill out all fields');
+        widget.onError(tr('settings.user.change_password.fill_all_fields'));
 
         return;
       }
 
       if (!widget.emailValidator.hasMatch(email)) {
-        widget.onError('Please enter a valid email.');
+        widget.onError(tr('settings.user.change_password.invalid_email'));
 
         return;
       }
 
       if (password != passwordConfirm) {
-        widget.onError('The passwords do not match.');
+        widget.onError(tr('settings.user.change_password.no_match'));
 
         return;
       }
 
       if (!acceptedTermsAndConditions) {
-        widget.onError(
-            'You need to accept the Terms & Conditions to use the app.');
+        widget.onError(tr('login.need_to_accept_tc'));
 
         return;
       }

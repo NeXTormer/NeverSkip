@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -81,14 +82,16 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
       slivers: [
         SliverToBoxAdapter(
             child: FredericBasicAppBar(
-                title: editing ? 'Edit your Activity' : 'Add a new Activity',
+                title: editing
+                    ? tr('misc.edit_activity')
+                    : tr('misc.create_activity'),
                 icon: GestureDetector(
                   onTap: () {
                     saveData();
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                    editing ? 'Save' : 'Add',
+                    editing ? tr('save') : tr('create'),
                     style: TextStyle(
                         color:
                             theme.isColorful ? Colors.white : theme.mainColor,
@@ -113,14 +116,14 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericHeading('Name'),
+            child: FredericHeading.translate('misc.name'),
           ),
         ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FredericTextField(
-              'Name',
+              tr('misc.name'),
               maxLength: 42,
               text: editing ? widget.activity.name : '',
               icon: null,
@@ -131,14 +134,14 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericHeading('Description'),
+            child: FredericHeading.translate('misc.description'),
           ),
         ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: FredericTextField(
-              'Description',
+              tr('misc.description'),
               controller: descriptionController,
               text: editing ? widget.activity.description : '',
               icon: null,
@@ -152,7 +155,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericHeading('Type'),
+            child: FredericHeading.translate('misc.type'),
           ),
         ),
         SliverToBoxAdapter(
@@ -170,7 +173,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericHeading('Muscle Groups'),
+            child: FredericHeading.translate('exercises.muscle_groups.title'),
           ),
         ),
         SliverToBoxAdapter(
@@ -189,7 +192,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericHeading('Recommended Sets'),
+            child: FredericHeading.translate('misc.recommended_sets'),
           ),
         ),
         SliverToBoxAdapter(
@@ -206,7 +209,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: FredericHeading('Recommended Reps'),
+            child: FredericHeading.translate('misc.recommended_reps'),
           ),
         ),
         SliverToBoxAdapter(
@@ -231,7 +234,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: FredericButton(
-                        'Delete',
+                        tr('delete'),
                         mainColor: theme.negativeColor,
                         onPressed: () => delete(context),
                       ),
@@ -240,7 +243,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                 Expanded(
                   flex: 2,
                   child: FredericButton(
-                    editing ? 'Save' : 'Add',
+                    editing ? tr('save') : tr('create'),
                     onPressed: () {
                       saveData();
                       Navigator.of(context).pop();
@@ -303,12 +306,11 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                       Navigator.of(context).pop();
                     });
                   },
-                  title: 'Confirm deletion',
+                  title: tr('delete'),
                   destructiveAction: true,
                   child: deleteButtonLoading
                       ? CircularProgressIndicator()
-                      : Text(
-                          'Do you want to delete the Exercise? This cannot be undone!',
+                      : Text(tr('misc.delete_activity'),
                           textAlign: TextAlign.center),
                 ),
               ),

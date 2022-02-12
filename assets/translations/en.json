@@ -104,6 +104,8 @@
       "changer_title": "Change the Color Theme"
     },
     "preferences": "Preferences",
+    "privacy_settings": "Privacy Settings",
+    "share_analytics": "Share Anonymous Analytics",
     "show_onboarding": "Show Introduction",
     "actions": "Actions",
     "reload_caches": "Reload caches from Database",
@@ -126,7 +128,7 @@
       {
         "title": "Date of Birth",
         "changer_title": "Update your birthday",
-        "description": "Your birthday is used to calculate your current age.",
+        "description": "Your birthday is used to calculate your current age."
       },
       "email_address_title": "E-Mail Address",
       "sign_out":
@@ -151,7 +153,8 @@
         "no_match": "The passwords to not match",
         "wrong_password": "Wrong password",
         "other_error": "Other error {}.",
-        "weak_password": "Weak password!"
+        "weak_password": "Weak password!",
+        "invalid_email": "Please enter a valid E-Mail"
       },
       "delete_account":
       {
@@ -166,7 +169,7 @@
           "complicated": "Its too complicated",
           "no_need": "I don't need it",
           "not_enough_features": "It doesn't do everything I need",
-          "not_working": "It didn't work as expected",
+          "not_working_as_expected": "It didn't work as expected",
           "performance_issues": "Performance issues or lag",
           "bugs": "Too many errors/bugs"
         },
@@ -176,8 +179,64 @@
       }
     }
   },
+  "login":
+  {
+    "title": "Welcome Back",
+    "title_signup": "Create your account",
+    "subtitle": "Sign in and continue so that you can remain healthy by following your daily goals and plans.",
+    "subtitle_signup": "Sign up and create an account so that you can remain healthy by following your daily goals and plans.",
+    "have_account": "Already have an account?",
+    "not_have_account": "Don't have an account?",
+    "log_in": "Log In",
+    "sign_up": "Sign Up",
+    "sign_up_google": "Sign up with Google",
+    "log_in_google": "Log in with Google",
+    "sign_up_email": "Sign up with E-Mail",
+    "log_in_email": "Log in with E-Mail",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "forgot_password": "Forgot password?",
+    "agree_tc_1": "I agree to the ",
+    "agree_tc_2": "Terms & Conditions",
+    "agree_tc_3": " of this app.",
+    "need_to_accept_tc": "You need to accept the Terms & Conditions to use this app."
+  },
+  "misc":
+  {
+    "new_activity": "New exercise",
+    "new_workout": "New workout",
+    "activity_not_found": "Exercise not found",
+    "activity_not_found_description": "Maybe this exercise was deleted",
+    "workout_not_found": "Wortkout not found",
+    "workout_not_found_description": "Maybe this workout was deleted",
+    "create_workout": "Create Workout",
+    "edit_workout": "Edit Workout",
+    "create_activity": "Create a new Exercise",
+    "edit_activity": "Edit your Exercise",
+    "name": "Name",
+    "description": "Description",
+    "duration": "Duration",
+    "week": "Week",
+    "weeks": "Weeks",
+    "repeating": "Repeating",
+    "number_of_activities": "Number of activities in workout",
+    "start_day": "Start day",
+    "type": "Type",
+    "weighted": "Weighted",
+    "calisthenics": "Calisthenics",
+    "recommended_reps": "Recommended Reps",
+    "recommended_sets": "Recommended Sets",
+    "delete_activity": "Do you want to delete the Exercise? This cannot be undone!",
+    "delete_workout": "Do you want to delete the workout plan? This cannot be undone!",
+    "set_reps_and_sets": "Set the desired number of sets and reps for this exercise."
+  },
+  "create": "Create",
   "save": "Save",
+  "okay": "Okay",
+  "confirm": "Confirm",
   "cancel": "Cancel",
+  "delete": "Delete",
+  "confirm_delete": "Confirm deletion",
   "close": "Close",
   "search_field": "Search...",
   "app_name": "NeverSkip Fitness"
