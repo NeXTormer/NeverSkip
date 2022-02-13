@@ -63,6 +63,9 @@ dependencies:
   introduction_screen: ^2.1.0
   cached_network_image: ^3.0.0
 
+  easy_localization: ^3.0.0
+  easy_localization_loader: ^1.0.0
+
   date_format: ^2.0.2
 
 
@@ -72,6 +75,7 @@ dev_dependencies:
   test:
   flutter_test:
     sdk: flutter
+  dart_code_metrics: ^4.10.1
 
 flutter_native_splash:
   background_image: "assets/icon/icon_background.png"
@@ -106,6 +110,7 @@ flutter:
     - assets/images/introduction_screen_3.png
     - assets/images/google/google_logo_light.png
     - assets/images/Medaille.png
+    - assets/translations/
 
   fonts:
      - family: ExtraIcons

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
@@ -69,7 +70,9 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                           widget.editable
                               ? Container(
                                   width: 200,
-                                  child: Text(widget.activity.activity.name,
+                                  child: Text(
+                                      widget.activity.activity.getNameLocalized(
+                                          context.locale.languageCode),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           //textBaseline: TextBaseline.alphabetic,
@@ -78,7 +81,9 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                                           fontWeight: FontWeight.w500,
                                           color: theme.textColor)),
                                 )
-                              : Text(widget.activity.activity.name,
+                              : Text(
+                                  widget.activity.activity.getNameLocalized(
+                                      context.locale.languageCode),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       //textBaseline: TextBaseline.alphabetic,
@@ -100,7 +105,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                             ),
                             SizedBox(width: 2),
                             Text(
-                                '${widget.activity.sets == 1 ? 'set' : 'sets'}',
+                                '${widget.activity.sets == 1 ? tr('progress.sets.one') : tr('progress.sets.other')}',
                                 style: TextStyle(
                                     color: theme.textColor,
                                     fontWeight: FontWeight.w500,
@@ -119,7 +124,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                             ),
                             SizedBox(width: 2),
                             Text(
-                                '${widget.activity.reps == 1 ? 'repetition' : 'repetitions'}',
+                                '${widget.activity.reps == 1 ? tr('progress.repetitions.one') : tr('progress.repetitions.other')}',
                                 style: TextStyle(
                                     color: theme.textColor,
                                     fontWeight: FontWeight.w500,
@@ -221,10 +226,10 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
               padding:
                   const EdgeInsets.only(left: 12, right: 12, top: 4, bottom: 8),
               child: Text(
-                'Set the desired number of sets and reps for this activity',
+                'misc.set_reps_and_sets',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 15),
-              ),
+              ).tr(),
             ),
           Container(
             margin: widget.hideDescription
@@ -239,7 +244,8 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
                 border: Border.all(color: theme.cardBorderColor)),
             child: Column(
               children: [
-                buildSubHeading('Sets', Icons.account_tree_outlined),
+                buildSubHeading(
+                    tr('progress.sets.other'), Icons.account_tree_outlined),
                 SizedBox(height: 12),
                 NumberWheel(
                   controller: widget.setsSliderController,
@@ -248,7 +254,8 @@ class _SelectSetsAndRepsPopupState extends State<SelectSetsAndRepsPopup> {
                   startingIndex: widget.setsSliderController.value.toInt() + 1,
                 ),
                 SizedBox(height: 12),
-                buildSubHeading('Repetitions', Icons.repeat_outlined),
+                buildSubHeading(
+                    tr('progress.repetitions.other'), Icons.repeat_outlined),
                 SizedBox(height: 12),
                 NumberWheel(
                     controller: widget.repsSliderController,

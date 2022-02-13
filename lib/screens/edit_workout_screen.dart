@@ -105,14 +105,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
             Radius.circular(10.0),
           ),
         ),
-        child: Text(
-          'Add Exercise',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.1,
-            fontSize: 15,
-          ),
-        ),
       ),
     );
   }

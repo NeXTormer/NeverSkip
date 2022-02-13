@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -15,11 +16,13 @@ import 'package:provider/provider.dart';
 import '../state/activity_filter_controller.dart';
 
 class ActivityListScreen extends StatelessWidget {
-  ActivityListScreen(
-      {this.isSelector = false,
-      this.onSelect,
-      this.title = 'All exercises',
-      this.subtitle = 'Find an exercise'});
+  ActivityListScreen({
+    this.isSelector = false,
+    this.onSelect,
+    String? title,
+    String? subtitle,
+  })  : this.title = tr(title ?? 'exercises.title'),
+        this.subtitle = tr(title ?? 'exercises.subtitle');
 
   final bool isSelector;
   final void Function(FredericActivity)? onSelect;
@@ -67,7 +70,7 @@ class ActivityListScreen extends StatelessWidget {
                       onSelect: onSelect,
                     ),
                     FeaturedActivitySegment(
-                      'Featured',
+                      tr('exercises.featured'),
                       FredericBackend.instance.defaults.featuredActivities,
                       onTap: onSelect,
                     ),

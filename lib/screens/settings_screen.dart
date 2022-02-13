@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,8 @@ class SettingsScreen extends StatelessWidget {
           slivers: [
             SliverToBoxAdapter(
               child: FredericBasicAppBar(
-                title: 'Settings',
-                subtitle: 'Make it fit your needs perfectly',
+                title: tr('settings.title'),
+                subtitle: tr('settings.subtitle'),
                 icon: FredericAppBarIcon(ExtraIcons.settings),
               ),
             ),
@@ -38,46 +39,41 @@ class SettingsScreen extends StatelessWidget {
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 10)),
             UserSettingsSegment(user),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
-            SettingsSegment(title: 'Customization', elements: <SettingsElement>[
-              SettingsElement(
-                text: 'Color Theme',
-                subText: theme.name,
-                changeAttributeSliver: ColorThemeChanger(),
-                changerTitle: 'Change the Color Theme',
-                icon: Icons.color_lens_outlined,
-              ),
-              // SettingsElement(
-              //   text: 'Werner',
-              //   subText: 'Enabled',
-              //   icon: Icons.description,
-              // ),
-              // SettingsElement(text: 'Reminder Notifications', hasSwitch: true),
-              // SettingsElement(
-              //   text: 'Werner',
-              //   subText: 'Enabled',
-              //   icon: Icons.description,
-              // ),
-            ]),
+            SettingsSegment(
+                title: tr('settings.customization'),
+                elements: <SettingsElement>[
+                  SettingsElement(
+                    text: tr('settings.color_theme.title'),
+                    subText: theme.name,
+                    changeAttributeSliver: ColorThemeChanger(),
+                    changerTitle: tr('settings.color_theme.changer_title'),
+                    icon: Icons.color_lens_outlined,
+                  ),
+                ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
-            SettingsSegment(title: 'Preferences', elements: <SettingsElement>[
-              SettingsElement(
-                text: 'Show introduction',
-                clickable: true,
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (c) => OnboardingScreen())),
-                icon: Icons.add_to_home_screen_outlined,
-              ),
-            ]),
+            SettingsSegment(
+                title: tr('settings.preferences'),
+                elements: <SettingsElement>[
+                  SettingsElement(
+                    text: tr('settings.show_onboarding'),
+                    clickable: true,
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (c) => OnboardingScreen())),
+                    icon: Icons.add_to_home_screen_outlined,
+                  ),
+                ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
-            SettingsSegment(title: 'Actions', elements: <SettingsElement>[
-              SettingsElement(
-                text: 'Reload caches from Database',
-                clickable: true,
-                onTap: () => ReloadCachesFromDBDialog.show(
-                    context: context, dialog: ReloadCachesFromDBDialog()),
-                icon: Icons.refresh_rounded,
-              ),
-            ]),
+            SettingsSegment(
+                title: tr('settings.actions'),
+                elements: <SettingsElement>[
+                  SettingsElement(
+                    text: tr('settings.reload_caches'),
+                    clickable: true,
+                    onTap: () => ReloadCachesFromDBDialog.show(
+                        context: context, dialog: ReloadCachesFromDBDialog()),
+                    icon: Icons.refresh_rounded,
+                  ),
+                ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             if (kDebugMode || user.isDeveloper)
               SettingsSegment(title: 'Debug', elements: <SettingsElement>[

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
@@ -32,14 +33,14 @@ class _WorkoutListAppbarState extends State<WorkoutListAppbar> {
   Widget build(BuildContext context) {
     return FredericSliverAppBar(
       height: 140,
-      title: 'All Workout Plans',
-      subtitle: 'Find your perfect Workout Plan',
+      title: tr('workouts.title'),
+      subtitle: tr('workouts.subtitle'),
       icon:
           StreakIcon(user: widget.user, onColorfulBackground: theme.isColorful),
       trailing: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: FredericTextField(
-          'Search...',
+          tr('search_field'),
           onColorfulBackground: theme.isColorful,
           brightContents: theme.isColorful,
           onSuffixIconTap: () {

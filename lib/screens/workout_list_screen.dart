@@ -38,13 +38,13 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
             SliverToBoxAdapter(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Active'),
+              child: FredericHeading.translate('workouts.enabled'),
             )),
             WorkoutListSegment(true),
             SliverToBoxAdapter(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Other'),
+              child: FredericHeading.translate('workouts.disabled'),
             )),
             WorkoutListSegment(false),
             SliverToBoxAdapter(child: Container(height: 100))

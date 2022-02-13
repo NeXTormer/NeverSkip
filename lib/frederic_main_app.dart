@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 
@@ -16,22 +17,22 @@ class FredericMainApp extends StatelessWidget {
           FredericScreen(
             screen: HomeScreen(),
             icon: ExtraIcons.person,
-            label: 'Home',
+            label: tr('home.navbar'),
           ),
           FredericScreen(
             screen: CalendarScreen(),
             icon: ExtraIcons.calendar,
-            label: 'Calendar',
+            label: tr('calendar.navbar'),
           ),
           FredericScreen(
             screen: ActivityListScreen(),
             icon: ExtraIcons.dumbbell,
-            label: 'Exercises',
+            label: tr('exercises.navbar'),
           ),
           FredericScreen(
             screen: WorkoutListScreen(),
             icon: ExtraIcons.statistics,
-            label: 'Workouts',
+            label: tr('workouts.navbar'),
           ),
         ],
       ),

@@ -30,9 +30,7 @@ class AchievementSegment extends StatelessWidget {
                 Padding(
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, top: 22, bottom: 8),
-                    child: FredericHeading(
-                      'Achievements',
-                    )),
+                    child: FredericHeading.translate('home.achievements')),
                 Container(
                   child: ListView.builder(
                     shrinkWrap: true,

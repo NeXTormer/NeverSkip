@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
@@ -87,7 +88,9 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
         slivers: [
           SliverToBoxAdapter(
               child: FredericBasicAppBar(
-            title: widget.isNewWorkout ? 'Create Workout' : 'Edit Workout',
+            title: widget.isNewWorkout
+                ? tr('misc.create_workout')
+                : tr('misc.edit_workout'),
             leadingIcon: Icon(
               ExtraIcons.settings,
               color: theme.isColorful ? Colors.white : theme.mainColor,
@@ -98,7 +101,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                 Navigator.of(context).pop();
               },
               child: Text(
-                widget.isNewWorkout ? 'Create' : 'Save',
+                widget.isNewWorkout ? tr('create') : tr('save'),
                 style: TextStyle(
                     color: theme.isColorful ? Colors.white : theme.mainColor,
                     fontWeight: FontWeight.w500),
@@ -121,7 +124,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Name'),
+              child: FredericHeading.translate('misc.name'),
             ),
           ),
           SliverToBoxAdapter(
@@ -139,7 +142,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Description'),
+              child: FredericHeading.translate('misc.description'),
             ),
           ),
           SliverToBoxAdapter(
@@ -160,7 +163,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Weeks'),
+              child: FredericHeading.translate('misc.duration'),
             ),
           ),
           SliverToBoxAdapter(
@@ -184,7 +187,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Repeating'),
+                      Text('misc.repeating').tr(),
                       CupertinoSwitch(
                           value: isRepeating,
                           onChanged: (value) {
@@ -199,7 +202,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   SizedBox(height: 12),
                   Row(
                     children: [
-                      Text('Number of activities'),
+                      Text('misc.number_of_activities').tr(),
                       Expanded(child: Container()),
                       Text(
                           '${widget.workout.activities.totalNumberOfActivities}'),
@@ -210,7 +213,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Start day'),
+                      Text('misc.start_day').tr(),
                       FredericCard(
                         width: 100,
                         onTap: () {
@@ -251,7 +254,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                         Expanded(
                             flex: 1,
                             child: FredericButton(
-                              'Delete',
+                              tr('delete'),
                               mainColor: Colors.red,
                               onPressed: () {
                                 showDialog(
@@ -272,11 +275,11 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                               Navigator.of(ctx).pop();
                                             });
                                           },
-                                          title: 'Confirm deletion',
+                                          title: tr('confirm_delete'),
                                           destructiveAction: true,
-                                          child: Text(
-                                              'Do you want to delete the workout plan? This cannot be undone!',
-                                              textAlign: TextAlign.center),
+                                          child: Text('misc.delete_workout',
+                                                  textAlign: TextAlign.center)
+                                              .tr(),
                                         ));
                               },
                               inverted: true,
@@ -286,7 +289,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                       Expanded(
                           flex: 2,
                           child: FredericButton(
-                              widget.isNewWorkout ? 'Create' : 'Save',
+                              widget.isNewWorkout ? tr('create') : tr('save'),
                               onPressed: () {
                             saveData();
                             Navigator.of(context).pop();

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' as loc;
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/number_wheel.dart';
@@ -286,7 +287,8 @@ class _FredericSliderThumb extends SliderComponentShape {
   String getLabelUnit(SliderUnit unit, int value) {
     switch (unit) {
       case SliderUnit.Weeks:
-        return '$value week${value == 1 ? '' : 's'}';
+        if (value == 1) return '$value ' + loc.tr('misc.week');
+        return '$value ' + loc.tr('misc.weeks');
       case SliderUnit.Kilograms:
         return '${labelValue.ceil()} kg';
       case SliderUnit.Kilometers:

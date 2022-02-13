@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_auth_event.dart';
@@ -18,14 +19,6 @@ enum AuthMode { Signup, Login }
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
-
-  final String title = 'Welcome Back';
-  final String titleSignup = 'Create a new account';
-  final String subtitleSignup =
-      'Sign up and create an account so that you can remain healthy by following your daily goals and plans.';
-
-  final String subtitle =
-      'Sign in and continue so that you can remain healthy by following your daily goals and plans.';
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -93,7 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   : 80),
                       Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(login ? widget.title : widget.titleSignup,
+                          child: Text(
+                              login
+                                  ? tr('login.title')
+                                  : tr('login.title_signup'),
                               style: TextStyle(
                                   fontSize: 18,
                                   letterSpacing: 0.4,
@@ -107,10 +103,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             switchInCurve: Curves.easeInOut,
                             switchOutCurve: Curves.easeInOut,
                             child: Text(
-                                login ? widget.subtitle : widget.subtitleSignup,
-                                key: ValueKey<String>(login
-                                    ? widget.subtitle
-                                    : widget.subtitleSignup),
+                                login
+                                    ? tr('login.subtitle')
+                                    : tr('login.subtitle_signup'),
+                                key: ValueKey<String>(
+                                    login ? 'login' : 'signup'),
                                 style: TextStyle(
                                     fontSize: 12,
                                     height: 1.6,
@@ -182,8 +179,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Text(
                                 login
-                                    ? 'Don\'t have an account? '
-                                    : 'Already have an account? ',
+                                    ? tr('login.not_have_account')
+                                    : tr('login.have_account'),
                                 style: TextStyle(
                                     color: theme.textColor,
                                     fontSize: 11,
@@ -195,7 +192,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hasError = false;
                                 }),
                                 child: Text(
-                                  login ? 'Sign Up' : 'Log In',
+                                  login
+                                      ? tr('login.sign_up')
+                                      : tr('login.log_in'),
                                   style: TextStyle(
                                       color: theme.mainColorInText,
                                       fontSize: 11,

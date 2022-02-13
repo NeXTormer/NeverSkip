@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_auth_event.dart';
@@ -48,7 +49,7 @@ class SignInWithGoogleButton extends StatelessWidget {
               ),
               SizedBox(width: 24),
               Text(
-                '${signUp ? 'Sign up' : 'Log in'} with Google',
+                signUp ? tr('login.sign_up_google') : tr('login.log_in_google'),
                 style: TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w500,

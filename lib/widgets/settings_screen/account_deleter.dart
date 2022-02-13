@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,10 +34,10 @@ class _AccountDeleterState extends State<AccountDeleter> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Enter your password below to make sure its you.'),
+            Text(tr('settings.user.delete_account.enter_pw_title')),
             SizedBox(height: 16),
             FredericTextField(
-              'Enter your password',
+              tr('settings.user.delete_account.enter_pw_field'),
               icon: Icons.vpn_key_outlined,
               isPasswordField: true,
               onSubmit: (value) async {
@@ -70,42 +71,51 @@ class _AccountDeleterState extends State<AccountDeleter> {
               },
             ),
             SizedBox(height: 16),
-            Text('Please tell us why you want to delete your account.'),
+            Text(tr('settings.user.delete_account.reason.title')),
             SizedBox(height: 16),
             FredericMultipleChoice(<FredericMultipleChoiceElement>[
               FredericMultipleChoiceElement(
-                  0, 'It\'s too complicated', Icons.graphic_eq_outlined,
+                  0,
+                  tr('settings.user.delete_account.reason.complicated'),
+                  Icons.graphic_eq_outlined,
                   info: 'too-complicated'),
               FredericMultipleChoiceElement(
-                  1, 'I don\'t need it', Icons.remove_circle_outline,
+                  1,
+                  tr('settings.user.delete_account.reason.no_need'),
+                  Icons.remove_circle_outline,
                   info: 'no-need'),
               FredericMultipleChoiceElement(
                   2,
-                  'It doensn\'t do everything I need',
+                  tr('settings.user.delete_account.reason.not_enough_features'),
                   Icons.featured_play_list_outlined,
                   info: 'not-everything-i-need'),
               FredericMultipleChoiceElement(
-                  3, 'It didn\'t work as expected', Icons.leak_remove_outlined,
+                  3,
+                  tr('settings.user.delete_account.reason.not_working_as_expected'),
+                  Icons.leak_remove_outlined,
                   info: 'not-as-expected'),
               FredericMultipleChoiceElement(
-                  4, 'Performance issues or lag', Icons.speed_outlined,
+                  4,
+                  tr('settings.user.delete_account.reason.performance_issues'),
+                  Icons.speed_outlined,
                   info: 'bad-performance'),
               FredericMultipleChoiceElement(
-                  5, 'Too many errors/bugs', Icons.bug_report_outlined,
+                  5,
+                  tr('settings.user.delete_account.reason.bugs'),
+                  Icons.bug_report_outlined,
                   info: 'bugs')
             ], controller: mcController),
             SizedBox(height: 16),
             FredericTextField(
-              'Optional Feedback',
+              tr('settings.user.delete_account.optional_feedback'),
               controller: feedbackController,
               icon: Icons.message_outlined,
             ),
             SizedBox(height: 12),
-            Text(
-                'If you have any issues or suggestions you can also contact us per E-Mail at office@hawkford.io.'),
+            Text('settings.user.delete_account.contact').tr(),
             SizedBox(height: 32),
             FredericButton(
-              'Delete account forever',
+              tr('settings.user.delete_account.button'),
               loading: loading,
               onPressed: () async {
                 if (!confirmed) return;
@@ -117,7 +127,6 @@ class _AccountDeleterState extends State<AccountDeleter> {
                     List<String?>.generate(mcController.selectedElements.length,
                         (index) => mcController.selectedElements[index].info),
                     user);
-                //TODO:
                 await FredericBackend.instance.userManager.authInterface
                     .deleteAccount(user);
                 SharedPreferences prefs = await SharedPreferences.getInstance();

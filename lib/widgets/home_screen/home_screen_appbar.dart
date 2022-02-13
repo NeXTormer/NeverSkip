@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -20,8 +21,8 @@ class HomeScreenAppbar extends StatelessWidget {
 
     return FredericSliverAppBar(
       height: 124,
-      title: 'Let\'s find you a Workout',
-      subtitle: 'Good $timeOfDay, $userName!',
+      title: tr('home.title'),
+      subtitle: tr('home.subtitle', args: [timeOfDay, userName]),
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -69,25 +70,25 @@ class HomeScreenAppbar extends StatelessWidget {
       case 7:
       case 8:
       case 9:
-        return 'Morning';
+        return tr('home.time_of_day.morning');
       case 10:
       case 12:
       case 13:
       case 14:
-        return 'Day';
+        return tr('home.time_of_day.day');
       case 15:
       case 16:
       case 17:
       case 18:
-        return 'Afternoon';
+        return tr('home.time_of_day.afternoon');
       case 19:
       case 20:
       case 21:
       case 22:
       case 23:
-        return 'Evening';
+        return tr('home.time_of_day.evening');
       default:
-        return 'Day';
+        return tr('home.time_of_day.day');
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 
@@ -42,7 +43,7 @@ class SmallActivityCardContent extends StatelessWidget {
                 Container(
                   width: 93,
                   child: Text(
-                    activity.name,
+                    activity.getNameLocalized(context.locale.languageCode),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: theme.greyTextColor,

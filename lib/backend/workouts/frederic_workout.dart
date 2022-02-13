@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
@@ -22,7 +23,8 @@ class FredericWorkout implements FredericDataObject {
 
   FredericWorkout.noSuchWorkout(String id)
       : this.id = id,
-        _name = 'No Such Workout found',
+        _name = tr('misc.workout_not_found'),
+        _description = tr('misc.workout_not_found_description'),
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a' {
     _activities = FredericWorkoutActivities(this);
@@ -32,6 +34,7 @@ class FredericWorkout implements FredericDataObject {
       : id = '',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fworkout-plan-4234.png?alt=media&token=890d0a5c-93ac-41a0-bd05-b3626b8e0d82',
+        _name = tr('misc.new_workout'),
         _owner = FredericBackend.instance.userManager.state.id {
     _activities = FredericWorkoutActivities(this);
   }
@@ -62,7 +65,7 @@ class FredericWorkout implements FredericDataObject {
   }
 
   String get name => _name ?? 'New Workout';
-  String get description => _description ?? 'Workout description';
+  String get description => _description ?? '';
   String get image =>
       _image ??
       'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Floading.png?alt=media&token=4f99ab1f-c0bb-4881-b010-4c395b3206a1';

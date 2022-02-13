@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
@@ -53,20 +54,22 @@ class AddProgressCard extends StatelessWidget {
                               border: Border.all(color: theme.cardBorderColor)),
                           child: Column(
                             children: [
-                              buildSubHeading(
-                                  'Repetitions', Icons.repeat_outlined),
+                              buildSubHeading(tr('progress.repetitions.other'),
+                                  Icons.repeat_outlined),
                               SizedBox(height: 12),
                               EnterRepsCounterWidget(),
                               if (activity.type ==
                                   FredericActivityType.Weighted) ...[
                                 SizedBox(height: 12),
-                                buildSubHeading('Weight', ExtraIcons.dumbbell),
+                                buildSubHeading(
+                                    tr('progress.weight'), ExtraIcons.dumbbell),
                                 SizedBox(height: 12),
                                 EnterWeightWidget(),
                               ],
                               if (hasSuggestions) SizedBox(height: 8),
                               if (hasSuggestions)
-                                buildSubHeading('Smart Suggestions',
+                                buildSubHeading(
+                                    tr('progress.smart_suggestions'),
                                     Icons.smart_button_outlined),
                               if (hasSuggestions) SizedBox(height: 8),
                               if (hasSuggestions)
@@ -74,8 +77,8 @@ class AddProgressCard extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 0, right: 0, top: 16),
-                                child:
-                                    FredericButton('Save', onPressed: onSave),
+                                child: FredericButton(tr('save'),
+                                    onPressed: onSave),
                               )
                             ],
                           ),

@@ -1,4 +1,5 @@
 import 'package:date_format/date_format.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -22,7 +23,7 @@ class EditWorkoutHeader extends StatelessWidget {
         formatDate(workout.startDate, const [dd, ' ', M, ' ', yyyy]);
     return FredericBasicAppBar(
         title: workout.name,
-        subtitle: 'Starting Date: $dateFormatString',
+        subtitle: '${tr("misc.start_day")}: $dateFormatString',
         icon: workout.canEdit
             ? InkWell(
                 onTap: () => CupertinoScaffold.showCupertinoModalBottomSheet(

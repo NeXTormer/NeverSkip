@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -22,14 +23,18 @@ class ActivityMuscleGroupSelector extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          SizedBox(width: 24),
-          buildElement('Arms', muscleGroups, FredericActivityMuscleGroup.Arms),
-          buildElement(
-              'Chest', muscleGroups, FredericActivityMuscleGroup.Chest),
-          buildElement('Back', muscleGroups, FredericActivityMuscleGroup.Back),
-          buildElement('Abs', muscleGroups, FredericActivityMuscleGroup.Core),
-          buildElement('Legs', muscleGroups, FredericActivityMuscleGroup.Legs),
-          SizedBox(width: 24),
+          SizedBox(width: 8),
+          buildElement(tr('exercises.muscle_groups.arms'), muscleGroups,
+              FredericActivityMuscleGroup.Arms),
+          buildElement(tr('exercises.muscle_groups.chest'), muscleGroups,
+              FredericActivityMuscleGroup.Chest),
+          buildElement(tr('exercises.muscle_groups.back'), muscleGroups,
+              FredericActivityMuscleGroup.Back),
+          buildElement(tr('exercises.muscle_groups.abs'), muscleGroups,
+              FredericActivityMuscleGroup.Core),
+          buildElement(tr('exercises.muscle_groups.legs'), muscleGroups,
+              FredericActivityMuscleGroup.Legs),
+          SizedBox(width: 8),
         ],
       ),
     );
@@ -43,7 +48,7 @@ class ActivityMuscleGroupSelector extends StatelessWidget {
     return FredericCard(
         onTap: () =>
             selected ? removeMuscleGroup(group) : addMuscleGroup(group),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
         color: selected ? theme.mainColor : theme.cardBackgroundColor,
         child: Center(
             child: Text(

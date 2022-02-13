@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/admin_panel/data_table_element.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
@@ -18,7 +19,7 @@ class FredericActivity
   ///
   FredericActivity.create(String ownerID)
       : id = '',
-        _name = 'New activity',
+        _name = tr('misc.new_activity'),
         _description = '',
         _owner = ownerID,
         _image =
@@ -36,8 +37,8 @@ class FredericActivity
 
   FredericActivity.noSuchActivity(String id)
       : this.id = id,
-        _name = 'Activity not found',
-        _description = 'Maybe this activity has been deleted.',
+        _name = tr('misc.activity_not_found'),
+        _description = tr('misc.activity_not_found_description'),
         _owner = 'global',
         _image =
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fquestion-mark.png?alt=media&token=b9b9a58c-1a9c-4b2c-8ae0-a8e7245baa9a';
@@ -72,7 +73,9 @@ class FredericActivity
   String get activityID => id;
 
   String? _name;
+  String? _name_de;
   String? _description;
+  String? _description_de;
   String? _image;
   String? _owner;
   int? _recommendedSets;
@@ -110,11 +113,25 @@ class FredericActivity
     return '';
   }
 
+  String getNameLocalized([String language = 'en']) {
+    if (canEdit) return name;
+    if (language == 'de') return _name_de ?? _name ?? '';
+    return _name ?? '';
+  }
+
+  String getDescriptionLocalized([String language = 'en']) {
+    if (canEdit) return description;
+    if (language == 'de') return _description_de ?? _description ?? '';
+    return _description ?? '';
+  }
+
   @override
   void fromMap(String id, Map<String, dynamic> data) {
     this.id = id;
     _name = data['name'];
+    _name_de = data['name_de'];
     _description = data['description'];
+    _description_de = data['description_de'];
     _image = data['image'];
     _owner = data['owner'];
     _recommendedReps = data['recommendedreps'];
@@ -131,8 +148,10 @@ class FredericActivity
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'name': name,
-      'description': description,
+      'name': _name ?? '',
+      'name_de': _name_de ?? '',
+      'description': _description ?? '',
+      'description_de': _description_de ?? '',
       'image': image,
       'owner': owner,
       'recommendedreps': recommendedReps,
