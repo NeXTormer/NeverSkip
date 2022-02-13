@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -19,7 +20,7 @@ class ReloadCachesFromDBDialog extends StatefulWidget {
 
 class _ReloadCachesFromDBDialogState extends State<ReloadCachesFromDBDialog> {
   bool loading = false;
-  String btnText = 'Reload';
+  String btnText = tr('settings.reload_caches.reload');
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class _ReloadCachesFromDBDialogState extends State<ReloadCachesFromDBDialog> {
                   Padding(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      'Reload cached data from the Database?',
+                      tr('settings.reload_caches.popup_title'),
                       style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 16,
@@ -49,8 +50,7 @@ class _ReloadCachesFromDBDialogState extends State<ReloadCachesFromDBDialog> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(
-                        'Reload if you think the cached data might be corrupted.',
+                    child: Text(tr('settings.reload_caches.popup_description'),
                         textAlign: TextAlign.center),
                   ),
                   Row(
@@ -59,7 +59,7 @@ class _ReloadCachesFromDBDialogState extends State<ReloadCachesFromDBDialog> {
                         child: Container(
                             padding:
                                 EdgeInsets.only(left: 12, bottom: 12, top: 8),
-                            child: FredericButton('Cancel',
+                            child: FredericButton(tr('cancel'),
                                 onPressed: () =>
                                     Navigator.of(context).pop(false),
                                 inverted: true)),
@@ -72,7 +72,8 @@ class _ReloadCachesFromDBDialogState extends State<ReloadCachesFromDBDialog> {
                               btnText,
                               loading: loading,
                               onPressed: () async {
-                                if (btnText != 'Reload') {
+                                if (btnText !=
+                                    tr('settings.reload_caches.reload')) {
                                   Navigator.of(context).pop();
                                   return;
                                 }
@@ -83,7 +84,7 @@ class _ReloadCachesFromDBDialogState extends State<ReloadCachesFromDBDialog> {
                                     .reloadCachesFromDatabase();
                                 setState(() {
                                   loading = false;
-                                  btnText = 'Done!';
+                                  btnText = tr('settings.reload_caches.done');
                                 });
                                 await Future.delayed(
                                     const Duration(milliseconds: 300));

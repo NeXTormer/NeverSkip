@@ -69,7 +69,10 @@ class FredericActionDialog extends StatelessWidget {
                           left: 12, right: 12, bottom: 12, top: 8),
                       child: FredericButton(
                         tr('okay'),
-                        onPressed: () => Navigator.of(context).pop(true),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                          onConfirm();
+                        },
                       ),
                     ),
                   if (!infoOnly)

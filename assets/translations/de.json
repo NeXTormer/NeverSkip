@@ -108,7 +108,21 @@
     "share_analytics": "Analytikdaten teilen",
     "show_onboarding": "Einführung anzeigen",
     "actions": "Aktionen",
-    "reload_caches": "Caches neu laden",
+    "reload_caches":
+    {
+      "title": "Caches neu laden",
+      "reload": "Neu laden",
+      "done": "Fertig!",
+      "popup_title": "Lade die zwischengespeicherten Daten von der Datenbank neu?",
+      "popup_description": "Lade die Daten neu wenn du denkst dass ein Datenfehler aufgetreten ist."
+    },
+    "feedback":
+    {
+      "title": "Feedback geben",
+      "heading_happiness": "Wie zufrieden bist du mit dieser App?",
+      "heading_text_feedback": "Hast du noch weiteres Feedback?",
+      "thanks": "Danke! :)"
+    },
     "user":
     {
       "your_data": "Deine Daten",
@@ -231,6 +245,7 @@
     "set_reps_and_sets": "Stelle deine gewünschten Wiederholungen und Sätze für diese Übung ein."
   },
   "create": "Erstellen",
+  "submit": "Speichern",
   "save": "Speichern",
   "okay": "Okay",
   "confirm": "Bestätigen",

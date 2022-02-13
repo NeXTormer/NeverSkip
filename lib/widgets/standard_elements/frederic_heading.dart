@@ -26,45 +26,46 @@ class FredericHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool showSubHeading = subHeading != null;
-    return Column(
+    return Row(
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(heading,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: fontSize,
-                    color: theme.textColor,
-                    letterSpacing: 0.6)),
-            if (showSubHeading) SizedBox(width: 8),
-            if (showSubHeading)
-              Container(
-                width: 1,
-                height: 18,
-                decoration: BoxDecoration(
-                    color: const Color(0xFFCDCDCD),
-                    borderRadius: BorderRadius.all(Radius.circular(100))),
-              ),
-            if (showSubHeading) SizedBox(width: 8),
-            if (showSubHeading)
-              Text(subHeading!,
-                  style: const TextStyle(
-                      color: const Color(0xF2A5A5A5),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      letterSpacing: 0.6)),
-            Expanded(child: Container()),
-            if (onPressed != null)
-              InkWell(
-                onTap: onPressed as void Function()?,
-                child: Icon(
-                  icon,
-                  color: const Color(0xFFC4C4C4),
-                ),
-              )
-          ],
-        )
+        Flexible(
+          fit: FlexFit.tight,
+          flex: subHeading == null && onPressed == null ? 1 : 0,
+          child: Text(heading,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: fontSize,
+                  color: theme.textColor,
+                  letterSpacing: 0.6)),
+        ),
+        if (showSubHeading) SizedBox(width: 8),
+        if (showSubHeading)
+          Container(
+            width: 1,
+            height: 18,
+            decoration: BoxDecoration(
+                color: const Color(0xFFCDCDCD),
+                borderRadius: BorderRadius.all(Radius.circular(100))),
+          ),
+        if (showSubHeading) SizedBox(width: 8),
+        if (showSubHeading)
+          Text(subHeading!,
+              style: const TextStyle(
+                  color: const Color(0xF2A5A5A5),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  letterSpacing: 0.6)),
+        if (!(subHeading == null && onPressed == null))
+          Expanded(child: Container()),
+        if (onPressed != null)
+          InkWell(
+            onTap: onPressed as void Function()?,
+            child: Icon(
+              icon,
+              color: const Color(0xFFC4C4C4),
+            ),
+          )
       ],
     );
   }

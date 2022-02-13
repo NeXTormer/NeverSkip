@@ -9,6 +9,7 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/widgets/settings_screen/feedback_sender_widget.dart';
 import 'package:frederic/widgets/settings_screen/reload_caches_from_db_dialog.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
 import 'package:frederic/widgets/settings_screen/settings_segment.dart';
@@ -67,11 +68,17 @@ class SettingsScreen extends StatelessWidget {
                 title: tr('settings.actions'),
                 elements: <SettingsElement>[
                   SettingsElement(
-                    text: tr('settings.reload_caches'),
+                    text: tr('settings.reload_caches.title'),
                     clickable: true,
                     onTap: () => ReloadCachesFromDBDialog.show(
                         context: context, dialog: ReloadCachesFromDBDialog()),
                     icon: Icons.refresh_rounded,
+                  ),
+                  SettingsElement(
+                    text: tr('settings.feedback.title'),
+                    icon: Icons.feedback_outlined,
+                    changerTitle: tr('settings.feedback.title'),
+                    changeAttributeWidget: FeedbackSenderWidget(user),
                   ),
                 ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
@@ -85,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 SettingsElement(
                   text: 'Crash the app',
-                  icon: Icons.announcement_outlined,
+                  icon: Icons.fire_extinguisher,
                   onTap: () => FirebaseCrashlytics.instance.crash(),
                 ),
               ])

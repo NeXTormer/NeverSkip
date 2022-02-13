@@ -73,9 +73,9 @@ class FredericActivity
   String get activityID => id;
 
   String? _name;
-  String? _name_de;
+  String? _nameDE;
   String? _description;
-  String? _description_de;
+  String? _descriptionDE;
   String? _image;
   String? _owner;
   int? _recommendedSets;
@@ -115,13 +115,13 @@ class FredericActivity
 
   String getNameLocalized([String language = 'en']) {
     if (canEdit) return name;
-    if (language == 'de') return _name_de ?? _name ?? '';
+    if (language == 'de') return _nameDE ?? _name ?? '';
     return _name ?? '';
   }
 
   String getDescriptionLocalized([String language = 'en']) {
     if (canEdit) return description;
-    if (language == 'de') return _description_de ?? _description ?? '';
+    if (language == 'de') return _descriptionDE ?? _description ?? '';
     return _description ?? '';
   }
 
@@ -129,9 +129,9 @@ class FredericActivity
   void fromMap(String id, Map<String, dynamic> data) {
     this.id = id;
     _name = data['name'];
-    _name_de = data['name_de'];
+    _nameDE = data['name_de'];
     _description = data['description'];
-    _description_de = data['description_de'];
+    _descriptionDE = data['description_de'];
     _image = data['image'];
     _owner = data['owner'];
     _recommendedReps = data['recommendedreps'];
@@ -149,9 +149,9 @@ class FredericActivity
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': _name ?? '',
-      'name_de': _name_de ?? '',
+      'name_de': _nameDE,
       'description': _description ?? '',
-      'description_de': _description_de ?? '',
+      'description_de': _descriptionDE,
       'image': image,
       'owner': owner,
       'recommendedreps': recommendedReps,
