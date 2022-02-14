@@ -52,6 +52,7 @@ dependencies:
   image: ^3.0.2
   lottie: ^1.2.1
   shimmer: ^2.0.0
+  fl_chart: ^0.45.0
   confetti: ^0.6.0
   animations: ^2.0.1
   fluttertoast: ^8.0.6
