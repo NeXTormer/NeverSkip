@@ -26,6 +26,8 @@ class SettingsSegment extends StatelessWidget {
             ),
             SizedBox(height: 8),
             FredericCard(
+              borderWidth: 1,
+              borderRadius: 8,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
