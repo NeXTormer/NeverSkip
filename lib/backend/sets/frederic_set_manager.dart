@@ -13,7 +13,9 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
       : super(FredericSetListData(
             changedActivities: <String>[],
             sets: HashMap<String, FredericSetList>(),
-            weeklyTrainingVolume: List<int>.filled(7, 0)));
+            weeklyTrainingVolume: List<int>.filled(7, 0))) {
+    on<FredericSetEvent>(_onEvent);
+  }
 
   WeeklyTrainingVolumeChartData weeklyTrainingVolumeChartData =
       WeeklyTrainingVolumeChartData();
@@ -47,13 +49,13 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     }
   }
 
-  @override
-  Stream<FredericSetListData> mapEventToState(FredericSetEvent event) async* {
-    yield FredericSetListData(
+  FutureOr<void> _onEvent(
+      FredericSetEvent event, Emitter<FredericSetListData> emit) async {
+    emit(FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
       weeklyTrainingVolume: weeklyTrainingVolumeChartData.data,
-    );
+    ));
   }
 
   Future<void> reload([bool fullReloadFromDB = false]) async {

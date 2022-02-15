@@ -13,7 +13,9 @@ class FredericActivityManager
     extends Bloc<FredericActivityEvent, FredericActivityListData> {
   FredericActivityManager()
       : super(FredericActivityListData(
-            <String>[], HashMap<String, FredericActivity>()));
+            <String>[], HashMap<String, FredericActivity>())) {
+    on<FredericActivityEvent>(_onEvent);
+  }
 
   late final FredericDataInterface<FredericActivity> dataInterface;
 
@@ -72,20 +74,19 @@ class FredericActivityManager
     }
   }
 
-  @override
-  Stream<FredericActivityListData> mapEventToState(
-      FredericActivityEvent event) async* {
+  FutureOr<void> _onEvent(FredericActivityEvent event,
+      Emitter<FredericActivityListData> emit) async {
     if (event is FredericActivityUpdateEvent) {
       await dataInterface.update(event.updated);
       _activities[event.updated.id] = event.updated;
-      yield FredericActivityListData([event.updated.id], _activities);
+      emit(FredericActivityListData([event.updated.id], _activities));
     } else if (event is FredericActivityCreateEvent) {
       FredericActivity newActivity =
           await dataInterface.create(event.newActivity);
       _activities[newActivity.id] = newActivity;
-      yield FredericActivityListData([newActivity.id], _activities);
+      emit(FredericActivityListData([newActivity.id], _activities));
     } else {
-      yield FredericActivityListData(event.changed, _activities);
+      emit(FredericActivityListData(event.changed, _activities));
     }
   }
 

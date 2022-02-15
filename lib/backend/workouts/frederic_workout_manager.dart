@@ -14,7 +14,9 @@ class FredericWorkoutManager
   FredericWorkoutManager({required this.activityManager})
       : _workouts = HashMap<String, FredericWorkout>(),
         super(FredericWorkoutListData(
-            HashMap<String, FredericWorkout>(), <String>[]));
+            HashMap<String, FredericWorkout>(), <String>[])) {
+    on<FredericWorkoutEvent>(_onEvent);
+  }
 
   HashMap<String, FredericWorkout> _workouts;
   bool _canFullReload = true;
@@ -45,8 +47,6 @@ class FredericWorkoutManager
     }
 
     add(FredericWorkoutEvent(changed));
-
-    return;
   }
 
   Future<void> triggerManualFullReload() async {
@@ -75,21 +75,20 @@ class FredericWorkoutManager
     return dataInterface.delete(workout);
   }
 
-  @override
-  Stream<FredericWorkoutListData> mapEventToState(
-      FredericWorkoutEvent event) async* {
+  FutureOr<void> _onEvent(
+      FredericWorkoutEvent event, Emitter<FredericWorkoutListData> emit) async {
     if (event is FredericWorkoutUpdateEvent) {
-      yield FredericWorkoutListData(_workouts, event.changed);
+      emit(FredericWorkoutListData(_workouts, event.changed));
     } else if (event is FredericWorkoutCreateEvent) {
       var workout = await dataInterface.create(event.workout);
       workout.onUpdate = updateWorkoutInDB;
       _workouts[workout.id] = workout;
-      yield FredericWorkoutListData(_workouts, event.changed);
+      emit(FredericWorkoutListData(_workouts, event.changed));
     } else if (event is FredericWorkoutDeleteEvent) {
       _deleteWorkout(event.workout);
-      yield FredericWorkoutListData(_workouts, event.changed);
+      emit(FredericWorkoutListData(_workouts, event.changed));
     } else {
-      yield FredericWorkoutListData(_workouts, event.changed);
+      emit(FredericWorkoutListData(_workouts, event.changed));
     }
   }
 }

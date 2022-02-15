@@ -17,6 +17,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       {required FredericBackend backend, required this.authInterface})
       : _backend = backend,
         super(FredericUser.noAuth()) {
+    on<FredericAuthEvent>(_onEvent);
     streakManager = StreakManager(this, _backend);
     authInterface.registerDataChangedListener(handleUserDataUpdate);
   }
@@ -29,16 +30,16 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   bool firestoreDataWasLoadedAtLeastOnce = false;
 
-  @override
-  Stream<FredericUser> mapEventToState(FredericAuthEvent event) async* {
+  FutureOr<void> _onEvent(
+      FredericAuthEvent event, Emitter<FredericUser> emit) async {
     if (event is FredericUserDataChangedEvent) {
-      yield await event.process(this);
+      emit(await event.process(this));
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
         // don't call userDataChanged() here, it will create a memory leak
       });
     } else {
-      yield await event.process(this);
+      emit(await event.process(this));
     }
     if (event is FredericRestoreLoginStatusEvent ||
         event is FredericEmailLoginEvent ||

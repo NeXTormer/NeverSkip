@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,7 +18,9 @@ class FredericGoalManager
     extends Bloc<FredericGoalEvent, FredericGoalListData> {
   FredericGoalManager()
       : super(
-            FredericGoalListData(<String>[], HashMap<String, FredericGoal>()));
+            FredericGoalListData(<String>[], HashMap<String, FredericGoal>())) {
+    on<FredericGoalEvent>(_onEvent);
+  }
 
   HashMap<String, FredericGoal> _goals = HashMap<String, FredericGoal>();
 
@@ -56,19 +59,19 @@ class FredericGoalManager
     add(FredericGoalEvent(changed));
   }
 
-  @override
-  Stream<FredericGoalListData> mapEventToState(FredericGoalEvent event) async* {
+  FutureOr<void> _onEvent(
+      FredericGoalEvent event, Emitter<FredericGoalListData> emit) async {
     if (event is FredericGoalUpdateEvent) {
-      yield FredericGoalListData(event.changed, _goals);
+      emit(FredericGoalListData(event.changed, _goals));
     } else if (event is FredericGoalCreateEvent) {
       _goals[event.newGoal.goalID] = event.newGoal;
-      yield FredericGoalListData(event.changed, _goals);
+      emit(FredericGoalListData(event.changed, _goals));
     } else if (event is FredericGoalDeleteEvent) {
       _goalsCollection.doc(event.goal.goalID).delete();
       _goals.remove(event.goal.goalID);
-      yield FredericGoalListData(event.changed, _goals);
+      emit(FredericGoalListData(event.changed, _goals));
     } else {
-      yield FredericGoalListData(event.changed, _goals);
+      emit(FredericGoalListData(event.changed, _goals));
     }
   }
 
