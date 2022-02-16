@@ -42,7 +42,7 @@ class FredericBackend implements FredericMessageProcessor {
     _activityManager = FredericActivityManager();
     _workoutManager = FredericWorkoutManager(activityManager: _activityManager);
 
-    _setManager = FredericSetManager();
+    _setManager = FredericSetManager(_activityManager);
     _goalManager = FredericGoalManager();
     _storageManager = FredericStorageManager(this);
     _analytics = FredericAnalytics();
@@ -118,6 +118,8 @@ class FredericBackend implements FredericMessageProcessor {
     await _initializeActivities(reloadFromDB);
     await _initializeWorkouts(reloadFromDB);
     await _initializeGoals();
+
+    _setManager.initializeDataRepresentations();
 
     _waitUntilCoreDataHasLoaded.complete();
     profiler.stop();

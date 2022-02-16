@@ -3,27 +3,33 @@ import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/charts/weekly_training_volume_chart_data.dart';
 import 'package:frederic/backend/database/frederic_data_interface.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/set_volume_data_representation.dart';
 
 class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
-  FredericSetManager()
+  FredericSetManager([FredericActivityManager? activityManager])
       : super(FredericSetListData(
             changedActivities: <String>[],
             sets: HashMap<String, FredericSetList>(),
             weeklyTrainingVolume: List<int>.filled(7, 0))) {
     on<FredericSetEvent>(_onEvent);
+
+    if (activityManager != null) {
+      weeklyTrainingVolumeChartData =
+          SetVolumeDataRepresentation(activityManager, this);
+    }
   }
 
-  WeeklyTrainingVolumeChartData weeklyTrainingVolumeChartData =
-      WeeklyTrainingVolumeChartData();
+  SetVolumeDataRepresentation? weeklyTrainingVolumeChartData;
 
   final int currentMonth = FredericSetDocument.calculateMonth(DateTime.now());
   static final int startingYear = 2021;
 
   HashMap<String, FredericSetList> _sets = HashMap<String, FredericSetList>();
+
+  HashMap<String, FredericSetList> get sets => _sets;
 
   late final FredericDataInterface<FredericSetDocument> dataInterface;
 
@@ -51,11 +57,17 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   FutureOr<void> _onEvent(
       FredericSetEvent event, Emitter<FredericSetListData> emit) async {
+    print('ON EVENT');
     emit(FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
-      weeklyTrainingVolume: weeklyTrainingVolumeChartData.data,
+      weeklyTrainingVolume: weeklyTrainingVolumeChartData!.getVolume7Days(),
     ));
+  }
+
+  FutureOr<void> initializeDataRepresentations() {
+    weeklyTrainingVolumeChartData!.initialize();
+    add(FredericSetEvent(['werner findeig']));
   }
 
   Future<void> reload([bool fullReloadFromDB = false]) async {
@@ -76,20 +88,21 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
       _sets[entry.key] = FredericSetList.fromDocuments(entry.key, entry.value);
     }
 
-    weeklyTrainingVolumeChartData.initialize(_sets);
     add(FredericSetEvent(documentMap.keys.toList()));
   }
 
-  void addSet(String activityID, FredericSet set) async {
-    await state[activityID].addSet(set, dataInterface);
-    weeklyTrainingVolumeChartData.addSet(set);
-    add(FredericSetEvent([activityID]));
+  void addSet(FredericActivity activity, FredericSet set) async {
+    //TODO: Why is this state[activityid] and not _sets[activityid]?
+    await state[activity.id].addSet(set, dataInterface);
+    weeklyTrainingVolumeChartData!.addSet(activity, set);
+    add(FredericSetEvent([activity.id]));
   }
 
-  void deleteSet(String activityID, FredericSet set) async {
-    await state[activityID].deleteSet(set, dataInterface);
-    weeklyTrainingVolumeChartData.removeSet(set);
-    add(FredericSetEvent([activityID]));
+  void deleteSet(FredericActivity activity, FredericSet set) async {
+    //TODO: Why is this state[activityid] and not _sets[activityid]?
+    await state[activity.id].deleteSet(set, dataInterface);
+    weeklyTrainingVolumeChartData!.deleteSet(activity, set);
+    add(FredericSetEvent([activity.id]));
   }
 }
 
@@ -97,7 +110,9 @@ class FredericSetListData {
   FredericSetListData(
       {required this.changedActivities,
       required this.sets,
-      required this.weeklyTrainingVolume});
+      required this.weeklyTrainingVolume}) {
+    print('Weekly Volume: $weeklyTrainingVolume');
+  }
   final List<String> changedActivities;
   final List<int> weeklyTrainingVolume;
   final HashMap<String, FredericSetList> sets;

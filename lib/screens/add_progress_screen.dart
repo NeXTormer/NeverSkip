@@ -168,7 +168,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
     double weight = controller.weight;
 
     FredericBackend.instance.setManager
-        .addSet(widget.activity.id, FredericSet(reps, weight, DateTime.now()));
+        .addSet(widget.activity, FredericSet(reps, weight, DateTime.now()));
 
     if (widget.openedFromCalendar) {
       FredericBackend.instance.analytics.logAddProgressOnCalendar();

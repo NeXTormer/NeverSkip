@@ -25,7 +25,7 @@ class FredericActivityManager
   bool _canFullReload = true;
 
   FredericActivity? operator [](String value) {
-    return state.activities[value];
+    return _activities[value];
   }
 
   Iterable<FredericActivity> get allActivities => state.activities.values;

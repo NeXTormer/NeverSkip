@@ -58,20 +58,7 @@ class TrainingVolumeChartSegment extends StatelessWidget {
                       ],
                     ),
                   ),
-                  buildWeekBar(
-                      tr('dates.short.monday'), volume[0] / highest, 0),
-                  buildWeekBar(
-                      tr('dates.short.tuesday'), volume[1] / highest, 1),
-                  buildWeekBar(
-                      tr('dates.short.wednesday'), volume[2] / highest, 2),
-                  buildWeekBar(
-                      tr('dates.short.thursday'), volume[3] / highest, 3),
-                  buildWeekBar(
-                      tr('dates.short.friday'), volume[4] / highest, 4),
-                  buildWeekBar(
-                      tr('dates.short.saturday'), volume[5] / highest, 5),
-                  buildWeekBar(
-                      tr('dates.short.sunday'), volume[6] / highest, 6),
+                  ...buildAllWeekbars(volume, highest),
                 ],
               )),
             );
@@ -79,6 +66,27 @@ class TrainingVolumeChartSegment extends StatelessWidget {
         )
       ],
     ));
+  }
+
+  String getDay(int index) {
+    switch (index) {
+      case 0:
+        return tr('dates.short.monday');
+      case 1:
+        return tr('dates.short.tuesday');
+      case 2:
+        return tr('dates.short.wednesday');
+      case 3:
+        return tr('dates.short.thursday');
+      case 4:
+        return tr('dates.short.friday');
+      case 5:
+        return tr('dates.short.saturday');
+      case 6:
+        return tr('dates.short.sunday');
+      default:
+        return tr('error');
+    }
   }
 
   /// 'rounds' the provided double so that the last decimal place is always zero
@@ -97,6 +105,20 @@ class TrainingVolumeChartSegment extends StatelessWidget {
       style: TextStyle(
           color: theme.greyTextColor, fontSize: 11, letterSpacing: 0.3),
     );
+  }
+
+  List<Widget> buildAllWeekbars(List<int> volume, double highest) {
+    List<Widget> list = <Widget>[];
+    final now = DateTime.now();
+    var weekday = now.weekday;
+    weekday--;
+
+    for (int i = 0; i < 7; i++) {
+      weekday++;
+      weekday %= 7;
+      list.add(buildWeekBar(getDay(weekday), volume[i] / highest, i));
+    }
+    return list;
   }
 
   Widget buildWeekBar(String day, double value, int index) {
