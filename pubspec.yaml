@@ -112,6 +112,8 @@ flutter:
     - assets/images/google/google_logo_light.png
     - assets/images/Medaille.png
     - assets/translations/
+    - assets/images/credits/felix.jpg
+    - assets/images/credits/stefan.jpg
 
   fonts:
      - family: ExtraIcons

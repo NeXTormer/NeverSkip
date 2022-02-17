@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/authentication_wrapper.dart';
 import 'package:frederic/main.dart';
@@ -18,7 +19,7 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               Expanded(flex: 6, child: Container()),
               Text(
-                'Welcome to\nNeverSkip',
+                tr('welcome_screen.title'),
                 style: TextStyle(
                     fontFamily: 'Montserrat',
                     letterSpacing: -1.0,
@@ -27,8 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                     fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 16),
-              Text(
-                  'Hey there! We have been working hard to make our dream app for building workout plans and tracking our progress.',
+              Text(tr('welcome_screen.text1'),
                   style: TextStyle(
                       fontFamily: 'Montserrat',
                       letterSpacing: -0.4,
@@ -36,8 +36,7 @@ class WelcomeScreen extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w500)),
               const SizedBox(height: 16),
-              Text(
-                  'We hope you will love using NeverSkip to track and plan your perfect workouts.',
+              Text(tr('welcome_screen.text2'),
                   style: TextStyle(
                       fontFamily: 'Montserrat',
                       letterSpacing: -0.4,
@@ -53,16 +52,22 @@ class WelcomeScreen extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
+                            foregroundImage:
+                                Image.asset('assets/images/credits/felix.jpg')
+                                    .image,
                             backgroundColor: Colors.white,
                           ),
                           const SizedBox(width: 8),
                           CircleAvatar(
+                            foregroundImage:
+                                Image.asset('assets/images/credits/stefan.jpg')
+                                    .image,
                             backgroundColor: Colors.white,
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      Text('- Felix & Stefan',
+                      Text(tr('welcome_screen.credits'),
                           textAlign: TextAlign.end,
                           style: TextStyle(
                               fontFamily: 'Montserrat',
@@ -76,7 +81,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               Expanded(flex: 8, child: Container()),
               FredericButton(
-                'Lets go!',
+                tr('welcome_screen.button'),
                 onPressed: () async {
                   final prefs = await SharedPreferences.getInstance();
                   prefs.setBool('show_welcome_screen', false);

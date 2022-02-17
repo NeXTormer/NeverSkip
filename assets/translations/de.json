@@ -1,4 +1,12 @@
 {
+  "welcome_screen":
+  {
+    "title": "Willkommen bei\nNeverSkip",
+    "text1": "Hallo! Wir haben hart daran gearbeitet, unsere Traum-App für die Erstellung von Trainingsplänen und die Verfolgung unserer Fortschritte zu entwickeln.",
+    "text2": "Wir hoffen, dass Sie es lieben werden, mit NeverSkip Ihre perfekten Trainingseinheiten zu verfolgen und zu planen.",
+    "button": "Los gehts!",
+    "credits": "- Felix & Stefan"
+  },
   "home":
   {
     "chart":
@@ -209,7 +217,7 @@
     "subtitle_signup": "Melde dich an um Fit und Gesund zu werden, indem du deine Ziele und Pläne verfolgst.",
     "have_account": "Du hast schon einen Account?",
     "not_have_account": "Du hast noch keinen Account?",
-    "log_in": "Einloggen",
+    "log_in": " Einloggen",
     "sign_up": "Anmelden",
     "sign_up_google": "Mit Google anmelden",
     "log_in_google": "Mit Google anmelden",

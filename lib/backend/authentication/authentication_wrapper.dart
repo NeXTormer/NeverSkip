@@ -33,12 +33,8 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            //return widget.welcomePage;
-            print('connection state done');
             if (snapshot.data?.containsKey('show_welcome_screen') ?? true) {
-              print('contains');
               if (snapshot.data?.getBool('show_welcome_screen') ?? true) {
-                print('show');
                 snapshot.data?.setBool('show_welcome_screen', false);
                 return widget.welcomePage;
               }
