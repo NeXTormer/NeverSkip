@@ -15,7 +15,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imagePadding: EdgeInsets.zero,
     );
 
@@ -137,7 +137,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ],
       onDone: () => Navigator.of(context).pop(),
       showSkipButton: true,
-      skipFlex: 0,
+      //skipFlex: 0,
+      skipOrBackFlex: 0,
       nextFlex: 0,
       //rtl: true, // Display as right-to-left
       skip: const Text('Skip'),

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/screens/welcome_screen.dart';
 
 import 'backend/authentication/authentication_wrapper.dart';
 import 'misc/ExtraIcons.dart';
@@ -37,6 +38,7 @@ class FredericMainApp extends StatelessWidget {
         ],
       ),
       loginPage: LoginScreen(),
+      welcomePage: WelcomeScreen(),
     );
   }
 }

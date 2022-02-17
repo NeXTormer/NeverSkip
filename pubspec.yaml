@@ -61,7 +61,7 @@ dependencies:
   cupertino_icons: ^1.0.3
   infinite_listview: ^1.1.0
   modal_bottom_sheet: ^2.0.0
-  introduction_screen: ^2.1.0
+  introduction_screen: ^3.0.0
   cached_network_image: ^3.0.0
 
   easy_localization: ^3.0.0

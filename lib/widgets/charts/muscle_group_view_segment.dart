@@ -24,15 +24,15 @@ class MuscleGroupViewSegment extends StatelessWidget {
             BlocBuilder<FredericSetManager, FredericSetListData>(
                 builder: (context, data) {
               return FredericCard(
-                height: 200,
+                height: 216,
                 child: Row(
                   children: [
                     Expanded(
                       child: MuscleGroupSplitPiechart(
-                        arms: data.muscleSplit[1],
-                        legs: data.muscleSplit[3],
                         chest: data.muscleSplit[0],
+                        arms: data.muscleSplit[1],
                         back: data.muscleSplit[2],
+                        legs: data.muscleSplit[3],
                         abs: data.muscleSplit[4],
                       ),
                     ),

@@ -25,8 +25,6 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: PieChart(PieChartData(
           sectionsSpace: 4,
-          pieTouchData: PieTouchData(
-              touchCallback: (FlTouchEvent event, pieTouchResponse) {}),
           sections: getExampleData(),
           centerSpaceRadius: double.infinity,
           centerSpaceColor: theme.backgroundColor)),
