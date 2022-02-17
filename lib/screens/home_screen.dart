@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/widgets/charts/muscle_group_view_segment.dart';
+import 'package:frederic/widgets/charts/training_volume_chart_segment.dart';
 import 'package:frederic/widgets/home_screen/achievement_segment.dart';
 import 'package:frederic/widgets/home_screen/goal_segment.dart';
 import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
 import 'package:frederic/widgets/home_screen/misc_stuff_segment.dart';
-import 'package:frederic/widgets/home_screen/muscle_group_view_segment.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
-import 'package:frederic/widgets/home_screen/training_volume_chart_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 
 class HomeScreen extends StatefulWidget {

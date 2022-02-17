@@ -1,12 +1,20 @@
 {
   "home":
   {
+    "chart":
+    {
+      "title_training_volume_week": "Trainingsvolumen",
+      "title_muscle_group_volume": "Muskelgruppenverteilung",
+      "0week": "Aktuelle Woche",
+      "1week": "Letzte Woche",
+      "2week": "Vor zwei Wochen",
+      "3week": "Vor drei Wochen",
+      "0month": "Aktuelles Monat"
+    },
     "title": "Finde deine Übungen!",
     "subtitle": "Guten {}, {}!",
     "personal_records": "Persönliche Bestleistungen",
     "my_goals": "Meine Ziele",
-    "training_volume_chart_title": "Trainingsvolumen",
-    "training_volume_chart_subtitle": "Aktuelle Woche",
     "achievements": "Meine Errungenschaften",
     "other": "Weitere",
     "history_button": "Verlauf",

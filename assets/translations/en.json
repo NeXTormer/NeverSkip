@@ -1,12 +1,20 @@
 {
   "home":
   {
+    "chart":
+    {
+      "title_training_volume_week": "Training volume",
+      "title_muscle_group_volume": "Muscle Group Split",
+      "0week": "Current Week",
+      "1week": "Last Week",
+      "2week": "Two Weeks Ago",
+      "3week": "Three Weeks Ago",
+      "0month": "Current Month"
+    },
     "title": "Let's find you a Workout!",
     "subtitle": "Good {}, {}!",
     "personal_records": "Personal Records",
     "my_goals": "My Goals",
-    "training_volume_chart_title": "Training volume",
-    "training_volume_chart_subtitle": "Current Week",
     "achievements": "My Achievements",
     "other": "Other",
     "history_button": "History",

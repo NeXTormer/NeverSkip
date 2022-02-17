@@ -37,15 +37,30 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
     profiler.stop();
   }
 
-  List<int> getVolume7Days([int weekOffset = 0]) {
-    List<int> list = List.filled(7, 0);
+  List<int> getVolumeXDays([int x = 7]) {
+    List<int> list = List.filled(x, 0);
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < x; i++) {
       final data = _data[today.subtract(Duration(days: i))];
       if (data != null) list[i] = data.volume.toInt();
     }
     list = list.reversed.toList();
+    return list;
+  }
+
+  List<int> getMuscleGroupSplit() {
+    List<int> list = List.filled(5, 0);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    for (int i = 0; i < 28; i++) {
+      final data = _data[today.subtract(Duration(days: i))];
+      if (data != null) {
+        for (int j = 0; j < 5; j++) {
+          list[j] += data.muscleGroupReps[j].toInt();
+        }
+      }
+    }
     return list;
   }
 

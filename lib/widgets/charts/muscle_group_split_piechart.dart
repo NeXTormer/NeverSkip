@@ -13,11 +13,11 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
       Key? key})
       : super(key: key);
 
-  final double chest;
-  final double abs;
-  final double legs;
-  final double arms;
-  final double back;
+  final int chest;
+  final int abs;
+  final int legs;
+  final int arms;
+  final int back;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
   List<PieChartSectionData> getExampleData() {
     return [
       PieChartSectionData(
-          value: legs,
+          value: legs.toDouble(),
           color: Color.alphaBlend(theme.mainColor, theme.accentColor),
           showTitle: false,
           badgePositionPercentageOffset: 1,
@@ -44,7 +44,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fleg.png?alt=media&token=611cf8b1-5494-4e60-a260-7b5a9c810dbc',
           )),
       PieChartSectionData(
-          value: abs,
+          value: abs.toDouble(),
           color: theme.accentColor,
           showTitle: false,
           badgePositionPercentageOffset: 1,
@@ -52,7 +52,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fabs.png?alt=media&token=00fc6429-17d8-4917-9a8c-27f912f10c87',
           )),
       PieChartSectionData(
-          value: chest,
+          value: chest.toDouble(),
           color: theme.mainColor,
           showTitle: false,
           badgePositionPercentageOffset: 1,
@@ -60,7 +60,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fbody.png?alt=media&token=a9b25f01-28e5-4c0c-8586-61d21a8a22bf',
           )),
       PieChartSectionData(
-          value: arms,
+          value: arms.toDouble(),
           color: theme.accentColor,
           showTitle: false,
           badgePositionPercentageOffset: 1,
@@ -68,7 +68,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
             'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fbodybuilding.png?alt=media&token=ae9756a1-3fef-43b2-a036-36370dc33c7c',
           )),
       PieChartSectionData(
-          value: back,
+          value: back.toDouble(),
           color: theme.mainColor,
           showTitle: false,
           badgePositionPercentageOffset: 1,
