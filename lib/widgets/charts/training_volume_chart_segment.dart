@@ -17,6 +17,8 @@ class _TrainingVolumeChartSegmentState
   PageController pageController = PageController();
   String subtitle = '';
 
+  int lastPage = 0;
+
   @override
   void initState() {
     super.initState();
@@ -62,10 +64,12 @@ class _TrainingVolumeChartSegmentState
     ));
   }
 
-  ///TODO: This gets called wayyy to often, make more efficient
   void handlePageChange() {
+    int currentPage = pageController.page?.round() ?? 0;
+    if (currentPage == lastPage) return;
+    lastPage = currentPage;
     setState(() {
-      switch (pageController.page?.round() ?? 0) {
+      switch (currentPage) {
         case 0:
           subtitle = tr('home.chart.0week');
           break;
