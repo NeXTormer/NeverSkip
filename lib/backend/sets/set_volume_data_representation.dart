@@ -23,9 +23,8 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
 
   @override
   void initialize() {
-    var profiler =
-        FredericProfiler.track('Initialize WeeklyTrainingVolumeChart');
-
+    var profiler = FredericProfiler.track('init SetVolumeDataRepresentation');
+    //TODO: Cache this for better performance
     for (var setList in setManager.sets.values) {
       final setIterator = setList.getAllSets();
       final activity = activityManager[setList.activityID];

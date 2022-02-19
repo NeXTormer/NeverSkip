@@ -50,6 +50,7 @@ class _TrainingVolumeChartSegmentState
                 padding: EdgeInsets.all(16),
                 child: PageView(
                   reverse: true,
+                  physics: BouncingScrollPhysics(),
                   controller: pageController,
                   children: [
                     TrainingVolumeWeekChartPage(volume.sublist(21, 28)),

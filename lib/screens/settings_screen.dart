@@ -80,6 +80,13 @@ class SettingsScreen extends StatelessWidget {
                     changerTitle: tr('settings.feedback.title'),
                     changeAttributeWidget: FeedbackSenderWidget(user),
                   ),
+                  SettingsElement(
+                    text: tr('settings.reset_app.title'),
+                    clickable: true,
+                    onTap: () => ReloadCachesFromDBDialog.show(
+                        context: context, dialog: ReloadCachesFromDBDialog()),
+                    icon: Icons.settings_backup_restore,
+                  ),
                 ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             if (kDebugMode || user.isDeveloper)
