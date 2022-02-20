@@ -35,11 +35,11 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data?.containsKey('show_welcome_screen') ?? true) {
               if (snapshot.data?.getBool('show_welcome_screen') ?? true) {
-                snapshot.data?.setBool('show_welcome_screen', false);
+                snapshot.data?.setBool('show_welcome_screen', true);
                 return widget.welcomePage;
               }
             } else {
-              snapshot.data?.setBool('show_welcome_screen', false);
+              snapshot.data?.setBool('show_welcome_screen', true);
               return widget.welcomePage;
             }
           }

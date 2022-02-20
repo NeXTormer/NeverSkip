@@ -62,6 +62,9 @@ class _ImageAttributeChangerState extends State<ImageAttributeChanger> {
               setState(() {
                 loading = true;
               });
+              if (currentImage != null) {
+                await CachedNetworkImage.evictFromCache(currentImage);
+              }
               await widget.updateValue(file);
               setState(() {
                 loading = false;

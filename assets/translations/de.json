@@ -132,6 +132,12 @@
       "popup_title": "Lade die zwischengespeicherten Daten von der Datenbank neu?",
       "popup_description": "Lade die Daten neu wenn du denkst dass ein Datenfehler aufgetreten ist."
     },
+    "reset_settings":
+    {
+      "title": "Einstellungen zurücksetzen",
+      "description": "Es werden alle Einstellungen und der Großteil der Caches von deinem Gerät gelöscht.\n\nAlle Daten, welche in der Cloud gespeichert sind (Sätze, Übungen, Workouts, usw.), bleiben bestehen.\n\nBenutze diese Funktion falls die App nicht mehr wie erwartet funktioniert.",
+      "button": "Zurücksetzen"
+    },
     "feedback":
     {
       "title": "Feedback geben",
