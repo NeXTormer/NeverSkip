@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
@@ -49,7 +50,17 @@ class PictureIcon extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
                 color: accentColor),
-            child: CachedNetworkImage(imageUrl: url!, color: mainColor)),
+            child: CachedNetworkImage(
+              imageUrl: url!,
+              color: mainColor,
+              progressIndicatorBuilder: (context, text, progress) {
+                return CupertinoActivityIndicator(
+                  color: mainColor,
+
+                  //    animating: true,
+                );
+              },
+            )),
       );
     return AspectRatio(
       aspectRatio: 1,

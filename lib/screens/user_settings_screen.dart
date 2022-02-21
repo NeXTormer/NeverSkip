@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,9 @@ class UserSettingsScreen extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: theme.mainColorLight,
                       radius: 60,
-                      backgroundImage: NetworkImage(user.image),
+                      backgroundImage: CachedNetworkImageProvider(
+                        user.image,
+                      ),
                     ),
                   ),
                 ),
