@@ -22,7 +22,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(16),
       child: PieChart(PieChartData(
           sectionsSpace: 4,
           sections: getExampleData(),
