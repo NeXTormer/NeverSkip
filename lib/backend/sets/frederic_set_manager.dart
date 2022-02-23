@@ -7,6 +7,7 @@ import 'package:frederic/backend/database/frederic_data_interface.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/set_volume_data_representation.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 
 class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   FredericSetManager([FredericActivityManager? activityManager])
@@ -59,18 +60,20 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   FutureOr<void> _onEvent(
       FredericSetEvent event, Emitter<FredericSetListData> emit) async {
-    print('ON EVENT');
-    emit(FredericSetListData(
+    final profiler = FredericProfiler.track('Generate SetListData');
+    final data = FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
       volume: volumeDataRepresentation!.volume,
       muscleSplit: volumeDataRepresentation!.getMuscleGroupSplit(),
       weeklyTrainingVolume: volumeDataRepresentation!.getVolumeXDays(28),
-    ));
+    );
+    profiler.stop();
+    emit(data);
   }
 
-  FutureOr<void> initializeDataRepresentations() {
-    volumeDataRepresentation!.initialize();
+  FutureOr<void> initializeDataRepresentations() async {
+    await volumeDataRepresentation!.initialize();
     add(FredericSetEvent(['werner findenig']));
   }
 
@@ -116,9 +119,7 @@ class FredericSetListData {
       required this.sets,
       required this.volume,
       required this.weeklyTrainingVolume,
-      required this.muscleSplit}) {
-    print('Weekly Volume: $weeklyTrainingVolume');
-  }
+      required this.muscleSplit}) {}
   final List<String> changedActivities;
   final List<int> weeklyTrainingVolume;
   final List<int> muscleSplit;

@@ -17,7 +17,8 @@
       "1week": "Letzte Woche",
       "2week": "Vor zwei Wochen",
       "3week": "Vor drei Wochen",
-      "0month": "Aktuelles Monat"
+      "0month": "Aktuelles Monat",
+      "title_activity_of_last_year": "Aktive Tage"
     },
     "title": "Finde deine Übungen!",
     "subtitle": "Guten {}, {}!",

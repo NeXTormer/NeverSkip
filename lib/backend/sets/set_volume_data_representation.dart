@@ -5,6 +5,7 @@ import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/backend/sets/frederic_set.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/sets/set_data_representation.dart';
+import 'package:hive/hive.dart';
 
 import '../activities/frederic_activity.dart';
 import '../util/frederic_profiler.dart';
@@ -18,21 +19,38 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
   final FredericSetManager setManager;
   final FredericActivityManager activityManager;
 
-  final HashMap<DateTime, VolumeDataRepresentation> _data =
+  HashMap<DateTime, VolumeDataRepresentation> _data =
       HashMap<DateTime, VolumeDataRepresentation>();
 
   HashMap<DateTime, VolumeDataRepresentation> get volume => _data;
 
+  Box<Map<dynamic, dynamic>>? _box;
+
   @override
-  void initialize() {
-    var profiler = FredericProfiler.track('init SetVolumeDataRepresentation');
-    //TODO: Cache this for better performance
-    for (var setList in setManager.sets.values) {
-      final setIterator = setList.getAllSets();
-      final activity = activityManager[setList.activityID];
-      for (var set in setIterator) {
-        _addDataToChart(activity, set);
+  Future<void> initialize() async {
+    var profiler;
+    //await Hive.deleteBoxFromDisk('SetVolumeDataRepresentation');
+    if (_box == null) _box = await Hive.openBox('SetVolumeDataRepresentation');
+    if (_box!.isEmpty) {
+      profiler = FredericProfiler.track('Calculate SetVolume');
+      for (var setList in setManager.sets.values) {
+        final setIterator = setList.getAllSets();
+        final activity = activityManager[setList.activityID];
+        for (var set in setIterator) {
+          _addDataToChart(activity, set);
+        }
       }
+
+      await _box!.put(0, Map<DateTime, VolumeDataRepresentation>.of(_data));
+    } else {
+      profiler = FredericProfiler.track('Load SetVolume');
+      final data = _box!.getAt(0);
+      if (data == null) {
+        await _box!.clear();
+        initialize();
+        return;
+      }
+      _data = HashMap<DateTime, VolumeDataRepresentation>.from(data);
     }
 
     profiler.stop();
@@ -83,6 +101,8 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
             set.reps;
       }
     }
+
+    _updateCachedData();
   }
 
   void _removeDataFromChart(FredericActivity activity, FredericSet set) {
@@ -97,6 +117,11 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
       dayData.muscleGroupReps[dayData.getMuscleGroupID(muscleGroup)] -=
           set.reps;
     }
+    _updateCachedData();
+  }
+
+  Future<void> _updateCachedData() async {
+    await _box!.put(0, Map<DateTime, VolumeDataRepresentation>.of(_data));
   }
 
   @override
@@ -114,6 +139,15 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
 class VolumeDataRepresentation implements FredericDataObject {
   VolumeDataRepresentation(this.sets, this.reps, this.volume, this.id)
       : muscleGroupReps = List.filled(5, 0);
+
+  VolumeDataRepresentation.fromMap(String id, Map<String, dynamic> data)
+      : this.id = id,
+        this.reps = 0,
+        this.sets = 0,
+        this.volume = 0,
+        this.muscleGroupReps = <double>[] {
+    fromMap(id, data);
+  }
 
   String id;
   int reps;
@@ -144,6 +178,7 @@ class VolumeDataRepresentation implements FredericDataObject {
     this.reps = data['reps'];
     this.sets = data['sets'];
     this.volume = data['volume'];
+    this.muscleGroupReps = data['musclegroups'];
   }
 
   @override
@@ -152,6 +187,7 @@ class VolumeDataRepresentation implements FredericDataObject {
       'reps': reps,
       'sets': sets,
       'volume': volume,
+      'musclegroups': muscleGroupReps
     };
   }
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
@@ -15,10 +16,10 @@ class MonthVolumeChartSegment extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(bottom: 16),
         child: FredericChart(
-          title: 'Trainingsvolumen',
+          title: tr('home.chart.title_activity_of_last_year'),
           pages: [
             FredericChartPage(
-                title: 'Aktuelles Monat',
+                title: null,
                 page: MonthVolumeChartPage(
                   setListData: setListData,
                 ))

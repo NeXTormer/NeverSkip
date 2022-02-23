@@ -25,7 +25,7 @@ class FredericChart extends StatefulWidget {
 
 class _FredericChartState extends State<FredericChart> {
   PageController pageController = PageController();
-  String subtitle = '';
+  String? subtitle;
 
   int lastPage = 0;
 
@@ -84,8 +84,8 @@ class _FredericChartState extends State<FredericChart> {
 }
 
 class FredericChartPage {
-  FredericChartPage({required this.title, required this.page});
+  FredericChartPage({this.title, required this.page});
 
   final Widget page;
-  final String title;
+  final String? title;
 }

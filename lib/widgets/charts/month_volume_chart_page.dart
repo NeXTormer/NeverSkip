@@ -59,7 +59,7 @@ class VolumeSliderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profiler = FredericProfiler.track('build slider');
+    final profiler = FredericProfiler.track('YearChart Calculate Year');
     List<DateTime> months = <DateTime>[];
     var today = DateTime.now();
     today = DateTime(today.year, today.month, today.day);
@@ -106,7 +106,7 @@ class VolumeSliderMonth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profiler = FredericProfiler.track('build month');
+    final profiler = FredericProfiler.track('YearChart Calculate Month');
     final DateFormat format = DateFormat('MMMM', context.locale.toString());
     List<DateTime?> dates = <DateTime?>[];
 

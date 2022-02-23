@@ -19,6 +19,7 @@ import 'package:frederic/backend/database/type_adapters/timestamp_type_adapter.d
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/sets/set_volume_data_representation.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
@@ -74,6 +75,11 @@ void main() async {
     if (!Hive.isAdapterRegistered(3))
       Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSetDocument>(3,
           create: (id, data) => FredericSetDocument.fromMap(id, data)));
+    if (!Hive.isAdapterRegistered(4))
+      Hive.registerAdapter(
+          FredericUniversalTypeAdapter<VolumeDataRepresentation>(4,
+              create: (id, data) =>
+                  VolumeDataRepresentation.fromMap(id, data)));
     if (!Hive.isAdapterRegistered(100))
       Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
     // == Hive == End ==

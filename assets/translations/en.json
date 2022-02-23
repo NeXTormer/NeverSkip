@@ -17,7 +17,8 @@
       "1week": "Last Week",
       "2week": "Two Weeks Ago",
       "3week": "Three Weeks Ago",
-      "0month": "Current Month"
+      "0month": "Current Month",
+      "title_activity_of_last_year": "Active days"
     },
     "title": "Let's find you a Workout!",
     "subtitle": "Good {}, {}!",
