@@ -127,8 +127,7 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
     double weight = addProgressController.weight;
     FredericSet set = FredericSet(reps, weight, DateTime.now());
     playerState.addProgress(widget.activity.activity, set);
-    FredericBackend.instance.setManager
-        .addSet(widget.activity.activity.id, set);
+    FredericBackend.instance.setManager.addSet(widget.activity.activity, set);
 
     FredericBackend.instance.analytics.logAddProgressOnWorkoutPlayer();
   }

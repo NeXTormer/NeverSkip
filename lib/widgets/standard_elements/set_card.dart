@@ -169,7 +169,7 @@ class _SetCardState extends State<SetCard> {
     });
     Future.delayed(widget.animationDuration).then((value) {
       FredericBackend.instance.setManager
-          .deleteSet(widget.activity.id, widget.set);
+          .deleteSet(widget.activity, widget.set);
       Navigator.of(context).pop();
     });
   }

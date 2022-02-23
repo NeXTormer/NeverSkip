@@ -84,7 +84,7 @@ class _CalendarActivityCardContentState
                             ),
                             SizedBox(width: 2),
                             Text(
-                                '${widget.activity.sets == 1 ? 'set' : 'sets'}',
+                                '${widget.activity.sets == 1 ? tr('progress.sets.one') : tr('progress.sets.other')}',
                                 style: TextStyle(
                                     color: theme.textColor,
                                     fontWeight: FontWeight.w500,
@@ -103,7 +103,7 @@ class _CalendarActivityCardContentState
                             ),
                             SizedBox(width: 2),
                             Text(
-                                '${widget.activity.reps == 1 ? 'repetition' : 'repetitions'}',
+                                '${widget.activity.reps == 1 ? tr('progress.repetitions.one') : tr('progress.repetitions.other')}',
                                 style: TextStyle(
                                     color: theme.textColor,
                                     fontWeight: FontWeight.w500,

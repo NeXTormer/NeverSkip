@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,9 @@ class UserSettingsScreen extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: theme.mainColorLight,
                       radius: 60,
-                      backgroundImage: NetworkImage(user.image),
+                      backgroundImage: CachedNetworkImageProvider(
+                        user.image,
+                      ),
                     ),
                   ),
                 ),
@@ -85,7 +88,7 @@ class UserSettingsScreen extends StatelessWidget {
               // ),
               SettingsElement(
                 text: tr('settings.user.picture.title'),
-                changerTitle: tr('settings.picture.changer_title'),
+                changerTitle: tr('settings.user.picture.changer_title'),
                 icon: Icons.person,
                 changeAttributeWidget: ImageAttributeChanger(
                     currentValue: () => user.image,
@@ -155,9 +158,10 @@ class UserSettingsScreen extends StatelessWidget {
                               return (await FredericActionDialog.show(
                                       context: context,
                                       dialog: FredericActionDialog(
-                                          title: 'Disable Anonymous Analytics?',
-                                          childText:
-                                              'Analytics are collected anonymously and are not shared with others.\nThey help us provide you a better experience.',
+                                          title: tr(
+                                              'settings.user.disable_analytics_title'),
+                                          childText: tr(
+                                              'settings.user.disable_analytics_description'),
                                           closeOnConfirm: true,
                                           onConfirm: () {
                                             preferences.data?.setBool(

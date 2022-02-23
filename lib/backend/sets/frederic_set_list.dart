@@ -62,6 +62,22 @@ class FredericSetList {
     return sets;
   }
 
+  Iterable<FredericSet> getAllSets() sync* {
+    int documentIndex = 0;
+    int setIndex = -1;
+    while (true) {
+      setIndex++;
+      if (documentIndex >= _setDocuments.length) break;
+      if (setIndex >= _setDocuments[documentIndex].sets.length) {
+        documentIndex++;
+        setIndex = -1;
+        continue;
+      }
+
+      yield _setDocuments[documentIndex].sets[setIndex];
+    }
+  }
+
   List<FredericSet> getTodaysSets([DateTime? day]) {
     day = day ?? DateTime.now();
     List<FredericSet> sets = <FredericSet>[];

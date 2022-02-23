@@ -9,6 +9,7 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/widgets/settings_screen/delete_local_documents_screen.dart';
 import 'package:frederic/widgets/settings_screen/feedback_sender_widget.dart';
 import 'package:frederic/widgets/settings_screen/reload_caches_from_db_dialog.dart';
 import 'package:frederic/widgets/settings_screen/settings_element.dart';
@@ -79,6 +80,12 @@ class SettingsScreen extends StatelessWidget {
                     icon: Icons.feedback_outlined,
                     changerTitle: tr('settings.feedback.title'),
                     changeAttributeWidget: FeedbackSenderWidget(user),
+                  ),
+                  SettingsElement(
+                    text: tr('settings.reset_settings.title'),
+                    changeAttributeWidget: DeleteLocalDocumentsScreen(),
+                    changerTitle: tr('settings.reset_settings.title'),
+                    icon: Icons.settings_backup_restore,
                   ),
                 ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),

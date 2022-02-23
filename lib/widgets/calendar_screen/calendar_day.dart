@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
@@ -99,13 +100,14 @@ class _CalendarMonthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final format = DateFormat('MMMM', context.locale.toString());
     return FredericCard(
       padding: EdgeInsets.all(12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('${getMonthName(day)}',
+          Text(format.format(day),
               style: TextStyle(
                   fontFamily: 'Montserrat',
                   color: theme.textColor,
@@ -123,37 +125,6 @@ class _CalendarMonthCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String getMonthName(DateTime day) {
-    switch (day.month) {
-      case 1:
-        return 'January';
-      case 2:
-        return 'February';
-      case 3:
-        return 'March';
-      case 4:
-        return 'April';
-      case 5:
-        return 'May';
-      case 6:
-        return 'June';
-      case 7:
-        return 'July';
-      case 8:
-        return 'August';
-      case 9:
-        return 'September';
-      case 10:
-        return 'October';
-      case 11:
-        return 'November';
-      case 12:
-        return 'December';
-      default:
-        return 'Other';
-    }
   }
 }
 
@@ -337,19 +308,19 @@ class _CalendarDayCard extends StatelessWidget {
   String getWeekdayName(int index) {
     switch (index) {
       case 1:
-        return 'Mon';
+        return tr('dates.short.monday');
       case 2:
-        return 'Tue';
+        return tr('dates.short.tuesday');
       case 3:
-        return 'Wed';
+        return tr('dates.short.wednesday');
       case 4:
-        return 'Thu';
+        return tr('dates.short.thursday');
       case 5:
-        return 'Fri';
+        return tr('dates.short.friday');
       case 6:
-        return 'Sat';
+        return tr('dates.short.saturday');
       case 7:
-        return 'Sun';
+        return tr('dates.short.sunday');
     }
     return 'Err';
   }

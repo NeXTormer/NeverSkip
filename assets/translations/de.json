@@ -1,12 +1,29 @@
 {
+  "welcome_screen":
+  {
+    "title": "Willkommen bei\nNeverSkip",
+    "text1": "Hallo! Wir haben hart daran gearbeitet, unsere Traum-App für die Erstellung von Trainingsplänen und die Verfolgung unserer Fortschritte zu entwickeln.",
+    "text2": "Wir hoffen, dass Sie es lieben werden, mit NeverSkip Ihre perfekten Trainingseinheiten zu verfolgen und zu planen.",
+    "button": "Los gehts!",
+    "credits": "- Felix & Stefan"
+  },
   "home":
   {
+    "chart":
+    {
+      "title_training_volume_week": "Trainingsvolumen",
+      "title_muscle_group_volume": "Muskelgruppenverteilung",
+      "0week": "Aktuelle Woche",
+      "1week": "Letzte Woche",
+      "2week": "Vor zwei Wochen",
+      "3week": "Vor drei Wochen",
+      "0month": "Aktuelles Monat",
+      "title_activity_of_last_year": "Aktive Tage"
+    },
     "title": "Finde deine Übungen!",
     "subtitle": "Guten {}, {}!",
     "personal_records": "Persönliche Bestleistungen",
     "my_goals": "Meine Ziele",
-    "training_volume_chart_title": "Aktuelle Woche",
-    "training_volume_chart_subtitle": "Trainingsvolumen",
     "achievements": "Meine Errungenschaften",
     "other": "Weitere",
     "history_button": "Verlauf",
@@ -81,13 +98,13 @@
     "sunday": "Sonntag",
     "short":
     {
-      "monday": "Mon",
-      "tuesday": "Die",
-      "wednesday": "Mit",
-      "thursday": "Don",
-      "friday": "Fre",
-      "saturday": "Sam",
-      "sunday": "Son"
+      "monday": "Mo",
+      "tuesday": "Di",
+      "wednesday": "Mi",
+      "thursday": "Do",
+      "friday": "Fr",
+      "saturday": "Sa",
+      "sunday": "So"
     }
   },
   "settings":
@@ -115,6 +132,12 @@
       "done": "Fertig!",
       "popup_title": "Lade die zwischengespeicherten Daten von der Datenbank neu?",
       "popup_description": "Lade die Daten neu wenn du denkst dass ein Datenfehler aufgetreten ist."
+    },
+    "reset_settings":
+    {
+      "title": "Einstellungen zurücksetzen",
+      "description": "Es werden alle Einstellungen und der Großteil der Caches von deinem Gerät gelöscht.\n\nAlle Daten, welche in der Cloud gespeichert sind (Sätze, Übungen, Workouts, usw.), bleiben bestehen.\n\nBenutze diese Funktion falls die App nicht mehr wie erwartet funktioniert.",
+      "button": "Zurücksetzen"
     },
     "feedback":
     {
@@ -150,6 +173,8 @@
         "title": "Abmelden",
         "text": "Willst Du Dich abmelden?"
       },
+      "disable_analytics_title": "Anonyme Analytics deaktivieren?",
+      "disable_analytics_description": "Analytikdaten sind Anonym und werden nie mit Dritten geteilt.\nDie Daten werden Genutzt um die App stets zu verbessern.",
       "change_password":
       {
         "title": "Passwort ändern",
@@ -201,8 +226,8 @@
     "subtitle_signup": "Melde dich an um Fit und Gesund zu werden, indem du deine Ziele und Pläne verfolgst.",
     "have_account": "Du hast schon einen Account?",
     "not_have_account": "Du hast noch keinen Account?",
-    "log_in": "Einloggen",
-    "sign_up": "Anmelden",
+    "log_in": " Einloggen",
+    "sign_up": " Anmelden",
     "sign_up_google": "Mit Google anmelden",
     "log_in_google": "Mit Google anmelden",
     "sign_up_email": "Mit E-Mail anmelden",

@@ -34,7 +34,6 @@ class WeekDaysSliderDayCard extends StatelessWidget {
         return LongPressDraggable<int>(
             data: dayIndex,
             maxSimultaneousDrags: 1,
-            onDragStarted: () => print("DAY: $dayIndex"),
             hapticFeedbackOnStart: true,
             child: buildContents(context, false, false, false),
             childWhenDragging: buildContents(context, false, false, true),

@@ -35,7 +35,6 @@ class _PasswordChangerState extends State<PasswordChanger> {
   Widget build(BuildContext context) {
     return BlocBuilder<FredericUserManager, FredericUser>(
       builder: (context, user) {
-        print('rebuilt');
         return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(

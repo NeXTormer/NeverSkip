@@ -1,12 +1,29 @@
 {
+  "welcome_screen":
+  {
+    "title": "Welcome to\nNeverSkip",
+    "text1": "Hey there! We have been working hard to make our dream app for building workout plans and tracking our progress.",
+    "text2": "We hope you will love using NeverSkip to track and plan your perfect workouts.",
+    "button": "Lets go!",
+    "credits": "- Felix & Stefan"
+  },
   "home":
   {
+    "chart":
+    {
+      "title_training_volume_week": "Training volume",
+      "title_muscle_group_volume": "Muscle Group Split",
+      "0week": "Current Week",
+      "1week": "Last Week",
+      "2week": "Two Weeks Ago",
+      "3week": "Three Weeks Ago",
+      "0month": "Current Month",
+      "title_activity_of_last_year": "Active days"
+    },
     "title": "Let's find you a Workout!",
     "subtitle": "Good {}, {}!",
     "personal_records": "Personal Records",
     "my_goals": "My Goals",
-    "training_volume_chart_title": "This week's training",
-    "training_volume_chart_subtitle": "training volume",
     "achievements": "My Achievements",
     "other": "Other",
     "history_button": "History",
@@ -116,6 +133,12 @@
       "popup_title": "Reload cached data from the Database?",
       "popup_description": "Reload if you think the cached data might be corrupted."
     },
+    "reset_settings":
+    {
+      "title": "Reset Settings",
+      "description": "This will delete all settings and most cached data from your device.\n\nAll data stored in the cloud (sets, exercises, workouts, ...) and your account will not be deleted.\n\nUse this if the App is not behaving correctly.",
+      "button": "Reset"
+    },
     "feedback":
     {
       "title": "Send Feedback",
@@ -150,6 +173,8 @@
         "title": "Sign Out",
         "text": "Do you want to sign out?"
       },
+      "disable_analytics_title": "Disable Anonymous Analytics?",
+      "disable_analytics_description": "Analytics are collected anonymously and are not shared with others.\nThey help us provide you a better experience.",
       "change_password":
       {
         "title": "Change Password",
@@ -201,8 +226,8 @@
     "subtitle_signup": "Sign up and create an account so that you can remain healthy by following your daily goals and plans.",
     "have_account": "Already have an account?",
     "not_have_account": "Don't have an account?",
-    "log_in": "Log In",
-    "sign_up": "Sign Up",
+    "log_in": " Log In",
+    "sign_up": " Sign Up",
     "sign_up_google": "Sign up with Google",
     "log_in_google": "Log in with Google",
     "sign_up_email": "Sign up with E-Mail",
