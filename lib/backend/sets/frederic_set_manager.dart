@@ -13,6 +13,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
       : super(FredericSetListData(
             changedActivities: <String>[],
             sets: HashMap<String, FredericSetList>(),
+            volume: HashMap<DateTime, VolumeDataRepresentation>(),
             muscleSplit: List<int>.filled(5, 0),
             weeklyTrainingVolume: List<int>.filled(28, 0))) {
     on<FredericSetEvent>(_onEvent);
@@ -62,6 +63,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     emit(FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
+      volume: volumeDataRepresentation!.volume,
       muscleSplit: volumeDataRepresentation!.getMuscleGroupSplit(),
       weeklyTrainingVolume: volumeDataRepresentation!.getVolumeXDays(28),
     ));
@@ -112,6 +114,7 @@ class FredericSetListData {
   FredericSetListData(
       {required this.changedActivities,
       required this.sets,
+      required this.volume,
       required this.weeklyTrainingVolume,
       required this.muscleSplit}) {
     print('Weekly Volume: $weeklyTrainingVolume');
@@ -120,6 +123,7 @@ class FredericSetListData {
   final List<int> weeklyTrainingVolume;
   final List<int> muscleSplit;
   final HashMap<String, FredericSetList> sets;
+  final HashMap<DateTime, VolumeDataRepresentation> volume;
 
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {

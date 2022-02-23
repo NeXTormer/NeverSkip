@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
@@ -13,7 +14,7 @@ class MonthVolumeChartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       child: Row(
         children: [
           Padding(
@@ -33,7 +34,7 @@ class MonthVolumeChartPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Expanded(child: VolumeSliderView())
+          Expanded(child: VolumeSliderView(setListData: setListData))
         ],
       ),
     );
@@ -51,32 +52,46 @@ class MonthVolumeChartPage extends StatelessWidget {
 }
 
 class VolumeSliderView extends StatelessWidget {
-  const VolumeSliderView({Key? key}) : super(key: key);
+  const VolumeSliderView({required this.setListData, Key? key})
+      : super(key: key);
+
+  final FredericSetListData setListData;
 
   @override
   Widget build(BuildContext context) {
+    final profiler = FredericProfiler.track('build slider');
+    List<DateTime> months = <DateTime>[];
+    var today = DateTime.now();
+    today = DateTime(today.year, today.month, today.day);
+    months.add(today);
+
+    int year = today.year;
+    int month = today.month;
+    for (int i = 0; i < 2; i++) {
+      var current = DateTime(year, month, 1);
+      do {
+        current = current.subtract(const Duration(days: 1));
+      } while (current.weekday != 7);
+      months.add(current);
+      month--;
+      if (month < 1) {
+        month = 12;
+        year--;
+      }
+    }
+
+    profiler.stop();
+
     return CustomScrollView(
       scrollDirection: Axis.horizontal,
       physics: BouncingScrollPhysics(),
       reverse: true,
       slivers: [
-        VolumeSliderMonth(
-          month: DateTime(2022, 02),
-          startingDay: DateTime(2022, 02, 23),
-        ),
-        VolumeSliderMonth(
-          month: DateTime(2022, 01),
-          startingDay: DateTime(2022, 01, 30),
-        ),
-        VolumeSliderMonth(
-          month: DateTime(2021, 12),
-          startingDay: DateTime(2021, 12, 26),
-        ),
-        VolumeSliderMonth(
-          month: DateTime(2021, 11),
-          startingDay: DateTime(2021, 11, 28),
-        ),
-        //VolumeSliderMonth(DateTime(2022, 02)),
+        for (final month in months)
+          VolumeSliderMonth(
+            startingDay: month,
+            setListData: setListData,
+          ),
       ],
     );
   }
@@ -84,15 +99,15 @@ class VolumeSliderView extends StatelessWidget {
 
 class VolumeSliderMonth extends StatelessWidget {
   const VolumeSliderMonth(
-      {required this.month, required this.startingDay, Key? key})
+      {required this.startingDay, required this.setListData, Key? key})
       : super(key: key);
-  final DateTime month;
   final DateTime startingDay;
+  final FredericSetListData setListData;
 
   @override
   Widget build(BuildContext context) {
+    final profiler = FredericProfiler.track('build month');
     final DateFormat format = DateFormat('MMMM', context.locale.toString());
-    print("REBUILD MONTH");
     List<DateTime?> dates = <DateTime?>[];
 
     for (int i = 0; i < (7 - startingDay.weekday); i++) dates.add(null);
@@ -100,7 +115,7 @@ class VolumeSliderMonth extends StatelessWidget {
     int i = 0;
     while (true) {
       DateTime current = startingDay.subtract(Duration(days: i));
-      if (current.month != month.month) {
+      if (current.month != startingDay.month) {
         if (current.weekday == 1) {
           dates.add(current);
           break;
@@ -108,11 +123,17 @@ class VolumeSliderMonth extends StatelessWidget {
       }
       dates.add(current);
 
+      if (current.month == startingDay.month &&
+          current.day == 1 &&
+          current.weekday == 1) {
+        break;
+      }
+
       i++;
     }
 
     dates = dates.reversed.toList();
-
+    profiler.stop();
     return SliverToBoxAdapter(
         child: Padding(
       padding: const EdgeInsets.only(right: 2),
@@ -120,12 +141,11 @@ class VolumeSliderMonth extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(format.format(month),
+            Text(format.format(startingDay),
                 style: TextStyle(
                     color: theme.greyTextColor,
                     fontWeight: FontWeight.w400,
                     fontSize: 13)),
-            //if (false)
             SizedBox(height: 8),
             Expanded(
               child: LayoutBuilder(builder: (context, constraints) {
@@ -142,6 +162,9 @@ class VolumeSliderMonth extends StatelessWidget {
                     for (final day in dates)
                       _DayCard(
                         day?.day.toString(),
+                        volume: day == null
+                            ? 0
+                            : setListData.volume[day]?.volume ?? 0.88,
                         size: size,
                       ),
                   ],
@@ -156,20 +179,33 @@ class VolumeSliderMonth extends StatelessWidget {
 }
 
 class _DayCard extends StatelessWidget {
-  const _DayCard(this.day, {this.size = 22, Key? key}) : super(key: key);
+  const _DayCard(this.day, {required this.volume, this.size = 22, Key? key})
+      : super(key: key);
   final String? day;
   final double size;
+  final double volume;
 
   @override
   Widget build(BuildContext context) {
     if (day == null) return SizedBox(height: size, width: size);
+    double opacity = volume / 2000.0;
+    if (opacity > 1) opacity = 1;
+
     return FredericCard(
       height: size,
-      color: theme.mainColorLight,
-      borderRadius: 4,
+      borderWidth: 0.6,
+      color: theme.accentColor.withOpacity(opacity),
+      borderRadius: 6,
       width: size,
       child: Center(
-        child: Text(day!),
+        child: Text(
+          day!,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: opacity > 0.7
+                  ? theme.textColorColorfulBackground
+                  : theme.textColor),
+        ),
       ),
     );
   }

@@ -21,6 +21,8 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
   final HashMap<DateTime, VolumeDataRepresentation> _data =
       HashMap<DateTime, VolumeDataRepresentation>();
 
+  HashMap<DateTime, VolumeDataRepresentation> get volume => _data;
+
   @override
   void initialize() {
     var profiler = FredericProfiler.track('init SetVolumeDataRepresentation');
