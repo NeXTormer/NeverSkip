@@ -88,7 +88,7 @@ class UserSettingsScreen extends StatelessWidget {
               // ),
               SettingsElement(
                 text: tr('settings.user.picture.title'),
-                changerTitle: tr('settings.picture.changer_title'),
+                changerTitle: tr('settings.user.picture.changer_title'),
                 icon: Icons.person,
                 changeAttributeWidget: ImageAttributeChanger(
                     currentValue: () => user.image,
@@ -158,9 +158,10 @@ class UserSettingsScreen extends StatelessWidget {
                               return (await FredericActionDialog.show(
                                       context: context,
                                       dialog: FredericActionDialog(
-                                          title: 'Disable Anonymous Analytics?',
-                                          childText:
-                                              'Analytics are collected anonymously and are not shared with others.\nThey help us provide you a better experience.',
+                                          title: tr(
+                                              'settings.user.disable_analytics_title'),
+                                          childText: tr(
+                                              'settings.user.disable_analytics_description'),
                                           closeOnConfirm: true,
                                           onConfirm: () {
                                             preferences.data?.setBool(

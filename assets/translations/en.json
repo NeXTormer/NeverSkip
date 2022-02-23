@@ -173,6 +173,8 @@
         "title": "Sign Out",
         "text": "Do you want to sign out?"
       },
+      "disable_analytics_title": "Disable Anonymous Analytics?",
+      "disable_analytics_description": "Analytics are collected anonymously and are not shared with others.\nThey help us provide you a better experience.",
       "change_password":
       {
         "title": "Change Password",

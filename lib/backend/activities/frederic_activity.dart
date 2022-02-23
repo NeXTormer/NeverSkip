@@ -108,7 +108,8 @@ class FredericActivity
 
   String get progressUnit {
     if (_type == FredericActivityType.Weighted) return 'kg';
-    if (_type == FredericActivityType.Calisthenics) return 'reps';
+    if (_type == FredericActivityType.Calisthenics)
+      return tr('progress.reps.other');
     if (_type == FredericActivityType.Stretch) return 's';
     return '';
   }

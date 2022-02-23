@@ -98,13 +98,13 @@
     "sunday": "Sonntag",
     "short":
     {
-      "monday": "Mon",
-      "tuesday": "Die",
-      "wednesday": "Mit",
-      "thursday": "Don",
-      "friday": "Fre",
-      "saturday": "Sam",
-      "sunday": "Son"
+      "monday": "Mo",
+      "tuesday": "Di",
+      "wednesday": "Mi",
+      "thursday": "Do",
+      "friday": "Fr",
+      "saturday": "Sa",
+      "sunday": "So"
     }
   },
   "settings":
@@ -173,6 +173,8 @@
         "title": "Abmelden",
         "text": "Willst Du Dich abmelden?"
       },
+      "disable_analytics_title": "Anonyme Analytics deaktivieren?",
+      "disable_analytics_description": "Analytikdaten sind Anonym und werden nie mit Dritten geteilt.\nDie Daten werden Genutzt um die App stets zu verbessern.",
       "change_password":
       {
         "title": "Passwort ändern",
