@@ -10,6 +10,7 @@ import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:image/image.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CalendarActivityCardContent extends StatefulWidget {
@@ -102,14 +103,18 @@ class _CalendarActivityCardContentState
                                   fontSize: 14),
                             ),
                             SizedBox(width: 2),
-                            Text(
-                                '${widget.activity.reps == 1 ? tr('progress.repetitions.one') : tr('progress.repetitions.other')}',
-                                style: TextStyle(
-                                    color: theme.textColor,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 0.5,
-                                    fontSize: 12)),
-                            Expanded(child: Container()),
+                            Expanded(
+                              child: Text(
+                                  '${widget.activity.reps == 1 ? tr('progress.repetitions.one') : tr('progress.repetitions.other')}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: theme.textColor,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.5,
+                                      fontSize: 12)),
+                            ),
+                            //Expanded(child: Container()),
                           ],
                         )
                       ],

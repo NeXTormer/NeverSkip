@@ -12,6 +12,11 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>de</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>frederic</string>
 	<key>CFBundlePackageType</key>
@@ -31,11 +36,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleLocalizations</key>
-    <array>
-    	<string>en</string>
-    	<string>de</string>
-    </array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
