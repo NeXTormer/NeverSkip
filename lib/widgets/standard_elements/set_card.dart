@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
@@ -86,7 +87,7 @@ class _SetCardState extends State<SetCard> {
                           size: 18,
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -98,18 +99,22 @@ class _SetCardState extends State<SetCard> {
                                 letterSpacing: 0.5,
                                 fontSize: 14),
                           ),
-                          SizedBox(width: 3),
-                          Text('reps',
+                          const SizedBox(width: 3),
+                          Text(tr('progress.reps.other'),
                               style: TextStyle(
                                   color: theme.textColor,
                                   fontWeight: FontWeight.w500,
                                   letterSpacing: 0.5,
                                   fontSize: 12)),
+                          if (widget.activity.type !=
+                              FredericActivityType.Weighted)
+                            // Add some padding so that the card doesn't scale up really huge because the width is too low
+                            const SizedBox(width: 56),
                           if (widget.activity.type ==
                               FredericActivityType.Weighted) ...[
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             FredericVerticalDivider(length: 16),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text(
                               '${widget.set.weight}',
                               style: TextStyle(
@@ -118,7 +123,7 @@ class _SetCardState extends State<SetCard> {
                                   letterSpacing: 0.5,
                                   fontSize: 14),
                             ),
-                            SizedBox(width: 3),
+                            const SizedBox(width: 3),
                             Text(widget.activity.progressUnit,
                                 style: TextStyle(
                                     color: theme.textColor,
@@ -128,7 +133,7 @@ class _SetCardState extends State<SetCard> {
                           ]
                         ],
                       ),
-                      SizedBox(width: 32),
+                      const SizedBox(width: 32),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -140,7 +145,7 @@ class _SetCardState extends State<SetCard> {
                                 letterSpacing: 0.4,
                                 fontSize: 14),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
                             '${DateFormat.Hm().format(widget.set.timestamp.toLocal())}',
                             style: TextStyle(
@@ -149,7 +154,7 @@ class _SetCardState extends State<SetCard> {
                                 letterSpacing: 0.3,
                                 fontSize: 14),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Icon(ExtraIcons.calendar,
                               color: green
                                   ? theme.positiveColor
