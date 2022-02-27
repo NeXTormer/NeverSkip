@@ -65,34 +65,20 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [
-                          widget.editable
-                              ? Container(
-                                  width: 200,
-                                  child: Text(
-                                      widget.activity.activity.getNameLocalized(
-                                          context.locale.languageCode),
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          //textBaseline: TextBaseline.alphabetic,
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: theme.textColor)),
-                                )
-                              : Text(
-                                  widget.activity.activity.getNameLocalized(
-                                      context.locale.languageCode),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      //textBaseline: TextBaseline.alphabetic,
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: theme.textColor)),
-                          Expanded(child: Container()),
-                        ]),
+                        Flexible(
+                          child: Text(
+                              widget.activity.activity.getNameLocalized(
+                                  context.locale.languageCode),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  //textBaseline: TextBaseline.alphabetic,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: theme.textColor)),
+                        ),
                         Row(
                           children: [
                             Text(

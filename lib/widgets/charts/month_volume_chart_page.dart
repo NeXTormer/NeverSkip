@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
+import 'package:frederic/widgets/standard_elements/shadow_custom_scroll_view.dart';
 
 class MonthVolumeChartPage extends StatelessWidget {
   const MonthVolumeChartPage({required this.setListData, Key? key})
@@ -68,7 +68,7 @@ class VolumeSliderView extends StatelessWidget {
 
     int year = today.year;
     int month = today.month;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 11; i++) {
       var current = DateTime(year, month, 1);
       do {
         current = current.subtract(const Duration(days: 1));
@@ -83,9 +83,9 @@ class VolumeSliderView extends StatelessWidget {
 
     profiler.stop();
 
-    return CustomScrollView(
+    return ShadowCustomScrollView(
       scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
+      blurPadding: const EdgeInsets.only(top: 0),
       reverse: true,
       slivers: [
         for (final month in months)

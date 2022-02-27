@@ -38,14 +38,16 @@ class ColorThemeCard extends StatelessWidget {
                     bottomLeft: Radius.circular(7))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'NeverSkip',
-                  style: TextStyle(
-                      color: localTheme.textColorColorfulBackground,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500),
+                Flexible(
+                  child: Text(
+                    'NeverSkip',
+                    style: TextStyle(
+                        color: localTheme.textColorColorfulBackground,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
                 Icon(
                   selected ? Icons.check_circle_outline : Icons.circle_outlined,
