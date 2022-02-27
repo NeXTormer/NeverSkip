@@ -101,31 +101,49 @@ class FredericBackend implements FredericMessageProcessor {
   }
 
   void _initialize() async {
-    final profiler = FredericProfiler.track('FredericBackend::loadData()');
+    FredericProfiler.log('Start _initialize');
     final userProfiler =
         FredericProfiler.track('FredericBackend::loadData::waitForUser()');
+
     await waitUntilUserHasAuthenticated();
+
+    FredericProfiler.log('User has Authenticated');
     userProfiler.stop();
 
-    _defaults = FredericDefaults(await _defaultsReference.get());
+    final profiler = FredericProfiler.track('FredericBackend::loadData()');
+    FredericProfiler.log('Start initializing managers');
+
+    _initializeDefaults(); // no await for faster start times
+    _initializeSets();
+    await _initializeActivities();
+    await _initializeWorkouts();
+    _initializeGoals();
+
+    _setManager.initializeDataRepresentations();
+
+    _waitUntilCoreDataHasLoaded.complete();
+
+    FredericProfiler.log('Finished _initialize');
+    profiler.stop();
+  }
+
+  Future<void> _initializeDefaults() async {
+    final data = await _defaultsReference.get();
+    _defaults = FredericDefaults(data);
 
     bool reloadFromDB =
         _userManager.state.shouldReloadFromDB || _defaults!.alwaysReloadFromDB;
     _userManager.state.shouldReloadFromDB = false;
     _userManager.userDataChanged();
 
-    await _initializeSets();
-    await _initializeActivities(reloadFromDB);
-    await _initializeWorkouts(reloadFromDB);
-    await _initializeGoals();
-
-    _setManager.initializeDataRepresentations();
-
-    _waitUntilCoreDataHasLoaded.complete();
-    profiler.stop();
+    if (reloadFromDB) {
+      _activityManager.reload(true);
+      _setManager.reload(true);
+      _workoutManager.reload(true);
+    }
   }
 
-  Future<void> _initializeActivities(bool reloadFromDB) {
+  Future<void> _initializeActivities() {
     _activityManager.setDataInterface(
         FirestoreCachingDataInterface<FredericActivity>(
             firestoreInstance: firestoreInstance,
@@ -140,10 +158,10 @@ class FredericBackend implements FredericMessageProcessor {
               .collection('activities')
               .where('owner', isEqualTo: _userManager.state.id)
         ]));
-    return _activityManager.reload(reloadFromDB);
+    return _activityManager.reload();
   }
 
-  Future<void> _initializeWorkouts(bool reloadFromDB) {
+  Future<void> _initializeWorkouts() {
     _workoutManager
         .setDataInterface(FirestoreCachingDataInterface<FredericWorkout>(
       firestoreInstance: firestoreInstance,
@@ -163,7 +181,7 @@ class FredericBackend implements FredericMessageProcessor {
             .where('owner', isEqualTo: _userManager.state.id)
       ],
     ));
-    return _workoutManager.reload(reloadFromDB);
+    return _workoutManager.reload();
   }
 
   Future<void> _initializeSets() {

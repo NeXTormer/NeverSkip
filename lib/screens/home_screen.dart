@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
 import 'package:frederic/widgets/charts/month_volume_chart_segment.dart';
 import 'package:frederic/widgets/charts/muscle_group_chart_segment.dart';
@@ -21,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    startupTimeProfiler?.stop();
     FredericBackend.instance.toastManager.removeLoginLoadingToast(context);
     super.initState();
     Future(() async {

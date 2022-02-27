@@ -1,12 +1,13 @@
 import 'dart:collection';
-import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class FredericProfiler {
+  static final bool profilerDisabled = false;
+
   FredericProfiler.track(this.component, {this.description}) {
-    if (kReleaseMode) return;
+    if (profilerDisabled) return;
     _stopwatch = Stopwatch();
     _stopwatch!.start();
     if (!_profilers.containsKey(component)) {
@@ -19,7 +20,7 @@ class FredericProfiler {
       HashMap<String, List<FredericProfiler>>();
 
   static void evaluate() {
-    if (kReleaseMode) return;
+    if (profilerDisabled) return;
     log('Completed Profilers:');
     for (var profilerList in _profilers.entries) {
       //each component
@@ -44,7 +45,7 @@ class FredericProfiler {
   }
 
   static Widget evaluateAsWidget() {
-    if (kReleaseMode) return Text('No Data: release mode');
+    if (profilerDisabled) return Text('No Data: release mode');
 
     List<Widget> widgets = <Widget>[];
 
@@ -98,7 +99,15 @@ class FredericProfiler {
   Stopwatch? _stopwatch;
 
   void stop() {
-    if (kReleaseMode) return;
+    if (profilerDisabled) return;
     _stopwatch!.stop();
+  }
+
+  static final timeFormat = DateFormat(DateFormat.HOUR24_MINUTE_SECOND);
+
+  static void log(String text) {
+    final now = DateTime.now();
+    print(
+        '\x1B[34m[${timeFormat.format(now)}.${now.millisecond}]:\x1B[0m $text');
   }
 }

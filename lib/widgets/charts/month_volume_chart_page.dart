@@ -68,7 +68,7 @@ class VolumeSliderView extends StatelessWidget {
 
     int year = today.year;
     int month = today.month;
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i < 5; i++) {
       var current = DateTime(year, month, 1);
       do {
         current = current.subtract(const Duration(days: 1));

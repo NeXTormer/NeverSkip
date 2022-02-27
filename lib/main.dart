@@ -34,7 +34,10 @@ FredericColorTheme _colorTheme = FredericColorTheme.blue();
 //FredericColorTheme _theme = FredericColorTheme.fromColor(Colors.brown, true);
 FredericColorTheme get theme => _colorTheme;
 
+FredericProfiler? startupTimeProfiler;
+
 void main() async {
+  startupTimeProfiler = FredericProfiler.track('App Startup Time');
   final timeUntilRunApp = FredericProfiler.track('time until runApp()');
   LicenseRegistry.addLicense(() async* {
     final license =
