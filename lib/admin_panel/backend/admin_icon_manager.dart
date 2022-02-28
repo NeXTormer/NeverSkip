@@ -47,7 +47,6 @@ class AdminIconManager extends Bloc<AdminIconEvent, AdminIconListData> {
         reference.name, await reference.getDownloadURL(), tags, reference);
   }
 
-  @override
   Stream<AdminIconListData> mapEventToState(AdminIconEvent event) async* {
     yield AdminIconListData(event.icons);
   }

@@ -29,7 +29,6 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
   @override
   Future<void> initialize() async {
     var profiler;
-    //await Hive.deleteBoxFromDisk('SetVolumeDataRepresentation');
     if (_box == null) _box = await Hive.openBox('SetVolumeDataRepresentation');
     if (_box!.isEmpty) {
       profiler = FredericProfiler.track('Calculate SetVolume');

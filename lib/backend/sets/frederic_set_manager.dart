@@ -119,7 +119,7 @@ class FredericSetListData {
       required this.sets,
       required this.volume,
       required this.weeklyTrainingVolume,
-      required this.muscleSplit}) {}
+      required this.muscleSplit});
   final List<String> changedActivities;
   final List<int> weeklyTrainingVolume;
   final List<int> muscleSplit;

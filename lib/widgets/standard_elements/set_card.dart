@@ -7,7 +7,6 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
-import 'package:intl/intl.dart';
 
 class SetCard extends StatefulWidget {
   SetCard(this.set, this.activity, {this.greenIfToday = false})
