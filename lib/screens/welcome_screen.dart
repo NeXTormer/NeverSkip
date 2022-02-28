@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
+  final bool stefanEnabled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,13 +59,14 @@ class WelcomeScreen extends StatelessWidget {
                                     .image,
                             backgroundColor: Colors.white,
                           ),
-                          const SizedBox(width: 8),
-                          CircleAvatar(
-                            foregroundImage:
-                                Image.asset('assets/images/credits/stefan.jpg')
-                                    .image,
-                            backgroundColor: Colors.white,
-                          ),
+                          if (stefanEnabled) const SizedBox(width: 8),
+                          if (stefanEnabled)
+                            CircleAvatar(
+                              foregroundImage: Image.asset(
+                                      'assets/images/credits/stefan.jpg')
+                                  .image,
+                              backgroundColor: Colors.white,
+                            ),
                         ],
                       ),
                       const SizedBox(height: 6),
