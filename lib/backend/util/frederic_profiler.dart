@@ -103,7 +103,8 @@ class FredericProfiler {
     _stopwatch!.stop();
   }
 
-  static final timeFormat = DateFormat(DateFormat.HOUR24_MINUTE_SECOND);
+  static final timeFormat =
+      DateFormat(DateFormat.HOUR24_MINUTE_SECOND, 'en-US');
 
   static void log(String text) {
     final now = DateTime.now();
