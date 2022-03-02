@@ -67,148 +67,150 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
         backgroundColor: theme.backgroundColor,
-        body: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: Container(
-            height: 880,
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                          height: smallScreen
-                              ? 50
-                              : medScreen
-                                  ? 40
-                                  : 80),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                              login
-                                  ? tr('login.title')
-                                  : tr('login.title_signup'),
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  letterSpacing: 0.4,
-                                  fontWeight: FontWeight.w600,
-                                  color: theme.mainColorInText))),
-                      SizedBox(height: 8),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            switchInCurve: Curves.easeInOut,
-                            switchOutCurve: Curves.easeInOut,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Container(
+              height: 880,
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(
+                            height: smallScreen
+                                ? 50
+                                : medScreen
+                                    ? 40
+                                    : 80),
+                        Align(
+                            alignment: Alignment.centerLeft,
                             child: Text(
                                 login
-                                    ? tr('login.subtitle')
-                                    : tr('login.subtitle_signup'),
-                                key: ValueKey<String>(
-                                    login ? 'login' : 'signup'),
+                                    ? tr('login.title')
+                                    : tr('login.title_signup'),
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    height: 1.6,
-                                    letterSpacing: 0.2,
-                                    fontWeight: FontWeight.w400,
-                                    color: theme.textColor)),
-                          )),
-                      SizedBox(height: 40),
-                      if (!smallScreen)
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 26),
-                            child: Image(
-                                colorBlendMode: BlendMode.screen,
-                                fit: BoxFit.scaleDown,
-                                image: AssetImage(
-                                    'assets/images/login_illustration.png'))),
-                      //SizedBox(height: 80),
-                    ],
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 24),
-                          AuthenticateWithEmailButton(
-                            login: login,
-                            hasError: hasError,
-                            onError: (error) {
-                              if (error == null) {
-                                setState(() {
-                                  hasError = false;
-                                });
-                              } else {
-                                setState(() {
-                                  errorText = error;
-                                  hasError = true;
-                                });
-                              }
-                            },
-                          ),
-                          // if (Platform.isIOS && false) SizedBox(height: 20),
-                          // if (Platform.isIOS && false)
-                          //   SignInWithAppleButton(
-                          //       borderRadius: BorderRadius.circular(10),
-                          //       text: login
-                          //           ? 'Log in with Apple'
-                          //           : 'Sign up with Apple',
-                          //       style: theme.isDark
-                          //           ? SignInWithAppleButtonStyle.white
-                          //           : SignInWithAppleButtonStyle.black,
-                          //       onPressed: () => handleAppleSignIn(context)),
-                          SizedBox(height: 20),
-                          if (Platform.isAndroid)
-                            SignInWithGoogleButton(
-                              signUp: !login,
-                            ),
-                          if (Platform.isAndroid) SizedBox(height: 12),
-                          if (hasError)
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(errorText,
-                                  style: TextStyle(
-                                      color: Colors.redAccent, fontSize: 14)),
-                            ),
-                          //Expanded(flex: 50, child: Container()),
-                          SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                login
-                                    ? tr('login.not_have_account')
-                                    : tr('login.have_account'),
-                                style: TextStyle(
-                                    color: theme.textColor,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              GestureDetector(
-                                onTap: () => setState(() {
-                                  login = !login;
-                                  hasError = false;
-                                }),
-                                child: Text(
+                                    fontSize: 18,
+                                    letterSpacing: 0.4,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.mainColorInText))),
+                        SizedBox(height: 8),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 200),
+                              switchInCurve: Curves.easeInOut,
+                              switchOutCurve: Curves.easeInOut,
+                              child: Text(
                                   login
-                                      ? tr('login.sign_up')
-                                      : tr('login.log_in'),
+                                      ? tr('login.subtitle')
+                                      : tr('login.subtitle_signup'),
+                                  key: ValueKey<String>(
+                                      login ? 'login' : 'signup'),
                                   style: TextStyle(
-                                      color: theme.mainColorInText,
+                                      fontSize: 12,
+                                      height: 1.6,
+                                      letterSpacing: 0.2,
+                                      fontWeight: FontWeight.w400,
+                                      color: theme.textColor)),
+                            )),
+                        SizedBox(height: 40),
+                        if (!smallScreen)
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 26),
+                              child: Image(
+                                  colorBlendMode: BlendMode.screen,
+                                  fit: BoxFit.scaleDown,
+                                  image: AssetImage(
+                                      'assets/images/login_illustration.png'))),
+                        //SizedBox(height: 80),
+                      ],
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 24),
+                            AuthenticateWithEmailButton(
+                              login: login,
+                              hasError: hasError,
+                              onError: (error) {
+                                if (error == null) {
+                                  setState(() {
+                                    hasError = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    errorText = error;
+                                    hasError = true;
+                                  });
+                                }
+                              },
+                            ),
+                            // if (Platform.isIOS && false) SizedBox(height: 20),
+                            // if (Platform.isIOS && false)
+                            //   SignInWithAppleButton(
+                            //       borderRadius: BorderRadius.circular(10),
+                            //       text: login
+                            //           ? 'Log in with Apple'
+                            //           : 'Sign up with Apple',
+                            //       style: theme.isDark
+                            //           ? SignInWithAppleButtonStyle.white
+                            //           : SignInWithAppleButtonStyle.black,
+                            //       onPressed: () => handleAppleSignIn(context)),
+                            SizedBox(height: 20),
+                            if (Platform.isAndroid)
+                              SignInWithGoogleButton(
+                                signUp: !login,
+                              ),
+                            if (Platform.isAndroid) SizedBox(height: 12),
+                            if (hasError)
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(errorText,
+                                    style: TextStyle(
+                                        color: Colors.redAccent, fontSize: 14)),
+                              ),
+                            //Expanded(flex: 50, child: Container()),
+                            SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  login
+                                      ? tr('login.not_have_account')
+                                      : tr('login.have_account'),
+                                  style: TextStyle(
+                                      color: theme.textColor,
                                       fontSize: 11,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w500),
                                 ),
-                              )
-                            ],
-                          ),
-                          SizedBox(height: 8)
-                        ],
+                                GestureDetector(
+                                  onTap: () => setState(() {
+                                    login = !login;
+                                    hasError = false;
+                                  }),
+                                  child: Text(
+                                    login
+                                        ? tr('login.sign_up')
+                                        : tr('login.log_in'),
+                                    style: TextStyle(
+                                        color: theme.mainColorInText,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 8)
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

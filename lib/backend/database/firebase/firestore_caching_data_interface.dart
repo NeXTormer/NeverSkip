@@ -57,7 +57,8 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
   @override
   Future<List<T>> get() async {
     if (await Hive.boxExists(name)) {
-      final profiler = FredericProfiler.track('Load from Box');
+      final profiler =
+          await FredericProfiler.trackFirebase('Load cached $name from Box');
       if (_box == null) _box = await Hive.openBox(name);
       if (_box!.isEmpty) {
         // If the stored box is empty it is possible that the box was corrupted
@@ -68,7 +69,7 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
           return reload();
         }
       }
-      profiler.stop();
+      profiler?.stop();
       return _box!.values.toList();
     } else {
       return reload();

@@ -2,10 +2,10 @@
   "welcome_screen":
   {
     "title": "Welcome to\nNeverSkip",
-    "text1": "Hey there! We have been working hard to make our dream app for building workout plans and tracking our progress.",
-    "text2": "We hope you will love using NeverSkip to track and plan your perfect workouts.",
+    "text1": "Hey there! I have been working hard to make my dream app for building workout plans and tracking my progress.",
+    "text2": "I hope you will love using NeverSkip to track and plan your perfect workouts.",
     "button": "Lets go!",
-    "credits": "- Felix & Stefan"
+    "credits": "- Felix"
   },
   "home":
   {

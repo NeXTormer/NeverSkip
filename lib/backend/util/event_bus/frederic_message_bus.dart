@@ -10,7 +10,7 @@ class FredericMessageBus {
     _processors.add(_defaultMessageProcessor);
   }
 
-  static const bool kMonitorPerformance = true;
+  static const bool kMonitorPerformance = false;
 
   final Queue<FredericBaseMessage> _queue = ListQueue<FredericBaseMessage>(10);
   final List<FredericMessageProcessor> _processors =

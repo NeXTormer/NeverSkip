@@ -37,7 +37,11 @@ FredericColorTheme get theme => _colorTheme;
 FredericProfiler? startupTimeProfiler;
 
 void main() async {
-  startupTimeProfiler = FredericProfiler.track('App Startup Time');
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  startupTimeProfiler =
+      await FredericProfiler.trackFirebase('App Startup Time');
   final timeUntilRunApp = FredericProfiler.track('time until runApp()');
   LicenseRegistry.addLicense(() async* {
     final license =
@@ -56,9 +60,7 @@ void main() async {
 
   // == Record all errors within a Flutter context ==
   runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
     await EasyLocalization.ensureInitialized();
-    await Firebase.initializeApp();
 
     // == Crashlytics & Performance ==
     if (kReleaseMode) {
@@ -90,25 +92,22 @@ void main() async {
     //await Hive.deleteBoxFromDisk('Sets');
 
     // == Load Startup Preferences ==
-    final colorThemeProfiler = FredericProfiler.track('load color theme');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     Object? themeID = preferences.get('colortheme');
     if (themeID != null && themeID is int) {
       _colorTheme = FredericColorTheme.find(themeID);
     }
-    colorThemeProfiler.stop();
     // == Load Startup Preferences == End ==
 
     // == Disable Analytics in debug mode
     if (kDebugMode) {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
-      await FirebasePerformance.instance.setPerformanceCollectionEnabled(false);
     } else {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
-      await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
     }
+    await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 
     timeUntilRunApp.stop();
     runApp(EasyLocalization(
@@ -194,20 +193,22 @@ class _FredericBaseState extends State<FredericBase> {
                   primary: theme.mainColor,
                   brightness:
                       theme.isBright ? Brightness.light : Brightness.dark)),
-          home: OrientationBuilder(
-            builder: (context, orientation) {
-              if (orientation == Orientation.portrait) {
-                return FredericMainApp();
-              }
+          home: true
+              ? FredericMainApp()
+              : OrientationBuilder(
+                  builder: (context, orientation) {
+                    if (orientation == Orientation.portrait) {
+                      return FredericMainApp();
+                    }
 
-              if (getIt.isRegistered<AdminBackend>())
-                getIt.unregister<AdminBackend>();
-              getIt.registerSingleton<AdminBackend>(AdminBackend());
-              return BlocProvider<AdminIconManager>.value(
-                  value: AdminBackend.instance.iconManager,
-                  child: FredericAdminPanel());
-            },
-          ),
+                    if (getIt.isRegistered<AdminBackend>())
+                      getIt.unregister<AdminBackend>();
+                    getIt.registerSingleton<AdminBackend>(AdminBackend());
+                    return BlocProvider<AdminIconManager>.value(
+                        value: AdminBackend.instance.iconManager,
+                        child: FredericAdminPanel());
+                  },
+                ),
         ),
       ),
     );

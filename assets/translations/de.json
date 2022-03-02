@@ -2,10 +2,10 @@
   "welcome_screen":
   {
     "title": "Willkommen bei\nNeverSkip",
-    "text1": "Hallo! Wir haben hart daran gearbeitet, unsere Traum-App für die Erstellung von Trainingsplänen und die Verfolgung unserer Fortschritte zu entwickeln.",
-    "text2": "Wir hoffen, dass Sie es lieben werden, mit NeverSkip Ihre perfekten Trainingseinheiten zu verfolgen und zu planen.",
+    "text1": "Hallo! Ich habe hart daran gearbeitet, meine Traum-App für die Erstellung von Trainingsplänen und die Verfolgung unserer Fortschritte zu entwickeln.",
+    "text2": "Ich hoffe, dass NeverSkip Ihnen hilft Ihre Trainingseinheiten zu verfolgen und Ihre Ziele zu erreichen.",
     "button": "Los gehts!",
-    "credits": "- Felix & Stefan"
+    "credits": "- Felix"
   },
   "home":
   {

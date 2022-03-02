@@ -102,16 +102,9 @@ class FredericBackend implements FredericMessageProcessor {
 
   void _initialize() async {
     FredericProfiler.log('Start _initialize');
-    final userProfiler =
-        FredericProfiler.track('FredericBackend::loadData::waitForUser()');
 
     await waitUntilUserHasAuthenticated();
-
     FredericProfiler.log('User has Authenticated');
-    userProfiler.stop();
-
-    final profiler = FredericProfiler.track('FredericBackend::loadData()');
-    FredericProfiler.log('Start initializing managers');
 
     _initializeDefaults(); // no await for faster start times
     _initializeSets();
@@ -119,12 +112,11 @@ class FredericBackend implements FredericMessageProcessor {
     await _initializeWorkouts();
     _initializeGoals();
 
-    _setManager.initializeDataRepresentations();
+    _setManager.initializeDataRepresentations(); // asynchronous
 
     _waitUntilCoreDataHasLoaded.complete();
 
     FredericProfiler.log('Finished _initialize');
-    profiler.stop();
   }
 
   Future<void> _initializeDefaults() async {

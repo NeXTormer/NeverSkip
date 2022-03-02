@@ -60,7 +60,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   FutureOr<void> _onEvent(
       FredericSetEvent event, Emitter<FredericSetListData> emit) async {
-    final profiler = FredericProfiler.track('Generate SetListData');
+    final profiler = FredericProfiler.track('SetManager onEvent');
     final data = FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,

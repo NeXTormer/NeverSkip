@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../frederic_backend.dart';
@@ -17,10 +16,8 @@ class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    final tracker = FredericProfiler.track("GetUserData persistent");
     FredericUser u =
         await userManager.authInterface.getUserData(user.id, user.email);
-    tracker.stop();
     return u;
   }
 }

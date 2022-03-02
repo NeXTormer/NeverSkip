@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
-import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 ///
@@ -131,7 +130,6 @@ class FredericWorkout implements FredericDataObject {
 
   void loadActivities(FredericActivityManager activityManager) {
     if (_activitiesList == null) return;
-    final profiler = FredericProfiler.track('Workout::loadActivities');
     _activities = FredericWorkoutActivities(this);
 
     for (dynamic activityMap in _activitiesList!) {
@@ -147,7 +145,6 @@ class FredericWorkout implements FredericDataObject {
     }
 
     for (var list in _activities.activities) list.sort();
-    profiler.stop();
   }
 
   ///

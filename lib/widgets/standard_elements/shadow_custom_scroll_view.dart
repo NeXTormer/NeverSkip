@@ -26,10 +26,14 @@ class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
 
   @override
   Widget build(BuildContext context) {
-    final color1 =
+    var color1 =
         theme.isDark ? Colors.white.withAlpha(30) : Colors.black.withAlpha(50);
-    final color2 =
+    var color2 =
         theme.isDark ? Colors.black.withAlpha(50) : Colors.white.withAlpha(30);
+    if (!showShadow) {
+      color1 = Colors.transparent;
+      color2 = Colors.transparent;
+    }
 
     return Stack(
       children: [
@@ -60,13 +64,12 @@ class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
             bottom: 0,
             child: Padding(
               padding: widget.blurPadding,
-              child: Container(
+              child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 100),
                   width: widget.shadowWidth,
-                  decoration: showShadow
-                      ? BoxDecoration(
-                          gradient: LinearGradient(colors: [color1, color2]),
-                        )
-                      : null),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [color1, color2]),
+                  )),
             )),
       ],
     );

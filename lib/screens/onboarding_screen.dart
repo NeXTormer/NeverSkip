@@ -135,7 +135,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           decoration: pageDecoration,
         ),
       ],
-      onDone: () => Navigator.of(context).pop(),
+      onDone: () {
+        Navigator.of(context).pop();
+      },
       showSkipButton: true,
       //skipFlex: 0,
       skipOrBackFlex: 0,
