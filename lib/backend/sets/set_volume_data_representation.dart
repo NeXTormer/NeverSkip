@@ -31,7 +31,8 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
     var profiler;
     if (_box == null) _box = await Hive.openBox('SetVolumeDataRepresentation');
     if (_box!.isEmpty) {
-      profiler = FredericProfiler.track('Calculate SetVolume');
+      profiler = await FredericProfiler.trackFirebase(
+          'Calculate SetVolumeDataRepresentation');
       for (var setList in setManager.sets.values) {
         final setIterator = setList.getAllSets();
         final activity = activityManager[setList.activityID];
@@ -42,7 +43,8 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
 
       await _box!.put(0, Map<DateTime, VolumeDataRepresentation>.of(_data));
     } else {
-      profiler = FredericProfiler.track('Load SetVolume');
+      profiler = await FredericProfiler.trackFirebase(
+          'Load SetVolumeDataRepresentation');
       final data = _box!.getAt(0);
       if (data == null) {
         await _box!.clear();

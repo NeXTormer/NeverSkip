@@ -21,6 +21,17 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (chest + abs + legs + arms + back == 0) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+            child: Text(
+          'No data yet. Add your progress to an exercise to get started.',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: theme.greyTextColor),
+        )),
+      );
+    }
     return Container(
       padding: const EdgeInsets.all(16),
       child: PieChart(PieChartData(

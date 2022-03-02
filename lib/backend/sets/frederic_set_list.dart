@@ -2,7 +2,6 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_interface.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
-import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/extensions.dart';
 import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
 
@@ -41,7 +40,6 @@ class FredericSetList {
 
   // TODO: make _setDocuments an ordered list to optimize it?
   List<FredericSet> getLatestSets([int count = 6]) {
-    final profiler = FredericProfiler.track('Get latest sets. Count: $count');
     List<FredericSet> sets = <FredericSet>[];
     _setDocuments.sort();
     int documentIndex = 0;
@@ -58,7 +56,6 @@ class FredericSetList {
       sets.add(_setDocuments[documentIndex].sets[setIndex]);
     }
     sets.sort();
-    profiler.stop();
     return sets;
   }
 

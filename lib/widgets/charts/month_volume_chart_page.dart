@@ -189,7 +189,7 @@ class _DayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (day == null) return SizedBox(height: size, width: size);
-    double opacity = volume / 3000.0;
+    double opacity = volume / 4000.0;
     if (opacity > 1) opacity = 1;
 
     return FredericCard(
