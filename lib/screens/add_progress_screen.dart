@@ -30,6 +30,9 @@ class AddProgressScreen extends StatefulWidget {
 class _AddProgressScreenState extends State<AddProgressScreen> {
   final AddProgressController controller = AddProgressController(0, 0);
 
+  bool lastUsedSmartSuggestions = false;
+  bool lastUsedRepsWeight = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +140,14 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                                 saveData();
                                 Navigator.of(context).pop();
                               },
+                              onUseSmartSuggestions: () {
+                                lastUsedRepsWeight = false;
+                                lastUsedSmartSuggestions = true;
+                              },
+                              onUseRepsWeight: () {
+                                lastUsedSmartSuggestions = false;
+                                lastUsedRepsWeight = true;
+                              },
                               suggestions: suggestions),
                         ),
                       ),
@@ -169,11 +180,13 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
 
     FredericBackend.instance.setManager
         .addSet(widget.activity, FredericSet(reps, weight, DateTime.now()));
-
+    print(lastUsedSmartSuggestions);
     if (widget.openedFromCalendar) {
-      FredericBackend.instance.analytics.logAddProgressOnCalendar();
+      FredericBackend.instance.analytics
+          .logAddProgressOnCalendar(lastUsedSmartSuggestions);
     } else {
-      FredericBackend.instance.analytics.logAddProgressOnActivity();
+      FredericBackend.instance.analytics
+          .logAddProgressOnActivity(lastUsedSmartSuggestions);
     }
   }
 }

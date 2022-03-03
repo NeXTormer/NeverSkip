@@ -6,10 +6,11 @@ import 'package:provider/provider.dart';
 import 'add_progress_card.dart';
 
 class RepsWeightSmartSuggestions extends StatelessWidget {
-  const RepsWeightSmartSuggestions(this.suggestions, {Key? key})
+  const RepsWeightSmartSuggestions(this.suggestions, {Key? key, this.onTap})
       : super(key: key);
 
   final List<RepsWeightSuggestion> suggestions;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class RepsWeightSmartSuggestions extends StatelessWidget {
                       suggestions[index],
                       onTap: () {
                         controller.setRepsAndWeight(suggestions[index]);
+                        onTap?.call();
                       },
                       selected: suggestions[index].reps == controller.reps &&
                           (suggestions[index].weight == controller.weight ||

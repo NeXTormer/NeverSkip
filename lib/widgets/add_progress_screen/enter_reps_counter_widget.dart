@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'add_progress_card.dart';
 
 class EnterRepsCounterWidget extends StatelessWidget {
-  const EnterRepsCounterWidget({Key? key}) : super(key: key);
+  const EnterRepsCounterWidget({this.onTap, Key? key}) : super(key: key);
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,5 +46,6 @@ class EnterRepsCounterWidget extends StatelessWidget {
     } else {
       controller.reps = newValue;
     }
+    onTap?.call();
   }
 }

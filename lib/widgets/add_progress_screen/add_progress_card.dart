@@ -16,6 +16,8 @@ class AddProgressCard extends StatelessWidget {
       required this.activity,
       required this.onSave,
       this.suggestions,
+      this.onUseRepsWeight,
+      this.onUseSmartSuggestions,
       Key? key})
       : super(key: key);
 
@@ -23,6 +25,8 @@ class AddProgressCard extends StatelessWidget {
   final FredericActivity activity;
   final List<RepsWeightSuggestion>? suggestions;
   final void Function() onSave;
+  final void Function()? onUseSmartSuggestions;
+  final void Function()? onUseRepsWeight;
 
   final double fullWidth = 382;
 
@@ -57,14 +61,18 @@ class AddProgressCard extends StatelessWidget {
                               buildSubHeading(tr('progress.repetitions.other'),
                                   Icons.repeat_outlined),
                               SizedBox(height: 12),
-                              EnterRepsCounterWidget(),
+                              EnterRepsCounterWidget(
+                                onTap: onUseRepsWeight,
+                              ),
                               if (activity.type ==
                                   FredericActivityType.Weighted) ...[
                                 SizedBox(height: 12),
                                 buildSubHeading(
                                     tr('progress.weight'), ExtraIcons.dumbbell),
                                 SizedBox(height: 12),
-                                EnterWeightWidget(),
+                                EnterWeightWidget(
+                                  onTap: onUseRepsWeight,
+                                ),
                               ],
                               if (hasSuggestions) SizedBox(height: 8),
                               if (hasSuggestions)
@@ -73,7 +81,10 @@ class AddProgressCard extends StatelessWidget {
                                     Icons.smart_button_outlined),
                               if (hasSuggestions) SizedBox(height: 8),
                               if (hasSuggestions)
-                                RepsWeightSmartSuggestions(suggestions!),
+                                RepsWeightSmartSuggestions(
+                                  suggestions!,
+                                  onTap: onUseSmartSuggestions,
+                                ),
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 0, right: 0, top: 16),

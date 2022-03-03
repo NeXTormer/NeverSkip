@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'add_progress_card.dart';
 
 class EnterWeightWidget extends StatelessWidget {
-  const EnterWeightWidget({Key? key}) : super(key: key);
+  const EnterWeightWidget({Key? key, this.onTap}) : super(key: key);
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,5 +46,6 @@ class EnterWeightWidget extends StatelessWidget {
     } else {
       controller.weight = newWeight;
     }
+    onTap?.call();
   }
 }
