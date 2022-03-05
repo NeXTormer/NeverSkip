@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
@@ -116,13 +117,13 @@ class _WorkoutCardState extends State<WorkoutCard> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             FredericChip(
-                              '${widget.period ?? widget.workout.period} week${(widget.period ?? widget.workout.period) == 1 ? '' : 's'}',
+                              '${widget.period ?? widget.workout.period} ${(widget.period ?? widget.workout.period) == 1 ? tr('misc.week') : tr('misc.weeks')}',
                               fontSize: 12,
                             ),
                             SizedBox(width: 10),
                             if (isRepeating)
                               FredericChip(
-                                'repeating',
+                                tr('misc.repeating'),
                                 fontSize: 12,
                               )
                           ],
