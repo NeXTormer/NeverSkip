@@ -10,8 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frederic/admin_panel/backend/admin_backend.dart';
-import 'package:frederic/admin_panel/backend/admin_icon_manager.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/type_adapters/frederic_universal_type_adapter.dart';
@@ -21,7 +19,6 @@ import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/sets/set_volume_data_representation.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
-import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 import 'package:get_it/get_it.dart';
@@ -179,37 +176,36 @@ class _FredericBaseState extends State<FredericBase> {
               value: FredericBackend.instance.goalManager),
         ],
         child: MaterialApp(
-          showPerformanceOverlay: false,
-          title: 'NeverSkip Fitness',
-          locale: context.locale,
-          supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates,
-          theme: ThemeData(
-              primaryColor: theme.mainColor,
-              brightness: theme.isBright ? Brightness.light : Brightness.dark,
-              fontFamily: 'Montserrat',
-              colorScheme: ColorScheme.fromSwatch().copyWith(
-                  secondary: theme.accentColor,
-                  primary: theme.mainColor,
-                  brightness:
-                      theme.isBright ? Brightness.light : Brightness.dark)),
-          home: true
-              ? FredericMainApp()
-              : OrientationBuilder(
-                  builder: (context, orientation) {
-                    if (orientation == Orientation.portrait) {
-                      return FredericMainApp();
-                    }
-
-                    if (getIt.isRegistered<AdminBackend>())
-                      getIt.unregister<AdminBackend>();
-                    getIt.registerSingleton<AdminBackend>(AdminBackend());
-                    return BlocProvider<AdminIconManager>.value(
-                        value: AdminBackend.instance.iconManager,
-                        child: FredericAdminPanel());
-                  },
-                ),
-        ),
+            showPerformanceOverlay: false,
+            title: 'NeverSkip Fitness',
+            locale: context.locale,
+            supportedLocales: context.supportedLocales,
+            localizationsDelegates: context.localizationDelegates,
+            theme: ThemeData(
+                primaryColor: theme.mainColor,
+                brightness: theme.isBright ? Brightness.light : Brightness.dark,
+                fontFamily: 'Montserrat',
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                    secondary: theme.accentColor,
+                    primary: theme.mainColor,
+                    brightness:
+                        theme.isBright ? Brightness.light : Brightness.dark)),
+            home: FredericMainApp()
+            // OrientationBuilder(
+            //     builder: (context, orientation) {
+            //       if (orientation == Orientation.portrait) {
+            //         return FredericMainApp();
+            //       }
+            //
+            //       if (getIt.isRegistered<AdminBackend>())
+            //         getIt.unregister<AdminBackend>();
+            //       getIt.registerSingleton<AdminBackend>(AdminBackend());
+            //       return BlocProvider<AdminIconManager>.value(
+            //           value: AdminBackend.instance.iconManager,
+            //           child: FredericAdminPanel());
+            //     },
+            //   ),
+            ),
       ),
     );
   }
