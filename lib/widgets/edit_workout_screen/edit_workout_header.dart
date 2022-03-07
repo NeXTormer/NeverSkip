@@ -23,6 +23,10 @@ class EditWorkoutHeader extends StatelessWidget {
         formatDate(workout.startDate, const [dd, ' ', M, ' ', yyyy]);
     return FredericBasicAppBar(
         title: workout.name,
+        //height: 75,
+        bottomPadding: theme.isColorful ? 8 : 2,
+        topPadding: 16,
+        backButton: true,
         subtitle: '${tr("misc.start_day")}: $dateFormatString',
         icon: workout.canEdit
             ? InkWell(
