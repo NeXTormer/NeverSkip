@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
@@ -22,7 +23,7 @@ class ActivityListScreen extends StatelessWidget {
     String? title,
     String? subtitle,
   })  : this.title = tr(title ?? 'exercises.title'),
-        this.subtitle = tr(title ?? 'exercises.subtitle');
+        this.subtitle = tr(subtitle ?? 'exercises.subtitle');
 
   final bool isSelector;
   final void Function(FredericActivity)? onSelect;
@@ -36,13 +37,34 @@ class ActivityListScreen extends StatelessWidget {
       child: FredericScaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            CupertinoScaffold.showCupertinoModalBottomSheet(
-                enableDrag: true,
-                context: context,
-                builder: (newContext) {
-                  return EditActivityScreen(FredericActivity.create(
-                      FredericBackend.instance.userManager.state.id));
-                });
+            if (CupertinoScaffold.of(context) == null) {
+              showModalBottomSheet(
+                  enableDrag: true,
+                  isScrollControlled: true,
+                  isDismissible: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  context: context,
+                  builder: (newContext) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.93,
+                        child: EditActivityScreen(FredericActivity.create(
+                            FredericBackend.instance.userManager.state.id)),
+                      ),
+                    );
+                  });
+            } else {
+              CupertinoScaffold.showCupertinoModalBottomSheet(
+                  enableDrag: true,
+                  context: context,
+                  builder: (newContext) {
+                    return EditActivityScreen(FredericActivity.create(
+                        FredericBackend.instance.userManager.state.id));
+                  });
+            }
           },
           child: Icon(
             Icons.post_add_outlined,

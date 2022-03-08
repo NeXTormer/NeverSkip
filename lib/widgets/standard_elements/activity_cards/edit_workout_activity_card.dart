@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
     return FredericCard(
         animated: true,
         margin: widget.margin,
-        height: deleted ? 0 : 70,
+        height: deleted ? 0 : 69,
         padding: EdgeInsets.all(deleted ? 0 : 10),
         duration: widget.animationDuration,
         child: deleted
@@ -68,12 +69,15 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Flexible(
-                          child: Text(
+                          child: AutoSizeText(
                               widget.activity.activity.getNameLocalized(
                                   context.locale.languageCode),
                               overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              maxFontSize: 14,
+                              minFontSize: 11,
                               style: TextStyle(
-                                  //textBaseline: TextBaseline.alphabetic,
+                                  textBaseline: TextBaseline.alphabetic,
                                   fontFamily: 'Montserrat',
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -141,7 +145,7 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
                     GestureDetector(
                       onTap: handleDelete,
                       child: Container(
-                        margin: EdgeInsets.only(right: 10),
+                        margin: EdgeInsets.only(right: 4),
                         padding: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
@@ -182,6 +186,13 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
     });
     Future.delayed(widget.animationDuration)
         .then((value) => widget.onDelete.call());
+  }
+
+  Size _textSize(String text, TextStyle? style) {
+    final TextPainter textPainter =
+        TextPainter(text: TextSpan(text: text, style: style), maxLines: 1)
+          ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 }
 

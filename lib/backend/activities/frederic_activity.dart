@@ -110,7 +110,7 @@ class FredericActivity
     if (_type == FredericActivityType.Weighted) return 'kg';
     if (_type == FredericActivityType.Calisthenics)
       return tr('progress.reps.other');
-    if (_type == FredericActivityType.Stretch) return 's';
+    if (_type == FredericActivityType.Time) return 's';
     return '';
   }
 
@@ -216,7 +216,7 @@ class FredericActivity
     if (typeString == 'weighted') return FredericActivityType.Weighted;
     if (typeString == null) return FredericActivityType.Weighted;
     if (typeString == 'cali') return FredericActivityType.Calisthenics;
-    if (typeString == 'stretch') return FredericActivityType.Stretch;
+    if (typeString == 'time') return FredericActivityType.Time;
     return FredericActivityType.Weighted;
   }
 
@@ -226,8 +226,8 @@ class FredericActivity
         return 'weighted';
       case FredericActivityType.Calisthenics:
         return 'cali';
-      case FredericActivityType.Stretch:
-        return 'stretch';
+      case FredericActivityType.Time:
+        return 'time';
       default:
         return '';
     }
@@ -376,6 +376,6 @@ class FredericActivity
   }
 }
 
-enum FredericActivityType { Weighted, Calisthenics, Stretch, None }
+enum FredericActivityType { Weighted, Calisthenics, Time, None }
 
 enum FredericActivityMuscleGroup { Arms, Chest, Back, Core, Legs, None }

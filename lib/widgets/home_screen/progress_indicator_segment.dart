@@ -79,6 +79,8 @@ class ProgressIndicatorSegment extends StatelessWidget {
                     .addProgressMonitor(activity.id);
                 Navigator.of(context).pop();
               }, //TODO:
+              title: tr('exercises.title'),
+              subtitle: tr('exercises.subtitle_add_progress_monitor'),
               // else {
               //   showDialog(
               //       context: context,
@@ -88,9 +90,6 @@ class ProgressIndicatorSegment extends StatelessWidget {
               //             onConfirm: () => Navigator.of(ctx).pop(),
               //           ));
               // }
-
-              title: 'All exercises',
-              subtitle: 'Select a new personal record display',
             )));
   }
 }

@@ -87,11 +87,10 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                     : tr('misc.create_activity'),
                 icon: GestureDetector(
                   onTap: () {
-                    saveData();
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                    editing ? tr('save') : tr('create'),
+                    tr('close'),
                     style: TextStyle(
                         color:
                             theme.isColorful ? Colors.white : theme.mainColor,

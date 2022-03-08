@@ -141,7 +141,7 @@ class CalendarActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 16, left: 8),
-      height: 90,
+      height: 96,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

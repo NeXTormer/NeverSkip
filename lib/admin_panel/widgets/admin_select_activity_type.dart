@@ -21,7 +21,7 @@ class AdminSelectActivityType extends StatelessWidget {
           buildElement('Weighted', selectedType, FredericActivityType.Weighted),
           buildElement(
               'Calisthenics', selectedType, FredericActivityType.Calisthenics),
-          buildElement('Stretch', selectedType, FredericActivityType.Stretch),
+          buildElement('Stretch', selectedType, FredericActivityType.Time),
           SizedBox(width: 24),
         ],
       ),

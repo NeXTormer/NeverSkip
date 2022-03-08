@@ -46,6 +46,7 @@
   {
     "title": "All Exercises",
     "subtitle": "Find an Exercise",
+    "subtitle_add_progress_monitor": "Select a new personal record display",
     "featured": "Featured",
     "muscle_groups":
     {

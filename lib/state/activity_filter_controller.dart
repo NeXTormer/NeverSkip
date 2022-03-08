@@ -7,7 +7,7 @@ class ActivityFilterController with ChangeNotifier {
   ActivityFilterController() {
     _types[FredericActivityType.Weighted] = true;
     _types[FredericActivityType.Calisthenics] = true;
-    _types[FredericActivityType.Stretch] = true;
+    _types[FredericActivityType.Time] = true;
 
     _muscleGroups[FredericActivityMuscleGroup.Arms] = true;
     _muscleGroups[FredericActivityMuscleGroup.Chest] = true;
@@ -24,7 +24,7 @@ class ActivityFilterController with ChangeNotifier {
 
   bool get weighted => _types[FredericActivityType.Weighted] ?? false;
   bool get calisthenics => _types[FredericActivityType.Calisthenics] ?? false;
-  bool get stretch => _types[FredericActivityType.Stretch] ?? false;
+  bool get stretch => _types[FredericActivityType.Time] ?? false;
   bool get arms => _muscleGroups[FredericActivityMuscleGroup.Arms] ?? false;
   bool get chest => _muscleGroups[FredericActivityMuscleGroup.Chest] ?? false;
   bool get back => _muscleGroups[FredericActivityMuscleGroup.Back] ?? false;
@@ -50,7 +50,7 @@ class ActivityFilterController with ChangeNotifier {
   }
 
   set stretch(bool value) {
-    _types[FredericActivityType.Stretch] = value;
+    _types[FredericActivityType.Time] = value;
     notifyListeners();
   }
 
