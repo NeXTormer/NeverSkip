@@ -22,7 +22,8 @@ class ShadowCustomScrollView extends StatefulWidget {
 }
 
 class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
-  bool showShadow = true;
+  bool shadowLeft = true;
+  bool shadowRight = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +31,19 @@ class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
         theme.isDark ? Colors.white.withAlpha(30) : Colors.black.withAlpha(50);
     var color2 =
         theme.isDark ? Colors.black.withAlpha(50) : Colors.white.withAlpha(30);
-    if (!showShadow) {
+
+    var colora =
+        theme.isDark ? Colors.white.withAlpha(30) : Colors.black.withAlpha(50);
+    var colorb =
+        theme.isDark ? Colors.black.withAlpha(50) : Colors.white.withAlpha(30);
+
+    if (!shadowLeft) {
       color1 = Colors.transparent;
       color2 = Colors.transparent;
+    }
+    if (!shadowRight) {
+      colora = Colors.transparent;
+      colorb = Colors.transparent;
     }
 
     return Stack(
@@ -42,11 +53,21 @@ class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
             if (notification.metrics.pixels <
                 notification.metrics.maxScrollExtent) {
               setState(() {
-                showShadow = true;
+                shadowLeft = true;
               });
             } else {
               setState(() {
-                showShadow = false;
+                shadowLeft = false;
+              });
+            }
+            if (notification.metrics.pixels >
+                notification.metrics.minScrollExtent) {
+              setState(() {
+                shadowRight = true;
+              });
+            } else {
+              setState(() {
+                shadowRight = false;
               });
             }
             return true;
@@ -69,6 +90,19 @@ class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
                   width: widget.shadowWidth,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [color1, color2]),
+                  )),
+            )),
+        Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Padding(
+              padding: widget.blurPadding,
+              child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 100),
+                  width: widget.shadowWidth,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [colorb, colora]),
                   )),
             )),
       ],
