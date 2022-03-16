@@ -92,6 +92,8 @@ class VolumeSliderView extends StatelessWidget {
           VolumeSliderMonth(
             startingDay: month,
             setListData: setListData,
+            tinted: month.month % 2 == 1,
+            tintEnabled: true,
           ),
       ],
     );
@@ -100,10 +102,16 @@ class VolumeSliderView extends StatelessWidget {
 
 class VolumeSliderMonth extends StatelessWidget {
   const VolumeSliderMonth(
-      {required this.startingDay, required this.setListData, Key? key})
+      {required this.startingDay,
+      required this.setListData,
+      this.tinted = false,
+      this.tintEnabled = false,
+      Key? key})
       : super(key: key);
   final DateTime startingDay;
   final FredericSetListData setListData;
+  final bool tinted;
+  final bool tintEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +175,9 @@ class VolumeSliderMonth extends StatelessWidget {
                             ? 0
                             : setListData.volume[day]?.volume ?? 0.88,
                         size: size,
+                        tinted: (day?.month == startingDay.month)
+                            ? tinted
+                            : tintEnabled,
                       ),
                   ],
                 );
@@ -180,11 +191,13 @@ class VolumeSliderMonth extends StatelessWidget {
 }
 
 class _DayCard extends StatelessWidget {
-  const _DayCard(this.day, {required this.volume, this.size = 22, Key? key})
+  const _DayCard(this.day,
+      {required this.volume, this.size = 22, this.tinted = false, Key? key})
       : super(key: key);
   final String? day;
   final double size;
   final double volume;
+  final bool tinted;
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +205,13 @@ class _DayCard extends StatelessWidget {
     double opacity = volume / 4000.0;
     if (opacity > 1) opacity = 1;
 
+    Color tintedColor = Colors.grey.withAlpha(55);
     return FredericCard(
       height: size,
       borderWidth: 0.6,
-      color: theme.accentColor.withOpacity(opacity),
+      color: tinted && volume < 1
+          ? tintedColor
+          : theme.accentColor.withOpacity(opacity),
       borderRadius: 6,
       width: size,
       child: Center(
@@ -203,9 +219,9 @@ class _DayCard extends StatelessWidget {
           day!,
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: opacity > 0.7
+              color: (opacity > 0.7
                   ? theme.textColorColorfulBackground
-                  : theme.textColor),
+                  : theme.textColor)),
         ),
       ),
     );
