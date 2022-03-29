@@ -26,7 +26,7 @@ class MuscleGroupSplitPiechart extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Center(
             child: Text(
-          'No data yet. Add your progress to an exercise to get started.',
+          'No data in the last 30 days. Add your progress to an exercise to get started.',
           textAlign: TextAlign.center,
           style: TextStyle(color: theme.greyTextColor),
         )),

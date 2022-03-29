@@ -4,6 +4,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/screens/start_trial_screen.dart';
 import 'package:frederic/widgets/charts/month_volume_chart_segment.dart';
 import 'package:frederic/widgets/charts/muscle_group_chart_segment.dart';
 import 'package:frederic/widgets/charts/week_volume_chart_segment.dart';
@@ -13,6 +14,7 @@ import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
 import 'package:frederic/widgets/home_screen/misc_stuff_segment.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -30,6 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
         FredericBackend.instance.userManager.firstUserSignUp = false;
         await Navigator.of(context)
             .push(MaterialPageRoute(builder: (c) => OnboardingScreen()));
+        CupertinoScaffold.showCupertinoModalBottomSheet(
+            enableDrag: false,
+            isDismissible: false,
+            context: context,
+            builder: (ctx) => StartTrialScreen());
       }
     });
   }

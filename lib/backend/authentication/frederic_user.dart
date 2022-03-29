@@ -23,8 +23,6 @@ class FredericUser {
 
   //TODO: make final or late final
   String id;
-  @deprecated
-  String get uid => id;
 
   final String statusMessage;
   FredericAuthState authState;
@@ -46,6 +44,7 @@ class FredericUser {
   DateTime? birthday;
   DateTime? streakStartDate;
   DateTime? streakLatestDate;
+  DateTime? _trialStartDate;
 
   bool get authenticated => authState == FredericAuthState.Authenticated;
   bool get finishedLoading => _name != null;
@@ -123,6 +122,7 @@ class FredericUser {
     _progressMonitors = data['progressmonitors']?.cast<String>() ?? <String>[];
     _activeWorkouts = data['activeworkouts']?.cast<String>() ?? <String>[];
     streakStartDate = data['streakstart']?.toDate();
+    _trialStartDate = data['trial_start']?.toDate();
     streakLatestDate = data['streaklatest']?.toDate();
     _shouldReloadData = data['should_reload_data'];
     _isDeveloper = data['is_developer'];
@@ -142,6 +142,7 @@ class FredericUser {
       'streakstart': streakStartDate,
       'streaklatest': streakLatestDate,
       'should_reload_data': _shouldReloadData,
+      'trial_start': _trialStartDate
     };
   }
 

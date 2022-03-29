@@ -29,7 +29,8 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    //return widget.welcomePage;
+    //return PurchaseScreen();
+    //return StartTrialScreen();
     return FutureBuilder<SharedPreferences>(
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {
