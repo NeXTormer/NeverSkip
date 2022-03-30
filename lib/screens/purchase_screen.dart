@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 
 class PurchaseScreen extends StatelessWidget {
-  const PurchaseScreen({Key? key}) : super(key: key);
+  const PurchaseScreen(this.user, {Key? key}) : super(key: key);
+
+  final FredericUser user;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class PurchaseScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Trial: 5 days remaining',
+                'Trial: ${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
                 style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300,

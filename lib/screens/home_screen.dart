@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             builder: (ctx) => StartTrialScreen());
       }
+      //if(FredericBackend.instance.userManager.firstUserSignUp == false && )
     });
   }
 

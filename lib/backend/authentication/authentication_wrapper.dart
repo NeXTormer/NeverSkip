@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/screens/purchase_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationWrapper extends StatefulWidget {
@@ -47,8 +48,10 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
           }
           return BlocBuilder<FredericUserManager, FredericUser>(
               buildWhen: (previous, next) =>
-                  previous.authState != next.authState,
+                  previous.authState != next.authState ||
+                  previous.canUseApp != next.canUseApp,
               builder: (context, user) {
+                if (!user.canUseApp) return PurchaseScreen(user);
                 return user.authState == FredericAuthState.Authenticated
                     ? widget.homePage
                     : widget.loginPage;

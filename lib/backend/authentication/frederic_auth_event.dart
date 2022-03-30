@@ -89,3 +89,10 @@ class FredericUserDataChangedEvent extends FredericAuthEvent {
     return newData ?? userManager.state;
   }
 }
+
+class FredericUserPurchaseEvent extends FredericAuthEvent {
+  @override
+  Future<FredericUser> process(FredericUserManager userManager) async {
+    return userManager.state..onPurchased();
+  }
+}

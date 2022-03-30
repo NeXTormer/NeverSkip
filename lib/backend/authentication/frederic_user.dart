@@ -39,6 +39,8 @@ class FredericUser {
   bool? _hasCompletedStreakToday;
   bool? _shouldReloadData;
   bool? _isDeveloper;
+  bool? _hasPurchased;
+  bool? _purchaseOverride;
   List<String>? _activeWorkouts;
   List<String>? _progressMonitors;
   DateTime? birthday;
@@ -52,6 +54,12 @@ class FredericUser {
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
   bool get shouldReloadFromDB => _shouldReloadData ?? false;
   bool get isDeveloper => _isDeveloper ?? false;
+  bool get hasActiveTrial => getTrialDaysLeft() >= 0;
+  bool get hasPurchased => _hasPurchased ?? false;
+  bool get canUseApp => ((_hasPurchased ?? false) ||
+      (_purchaseOverride ?? false) ||
+      hasActiveTrial);
+
   String get email => _email;
   String get name => _name ?? '';
   String get username => _username ?? '';
@@ -126,6 +134,7 @@ class FredericUser {
     streakLatestDate = data['streaklatest']?.toDate();
     _shouldReloadData = data['should_reload_data'];
     _isDeveloper = data['is_developer'];
+    _purchaseOverride = data['purchase_override'];
   }
 
   Map<String, dynamic> toMap() {
@@ -174,6 +183,21 @@ class FredericUser {
     } else {
       _activeWorkouts!.remove(workout);
     }
+  }
+
+  void onPurchased() {
+    _hasPurchased = true;
+  }
+
+  void startTrial() {
+    if (_trialStartDate == null) {
+      _trialStartDate = DateTime.now();
+    }
+  }
+
+  int getTrialDaysLeft() {
+    if (_trialStartDate == null) return -1;
+    return _trialStartDate!.difference(DateTime.now()).inDays;
   }
 
   Future<bool> hasActivitiesOnDay(DateTime day) async {
