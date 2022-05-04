@@ -95,6 +95,9 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
       _sets[entry.key] = FredericSetList.fromDocuments(entry.key, entry.value);
     }
 
+    if (fullReloadFromDB)
+      await volumeDataRepresentation?.reCalculateAndInitialize();
+
     add(FredericSetEvent(documentMap.keys.toList()));
   }
 

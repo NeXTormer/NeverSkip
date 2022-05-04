@@ -126,11 +126,11 @@ class VolumeSliderMonth extends StatelessWidget {
       DateTime current = startingDay.subtract(Duration(days: i));
       if (current.month != startingDay.month) {
         if (current.weekday == 1) {
-          dates.add(current);
+          dates.add(DateTime(current.year, current.month, current.day));
           break;
         }
       }
-      dates.add(current);
+      dates.add(DateTime(current.year, current.month, current.day));
 
       if (current.month == startingDay.month &&
           current.day == 1 &&

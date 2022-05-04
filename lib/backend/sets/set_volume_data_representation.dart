@@ -26,6 +26,13 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
 
   Box<Map<dynamic, dynamic>>? _box;
 
+  Future<void> reCalculateAndInitialize() async {
+    if (_box == null) _box = await Hive.openBox('SetVolumeDataRepresentation');
+    _box?.clear();
+
+    return initialize();
+  }
+
   @override
   Future<void> initialize() async {
     var profiler;
