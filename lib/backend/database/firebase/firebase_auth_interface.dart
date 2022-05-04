@@ -113,10 +113,11 @@ class FirebaseAuthInterface implements FredericAuthInterface {
       DocumentSnapshot<Map<String, dynamic>> userDocument =
           await firestoreInstance.collection('users').doc(uid).get();
 
-      if (!userDocument.exists)
+      if (!userDocument.exists) {
         return FredericUser.noAuth(
           statusMessage: 'Login Error. Please contact support. [Error UDNF]',
         );
+      }
       firestoreInstance
           .collection('users')
           .doc(uid)
@@ -138,10 +139,10 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   @override
   Future<FredericUser> getUserData(String uid, String email) async {
     _box = await Hive.openBox(_name);
-    if (_box?.isEmpty ?? true) return _reloadUserData(uid, email, false);
+    if ((_box?.isEmpty ?? true)) return _reloadUserData(uid, email, false);
     final data = _box?.get(0);
     if (data != null) {
-      _reloadUserData(uid, email, true); // NO AWAIT
+      _reloadUserData(uid, email, true); // NO AWAIT, load data from db
       return FredericUser.fromMap(uid, email, Map<String, dynamic>.from(data));
     }
     return _reloadUserData(uid, email, false);
@@ -185,7 +186,10 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   }
 
   @override
-  Future<void> update(FredericUser user) {
+  Future<void> update(FredericUser user) async {
+    if (_box == null) _box = await Hive.openBox(_name);
+    _box!.put(0, user.toMap());
+
     return firestoreInstance
         .collection('users')
         .doc(user.id)
