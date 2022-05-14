@@ -90,7 +90,7 @@ class AchievementScreen extends StatelessWidget {
             FredericBackend.instance.userManager.state.achievementsCount -= 1;
           FredericBackend.instance.goalManager
               .add(FredericGoalDeleteEvent(goal));
-          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           });

@@ -33,7 +33,7 @@ class ActivityPlayerSetSegment extends StatelessWidget {
           int indexCurrentSet = numberOfSetsDone;
           bool everythingComplete = numberOfSetsDone >= numberOfSetsTODO;
 
-          WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             jumpTo(indexCurrentSet * itemExtent);
           });
           Future(() {

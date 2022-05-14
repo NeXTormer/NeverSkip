@@ -35,7 +35,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
   void initState() {
     DateTime oneMonthBefore = today.subtract(Duration(days: today.day + 1));
     startingDate = DateTime(oneMonthBefore.year, oneMonthBefore.month, 1);
-    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       jumpToDay(widget.initialDate);
     });
     super.initState();

@@ -62,7 +62,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     dummyRepeating = widget.workout.repeating;
     dummyPeriod = widget.workout.period;
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       descriptionController.addListener(() {
         setState(() {
           if (descriptionController.text.isNotEmpty)
@@ -269,7 +269,7 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                                     widget.workout));
 
                                             WidgetsBinding.instance
-                                                ?.addPostFrameCallback(
+                                                .addPostFrameCallback(
                                                     (timeStamp) {
                                               Navigator.of(ctx).pop();
                                               Navigator.of(ctx).pop();

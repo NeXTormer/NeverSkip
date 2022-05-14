@@ -55,7 +55,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
     name = widget.activity.name;
     description = widget.activity.description;
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       descriptionController.addListener(() {
         setState(() {
           if (descriptionController.text.isNotEmpty)
@@ -300,7 +300,7 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
                     });
                     await FredericBackend.instance.activityManager
                         .deleteActivity(widget.activity);
-                    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     });

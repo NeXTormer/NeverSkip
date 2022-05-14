@@ -62,7 +62,7 @@ dependencies:
   in_app_purchase: ^3.0.2
   cupertino_icons: ^1.0.3
   infinite_listview: ^1.1.0
-  modal_bottom_sheet: ^2.0.0
+  modal_bottom_sheet: ^2.0.1
   introduction_screen: ^3.0.0
   cached_network_image: ^3.0.0
 
