@@ -74,6 +74,7 @@ class VolumeSliderView extends StatelessWidget {
         current = current.subtract(const Duration(days: 1));
       } while (current.weekday != 7);
       months.add(current);
+
       month--;
       if (month < 1) {
         month = 12;
@@ -93,7 +94,6 @@ class VolumeSliderView extends StatelessWidget {
             startingDay: month,
             setListData: setListData,
             tinted: month.month % 2 == 1,
-            tintEnabled: true,
           ),
       ],
     );
@@ -105,14 +105,12 @@ class VolumeSliderMonth extends StatelessWidget {
       {required this.startingDay,
       required this.setListData,
       this.tinted = false,
-      this.tintEnabled = false,
       Key? key})
       : super(key: key);
 
   final DateTime startingDay;
   final FredericSetListData setListData;
   final bool tinted;
-  final bool tintEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -169,17 +167,16 @@ class VolumeSliderMonth extends StatelessWidget {
                   spacing: spacing,
                   runSpacing: spacing,
                   children: [
-                    for (final day in dates)
-                      _DayCard(
-                        day?.day.toString(),
-                        volume: day == null
-                            ? 0
-                            : setListData.volume[day]?.volume ?? 0.88,
-                        size: size,
-                        tinted: (day?.month == startingDay.month)
-                            ? tinted
-                            : tintEnabled,
-                      ),
+                    for (int i = 0; i < dates.length; i++)
+                      _DayCard(dates[i]?.day.toString(),
+                          volume: dates[i] == null
+                              ? 0
+                              : setListData.volume[dates[i]]?.volume ?? 0.88,
+                          size: size,
+                          tinted: tinted
+                              ? (dates[i]?.month == startingDay.month &&
+                                  (dates[i]?.day ?? 0) <= i + 1)
+                              : (dates[i]?.day ?? 0) >= i + 1),
                   ],
                 );
               }),
