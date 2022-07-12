@@ -6,11 +6,11 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/add_progress_screen/add_progress_card.dart';
+import 'package:frederic/widgets/add_progress_screen/previous_sets_list.dart';
 import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:frederic/widgets/standard_elements/set_card.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddProgressScreen extends StatefulWidget {
@@ -20,6 +20,8 @@ class AddProgressScreen extends StatefulWidget {
   }
 
   final bool openedFromCalendar;
+
+  final bool enableSmartSuggestions = false;
 
   final FredericActivity activity;
 
@@ -104,7 +106,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                     next.hasChanged(widget.activity.id),
                 builder: (context, setListData) {
                   List<FredericSet> sets =
-                      setListData[widget.activity.id].getLatestSets();
+                      setListData[widget.activity.id].getLatestSets(0, 3);
                   if (sets.isEmpty) {
                     controller.setRepsAndWeight(RepsWeightSuggestion(
                         widget.activity.recommendedReps, 30));
@@ -112,11 +114,13 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                     controller.setRepsAndWeight(
                         RepsWeightSuggestion(sets[0].reps, sets[0].weight));
                   }
-                  List<RepsWeightSuggestion> suggestions =
-                      setListData[widget.activity.id].getSuggestions(
-                          weighted: widget.activity.type ==
-                              FredericActivityType.Weighted,
-                          recommendedReps: widget.activity.recommendedReps);
+                  List<RepsWeightSuggestion>? suggestions =
+                      widget.enableSmartSuggestions
+                          ? setListData[widget.activity.id].getSuggestions(
+                              weighted: widget.activity.type ==
+                                  FredericActivityType.Weighted,
+                              recommendedReps: widget.activity.recommendedReps)
+                          : null;
                   return CustomScrollView(
                     physics: ClampingScrollPhysics(),
                     controller: ModalScrollController.of(context),
@@ -158,12 +162,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                         child: FredericHeading.translate(
                             'progress.previous_performance'),
                       )),
-                      SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                              (context, index) => SetCard(
-                                  sets[index], widget.activity,
-                                  greenIfToday: true),
-                              childCount: sets.length)),
+                      PreviousSetsList(sets: sets, activity: widget.activity),
                       SliverToBoxAdapter(child: SizedBox(height: 50))
                     ],
                   );

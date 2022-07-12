@@ -39,12 +39,20 @@ class FredericSetList {
   }
 
   // TODO: make _setDocuments an ordered list to optimize it?
-  List<FredericSet> getLatestSets([int count = 6]) {
+  // count of zero gets the latest 3 training days, to a max of 20
+  List<FredericSet> getLatestSets(
+      [int count = 6, int includedTrainingDaysTarget = 3]) {
+    int includedTrainingDays = 0;
+
+    DateTime currentDay = DateTime.fromMicrosecondsSinceEpoch(0);
+
     List<FredericSet> sets = <FredericSet>[];
     _setDocuments.sort();
     int documentIndex = 0;
     int setIndex = -1;
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < (count != 0 ? count : 20); i++) {
+      if (count == 0 && includedTrainingDays == includedTrainingDaysTarget)
+        break;
       setIndex++;
       if (documentIndex >= _setDocuments.length) break;
       if (setIndex >= _setDocuments[documentIndex].sets.length) {
@@ -53,7 +61,13 @@ class FredericSetList {
         continue;
       }
       _setDocuments[documentIndex].sets.sort();
-      sets.add(_setDocuments[documentIndex].sets[setIndex]);
+      FredericSet currentSet = _setDocuments[documentIndex].sets[setIndex];
+      sets.add(currentSet);
+
+      if (currentSet.timestamp.isNotSameDay(currentDay)) {
+        includedTrainingDays += 1;
+        currentDay = currentSet.timestamp;
+      }
     }
     sets.sort();
     return sets;
