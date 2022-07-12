@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
+import 'package:frederic/widgets/standard_elements/shadow_list_view.dart';
 import 'package:frederic/widgets/workout_player_screen/activity_player_view.dart';
 import 'package:frederic/widgets/workout_player_screen/short_set_card.dart';
 import 'package:provider/provider.dart';
@@ -68,10 +69,10 @@ class ActivityPlayerSetSegment extends StatelessWidget {
                         overscroll.disallowIndicator();
                         return true;
                       },
-                      child: ListView.builder(
-                        //key: UniqueKey(),
-                        //key: ValueKey<int>(numberOfSetsTotal),
+                      child: ShadowListView(
+                        blurPadding: const EdgeInsets.only(left: 24),
                         controller: controller,
+                        shadowWidth: 12,
                         prototypeItem: ShortSetCard(),
                         itemCount: numberOfSetsTotal + 1,
                         scrollDirection: Axis.vertical,
@@ -109,7 +110,7 @@ class ActivityPlayerSetSegment extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(child: Container()),
+                //Expanded(child: Container()),
               ],
             );
           });

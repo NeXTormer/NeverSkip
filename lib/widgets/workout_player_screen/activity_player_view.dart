@@ -76,26 +76,33 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Expanded(
-                        child: ActivityPlayerSetSegment(
-                      widget.activity,
-                      controller: scrollController,
-                    )),
+                    Flexible(
+                      child: Container(
+                          //color: Colors.green,
+                          child: ActivityPlayerSetSegment(
+                        widget.activity,
+                        controller: scrollController,
+                      )),
+                    ),
                     SizedBox(height: 16),
-                    Consumer<WorkoutPlayerState>(
-                        builder: (context, playerState, child) {
-                      return AddProgressCard(
-                          controller: addProgressController,
-                          activity: widget.activity.activity,
-                          onSave: () => saveProgress(playerState),
-                          suggestions: widget.showSmartSuggestions
-                              ? setListData[widget.activity.activity.id]
-                                  .getSuggestions(
-                                      weighted: widget.activity.activity.type ==
-                                          FredericActivityType.Weighted,
-                                      recommendedReps: widget.activity.reps)
-                              : null);
-                    }),
+                    Container(
+                      //color: Colors.red,
+                      child: Consumer<WorkoutPlayerState>(
+                          builder: (context, playerState, child) {
+                        return AddProgressCard(
+                            controller: addProgressController,
+                            activity: widget.activity.activity,
+                            onSave: () => saveProgress(playerState),
+                            suggestions: widget.showSmartSuggestions
+                                ? setListData[widget.activity.activity.id]
+                                    .getSuggestions(
+                                        weighted:
+                                            widget.activity.activity.type ==
+                                                FredericActivityType.Weighted,
+                                        recommendedReps: widget.activity.reps)
+                                : null);
+                      }),
+                    ),
                     SizedBox(height: 16),
                     Consumer<BooleanChangeNotifier>(
                         builder: (context, finished, child) {

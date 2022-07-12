@@ -39,6 +39,7 @@ class _WorkoutPlayerViewState extends State<WorkoutPlayerView> {
                 : widget.activities[index + 1],
             constraints: widget.constraints,
             pageController: pageController,
+            showSmartSuggestions: false,
           );
         });
   }

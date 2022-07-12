@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 
-class ShadowCustomScrollView extends StatefulWidget {
-  const ShadowCustomScrollView(
-      {this.slivers = const <Widget>[],
-      this.scrollDirection = Axis.vertical,
+class ShadowListView extends StatefulWidget {
+  const ShadowListView(
+      {required this.itemBuilder,
+      this.scrollDirection = Axis.horizontal,
       this.reverse = false,
-      this.shadowWidth = 14,
       this.physics = const BouncingScrollPhysics(),
+      this.shadowWidth = 14,
       this.blurPadding = const EdgeInsets.all(0),
+      this.controller,
+      this.itemCount,
+      this.prototypeItem,
       Key? key})
       : super(key: key);
 
+  final Widget Function(BuildContext context, int index) itemBuilder;
   final ScrollPhysics physics;
   final Axis scrollDirection;
   final bool reverse;
-  final List<Widget> slivers;
   final EdgeInsets blurPadding;
   final double shadowWidth;
+  final ScrollController? controller;
+  final int? itemCount;
+  final Widget? prototypeItem;
 
   @override
-  _ShadowCustomScrollViewState createState() => _ShadowCustomScrollViewState();
+  _ShadowListViewState createState() => _ShadowListViewState();
 }
 
-class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
+class _ShadowListViewState extends State<ShadowListView> {
   bool shadowLeft = true;
   bool shadowRight = false;
 
@@ -74,37 +80,45 @@ class _ShadowCustomScrollViewState extends State<ShadowCustomScrollView> {
             }
             return true;
           },
-          child: CustomScrollView(
-            scrollDirection: widget.scrollDirection,
-            physics: widget.physics,
-            reverse: widget.reverse,
-            slivers: widget.slivers,
-          ),
+          child: ListView.builder(
+              controller: widget.controller,
+              prototypeItem: widget.prototypeItem,
+              itemCount: widget.itemCount,
+              scrollDirection: widget.scrollDirection,
+              physics: widget.physics,
+              reverse: widget.reverse,
+              itemBuilder: widget.itemBuilder),
         ),
         Positioned(
             left: 0,
-            top: 0,
+            right: 0,
             bottom: 0,
             child: Padding(
               padding: widget.blurPadding,
               child: AnimatedContainer(
                   duration: const Duration(milliseconds: 100),
-                  width: widget.shadowWidth,
+                  height: widget.shadowWidth,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [color1, color2]),
+                    gradient: LinearGradient(
+                        colors: [color1, color2],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter),
                   )),
             )),
         Positioned(
             right: 0,
             top: 0,
-            bottom: 0,
+            left: 0,
             child: Padding(
               padding: widget.blurPadding,
               child: AnimatedContainer(
                   duration: const Duration(milliseconds: 100),
-                  width: widget.shadowWidth,
+                  height: widget.shadowWidth,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [colorb, colora]),
+                    gradient: LinearGradient(
+                        colors: [colorb, colora],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter),
                   )),
             )),
       ],

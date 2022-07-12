@@ -108,6 +108,7 @@ class VolumeSliderMonth extends StatelessWidget {
       this.tintEnabled = false,
       Key? key})
       : super(key: key);
+
   final DateTime startingDay;
   final FredericSetListData setListData;
   final bool tinted;
