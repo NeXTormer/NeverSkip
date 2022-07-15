@@ -58,9 +58,15 @@ class FredericWorkout implements FredericDataObject {
   DateTime get startDateAdjusted {
     DateTime today = DateTime.now();
     DateTime end = startDate.add(Duration(days: period * 7));
-    if (today.isAfter(end) && repeating == false) return startDate;
-    return today.subtract(
-        Duration(days: today.difference(startDate).inDays % (period * 7)));
+    if (today.isBefore(end) || repeating == false) return startDate;
+
+    int daysBetweenTodayAndLastEnd = today.difference(end).inDays.abs();
+
+    int periodsSinceEnd = daysBetweenTodayAndLastEnd ~/ (period * 7);
+
+    return today.subtract(Duration(
+        days: (today.difference(startDate).inDays % (period * 7)) +
+            periodsSinceEnd * (period * 7)));
   }
 
   String get name => _name ?? 'New Workout';

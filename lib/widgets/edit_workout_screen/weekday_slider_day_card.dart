@@ -70,7 +70,14 @@ class WeekDaysSliderDayCard extends StatelessWidget {
           height: expanded ? 44 : null,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            border: empty ? Border.all(color: theme.cardBorderColor) : null,
+            border: empty
+                ? Border.all(color: theme.cardBorderColor)
+                : (selected
+                    ? Border.all(
+                        color: theme.isBright
+                            ? theme.mainColor
+                            : theme.accentColor)
+                    : null),
             color: colored
                 ? theme.positiveColor.withOpacity(0.3)
                 : selected

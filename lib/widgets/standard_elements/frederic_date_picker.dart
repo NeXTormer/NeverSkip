@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:frederic/main.dart';
-import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:intl/intl.dart';
 
 class FredericDatePicker extends StatefulWidget {
@@ -96,16 +95,16 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: theme.cardBorderColor, width: 0.6)),
-                        child: FredericCard(
-                          child: _WeekDaysSliderDayButton(
-                              dayIndex: index,
-                              selectedDate: selectedDayIndex,
-                              date: date),
-                        ),
+                        decoration: true
+                            ? null
+                            : BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                    color: theme.cardBorderColor, width: 0.6)),
+                        child: _WeekDaysSliderDayButton(
+                            dayIndex: index,
+                            selectedDate: selectedDayIndex,
+                            date: date),
                       ),
                     ),
                   );
@@ -164,7 +163,10 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
                   ? theme.mainColorLight
                   : (theme.isDark ? theme.cardBackgroundColor : Colors.white),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: theme.cardBorderColor)),
+              border: Border.all(
+                  color: selected
+                      ? (theme.isBright ? theme.mainColor : theme.accentColor)
+                      : theme.cardBorderColor)),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           child: Center(
             child: Text(string,
@@ -223,7 +225,10 @@ class _WeekDaysSliderDayButton extends StatelessWidget {
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: theme.mainColor.withOpacity(0.1),
+              border: Border.all(
+                  color: theme.isBright ? theme.mainColor : theme.accentColor,
+                  width: 0.8),
+              color: theme.mainColorLight,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -251,6 +256,7 @@ class _WeekDaysSliderDayButton extends StatelessWidget {
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(5)),
+              border: Border.all(color: theme.cardBorderColor, width: 0.8),
               color: theme.cardBackgroundColor,
             ),
             padding: const EdgeInsets.symmetric(vertical: 3),

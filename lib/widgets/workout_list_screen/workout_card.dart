@@ -178,6 +178,8 @@ class _WorkoutCardState extends State<WorkoutCard> {
   }
 
   void handleSwitch(BuildContext context, bool value) {
+    print(
+        'Workout start date: ${widget.workout.startDate}, adjusted: ${widget.workout.startDateAdjusted}');
     String action = value ? 'Enable' : 'Disable';
     FredericActionDialog.show(
         context: context,
@@ -188,11 +190,11 @@ class _WorkoutCardState extends State<WorkoutCard> {
           // childText: 'Do you want to ${action.toLowerCase()} the workout?',
           child: Column(
             children: [
-              Text("Do you want to set another starting date?"),
+              Text("You can select another starting date if you want."),
               const SizedBox(height: 16),
               FredericDatePicker(
                 onDateChanged: (date) {},
-                initialDate: widget.workout.startDate,
+                initialDate: widget.workout.startDateAdjusted,
               ),
               const SizedBox(height: 8),
             ],
