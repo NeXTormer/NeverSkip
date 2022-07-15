@@ -7,6 +7,7 @@ import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
+import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -19,6 +20,8 @@ class WorkoutCard extends StatefulWidget {
   const WorkoutCard.dummy(this.workout,
       {this.name, this.description, this.period, this.repeating})
       : clickable = false;
+
+  static const bool kCanDeleteWithLongPress = false;
 
   final String? name;
   final String? description;
@@ -151,6 +154,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
   }
 
   void handleLongPress(BuildContext context) {
+    if (!WorkoutCard.kCanDeleteWithLongPress) return;
     if (widget.workout.canEdit) {
       FredericActionDialog.show(
           context: context,
@@ -179,21 +183,49 @@ class _WorkoutCardState extends State<WorkoutCard> {
         context: context,
         dialog: FredericActionDialog(
           actionText: action,
-          title: 'Change active status',
+          title: '$action the workout?',
           closeOnConfirm: true,
-          childText: 'Do you want to ${action.toLowerCase()} the workout?',
-          onConfirm: () => setState(() {
-            if (value) {
-              FredericBackend.instance.userManager
-                  .addActiveWorkout(widget.workout.id);
-              isSelected = true;
-            } else {
-              FredericBackend.instance.userManager
-                  .removeActiveWorkout(widget.workout.id);
-              isSelected = false;
-            }
-            FredericBackend.instance.userManager.userDataChanged();
-          }),
+          // childText: 'Do you want to ${action.toLowerCase()} the workout?',
+          child: Column(
+            children: [
+              Text("Do you want to set another starting date?"),
+              const SizedBox(height: 16),
+              FredericDatePicker(
+                onDateChanged: (date) {},
+                initialDate: widget.workout.startDate,
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+          onConfirm: () async {
+            // if (value) {
+            //   await FredericActionDialog.show(
+            //       context: context,
+            //       dialog: FredericActionDialog(
+            //         actionText: action,
+            //         title: 'Update start date?',
+            //         closeOnConfirm: true,
+            //         child: FredericDatePicker(
+            //           onDateChanged: (date) {},
+            //           initialDate: DateTime.now(),
+            //         ),
+            //         onConfirm: () {},
+            //       ));
+            // }
+
+            setState(() {
+              if (value) {
+                FredericBackend.instance.userManager
+                    .addActiveWorkout(widget.workout.id);
+                isSelected = true;
+              } else {
+                FredericBackend.instance.userManager
+                    .removeActiveWorkout(widget.workout.id);
+                isSelected = false;
+              }
+              FredericBackend.instance.userManager.userDataChanged();
+            });
+          },
         ));
   }
 }
