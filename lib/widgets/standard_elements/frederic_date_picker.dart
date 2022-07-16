@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:intl/intl.dart';
 
 class FredericDatePicker extends StatefulWidget {
@@ -32,10 +33,12 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
 
   @override
   void initState() {
-    DateTime oneMonthBefore = today.subtract(Duration(days: today.day + 1));
+    DateTime oneMonthBefore =
+        widget.initialDate.subtract(Duration(days: widget.initialDate.day + 1));
     startingDate = DateTime(oneMonthBefore.year, oneMonthBefore.month, 1);
+
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      jumpToDay(widget.initialDate);
+      jumpToAndSelectDay(widget.initialDate);
     });
     super.initState();
   }
@@ -44,8 +47,8 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
   Widget build(BuildContext context) {
     dayWidth = (MediaQuery.of(context).size.width / 10);
     dayTotalWidth = dayPadding + dayWidth;
-    return Container(
-      color: theme.backgroundColor,
+    return FredericCard(
+      // color: theme.cardBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
@@ -132,6 +135,11 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
   }
 
   void jumpToDay(DateTime day) {
+    int index = day.difference(startingDate).inDays;
+    dayController.jumpTo((dayTotalWidth) * index);
+  }
+
+  void jumpToAndSelectDay(DateTime day) {
     int index = day.difference(startingDate).inDays;
     dayController.jumpTo((dayTotalWidth) * index);
     selectedDayIndex = index;

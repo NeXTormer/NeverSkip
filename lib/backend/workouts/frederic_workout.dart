@@ -268,11 +268,13 @@ class FredericWorkoutActivities {
   }
 
   List<FredericWorkoutActivity> getDay(DateTime day) {
+    DateTime selectedDay = DateTime(day.year, day.month, day.day);
+
     DateTime start = workout.startDate;
     DateTime end = workout.startDate.add(Duration(days: period * 7));
-    if (day.isAfter(end) && workout.repeating == false)
+    if (selectedDay.isAfter(end) && workout.repeating == false)
       return <FredericWorkoutActivity>[];
-    int daysDiff = day.difference(start).inDays % (period * 7);
+    int daysDiff = selectedDay.difference(start).inDays % (period * 7);
     return activities[daysDiff + 1];
   }
 

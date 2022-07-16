@@ -73,33 +73,42 @@ class FredericCard extends StatelessWidget {
           margin: margin,
           decoration: decoration,
           child: container);
-    else
-      return Stack(
-        fit: StackFit.passthrough,
-        children: [
-          if (shimmer)
-            Shimmer.fromColors(
-              period: Duration(seconds: 1),
-              child: Container(
-                width: width,
-                height: height,
-                margin: margin,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(borderRadius),
-                  color: Colors.black,
-                ),
-              ),
-              baseColor: Colors.yellow.shade50,
-              highlightColor: Colors.white,
-            ),
-          Container(
-            width: width,
-            height: height,
-            margin: margin,
-            decoration: decoration,
-            child: container,
-          ),
-        ],
+
+    if (!shimmer)
+      return Container(
+        width: width,
+        height: height,
+        margin: margin,
+        decoration: decoration,
+        child: container,
       );
+
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        if (shimmer)
+          Shimmer.fromColors(
+            period: Duration(seconds: 1),
+            child: Container(
+              width: width,
+              height: height,
+              margin: margin,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(borderRadius),
+                color: Colors.black,
+              ),
+            ),
+            baseColor: Colors.yellow.shade50,
+            highlightColor: Colors.white,
+          ),
+        Container(
+          width: width,
+          height: height,
+          margin: margin,
+          decoration: decoration,
+          child: container,
+        ),
+      ],
+    );
   }
 }

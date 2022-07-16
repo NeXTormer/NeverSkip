@@ -37,8 +37,6 @@ class _EnableDisableWorkoutDialogState
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'Workout start date: ${widget.workout.startDate}, adjusted: ${widget.workout.startDateAdjusted}');
     String action = widget.enabling ? 'Enable' : 'Disable';
 
     return FredericActionDialog(
@@ -58,7 +56,7 @@ class _EnableDisableWorkoutDialogState
                   onDateChanged: (date) {
                     newWorkoutStartDate = date;
                   },
-                  initialDate: widget.workout.startDateAdjusted,
+                  initialDate: widget.workout.startDate,
                 ),
                 const SizedBox(height: 8),
               ],
