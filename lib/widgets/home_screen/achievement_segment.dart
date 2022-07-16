@@ -7,6 +7,8 @@ import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/main.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
 
@@ -31,42 +33,57 @@ class AchievementSegment extends StatelessWidget {
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, top: 22, bottom: 8),
                     child: FredericHeading.translate('home.achievements')),
-                Container(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: BouncingScrollPhysics(),
-                    itemCount: user.achievementsCount,
-                    itemBuilder: (context, index) {
-                      try {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          child: GoalCard(
-                            goals[index],
-                            type: GoalCardType.Achievement,
-                            sets: setData,
-                            activity: activityListData
-                                .activities[goals[index].activityID],
-                            index: index + 1,
-                          ),
-                        );
-                      } on RangeError catch (_) {
-                        return Padding(
+                if (goals.isEmpty)
+                  FredericCard(
+                    height: 70,
+                    margin:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    child: Center(
+                        child: Text(
+                      'You do not have any achievements yet.\nAdd one by completing a goal.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: theme.greyTextColor),
+                    )),
+                  ),
+                if (goals.isNotEmpty)
+                  Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: user.achievementsCount,
+                      itemBuilder: (context, index) {
+                        try {
+                          return Padding(
                             padding: EdgeInsets.only(
                               left: 16,
                               right: 16,
                               bottom: 16,
                             ),
-                            child:
-                                GoalCard(null, type: GoalCardType.Achievement));
-                      }
-                    },
+                            child: GoalCard(
+                              goals[index],
+                              type: GoalCardType.Achievement,
+                              sets: setData,
+                              activity: activityListData
+                                  .activities[goals[index].activityID],
+                              index: index + 1,
+                            ),
+                          );
+                        } on RangeError catch (_) {
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                                bottom: 16,
+                              ),
+                              child: GoalCard(null,
+                                  type: GoalCardType.Achievement));
+                        }
+                      },
+                    ),
                   ),
-                ),
               ],
             );
           });

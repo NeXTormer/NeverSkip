@@ -6,8 +6,10 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -40,6 +42,19 @@ class ProgressIndicatorSegment extends StatelessWidget {
                   for (String activityID in user.progressMonitors) {
                     activities.add(setData[activityID]);
                   }
+                  if (activities.length == 0)
+                    return FredericCard(
+                      height: 70,
+                      margin: const EdgeInsets.only(left: 16, right: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 8),
+                      child: Center(
+                          child: Text(
+                        'You have displayed any personal records yet.\nPress + to add one.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: theme.greyTextColor),
+                      )),
+                    );
                   return Container(
                     height: 60,
                     child: ListView.builder(
