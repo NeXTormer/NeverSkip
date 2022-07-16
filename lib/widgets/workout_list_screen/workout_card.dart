@@ -7,8 +7,8 @@ import 'package:frederic/screens/edit_workout_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
-import 'package:frederic/widgets/standard_elements/frederic_date_picker.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
+import 'package:frederic/widgets/workout_list_screen/enable_workout_dialog.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class WorkoutCard extends StatefulWidget {
@@ -178,56 +178,26 @@ class _WorkoutCardState extends State<WorkoutCard> {
   }
 
   void handleSwitch(BuildContext context, bool value) {
-    print(
-        'Workout start date: ${widget.workout.startDate}, adjusted: ${widget.workout.startDateAdjusted}');
-    String action = value ? 'Enable' : 'Disable';
-    FredericActionDialog.show(
-        context: context,
-        dialog: FredericActionDialog(
-          actionText: action,
-          title: '$action the workout?',
-          closeOnConfirm: true,
-          // childText: 'Do you want to ${action.toLowerCase()} the workout?',
-          child: Column(
-            children: [
-              Text("You can select another starting date if you want."),
-              const SizedBox(height: 16),
-              FredericDatePicker(
-                onDateChanged: (date) {},
-                initialDate: widget.workout.startDateAdjusted,
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-          onConfirm: () async {
-            // if (value) {
-            //   await FredericActionDialog.show(
-            //       context: context,
-            //       dialog: FredericActionDialog(
-            //         actionText: action,
-            //         title: 'Update start date?',
-            //         closeOnConfirm: true,
-            //         child: FredericDatePicker(
-            //           onDateChanged: (date) {},
-            //           initialDate: DateTime.now(),
-            //         ),
-            //         onConfirm: () {},
-            //       ));
-            // }
+    EnableDisableWorkoutDialog.show(context, widget.workout, value,
+        (newStartDate) {
+      if (newStartDate != null) {
+        widget.workout.updateData(newStartDate: newStartDate);
+        FredericBackend.instance.workoutManager
+            .updateWorkoutInDB(widget.workout);
+      }
 
-            setState(() {
-              if (value) {
-                FredericBackend.instance.userManager
-                    .addActiveWorkout(widget.workout.id);
-                isSelected = true;
-              } else {
-                FredericBackend.instance.userManager
-                    .removeActiveWorkout(widget.workout.id);
-                isSelected = false;
-              }
-              FredericBackend.instance.userManager.userDataChanged();
-            });
-          },
-        ));
+      setState(() {
+        if (value) {
+          FredericBackend.instance.userManager
+              .addActiveWorkout(widget.workout.id);
+          isSelected = true;
+        } else {
+          FredericBackend.instance.userManager
+              .removeActiveWorkout(widget.workout.id);
+          isSelected = false;
+        }
+        FredericBackend.instance.userManager.userDataChanged();
+      });
+    });
   }
 }
