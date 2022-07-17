@@ -7,6 +7,7 @@ import 'package:frederic/screens/onboarding_screen.dart';
 import 'package:frederic/screens/start_trial_screen.dart';
 import 'package:frederic/widgets/charts/month_volume_chart_segment.dart';
 import 'package:frederic/widgets/charts/muscle_group_chart_segment.dart';
+import 'package:frederic/widgets/charts/progress_chart_segment.dart';
 import 'package:frederic/widgets/charts/week_volume_chart_segment.dart';
 import 'package:frederic/widgets/home_screen/achievement_segment.dart';
 import 'package:frederic/widgets/home_screen/goal_segment.dart';
@@ -54,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ProgressIndicatorSegment(),
               GoalSegment(),
               MonthVolumeChartSegment(),
+              ProgressChartSegment(),
               MuscleGroupChartSegment(),
               WeekVolumeChartSegment(),
               AchievementSegment(),

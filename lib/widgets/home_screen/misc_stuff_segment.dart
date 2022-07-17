@@ -15,10 +15,17 @@ class MiscStuffSegment extends StatelessWidget {
         child: Column(
           children: [
             FredericHeading.translate('home.other'),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             MiscListItem(
               text: tr('home.history_button'),
               icon: Icons.history,
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (c) => HistoryScreen())),
+            ),
+            const SizedBox(height: 8),
+            MiscListItem(
+              text: tr('home.create_chart_button'),
+              icon: Icons.add_chart,
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (c) => HistoryScreen())),
             )

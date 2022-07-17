@@ -49,7 +49,7 @@ class GoalSegment extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                   child: Center(
                       child: Text(
-                    'You have not set any goals yet.\nPress + to add one.',
+                    'You don\'t have any active goals.\nPress + to add one.',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: theme.greyTextColor),
                   )),
@@ -60,7 +60,7 @@ class GoalSegment extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: false,
                     scrollDirection: Axis.horizontal,
-                    itemCount: user.goalsCount,
+                    itemCount: goals.length,
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       try {
@@ -74,16 +74,20 @@ class GoalSegment extends StatelessWidget {
                                   .activities[goals[index].activityID]),
                         );
                       } on RangeError catch (_) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              left: index == 0 ? 16 : 12,
-                              right: index == ([1].length - 1) ? 16 : 0),
-                          child: GoalCard(null),
+                        return Container(
+                          color: Colors.red,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: index == 0 ? 16 : 12,
+                                right: index == ([1].length - 1) ? 16 : 0),
+                            child: GoalCard(null),
+                          ),
                         );
                       }
                     },
                   ),
                 ),
+              const SizedBox(height: 8)
             ]);
           });
         });

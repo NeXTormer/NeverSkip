@@ -85,7 +85,7 @@ class FredericGoal {
   String get title => _title ?? 'Goal';
   String get image =>
       _image ??
-      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fgoal.png?alt=media&token=ad607f8b-1af9-4fa2-9bf9-6bdbde6251a9';
+      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fgoal.png?alt=media&token=9f580776-3dec-47f6-b4e2-ea8788fa02a1';
   String get activityID => _activityID ?? '';
   String get unit => _unit ?? '';
   num get startState => _startState ?? 0;

@@ -24,6 +24,7 @@ import 'package:frederic/widgets/standard_elements/unit_slider.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 enum Datepicker { Start, End }
+
 enum FormError {
   CurrentStateEqualsEndStart,
   StartStateEqualsEndState,
@@ -228,7 +229,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             title: titleController.text,
             image: dummyActivity != null
                 ? dummyActivity!.image
-                : 'https://media.gq.com/photos/5a3d41215f1f364364dd437a/16:9/w_1280,c_limit/ask-a-trainer-bicep-curl.jpg',
+                : 'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fgoal.png?alt=media&token=9f580776-3dec-47f6-b4e2-ea8788fa02a1',
             unit: unitSliderController.value,
             startState: startStateController.value,
             currentState: currentStateController.value,
