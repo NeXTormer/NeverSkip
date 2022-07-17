@@ -8,12 +8,14 @@ class FredericDatePicker extends StatefulWidget {
   FredericDatePicker({
     Key? key,
     required this.initialDate,
+    this.showBorder = true,
     required this.onDateChanged,
   }) : super(key: key);
 
   final DateFormat df = DateFormat('MMMM');
   final DateTime initialDate;
   final void Function(DateTime) onDateChanged;
+  final bool showBorder;
 
   @override
   _FredericDatePickerState createState() => _FredericDatePickerState();
@@ -48,6 +50,7 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
     dayWidth = (MediaQuery.of(context).size.width / 10);
     dayTotalWidth = dayPadding + dayWidth;
     return FredericCard(
+      borderWidth: widget.showBorder ? 1 : 0,
       // color: theme.cardBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),

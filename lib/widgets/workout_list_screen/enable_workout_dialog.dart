@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/workouts/frederic_workout.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -37,22 +38,24 @@ class _EnableDisableWorkoutDialogState
 
   @override
   Widget build(BuildContext context) {
-    String action = widget.enabling ? 'Enable' : 'Disable';
+    String action = widget.enabling ? tr('enable') : tr('disable');
 
     return FredericActionDialog(
       actionText: action,
-      title: '$action the workout?',
+      title: tr('workouts.action_the_workout', args: [action]),
       closeOnConfirm: true,
       childText: widget.enabling
           ? null
-          : 'Do you want to ${action.toLowerCase()} the workout?',
+          : tr('workouts.action_the_workout_long',
+              args: [action.toLowerCase()]),
       child: !widget.enabling
           ? null
           : Column(
               children: [
-                Text("You can select another starting date if you want."),
+                Text('workouts.select_another_startdate').tr(),
                 const SizedBox(height: 16),
                 FredericDatePicker(
+                  showBorder: false,
                   onDateChanged: (date) {
                     newWorkoutStartDate = date;
                   },

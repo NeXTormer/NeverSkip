@@ -18,7 +18,8 @@
       "2week": "Vor zwei Wochen",
       "3week": "Vor drei Wochen",
       "0month": "Aktuelles Monat",
-      "title_activity_of_last_year": "Aktive Tage"
+      "title_activity_of_last_year": "Aktive Tage",
+      "title_progress_chart": "Fortschritt"
     },
     "title": "Finde deine Übungen!",
     "subtitle": "Guten {}, {}!",
@@ -66,7 +67,11 @@
     "subtitle": "Finde deinen Workoutplan",
     "enabled": "Aktiv",
     "disabled": "Andere",
-    "navbar": "Workouts"
+    "navbar": "Workouts",
+    "delete_text": "Willst du diesen Workoutplan wirklich Löschen?",
+    "action_the_workout": "Workout {}?",
+    "action_the_workout_long": "Willst du das Workout {}?",
+    "select_another_startdate": "Falls nötig, kannst du hier das Startdatum verändern."
   },
   "progress":
   {
@@ -272,6 +277,8 @@
   },
   "create": "Erstellen",
   "submit": "Speichern",
+  "enable": "Aktivieren",
+  "disable": "Deaktivieren",
   "save": "Speichern",
   "okay": "Okay",
   "confirm": "Bestätigen",

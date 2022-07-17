@@ -18,7 +18,8 @@
       "2week": "Two Weeks Ago",
       "3week": "Three Weeks Ago",
       "0month": "Current Month",
-      "title_activity_of_last_year": "Active days"
+      "title_activity_of_last_year": "Active days",
+      "title_progress_chart": "Progress"
     },
     "title": "Let's find you a Workout!",
     "subtitle": "Good {}, {}!",
@@ -66,7 +67,11 @@
     "subtitle": "Find your perfect Workout Plan",
     "enabled": "Active",
     "disabled": "Other",
-    "navbar": "Workouts"
+    "navbar": "Workouts",
+    "delete_text": "Do you want to delete this Workout Plan? This cannot be undone!",
+    "action_the_workout": "{} the workout?",
+    "action_the_workout_long": "Do you want to {} the workout?",
+    "select_another_startdate": "You can modify your starting date if you want."
   },
   "progress":
   {
@@ -272,6 +277,8 @@
   },
   "create": "Create",
   "submit": "Submit",
+  "enable": "Enable",
+  "disable": "Disable",
   "save": "Save",
   "okay": "Okay",
   "confirm": "Confirm",

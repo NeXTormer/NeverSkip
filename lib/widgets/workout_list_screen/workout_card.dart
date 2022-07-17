@@ -159,13 +159,12 @@ class _WorkoutCardState extends State<WorkoutCard> {
       FredericActionDialog.show(
           context: context,
           dialog: FredericActionDialog(
-            title: 'Confirm deletion',
-            actionText: 'Delete',
+            title: tr('confirm_delete'),
+            actionText: tr('delete'),
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: Text(
-                  'Do you want to delete this Workout Plan? This cannot be undone!',
-                  textAlign: TextAlign.center),
+              child:
+                  Text(tr('workout.delete_text'), textAlign: TextAlign.center),
             ),
             onConfirm: () {
               FredericBackend.instance.workoutManager

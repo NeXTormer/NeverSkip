@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/sets/frederic_set.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/widgets/charts/frederic_chart.dart';
 import 'package:frederic/widgets/charts/progress_line_chart.dart';
@@ -18,7 +19,9 @@ class ProgressChartSegment extends StatelessWidget {
         child: FredericChart(
             height: 216,
             title: tr('home.chart.title_progress_chart'),
-            pages: [FredericChartPage(page: ProgressLineChart())]),
+            pages: [
+              FredericChartPage(page: ProgressLineChart(<FredericSet>[]))
+            ]),
       );
     }));
   }
