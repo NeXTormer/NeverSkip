@@ -135,8 +135,13 @@ class FredericActivity
     _descriptionDE = data['description_de'];
     _image = data['image'];
     _owner = data['owner'];
-    _recommendedReps = data['recommendedreps'];
-    _recommendedSets = data['recommendedsets'];
+
+    dynamic reps = data['recommendedreps'];
+    dynamic sets = data['recommendedsets'];
+
+    _recommendedReps = reps is String ? int.tryParse(reps) : reps;
+    _recommendedSets = sets is String ? int.tryParse(sets) : sets;
+
     _type = parseTypeFromString(data['type']);
 
     List<dynamic>? muscleGroups = data['musclegroup'];
