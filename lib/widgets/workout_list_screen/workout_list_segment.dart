@@ -23,9 +23,9 @@ class WorkoutListSegment extends StatelessWidget {
               .where((element) => element.name.contains(searchTerm.searchTerm))
               .where((element) {
             if (active) {
-              return user.activeWorkouts.contains(element.id);
+              return user.activeWorkouts.containsKey(element.id);
             } else {
-              return !user.activeWorkouts.contains(element.id);
+              return !user.activeWorkouts.containsKey(element.id);
             }
           }).toList();
           return SliverList(

@@ -41,7 +41,7 @@ class FredericUser {
   bool? _isDeveloper;
   bool? _hasPurchased;
   bool? _purchaseOverride;
-  List<String>? _activeWorkouts;
+  Map<String, DateTime?>? _activeWorkouts;
   List<String>? _progressMonitors;
   DateTime? birthday;
   DateTime? streakStartDate;
@@ -78,9 +78,9 @@ class FredericUser {
     return _progressMonitors!;
   }
 
-  List<String> get activeWorkouts {
+  Map<String, DateTime?> get activeWorkouts {
     if (_activeWorkouts == null) {
-      _activeWorkouts = <String>[];
+      _activeWorkouts = Map<String, DateTime?>();
     }
     return _activeWorkouts!;
   }
@@ -128,7 +128,22 @@ class FredericUser {
     _achievementsCount = data['achievementscount'];
     birthday = data['birthday']?.toDate();
     _progressMonitors = data['progressmonitors']?.cast<String>() ?? <String>[];
-    _activeWorkouts = data['activeworkouts']?.cast<String>() ?? <String>[];
+
+    dynamic activeWorkoutsData = data['activeworkouts'];
+    if (activeWorkoutsData is List<dynamic> ||
+        activeWorkoutsData is List<String>) {
+      _activeWorkouts = <String, DateTime?>{};
+      for (String workout in activeWorkoutsData) {
+        _activeWorkouts![workout] = null;
+      }
+    } else {
+      if (activeWorkoutsData != null) {
+        _activeWorkouts = Map.from(activeWorkoutsData);
+      } else {
+        _activeWorkouts = <String, DateTime?>{};
+      }
+    }
+
     streakStartDate = data['streakstart']?.toDate();
     _trialStartDate = data['trial_start']?.toDate();
     streakLatestDate = data['streaklatest']?.toDate();
@@ -170,16 +185,15 @@ class FredericUser {
     }
   }
 
-  void addActiveWorkout(String workout) {
-    if (_activeWorkouts == null) _activeWorkouts = <String>[];
-    if (!_activeWorkouts!.contains(workout)) {
-      _activeWorkouts!.add(workout);
-    }
+  void addActiveWorkout(String workout, DateTime? startDate) {
+    if (_activeWorkouts == null) _activeWorkouts = Map<String, DateTime>();
+    assert(_activeWorkouts!.containsKey(workout) == false);
+    _activeWorkouts![workout] = startDate;
   }
 
   void removeActiveWorkout(String workout) {
     if (_activeWorkouts == null) {
-      _activeWorkouts = <String>[];
+      _activeWorkouts = Map<String, DateTime>();
     } else {
       _activeWorkouts!.remove(workout);
     }
@@ -201,11 +215,12 @@ class FredericUser {
   }
 
   Future<bool> hasActivitiesOnDay(DateTime day) async {
-    for (var workoutID in activeWorkouts) {
-      FredericWorkout? workout =
-          FredericBackend.instance.workoutManager.state.workouts[workoutID];
+    for (var workoutPair in activeWorkouts.entries) {
+      FredericWorkout? workout = FredericBackend
+          .instance.workoutManager.state.workouts[workoutPair.key];
       if (workout == null) continue;
-      if (workout.activities.getDay(day).isNotEmpty) return true;
+      if (workout.activities.getDay(day, workoutPair.value).isNotEmpty)
+        return true;
     }
     return false;
   }

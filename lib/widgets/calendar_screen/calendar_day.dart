@@ -32,10 +32,12 @@ class CalendarDay extends StatelessWidget {
     DateTime day = DateTime.now().add(Duration(days: index));
     List<FredericWorkoutActivity> activitiesDueToday =
         <FredericWorkoutActivity>[];
-    for (String workoutID in user.activeWorkouts) {
-      if (workoutListData.workouts[workoutID] != null)
-        activitiesDueToday.addAll(
-            workoutListData.workouts[workoutID]!.activities.getDay(day));
+    for (var activeWorkoutPair in user.activeWorkouts.entries) {
+      if (workoutListData.workouts[activeWorkoutPair.key] != null) {
+        activitiesDueToday.addAll(workoutListData
+            .workouts[activeWorkoutPair.key]!.activities
+            .getDay(day, activeWorkoutPair.value));
+      }
     }
     bool dayFinished = true;
     List<bool> completedActivityToday = currentDayIsToday

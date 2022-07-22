@@ -43,7 +43,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
   @override
   void initState() {
     isSelected = FredericBackend.instance.userManager.state.activeWorkouts
-        .contains(widget.workout.id);
+        .containsKey(widget.workout.id);
     super.initState();
   }
 
@@ -179,7 +179,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
   void handleSwitch(BuildContext context, bool value) {
     EnableDisableWorkoutDialog.show(context, widget.workout, value,
         (newStartDate) {
-      if (newStartDate != null) {
+      if (newStartDate != null && widget.workout.canEdit) {
         widget.workout.updateData(newStartDate: newStartDate);
         FredericBackend.instance.workoutManager
             .updateWorkoutInDB(widget.workout);
@@ -188,7 +188,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
       setState(() {
         if (value) {
           FredericBackend.instance.userManager
-              .addActiveWorkout(widget.workout.id);
+              .addActiveWorkout(widget.workout.id, newStartDate);
           isSelected = true;
         } else {
           FredericBackend.instance.userManager

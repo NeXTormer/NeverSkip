@@ -26,6 +26,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   }
 
   SetVolumeDataRepresentation? volumeDataRepresentation;
+  // SetProgressChartDataRepresentation? chartDataRepresentation;
 
   final int currentMonth = FredericSetDocument.calculateMonth(DateTime.now());
   static final int startingYear = 2021;

@@ -91,8 +91,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     FredericBase.forceFullRestart(context);
   }
 
-  void addActiveWorkout(String workoutID) {
-    state.addActiveWorkout(workoutID);
+  void addActiveWorkout(String workoutID, DateTime? startDate) {
+    state.addActiveWorkout(workoutID, startDate);
     userDataChanged();
   }
 
