@@ -149,7 +149,8 @@ class FredericUser {
     streakLatestDate = data['streaklatest']?.toDate();
     _shouldReloadData = data['should_reload_data'];
     _isDeveloper = data['is_developer'];
-    _purchaseOverride = data['purchase_override'];
+    _purchaseOverride = data['free_forever_override'] ?? false;
+    _hasPurchased = data['has_purchased'] ?? false;
   }
 
   Map<String, dynamic> toMap() {
@@ -166,7 +167,8 @@ class FredericUser {
       'streakstart': streakStartDate,
       'streaklatest': streakLatestDate,
       'should_reload_data': _shouldReloadData,
-      'trial_start': _trialStartDate
+      'trial_start': _trialStartDate,
+      'has_purchased': _hasPurchased
     };
   }
 

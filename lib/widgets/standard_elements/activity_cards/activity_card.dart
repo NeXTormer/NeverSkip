@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
@@ -75,6 +76,7 @@ class ActivityCard extends StatelessWidget {
 
   void handleClick(BuildContext context) {
     if (onClick != null) return onClick!();
+    if (activity.id.isEmpty) return;
     CupertinoScaffold.showCupertinoModalBottomSheet(
         enableDrag: true,
         context: context,

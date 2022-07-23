@@ -7,6 +7,7 @@ import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/firebase/firebase_auth_interface.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
+import 'package:frederic/backend/purchases/purchase_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
@@ -38,6 +39,8 @@ class FredericBackend implements FredericMessageProcessor {
 
     _userManager = FredericUserManager(
         backend: this, authInterface: firebaseAuthInterface);
+
+    _purchaseManager = PurchaseManager(_userManager);
 
     _activityManager = FredericActivityManager();
     _workoutManager = FredericWorkoutManager(activityManager: _activityManager);
@@ -78,6 +81,9 @@ class FredericBackend implements FredericMessageProcessor {
 
   late final FredericAnalytics _analytics;
   FredericAnalytics get analytics => _analytics;
+
+  late final PurchaseManager _purchaseManager;
+  PurchaseManager get purchaseManager => _purchaseManager;
 
   final ToastManager toastManager = ToastManager();
 

@@ -10,6 +10,14 @@ abstract class FredericAuthEvent {
   Future<FredericUser> process(FredericUserManager userManager);
 }
 
+class FredericPurchaseLicenseEvent extends FredericAuthEvent {
+  @override
+  Future<FredericUser> process(FredericUserManager userManager) {
+    // TODO: set has_purchased to true
+    throw UnimplementedError();
+  }
+}
+
 class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
   FredericRestoreLoginStatusEvent(this.user);
   FredericUser user;
