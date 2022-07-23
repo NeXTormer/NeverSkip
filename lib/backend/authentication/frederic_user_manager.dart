@@ -41,11 +41,19 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     } else {
       emit(await event.process(this));
     }
+
+    print(StackTrace.current);
     if (event is FredericRestoreLoginStatusEvent ||
-        event is FredericEmailLoginEvent ||
-        event is FredericOAuthSignInEvent) {
+        event is FredericEmailLoginEvent) {
       FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
           FredericConcurrencyMessageType.UserHasAuthenticated));
+      print("User has authenticated [EMail, RESTORE] ($event)");
+    }
+    if (event is FredericOAuthSignInEvent) {
+      Future.delayed(Duration(seconds: 1)).then((value) =>
+          FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+              FredericConcurrencyMessageType.UserHasAuthenticated)));
+      print("User has authenticated [OAuth]");
     }
     if (event is FredericEmailSignupEvent) {
       firstUserSignUp = true;
