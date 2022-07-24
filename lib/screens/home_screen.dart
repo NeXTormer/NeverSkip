@@ -33,13 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
         FredericBackend.instance.userManager.firstUserSignUp = false;
         await Navigator.of(context)
             .push(MaterialPageRoute(builder: (c) => OnboardingScreen()));
+      }
+      if (!FredericBackend.instance.userManager.state.trialStarted) {
         CupertinoScaffold.showCupertinoModalBottomSheet(
             enableDrag: false,
             isDismissible: false,
             context: context,
             builder: (ctx) => StartTrialScreen());
       }
-      //if(FredericBackend.instance.userManager.firstUserSignUp == false && )
     });
   }
 

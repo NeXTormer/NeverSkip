@@ -9,6 +9,7 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
+import 'package:frederic/screens/purchase_screen.dart';
 import 'package:frederic/widgets/settings_screen/delete_local_documents_screen.dart';
 import 'package:frederic/widgets/settings_screen/feedback_sender_widget.dart';
 import 'package:frederic/widgets/settings_screen/reload_caches_from_db_dialog.dart';
@@ -40,6 +41,23 @@ class SettingsScreen extends StatelessWidget {
             if (theme.isMonotone) SliverDivider(),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 10)),
             UserSettingsSegment(user),
+            if (user.inTrialMode)
+              SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
+            if (user.inTrialMode)
+              SettingsSegment(
+                  title: tr('settings.trial'),
+                  elements: <SettingsElement>[
+                    SettingsElement(
+                      text: tr('settings.trial.title'),
+                      subText:
+                          '${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => PurchaseScreen(user))),
+                      icon: Icons.monetization_on_outlined,
+                    ),
+                  ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             SettingsSegment(
                 title: tr('settings.customization'),

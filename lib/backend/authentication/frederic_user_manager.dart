@@ -42,7 +42,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       emit(await event.process(this));
     }
 
-    print(StackTrace.current);
     if (event is FredericRestoreLoginStatusEvent ||
         event is FredericEmailLoginEvent) {
       FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(

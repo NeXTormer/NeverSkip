@@ -4,8 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/screens/purchase_screen.dart';
 import 'package:frederic/screens/settings_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_sliver_app_bar.dart';
+import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/streak_icon.dart';
 import 'package:frederic/widgets/transitions/frederic_container_transition.dart';
 
@@ -24,7 +26,6 @@ class HomeScreenAppbar extends StatelessWidget {
       title: tr('home.title'),
       subtitle: tr('home.subtitle', args: [timeOfDay, userName]),
       leading: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           FredericContainerTransition(
               tappable: true,
@@ -49,6 +50,43 @@ class HomeScreenAppbar extends StatelessWidget {
                 );
               },
               expandedChild: SettingsScreen()),
+          Expanded(child: Container()),
+          if (user.inTrialMode)
+            FredericContainerTransition(
+                tappable: true,
+                closedBorderRadius: 0,
+                transitionType: ContainerTransitionType.fadeThrough,
+                onClose: () =>
+                    FredericBackend.instance.analytics.logEnterHomeScreen(),
+                childBuilder: (context, openContainer) {
+                  return Container(
+                    color: theme.isColorful
+                        ? theme.mainColor
+                        : theme.backgroundColor,
+                    child: Row(
+                      children: [
+                        Text(
+                          '${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              color: theme.isColorful
+                                  ? theme.textColorColorfulBackground
+                                  : theme.textColor),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(Icons.monetization_on_outlined,
+                            color: theme.isColorful
+                                ? theme.textColorColorfulBackground
+                                : theme.mainColor,
+                            size: 24),
+                        const SizedBox(width: 8),
+                        FredericVerticalDivider(),
+                      ],
+                    ),
+                  );
+                },
+                expandedChild: PurchaseScreen(user)),
           StreakIcon(
             user: user,
             onColorfulBackground: theme.isColorful,

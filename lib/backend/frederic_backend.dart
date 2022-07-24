@@ -109,6 +109,8 @@ class FredericBackend implements FredericMessageProcessor {
   void _initialize() async {
     FredericProfiler.log('Start _initialize');
 
+    Future<void> purchaseManagerFuture = _purchaseManager.initialize();
+
     await waitUntilUserHasAuthenticated();
     FredericProfiler.log('User has Authenticated');
 
@@ -120,6 +122,7 @@ class FredericBackend implements FredericMessageProcessor {
 
     _setManager.initializeDataRepresentations(); // asynchronous
 
+    await purchaseManagerFuture;
     _waitUntilCoreDataHasLoaded.complete();
 
     FredericProfiler.log('Finished _initialize');
@@ -232,13 +235,16 @@ class FredericDefaults {
         document.data()?['featured_activities']?.cast<String>() ??
             const <String>[];
     _alwaysReloadFromDB = document.data()?['always_reload_from_db'];
+    _trialDuration = document.data()?['trial_duration'];
   }
 
   FredericDefaults.empty();
 
   List<String>? _featuredActivities;
   bool? _alwaysReloadFromDB;
+  int? _trialDuration;
 
+  int get trialDuration => _trialDuration ?? 30;
   List<String> get featuredActivities => _featuredActivities ?? <String>[];
   bool get alwaysReloadFromDB => _alwaysReloadFromDB ?? false;
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/extensions.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,9 @@ class FredericUser {
   bool get shouldReloadFromDB => _shouldReloadData ?? false;
   bool get isDeveloper => _isDeveloper ?? false;
   bool get hasActiveTrial => getTrialDaysLeft() >= 0;
+  bool get inTrialMode =>
+      !hasPurchased && !(_purchaseOverride ?? false) && trialStarted;
+  bool get trialStarted => _trialStartDate != null;
   bool get hasPurchased => _hasPurchased ?? false;
   bool get canUseApp => ((_hasPurchased ?? false) ||
       (_purchaseOverride ?? false) ||
@@ -144,9 +148,10 @@ class FredericUser {
       }
     }
 
-    streakStartDate = data['streakstart']?.toDate();
-    _trialStartDate = data['trial_start']?.toDate();
-    streakLatestDate = data['streaklatest']?.toDate();
+    streakStartDate = _loadDate(data['streakstart']);
+    _trialStartDate = _loadDate(data['trial_start']);
+    streakLatestDate = _loadDate(data['streaklatest']);
+
     _shouldReloadData = data['should_reload_data'];
     _isDeveloper = data['is_developer'];
     _purchaseOverride = data['free_forever_override'] ?? false;
@@ -170,6 +175,12 @@ class FredericUser {
       'trial_start': _trialStartDate,
       'has_purchased': _hasPurchased
     };
+  }
+
+  DateTime? _loadDate(dynamic data) {
+    if (data is DateTime || data is DateTime?) return data;
+    if (data is Timestamp || data is Timestamp?) return data?.toDate();
+    return null;
   }
 
   void addProgressMonitor(String monitor) {
@@ -213,7 +224,9 @@ class FredericUser {
 
   int getTrialDaysLeft() {
     if (_trialStartDate == null) return -1;
-    return _trialStartDate!.difference(DateTime.now()).inDays;
+    DateTime trialEndDate = _trialStartDate!
+        .add(Duration(days: FredericBackend.instance.defaults.trialDuration));
+    return trialEndDate.difference(DateTime.now()).inDays + 1;
   }
 
   Future<bool> hasActivitiesOnDay(DateTime day) async {
