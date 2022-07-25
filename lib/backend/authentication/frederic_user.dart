@@ -42,6 +42,10 @@ class FredericUser {
   bool? _isDeveloper;
   bool? _hasPurchased;
   bool? _purchaseOverride;
+
+  bool? tempPurchaseIsPending;
+  bool? tempPurchaseError;
+
   Map<String, DateTime?>? _activeWorkouts;
   List<String>? _progressMonitors;
   DateTime? birthday;

@@ -67,8 +67,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
-  void userDataChanged() {
-    authInterface.update(state);
+  FutureOr<void> userDataChanged([bool waitForUpdate = false]) async {
+    if (waitForUpdate) {
+      await authInterface.update(state);
+    } else {
+      authInterface.update(state);
+    }
     state.calculateDerivedAttributes();
     add(FredericUserDataChangedEvent());
   }

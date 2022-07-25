@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:frederic/backend/authentication/frederic_auth_event.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -39,6 +38,9 @@ class PurchaseManager {
         continue;
       }
     }
+
+    _purchaseStreamSubscription =
+        _storeInstance.purchaseStream.listen(_onPurchaseStreamUpdated);
   }
 
   void startFreeTrial() {
@@ -46,22 +48,58 @@ class PurchaseManager {
     _userManager.userDataChanged();
   }
 
-  void purchaseForCurrentAccount() {
-    _purchaseStreamSubscription =
-        _storeInstance.purchaseStream.listen(_onPurchaseStreamUpdated);
+  Future<String> purchaseForCurrentAccount({required bool discount}) async {
+    if (discount) {
+      assert(_userManager.state.hasActiveTrial);
+    }
 
-    // PurchaseDetails details = PurchaseDetails(
-    //     productID: productID,
-    //     verificationData: PurchaseVerificationData(),
-    //     transactionDate: DateTime.now(),
-    //     status: status);
+    if (_userManager.state.hasPurchased) {
+      return 'User already has a license';
+    }
 
-    // _storeInstance.completePurchase(details);
+    if (purchaseAppDiscountedProduct == null || purchaseAppProduct == null) {
+      return 'Error connecting to store';
+    }
+
+    bool success = await _storeInstance.buyConsumable(
+        purchaseParam: PurchaseParam(
+            productDetails: discount
+                ? purchaseAppDiscountedProduct!
+                : purchaseAppProduct!));
+    return '';
   }
 
-  void _onPurchaseStreamUpdated(List<PurchaseDetails> detailsList) {
-    _userManager.add(FredericPurchaseLicenseEvent());
+  void _onPurchaseStreamUpdated(List<PurchaseDetails> detailsList) async {
+    for (var detail in detailsList) {
+      if (detail.status == PurchaseStatus.purchased ||
+          detail.status == PurchaseStatus.restored) {
+        _userManager.state.onPurchased();
+        _userManager.state.tempPurchaseIsPending = false;
+        _userManager.state.tempPurchaseError = false;
 
+        await _userManager.userDataChanged(true);
+      } else if (detail.status == PurchaseStatus.pending) {
+        _userManager.state.tempPurchaseIsPending = true;
+        await _userManager.userDataChanged(true);
+      } else if (detail.status == PurchaseStatus.error) {
+        _userManager.state.tempPurchaseError = true;
+        _userManager.state.tempPurchaseIsPending = false;
+
+        await _userManager.userDataChanged(true);
+      } else if (detail.status == PurchaseStatus.canceled) {
+        _userManager.state.tempPurchaseError = false;
+        _userManager.state.tempPurchaseIsPending = false;
+
+        await _userManager.userDataChanged();
+      }
+
+      if (detail.pendingCompletePurchase) {
+        await _storeInstance.completePurchase(detail);
+      }
+    }
+  }
+
+  void discard() {
     _purchaseStreamSubscription?.cancel();
   }
 }

@@ -54,6 +54,7 @@ class HomeScreenAppbar extends StatelessWidget {
           if (user.inTrialMode)
             FredericContainerTransition(
                 tappable: true,
+                dragThreshold: double.infinity,
                 closedBorderRadius: 0,
                 transitionType: ContainerTransitionType.fadeThrough,
                 onClose: () =>
@@ -86,7 +87,7 @@ class HomeScreenAppbar extends StatelessWidget {
                     ),
                   );
                 },
-                expandedChild: PurchaseScreen(user)),
+                expandedChild: PurchaseScreen()),
           StreakIcon(
             user: user,
             onColorfulBackground: theme.isColorful,

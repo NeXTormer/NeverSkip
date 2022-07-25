@@ -51,10 +51,8 @@ class SettingsScreen extends StatelessWidget {
                       text: tr('settings.trial.title'),
                       subText:
                           '${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (c) => PurchaseScreen(user))),
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (c) => PurchaseScreen())),
                       icon: Icons.monetization_on_outlined,
                     ),
                   ]),
