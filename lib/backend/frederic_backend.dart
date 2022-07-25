@@ -87,6 +87,8 @@ class FredericBackend implements FredericMessageProcessor {
 
   final ToastManager toastManager = ToastManager();
 
+  bool get canUseApp => _userManager.state.canUseApp;
+
   WaitForX _waitUntilCoreDataHasLoaded = WaitForX();
   Future<void> waitUntilCoreDataIsLoaded() =>
       _waitUntilCoreDataHasLoaded.waitForX();

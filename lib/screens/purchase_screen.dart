@@ -19,9 +19,9 @@ class PurchaseScreen extends StatelessWidget {
               builder: (context, user) {
             if (user.hasPurchased) {
               Future(() {
+                Navigator.of(context).pop();
                 FredericBackend.instance.toastManager
                     .showPurchaseSuccessfulToast(context);
-                Navigator.of(context).pop();
               });
             }
 

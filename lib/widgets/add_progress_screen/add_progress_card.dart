@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
+import 'package:frederic/widgets/purchase_screen/feature_not_purchased_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:provider/provider.dart';
 
@@ -88,8 +90,14 @@ class AddProgressCard extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 0, right: 0, top: 16),
-                                child: FredericButton(tr('save'),
-                                    onPressed: onSave),
+                                child:
+                                    FredericButton(tr('save'), onPressed: () {
+                                  if (FredericBackend.instance.canUseApp) {
+                                    onSave();
+                                  } else {
+                                    FeatureNotPurchasedDialog.show(context);
+                                  }
+                                }),
                               )
                             ],
                           ),
