@@ -20,7 +20,9 @@ class ProgressChartSegment extends StatelessWidget {
             height: 216,
             title: tr('home.chart.title_progress_chart'),
             pages: [
-              FredericChartPage(page: ProgressLineChart(<FredericSet>[]))
+              FredericChartPage(
+                  title: 'Coming soon...',
+                  page: ProgressLineChart(<FredericSet>[]))
             ]),
       );
     }));

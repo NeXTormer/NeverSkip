@@ -32,27 +32,36 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   FutureOr<void> _onEvent(
       FredericAuthEvent event, Emitter<FredericUser> emit) async {
+    FredericUser? user;
     if (event is FredericUserDataChangedEvent) {
-      emit(await event.process(this));
+      user = await event.process(this);
+      emit(user);
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
         // don't call userDataChanged() here, it will create a memory leak
       });
     } else {
-      emit(await event.process(this));
+      user = await event.process(this);
+      emit(user);
     }
 
     if (event is FredericRestoreLoginStatusEvent ||
         event is FredericEmailLoginEvent) {
-      FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
-          FredericConcurrencyMessageType.UserHasAuthenticated));
-      print("User has authenticated [EMail, RESTORE] ($event)");
+      if (user.id.isNotEmpty) {
+        FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+            FredericConcurrencyMessageType.UserHasAuthenticated));
+        print("User has authenticated [EMail, RESTORE] ($event) [$user]");
+      } else {
+        print("RestoreLoginStatusEvent or EmailLoginEvent without user uid");
+      }
     }
     if (event is FredericOAuthSignInEvent) {
-      Future.delayed(Duration(seconds: 1)).then((value) =>
-          FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
-              FredericConcurrencyMessageType.UserHasAuthenticated)));
-      print("User has authenticated [OAuth]");
+      //Future.delayed(Duration(seconds: 1)).then((value) =>
+      if (user.id.isNotEmpty) {
+        FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+            FredericConcurrencyMessageType.UserHasAuthenticated));
+      }
+      print("User has authenticated [OAuth] [$user]");
     }
     if (event is FredericEmailSignupEvent) {
       firstUserSignUp = true;
@@ -80,12 +89,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   @override
   void onTransition(
       Transition<FredericAuthEvent, FredericUser> transition) async {
-    // print("USER TRANSITION");
-    // print("event: ${transition.event}");
-    // print('current: ${transition.currentState.activeWorkouts}');
-    // print("===");
-    // print('next: ${transition.nextState.activeWorkouts}');
-    // print('\n\n');
+    print("USER TRANSITION");
+    print("event: ${transition.event}");
+    print('current: ${transition.currentState.id}');
+    print("===");
+    print('next: ${transition.nextState.id}');
+    print('\n\n');
     super.onTransition(transition);
   }
 

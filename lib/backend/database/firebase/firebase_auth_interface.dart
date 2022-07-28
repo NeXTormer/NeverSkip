@@ -207,7 +207,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
         .doc('default_user')
         .get();
 
-    firestoreInstance.collection('users').doc(id).set({
+    await firestoreInstance.collection('users').doc(id).set({
       'id': id,
       'name': name ?? defaultDoc.data()?['name'] ?? '',
       'image': image ?? defaultDoc.data()?['image'] ?? '',

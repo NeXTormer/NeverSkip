@@ -114,7 +114,7 @@ class FredericBackend implements FredericMessageProcessor {
     Future<void> purchaseManagerFuture = _purchaseManager.initialize();
 
     await waitUntilUserHasAuthenticated();
-    FredericProfiler.log('User has Authenticated');
+    FredericProfiler.log('waitUntilUserHasAuthenticated completed');
 
     _initializeDefaults(); // no await for faster start times
     _initializeSets();
