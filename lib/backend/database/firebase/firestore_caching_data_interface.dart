@@ -78,6 +78,9 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
 
   @override
   Future<List<T>> reload() async {
+    if (name == "Goals") {
+      print("G");
+    }
     if (_box == null) {
       _box = await Hive.openBox(name);
     } else {
@@ -88,7 +91,7 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
     Map<String, T> entries = <String, T>{};
 
     if (queries == null) {
-      queries = [collectionReference.orderBy('month')];
+      queries = [collectionReference.limit(10000)];
     }
     for (final query in queries!) {
       QuerySnapshot<Map<String, dynamic>?> querySnapshot = await query.get();

@@ -56,7 +56,6 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       }
     }
     if (event is FredericOAuthSignInEvent) {
-      //Future.delayed(Duration(seconds: 1)).then((value) =>
       if (user.id.isNotEmpty) {
         FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
             FredericConcurrencyMessageType.UserHasAuthenticated));

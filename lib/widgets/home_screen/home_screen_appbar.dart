@@ -54,7 +54,6 @@ class HomeScreenAppbar extends StatelessWidget {
           if (user.inTrialMode)
             FredericContainerTransition(
                 tappable: true,
-                dragThreshold: double.infinity,
                 closedBorderRadius: 0,
                 transitionType: ContainerTransitionType.fadeThrough,
                 onClose: () =>

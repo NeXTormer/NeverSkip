@@ -6,6 +6,7 @@ import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/firebase/firebase_auth_interface.dart';
+import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/purchases/purchase_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
@@ -106,6 +107,7 @@ class FredericBackend implements FredericMessageProcessor {
     await activityManager.triggerManualFullReload();
     await workoutManager.triggerManualFullReload();
     await setManager.triggerManualFullReload();
+    await goalManager.triggerManualFullReload();
   }
 
   void _initialize() async {
@@ -143,6 +145,7 @@ class FredericBackend implements FredericMessageProcessor {
       _activityManager.reload(true);
       _setManager.reload(true);
       _workoutManager.reload(true);
+      _goalManager.reload(true);
     }
   }
 
@@ -194,12 +197,28 @@ class FredericBackend implements FredericMessageProcessor {
             .collection('users')
             .doc(_userManager.state.id)
             .collection('sets'),
+        queries: [
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(_userManager.state.id)
+              .collection('sets')
+              .orderBy('month')
+        ],
         firestoreInstance: firestoreInstance,
         generateObject: (id, data) => FredericSetDocument.fromMap(id, data)));
     return _setManager.reload();
   }
 
   Future<void> _initializeGoals() {
+    _goalManager.setDataInterface(FirestoreCachingDataInterface(
+        name: 'Goals',
+        collectionReference: FirebaseFirestore.instance
+            .collection('users')
+            .doc(_userManager.state.id)
+            .collection('goals'),
+        firestoreInstance: firestoreInstance,
+        generateObject: (id, data) => FredericGoal.fromMap(id, data)));
+
     return _goalManager.reload();
   }
 
