@@ -1,0 +1,70 @@
+{
+  "identifier" : "AD17127E",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "5.99",
+      "familyShareable" : false,
+      "internalID" : "1636145073",
+      "localizations" : [
+        {
+          "description" : "One time purchase to unlock the app forever",
+          "displayName" : "Unlock NeverSkip forever",
+          "locale" : "en_GB"
+        },
+        {
+          "description" : "Einmaliger Kauf der App.",
+          "displayName" : "NeverSkip Kaufen",
+          "locale" : "de"
+        }
+      ],
+      "productID" : "frederic_unlock_forever",
+      "referenceName" : "App OTP",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "6.99",
+      "familyShareable" : false,
+      "internalID" : "1636565787",
+      "localizations" : [
+        {
+          "description" : "Purchase a license for your account.",
+          "displayName" : "NeverSkip license",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "frederic_purchase_app_for_this_account",
+      "referenceName" : "NeverSkip license",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "1636565927",
+      "localizations" : [
+        {
+          "description" : "Purchase a license for your account.",
+          "displayName" : "NeverSkip license (discounted)",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "frederic_purchase_app_for_this_account_discounted",
+      "referenceName" : "NeverSkip license (Discounted)",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1560521531",
+    "_developerTeamID" : "GYVQ5BCFR6",
+    "_lastSynchronizedDate" : 680568792.40655696
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}
