@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
@@ -9,6 +10,10 @@ import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 
 class PurchaseScreen extends StatelessWidget {
   const PurchaseScreen({Key? key}) : super(key: key);
+
+  final String normalPrice = "6,99";
+  final String discountPrice = '4,99';
+  final String discount = "2";
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,7 @@ class PurchaseScreen extends StatelessWidget {
                                 'assets/images/abdominal-bench.png')),
                       ),
                       Text(
-                        'Purchase NeverSkip',
+                        tr('trial.purchase_app'),
                         style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
@@ -63,14 +68,14 @@ class PurchaseScreen extends StatelessWidget {
                             letterSpacing: 0.2),
                       ),
                       const SizedBox(height: 32),
-                      buildListEntry('Plan your workouts'),
-                      buildListEntry('See your progress'),
-                      buildListEntry('Stay Motivated'),
+                      buildListEntry(tr('trial.list_item_1')),
+                      buildListEntry(tr('trial.list_item_2')),
+                      buildListEntry(tr('trial.list_item_3')),
                       const SizedBox(height: 30),
                       if (user.tempPurchaseIsPending ?? false)
                         Container(
                           child: Text(
-                            "Purchase is pending, please keep the app open until the purchase is completed.",
+                            tr('trial.purchase_pending_text'),
                             style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
@@ -82,7 +87,7 @@ class PurchaseScreen extends StatelessWidget {
                         const SizedBox(height: 30),
                       const SizedBox(height: 30),
                       Text(
-                        'If you purchase within the trial period you get a €2 discount!',
+                        tr('trial.discount_description', args: [discount]),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,
@@ -91,7 +96,9 @@ class PurchaseScreen extends StatelessWidget {
                             letterSpacing: 0.2),
                       ),
                       const SizedBox(height: 18),
-                      FredericButton('Purchase during trial for €4,99',
+                      FredericButton(
+                          tr('trial.purchase_button_discount',
+                              args: [discountPrice]),
                           loading: user.hasActiveTrial &&
                               (user.tempPurchaseIsPending ?? false),
                           mainColor: user.hasActiveTrial
@@ -102,7 +109,9 @@ class PurchaseScreen extends StatelessWidget {
                             .purchaseForCurrentAccount(discount: true);
                       }),
                       const SizedBox(height: 18),
-                      FredericButton('Purchase after trial for €6,99',
+                      FredericButton(
+                          tr('trial.purchase_button_normal',
+                              args: [normalPrice]),
                           loading: (!user.hasActiveTrial) &&
                               (user.tempPurchaseIsPending ?? false),
                           mainColor: user.hasActiveTrial
@@ -114,7 +123,7 @@ class PurchaseScreen extends StatelessWidget {
                       }),
                       const SizedBox(height: 18),
                       Text(
-                        'If you have any questions regarding the purchase process feel free to contact me at hawkford@icloud.com',
+                        tr('trial.help_text'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,

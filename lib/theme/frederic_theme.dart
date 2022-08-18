@@ -58,7 +58,7 @@ class FredericColorTheme {
       this.mainColorInText = const Color(0xFF4791FF),
       this.mainColorLight = const Color(0xFF353535),
       this.accentColor = const Color(0xFF4791FF),
-      this.accentColorLight = const Color(0xFF353535),
+      this.accentColorLight = const Color(0x1A353535),
       this.positiveColor = const Color(0xFF1CBB3F),
       this.positiveColorLight = const Color(0x1A1CBB3F),
       this.negativeColor = Colors.red,
@@ -125,6 +125,7 @@ class FredericColorTheme {
       this.isColorful = true,
       this.greyTextColor = const Color(0xBF3A3A3A),
       this.cardBorderColor = const Color(0xFFE2E2E2)});
+
   FredericColorTheme.orangeDark(
       {this.name = "Dark Orange",
       this.uid = 6,
@@ -429,6 +430,7 @@ class FredericColorTheme {
   }
 
   static final List<FredericColorTheme> _allThemes = <FredericColorTheme>[];
+
   static List<FredericColorTheme> get allThemes {
     if (_allThemes.isEmpty) {
       for (int i = 1; i <= 13; i++) {
@@ -467,5 +469,6 @@ class FredericColorTheme {
   late final Color cardBorderColor;
 
   bool get isBright => !isDark;
+
   bool get isMonotone => !isColorful;
 }

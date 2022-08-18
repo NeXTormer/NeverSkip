@@ -88,12 +88,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   @override
   void onTransition(
       Transition<FredericAuthEvent, FredericUser> transition) async {
-    print("USER TRANSITION");
-    print("event: ${transition.event}");
-    print('current: ${transition.currentState.id}');
-    print("===");
-    print('next: ${transition.nextState.id}');
-    print('\n\n');
+    // print("USER TRANSITION");
+    // print("event: ${transition.event}");
+    // print('current: ${transition.currentState.id}');
+    // print("===");
+    // print('next: ${transition.nextState.id}');
+    // print('\n\n');
     super.onTransition(transition);
   }
 
