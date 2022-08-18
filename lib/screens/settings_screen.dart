@@ -45,10 +45,10 @@ class SettingsScreen extends StatelessWidget {
               SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             if (user.inTrialMode)
               SettingsSegment(
-                  title: tr('settings.trial'),
+                  title: tr('settings.trial.title'),
                   elements: <SettingsElement>[
                     SettingsElement(
-                      text: tr('settings.trial.title'),
+                      text: tr('settings.trial.button'),
                       subText:
                           '${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
                       onTap: () => Navigator.push(context,
@@ -118,7 +118,9 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.fire_extinguisher,
                   onTap: () => FirebaseCrashlytics.instance.crash(),
                 ),
-              ])
+              ]),
+            if (kDebugMode || user.isDeveloper)
+              SliverPadding(padding: const EdgeInsets.symmetric(vertical: 16)),
           ],
         ),
       ),

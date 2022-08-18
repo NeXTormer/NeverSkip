@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/screens/purchase_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -13,10 +14,9 @@ class FeatureNotPurchasedDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FredericActionDialog(
-      actionText: 'Buy',
-      title: 'Trial period over',
-      childText:
-          'Your trial period is over. You have to buy the app in order to use all its features again.',
+      actionText: tr('trial.trial_over_dialog.buy'),
+      title: tr('trial.trial_over_dialog.title'),
+      childText: tr('trial.trial_over_dialog.description'),
       onConfirm: () => Navigator.push(
           context, MaterialPageRoute(builder: (c) => PurchaseScreen())),
     );

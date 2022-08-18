@@ -27,63 +27,76 @@ class HomeScreenAppbar extends StatelessWidget {
       subtitle: tr('home.subtitle', args: [timeOfDay, userName]),
       leading: Row(
         children: [
-          FredericContainerTransition(
-              tappable: true,
-              closedBorderRadius: 32,
-              transitionType: ContainerTransitionType.fadeThrough,
-              onClose: () =>
-                  FredericBackend.instance.analytics.logEnterHomeScreen(),
-              childBuilder: (context, openContainer) {
-                return CircleAvatar(
-                  radius: 22,
-                  foregroundColor: theme.isBright
-                      ? Colors.white
-                      : theme.textColorColorfulBackground,
-                  backgroundColor: theme.isBright
-                      ? Colors.white
-                      : theme.textColorColorfulBackground,
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    foregroundImage: CachedNetworkImageProvider(user.image),
-                  ),
-                );
-              },
-              expandedChild: SettingsScreen()),
+          Stack(
+            children: [
+              FredericContainerTransition(
+                  tappable: true,
+                  closedBorderRadius: 32,
+                  transitionType: ContainerTransitionType.fadeThrough,
+                  onClose: () =>
+                      FredericBackend.instance.analytics.logEnterHomeScreen(),
+                  childBuilder: (context, openContainer) {
+                    return CircleAvatar(
+                      radius: 22,
+                      foregroundColor: theme.isBright
+                          ? Colors.white
+                          : theme.textColorColorfulBackground,
+                      backgroundColor: theme.isBright
+                          ? Colors.white
+                          : theme.textColorColorfulBackground,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        foregroundImage: CachedNetworkImageProvider(user.image),
+                      ),
+                    );
+                  },
+                  expandedChild: SettingsScreen()),
+              Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Icon(
+                    Icons.settings,
+                    size: 18,
+                    color: theme.greyColor,
+                  ))
+            ],
+          ),
           Expanded(child: Container()),
           if (user.inTrialMode)
             FredericContainerTransition(
                 tappable: true,
                 closedBorderRadius: 0,
+                closedColor:
+                    theme.isColorful ? theme.mainColor : theme.backgroundColor,
                 transitionType: ContainerTransitionType.fadeThrough,
                 onClose: () =>
                     FredericBackend.instance.analytics.logEnterHomeScreen(),
                 childBuilder: (context, openContainer) {
-                  return Container(
-                    color: theme.isColorful
-                        ? theme.mainColor
-                        : theme.backgroundColor,
-                    child: Row(
-                      children: [
-                        Text(
-                          '${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 16,
-                              color: theme.isColorful
-                                  ? theme.textColorColorfulBackground
-                                  : theme.textColor),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(Icons.monetization_on_outlined,
+                  return Row(
+                    children: [
+                      Text(
+                        '${user.getTrialDaysLeft() >= 0 ? "${user.getTrialDaysLeft()} days remaining" : "expired"}',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
                             color: theme.isColorful
                                 ? theme.textColorColorfulBackground
-                                : theme.mainColor,
-                            size: 24),
-                        const SizedBox(width: 8),
-                        FredericVerticalDivider(),
-                      ],
-                    ),
+                                : theme.textColor),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.monetization_on_outlined,
+                          color: theme.isColorful
+                              ? theme.textColorColorfulBackground
+                              : theme.mainColor,
+                          size: 24),
+                      const SizedBox(width: 8),
+                      FredericVerticalDivider(
+                        color: theme.isColorful
+                            ? theme.textColorColorfulBackground
+                            : theme.greyColor,
+                      ),
+                    ],
                   );
                 },
                 expandedChild: PurchaseScreen()),
