@@ -60,30 +60,39 @@ class FredericBackend implements FredericMessageProcessor {
   late final FirebaseFirestore firestoreInstance;
 
   late final FredericUserManager _userManager;
+
   FredericUserManager get userManager => _userManager;
 
   late final FredericSetManager _setManager;
+
   FredericSetManager get setManager => _setManager;
 
   late final FredericActivityManager _activityManager;
+
   FredericActivityManager get activityManager => _activityManager;
 
   late final FredericWorkoutManager _workoutManager;
+
   FredericWorkoutManager get workoutManager => _workoutManager;
 
   late final FredericGoalManager _goalManager;
+
   FredericGoalManager get goalManager => _goalManager;
 
   late final FredericMessageBus _eventBus;
+
   FredericMessageBus get messageBus => _eventBus;
 
   late final FredericStorageManager _storageManager;
+
   FredericStorageManager get storageManager => _storageManager;
 
   late final FredericAnalytics _analytics;
+
   FredericAnalytics get analytics => _analytics;
 
   late final PurchaseManager _purchaseManager;
+
   PurchaseManager get purchaseManager => _purchaseManager;
 
   final ToastManager toastManager = ToastManager();
@@ -91,14 +100,17 @@ class FredericBackend implements FredericMessageProcessor {
   bool get canUseApp => _userManager.state.canUseApp;
 
   WaitForX _waitUntilCoreDataHasLoaded = WaitForX();
+
   Future<void> waitUntilCoreDataIsLoaded() =>
       _waitUntilCoreDataHasLoaded.waitForX();
 
   WaitForX _waitUntilUserHasAuthenticated = WaitForX();
+
   Future<void> waitUntilUserHasAuthenticated() =>
       _waitUntilUserHasAuthenticated.waitForX();
 
   FredericDefaults? _defaults;
+
   FredericDefaults get defaults => _defaults ?? FredericDefaults.empty();
   DocumentReference<Map<String, dynamic>> _defaultsReference =
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
@@ -247,7 +259,9 @@ class FredericBackend implements FredericMessageProcessor {
     }
   }
 
-  void dispose() {}
+  void dispose() {
+    _purchaseManager.dispose();
+  }
 }
 
 class FredericDefaults {
@@ -266,6 +280,8 @@ class FredericDefaults {
   int? _trialDuration;
 
   int get trialDuration => _trialDuration ?? 30;
+
   List<String> get featuredActivities => _featuredActivities ?? <String>[];
+
   bool get alwaysReloadFromDB => _alwaysReloadFromDB ?? false;
 }

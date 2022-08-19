@@ -131,6 +131,23 @@ class PurchaseScreen extends StatelessWidget {
                             color: Colors.black54,
                             letterSpacing: 0.2),
                       ),
+                      const SizedBox(height: 18),
+                      GestureDetector(
+                        onTap: () {
+                          FredericBackend.instance.purchaseManager
+                              .restorePurchase();
+                        },
+                        child: Text(
+                          'Restore purchase',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black87,
+                              letterSpacing: 0.2),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                     ],
                   ),
                 ),

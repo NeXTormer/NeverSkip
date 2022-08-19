@@ -157,8 +157,10 @@ class _FredericBaseState extends State<FredericBase> {
       if (kDebugMode) DeviceOrientation.landscapeRight
     ]);
 
-    if (getIt.isRegistered<FredericBackend>())
+    if (getIt.isRegistered<FredericBackend>()) {
+      FredericBackend.instance.dispose();
       getIt.unregister<FredericBackend>();
+    }
     getIt.registerSingleton<FredericBackend>(FredericBackend());
   }
 

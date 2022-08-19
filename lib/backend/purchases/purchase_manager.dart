@@ -1,8 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 
+//
+// https://levelup.gitconnected.com/how-to-integrate-in-app-purchase-in-flutter-ios-54a66b7eff0b
+//
 class PurchaseManager {
   late final InAppPurchase _storeInstance;
   final FredericUserManager _userManager;
@@ -17,12 +23,20 @@ class PurchaseManager {
   ProductDetails? purchaseAppProduct;
   ProductDetails? purchaseAppDiscountedProduct;
 
+  bool isAvailable = false;
+
   PurchaseManager(this._userManager) {
     _storeInstance = InAppPurchase.instance;
   }
 
   Future<void> initialize() async {
     bool storeIsAvailable = await _storeInstance.isAvailable();
+
+    if (!storeIsAvailable) return;
+    isAvailable = true;
+
+    _purchaseStreamSubscription =
+        _storeInstance.purchaseStream.listen(_onPurchaseStreamUpdated);
 
     var response = await _storeInstance
         .queryProductDetails({PURCHASE_APP_KEY, PURCHASE_APP_DISCOUNTED_KEY});
@@ -39,8 +53,11 @@ class PurchaseManager {
       }
     }
 
-    _purchaseStreamSubscription =
-        _storeInstance.purchaseStream.listen(_onPurchaseStreamUpdated);
+    if (Platform.isIOS) {
+      var iosPlatformAddition = _storeInstance
+          .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
+      await iosPlatformAddition.setDelegate(FredericPaymentQueueDelegate());
+    }
   }
 
   void startFreeTrial() {
@@ -62,11 +79,13 @@ class PurchaseManager {
     }
 
     bool success = await _storeInstance.buyConsumable(
+        autoConsume: true,
         purchaseParam: PurchaseParam(
             productDetails: discount
                 ? purchaseAppDiscountedProduct!
                 : purchaseAppProduct!));
-    return '';
+
+    return success ? 'Success' : 'Error';
   }
 
   void _onPurchaseStreamUpdated(List<PurchaseDetails> detailsList) async {
@@ -99,7 +118,34 @@ class PurchaseManager {
     }
   }
 
-  void discard() {
+  Future<void> restorePurchase() {
+    return _storeInstance.restorePurchases();
+  }
+
+  void dispose() {
+    if (Platform.isIOS) {
+      var iosPlatformAddition = _storeInstance
+          .getPlatformAddition<InAppPurchaseStoreKitPlatformAddition>();
+      iosPlatformAddition.setDelegate(null);
+    }
     _purchaseStreamSubscription?.cancel();
+  }
+}
+
+/// Example implementation of the
+/// [`SKPaymentQueueDelegate`](https://developer.apple.com/documentation/storekit/skpaymentqueuedelegate?language=objc).
+///
+/// The payment queue delegate can be implementated to provide information
+/// needed to complete transactions.
+class FredericPaymentQueueDelegate implements SKPaymentQueueDelegateWrapper {
+  @override
+  bool shouldContinueTransaction(
+      SKPaymentTransactionWrapper transaction, SKStorefrontWrapper storefront) {
+    return true;
+  }
+
+  @override
+  bool shouldShowPriceConsent() {
+    return false;
   }
 }
