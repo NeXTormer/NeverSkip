@@ -66,6 +66,7 @@ class PurchaseManager {
   }
 
   Future<String> purchaseForCurrentAccount({required bool discount}) async {
+    print('Purchase button pressed, discount: $discount');
     if (discount) {
       assert(_userManager.state.hasActiveTrial);
     }
