@@ -32,7 +32,7 @@ class FredericMainApp extends StatelessWidget {
           ),
           FredericScreen(
             screen: WorkoutListScreen(),
-            icon: ExtraIcons.statistics,
+            icon: Icons.view_timeline_outlined,
             label: tr('workouts.navbar'),
           ),
         ],

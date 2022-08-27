@@ -37,6 +37,7 @@ class EditGoalDataScreen extends StatefulWidget {
   EditGoalDataScreen(this.goal, {this.sets, this.activity}) {
     isNewGoal = goal.id == 'new';
   }
+
   final FredericGoal goal;
 
   final FredericSetListData? sets;
@@ -136,6 +137,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 children: [
                   buildDatePickerRow('Start Date', Datepicker.Start,
                       initialDate: DateTime.now()),
+                  const SizedBox(height: 8),
                   buildDatePickerRow(
                     'End Date',
                     Datepicker.End,
@@ -589,11 +591,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         AnimatedContainer(
           height: datepickerStatus ? 150 : 0,
           duration: Duration(microseconds: 200),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(color: theme.cardBorderColor),
-          ),
           child: FredericDatePicker(
             initialDate: initialDate,
             onDateChanged: (date) {

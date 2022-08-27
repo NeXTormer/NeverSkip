@@ -30,7 +30,7 @@ class ShadowListView extends StatefulWidget {
 }
 
 class _ShadowListViewState extends State<ShadowListView> {
-  bool shadowLeft = true;
+  bool shadowLeft = false;
   bool shadowRight = false;
 
   @override

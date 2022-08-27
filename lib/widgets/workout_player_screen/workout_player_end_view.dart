@@ -28,7 +28,7 @@ class WorkoutPlayerEndView extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              'You completed your work for today.',
+              'You completed your workout for today.',
               style: TextStyle(fontSize: 15),
             ),
             SizedBox(height: 24),
@@ -36,7 +36,6 @@ class WorkoutPlayerEndView extends StatelessWidget {
             SizedBox(height: 4),
             Text('Your workout took ${state.getCurrentTimeFancy()}.'),
             SizedBox(height: 32),
-            Text('More coming in the future!'),
             Expanded(child: Container()),
             FredericButton('Done', onPressed: () {
               Navigator.of(context).pop();
