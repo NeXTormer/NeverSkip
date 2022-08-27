@@ -6,8 +6,8 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/shadow_custom_scroll_view.dart';
 
-class MonthVolumeChartPage extends StatelessWidget {
-  const MonthVolumeChartPage({required this.setListData, Key? key})
+class ActiveDaysChartPage extends StatelessWidget {
+  const ActiveDaysChartPage({required this.setListData, Key? key})
       : super(key: key);
 
   final FredericSetListData setListData;
@@ -176,7 +176,8 @@ class VolumeSliderMonth extends StatelessWidget {
                           tinted: tinted
                               ? (dates[i]?.month == startingDay.month &&
                                   (dates[i]?.day ?? 0) <= i + 1)
-                              : (dates[i]?.day ?? 0) >= i + 1),
+                              : (dates[i]?.day ?? 0) >=
+                                  i + 2 /* idk why i+2 works but it does*/),
                   ],
                 );
               }),
