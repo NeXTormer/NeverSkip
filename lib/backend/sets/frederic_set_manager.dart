@@ -26,6 +26,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   }
 
   SetVolumeDataRepresentation? volumeDataRepresentation;
+
   // SetProgressChartDataRepresentation? chartDataRepresentation;
 
   final int currentMonth = FredericSetDocument.calculateMonth(DateTime.now());
@@ -124,6 +125,7 @@ class FredericSetListData {
       required this.volume,
       required this.weeklyTrainingVolume,
       required this.muscleSplit});
+
   final List<String> changedActivities;
   final List<int> weeklyTrainingVolume;
   final List<int> muscleSplit;
@@ -158,6 +160,8 @@ class FredericSetListData {
     return setList.getTodaysSets(day);
   }
 
+  List<FredericActivity> getLastWorkoutActivities() {}
+
   bool operator ==(other) => false;
 
   bool hasChanged(String activityID) => changedActivities.contains(activityID);
@@ -168,6 +172,7 @@ class FredericSetListData {
 
 class FredericSetEvent {
   FredericSetEvent(this.changedActivities);
+
   final List<String> changedActivities;
 
   bool operator ==(other) => false;
