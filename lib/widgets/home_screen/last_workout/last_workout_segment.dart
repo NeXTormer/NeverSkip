@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:frederic/widgets/home_screen/last_workout_card.dart';
+import 'package:frederic/widgets/home_screen/last_workout/last_workout_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 
