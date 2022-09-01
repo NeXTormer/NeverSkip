@@ -26,6 +26,8 @@ class CalendarScreen extends StatelessWidget {
             builder: (context, workoutListData) {
           return BlocBuilder<FredericSetManager, FredericSetListData>(
               builder: (context, setListData) {
+            bool includeYesterday = DateTime.now().hour < 2;
+
             return CustomScrollView(
               physics: BouncingScrollPhysics(),
               slivers: [
@@ -39,8 +41,11 @@ class CalendarScreen extends StatelessWidget {
                 if (user.canUseApp)
                   SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
+                    if (includeYesterday) {
+                      index = index - 1;
+                    }
                     return CalendarDay(index, user, workoutListData,
-                        index == 0 ? setListData : null);
+                        (index == 0 || index == -1) ? setListData : null);
                   })),
                 if (!user.canUseApp)
                   SliverToBoxAdapter(

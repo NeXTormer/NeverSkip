@@ -15,14 +15,14 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 
 class CalendarDay extends StatelessWidget {
   CalendarDay(this.index, this.user, this.workoutListData, this.setListData) {
-    currentDayIsToday = index == 0;
+    currentDayIsTodayOrYesterday = index <= 0;
   }
 
   final FredericUser user;
   final FredericWorkoutListData workoutListData;
   final FredericSetListData? setListData;
 
-  late final bool currentDayIsToday;
+  late final bool currentDayIsTodayOrYesterday;
 
   final int index;
 
@@ -40,15 +40,19 @@ class CalendarDay extends StatelessWidget {
       }
     }
     bool dayFinished = true;
-    List<bool> completedActivityToday = currentDayIsToday
+    bool atLeastOneActivityFinished = false;
+    List<bool> completedActivityToday = currentDayIsTodayOrYesterday
         ? List.filled(activitiesDueToday.length, false)
         : <bool>[];
-    if (currentDayIsToday) {
+    if (currentDayIsTodayOrYesterday) {
       if (setListData != null) {
         for (int i = 0; i < activitiesDueToday.length; i++) {
           FredericSetList setList =
               setListData![activitiesDueToday[i].activity.id];
           bool activityFinished = setList.wasActiveToday();
+          if (activityFinished) {
+            atLeastOneActivityFinished = true;
+          }
           completedActivityToday[i] = activityFinished;
           if (activityFinished == false) {
             dayFinished = false;
@@ -57,7 +61,7 @@ class CalendarDay extends StatelessWidget {
       }
 
       print('build today'); // leave in to check for loops
-      if (dayFinished && activitiesDueToday.isNotEmpty) {
+      if (atLeastOneActivityFinished && activitiesDueToday.isNotEmpty) {
         FredericBackend.instance.messageBus.add(FredericSystemMessage(
             type: FredericSystemMessageType.CalendarDayCompleted,
             description: 'Calendar day completed'));
@@ -75,8 +79,8 @@ class CalendarDay extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _CalendarDayCard(
-                    day, activitiesDueToday, dayFinished && currentDayIsToday),
+                _CalendarDayCard(day, activitiesDueToday,
+                    dayFinished && currentDayIsTodayOrYesterday),
                 Expanded(
                   child: Column(
                     children:
@@ -242,6 +246,7 @@ class _CalendarDayCard extends StatelessWidget {
   /// very odd
   ///
   _CalendarDayCard(this.day, this.activities, this.completed);
+
   final DateTime day;
   final completed;
   final List<FredericWorkoutActivity> activities;
