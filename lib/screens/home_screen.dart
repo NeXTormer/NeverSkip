@@ -30,6 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
     FredericBackend.instance.toastManager.removeLoginLoadingToast(context);
     super.initState();
     Future(() async {
+      if (FredericBackend.instance.userManager.state.id.isEmpty) {
+        print(
+            "=====SHOULD NOT HAPPEN===== Showing homescreen with no user doc");
+      }
+
       if (FredericBackend.instance.userManager.firstUserSignUp) {
         FredericBackend.instance.userManager.firstUserSignUp = false;
         await Navigator.of(context)

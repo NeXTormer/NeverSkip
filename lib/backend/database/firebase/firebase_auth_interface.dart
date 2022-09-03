@@ -111,9 +111,9 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           await firestoreInstance.collection('users').doc(uid).get();
 
       if (!userDocument.exists) {
-        return FredericUser.noAuth(
-          statusMessage: 'Login Error. Please contact support. [Error UDNF]',
-        );
+        print(
+            'User Document not found, probably because auth stream updated while doc was not yet created');
+        return FredericUser.noAuth();
       }
       firestoreInstance
           .collection('users')
@@ -217,10 +217,14 @@ class FirebaseAuthInterface implements FredericAuthInterface {
 
     final userDocument =
         await firestoreInstance.collection('users').doc(id).get();
-    if (userDocument.data() == null)
+
+    if (userDocument.data() == null) {
+      print('UDNFAS');
       return FredericUser.noAuth(
           statusMessage:
               'Sign up Error. Please contact support. [Error UDNFAS]');
+    }
+
     return FredericUser.fromMap(id, email, userDocument.data()!);
   }
 
