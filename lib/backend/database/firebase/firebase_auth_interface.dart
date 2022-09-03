@@ -79,22 +79,19 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   }
 
   @override
-  Future<FredericUser> logInOAuth(OAuthCredential credential) async {
+  Future<FredericUser> logInOAuth(OAuthCredential credential,
+      {String? name}) async {
     final userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    String? name = userCredential.user?.displayName;
+    String? displayName = name ?? userCredential.user?.displayName;
     String? image = userCredential.user?.photoURL;
-
-    if (name == null) {
-      //TODO: Apple; get name and picture
-    }
 
     if (userCredential.additionalUserInfo?.isNewUser ?? true) {
       return _createDBEntry(
           id: userCredential.user!.uid,
           email: userCredential.user?.email ?? 'error-no-email',
-          name: name,
+          name: displayName,
           image: image,
           username: userCredential.additionalUserInfo?.username);
     } else {

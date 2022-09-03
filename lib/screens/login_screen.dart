@@ -149,17 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
-                            // if (Platform.isIOS && false) SizedBox(height: 20),
-                            // if (Platform.isIOS && false)
-                            //   SignInWithAppleButton(
-                            //       borderRadius: BorderRadius.circular(10),
-                            //       text: login
-                            //           ? 'Log in with Apple'
-                            //           : 'Sign up with Apple',
-                            //       style: theme.isDark
-                            //           ? SignInWithAppleButtonStyle.white
-                            //           : SignInWithAppleButtonStyle.black,
-                            //       onPressed: () => handleAppleSignIn(context)),
+                            if (Platform.isIOS) SizedBox(height: 20),
+                            if (Platform.isIOS)
+                              SignInWithAppleButton(
+                                  borderRadius: BorderRadius.circular(10),
+                                  style: theme.isDark
+                                      ? SignInWithAppleButtonStyle.white
+                                      : SignInWithAppleButtonStyle.black,
+                                  onPressed: () => handleAppleSignIn(context)),
                             SizedBox(height: 20),
                             if (Platform.isAndroid)
                               SignInWithGoogleButton(
@@ -235,8 +232,11 @@ class _LoginScreenState extends State<LoginScreen> {
         rawNonce: rawNonce,
       );
 
-      FredericBackend.instance.userManager
-          .add(FredericOAuthSignInEvent(oauthCredential, context));
+      FredericBackend.instance.userManager.add(FredericOAuthSignInEvent(
+          oauthCredential,
+          context: context,
+          name:
+              '${credential.givenName ?? ''} ${credential.familyName ?? ''}'));
     } catch (e) {
       print(e);
     }

@@ -38,15 +38,16 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
 }
 
 class FredericOAuthSignInEvent extends FredericAuthEvent {
-  FredericOAuthSignInEvent(this.authCredential, [this.context]);
+  FredericOAuthSignInEvent(this.authCredential, {this.name, this.context});
 
   final OAuthCredential authCredential;
   final BuildContext? context;
+  final String? name;
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
     FredericBackend.instance.analytics.analytics.logLogin(loginMethod: 'oauth');
-    return userManager.authInterface.logInOAuth(authCredential);
+    return userManager.authInterface.logInOAuth(authCredential, name: name);
   }
 }
 

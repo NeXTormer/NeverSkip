@@ -160,7 +160,7 @@ class FredericSetListData {
     return setList.getTodaysSets(day);
   }
 
-  List<FredericActivity> getLastWorkoutActivities() {}
+  // List<FredericActivity> getLastWorkoutActivities() {}
 
   bool operator ==(other) => false;
 
