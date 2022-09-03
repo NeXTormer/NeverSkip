@@ -32,20 +32,35 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   FutureOr<void> _onEvent(
       FredericAuthEvent event, Emitter<FredericUser> emit) async {
+    FredericUser? user;
     if (event is FredericUserDataChangedEvent) {
-      emit(await event.process(this));
+      user = await event.process(this);
+      emit(user);
       FredericBackend.instance.waitUntilCoreDataIsLoaded().then((value) {
         streakManager.handleUserDataChange();
         // don't call userDataChanged() here, it will create a memory leak
       });
     } else {
-      emit(await event.process(this));
+      user = await event.process(this);
+      emit(user);
     }
+
     if (event is FredericRestoreLoginStatusEvent ||
-        event is FredericEmailLoginEvent ||
-        event is FredericOAuthSignInEvent) {
-      FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
-          FredericConcurrencyMessageType.UserHasAuthenticated));
+        event is FredericEmailLoginEvent) {
+      if (user.id.isNotEmpty) {
+        FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+            FredericConcurrencyMessageType.UserHasAuthenticated));
+        print("User has authenticated [EMail, RESTORE] ($event) [$user]");
+      } else {
+        print("RestoreLoginStatusEvent or EmailLoginEvent without user uid");
+      }
+    }
+    if (event is FredericOAuthSignInEvent) {
+      if (user.id.isNotEmpty) {
+        FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+            FredericConcurrencyMessageType.UserHasAuthenticated));
+      }
+      print("User has authenticated [OAuth] [$user]");
     }
     if (event is FredericEmailSignupEvent) {
       firstUserSignUp = true;
@@ -60,8 +75,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
   }
 
-  void userDataChanged() {
-    authInterface.update(state);
+  FutureOr<void> userDataChanged([bool waitForUpdate = false]) async {
+    if (waitForUpdate) {
+      await authInterface.update(state);
+    } else {
+      authInterface.update(state);
+    }
     state.calculateDerivedAttributes();
     add(FredericUserDataChangedEvent());
   }
@@ -71,9 +90,9 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       Transition<FredericAuthEvent, FredericUser> transition) async {
     // print("USER TRANSITION");
     // print("event: ${transition.event}");
-    // print('current: ${transition.currentState.activeWorkouts}');
+    // print('current: ${transition.currentState.id}');
     // print("===");
-    // print('next: ${transition.nextState.activeWorkouts}');
+    // print('next: ${transition.nextState.id}');
     // print('\n\n');
     super.onTransition(transition);
   }
@@ -91,8 +110,8 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     FredericBase.forceFullRestart(context);
   }
 
-  void addActiveWorkout(String workoutID) {
-    state.addActiveWorkout(workoutID);
+  void addActiveWorkout(String workoutID, DateTime? startDate) {
+    state.addActiveWorkout(workoutID, startDate);
     userDataChanged();
   }
 

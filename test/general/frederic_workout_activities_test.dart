@@ -79,7 +79,8 @@ void main() {
       workout.updateData(newStartDate: start, newRepeating: true);
 
       void checkDay(int day, int week) {
-        var list = activities.getDay(start.add(Duration(days: week * 7 + day)));
+        var list = activities.getDay(
+            start.add(Duration(days: week * 7 + day)), workout.startDate);
 
         expect(list.isNotEmpty, true);
         var activity = list.first;
@@ -101,7 +102,8 @@ void main() {
 
       void checkDay(int day, int week) {
         bool weekHasActivities = week % 2 == 0;
-        var list = activities.getDay(start.add(Duration(days: week * 7 + day)));
+        var list = activities.getDay(
+            start.add(Duration(days: week * 7 + day)), workout.startDate);
 
         if (!weekHasActivities) {
           expect(list.isEmpty, true);

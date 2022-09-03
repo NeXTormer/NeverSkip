@@ -8,6 +8,7 @@ class PictureIcon extends StatelessWidget {
     Color? mainColor,
     Color? accentColor,
     this.borderRadius = 10,
+    this.iconPadding = 10,
   }) : icon = null {
     this.mainColor = mainColor ?? theme.mainColor;
     this.accentColor = accentColor ?? theme.mainColorLight;
@@ -18,6 +19,7 @@ class PictureIcon extends StatelessWidget {
     Color? mainColor,
     Color? accentColor,
     this.borderRadius = 10,
+    this.iconPadding = 10,
   }) : url = null {
     this.mainColor = mainColor ?? theme.mainColor;
     this.accentColor = accentColor ?? theme.mainColorLight;
@@ -27,6 +29,7 @@ class PictureIcon extends StatelessWidget {
   final String? url;
   late final Color mainColor;
   final double borderRadius;
+  final double iconPadding;
   late final Color accentColor;
 
   @override
@@ -35,7 +38,7 @@ class PictureIcon extends StatelessWidget {
       return AspectRatio(
         aspectRatio: 1,
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(iconPadding),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
               color: theme.mainColorLight),
@@ -45,7 +48,7 @@ class PictureIcon extends StatelessWidget {
       return AspectRatio(
         aspectRatio: 1,
         child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(iconPadding),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(borderRadius),
                 color: accentColor),
@@ -64,7 +67,7 @@ class PictureIcon extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(iconPadding),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(borderRadius),
               color: accentColor),

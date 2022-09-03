@@ -79,22 +79,19 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   }
 
   @override
-  Future<FredericUser> logInOAuth(OAuthCredential credential) async {
+  Future<FredericUser> logInOAuth(OAuthCredential credential,
+      {String? name}) async {
     final userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    String? name = userCredential.user?.displayName;
+    String? displayName = name ?? userCredential.user?.displayName;
     String? image = userCredential.user?.photoURL;
-
-    if (name == null) {
-      //TODO: Apple; get name and picture
-    }
 
     if (userCredential.additionalUserInfo?.isNewUser ?? true) {
       return _createDBEntry(
           id: userCredential.user!.uid,
           email: userCredential.user?.email ?? 'error-no-email',
-          name: name,
+          name: displayName,
           image: image,
           username: userCredential.additionalUserInfo?.username);
     } else {
@@ -114,9 +111,9 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           await firestoreInstance.collection('users').doc(uid).get();
 
       if (!userDocument.exists) {
-        return FredericUser.noAuth(
-          statusMessage: 'Login Error. Please contact support. [Error UDNF]',
-        );
+        print(
+            'User Document not found, probably because auth stream updated while doc was not yet created');
+        return FredericUser.noAuth();
       }
       firestoreInstance
           .collection('users')
@@ -207,7 +204,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
         .doc('default_user')
         .get();
 
-    firestoreInstance.collection('users').doc(id).set({
+    await firestoreInstance.collection('users').doc(id).set({
       'id': id,
       'name': name ?? defaultDoc.data()?['name'] ?? '',
       'image': image ?? defaultDoc.data()?['image'] ?? '',
@@ -220,10 +217,14 @@ class FirebaseAuthInterface implements FredericAuthInterface {
 
     final userDocument =
         await firestoreInstance.collection('users').doc(id).get();
-    if (userDocument.data() == null)
+
+    if (userDocument.data() == null) {
+      print('UDNFAS');
       return FredericUser.noAuth(
           statusMessage:
               'Sign up Error. Please contact support. [Error UDNFAS]');
+    }
+
     return FredericUser.fromMap(id, email, userDocument.data()!);
   }
 

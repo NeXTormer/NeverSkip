@@ -12,6 +12,7 @@ import 'package:frederic/widgets/charts/week_volume_chart_segment.dart';
 import 'package:frederic/widgets/home_screen/achievement_segment.dart';
 import 'package:frederic/widgets/home_screen/goal_segment.dart';
 import 'package:frederic/widgets/home_screen/home_screen_appbar.dart';
+import 'package:frederic/widgets/home_screen/last_workout/last_workout_segment.dart';
 import 'package:frederic/widgets/home_screen/misc_stuff_segment.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
@@ -29,17 +30,23 @@ class _HomeScreenState extends State<HomeScreen> {
     FredericBackend.instance.toastManager.removeLoginLoadingToast(context);
     super.initState();
     Future(() async {
+      if (FredericBackend.instance.userManager.state.id.isEmpty) {
+        print(
+            "=====SHOULD NOT HAPPEN===== Showing homescreen with no user doc");
+      }
+
       if (FredericBackend.instance.userManager.firstUserSignUp) {
         FredericBackend.instance.userManager.firstUserSignUp = false;
         await Navigator.of(context)
             .push(MaterialPageRoute(builder: (c) => OnboardingScreen()));
+      }
+      if (!FredericBackend.instance.userManager.state.trialStarted) {
         CupertinoScaffold.showCupertinoModalBottomSheet(
             enableDrag: false,
             isDismissible: false,
             context: context,
             builder: (ctx) => StartTrialScreen());
       }
-      //if(FredericBackend.instance.userManager.firstUserSignUp == false && )
     });
   }
 
@@ -54,7 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenAppbar(user),
               ProgressIndicatorSegment(),
               GoalSegment(),
-              MonthVolumeChartSegment(),
+              LastWorkoutSegment(),
+              ActiveDaysChartSegment(),
               ProgressChartSegment(),
               MuscleGroupChartSegment(),
               WeekVolumeChartSegment(),

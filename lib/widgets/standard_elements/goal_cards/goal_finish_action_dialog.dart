@@ -250,7 +250,9 @@ class _GoalFinishActionDialogState extends State<GoalFinishActionDialog>
     var goalscount = FredericBackend.instance.userManager.state.goalsCount;
     if (goalscount >= 1)
       FredericBackend.instance.userManager.state.goalsCount -= 1;
-    widget.goal.isCompleted = true;
+    widget.goal.updateData(isCompleted: true);
+    FredericBackend.instance.goalManager
+        .add(FredericGoalUpdateEvent(widget.goal));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Navigator.of(context).pop();
     });

@@ -35,15 +35,19 @@ class ActivityPlayerSetSegment extends StatelessWidget {
           bool everythingComplete = numberOfSetsDone >= numberOfSetsTODO;
 
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            controller.jumpTo(0);
             jumpTo(indexCurrentSet * itemExtent);
           });
           Future(() {
-            Provider.of<BooleanChangeNotifier>(context, listen: false).value =
+            Provider
+                .of<BooleanChangeNotifier>(context, listen: false)
+                .value =
                 everythingComplete;
           });
 
           //int currentFirstItem = widget.controller.offset ~/ itemExtent;
           //print(currentFirstItem);
+
 
           return LayoutBuilder(builder: (context, constraints) {
             double availableHeight = constraints.maxHeight;
@@ -64,7 +68,7 @@ class ActivityPlayerSetSegment extends StatelessWidget {
                       }
                     },
                     child:
-                        NotificationListener<OverscrollIndicatorNotification>(
+                    NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
                         overscroll.disallowIndicator();
                         return true;

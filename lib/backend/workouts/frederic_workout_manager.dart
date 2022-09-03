@@ -68,7 +68,7 @@ class FredericWorkoutManager
 
   Future<void> _deleteWorkout(FredericWorkout workout) {
     if (FredericBackend.instance.userManager.state.activeWorkouts
-        .contains(workout.id)) {
+        .containsKey(workout.id)) {
       FredericBackend.instance.userManager.removeActiveWorkout(workout.id);
     }
     _workouts.remove(workout.id);

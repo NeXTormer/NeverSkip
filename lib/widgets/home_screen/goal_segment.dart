@@ -100,7 +100,7 @@ class GoalSegment extends StatelessWidget {
       context: context,
       builder: (c) => Scaffold(
           body: EditGoalDataScreen(
-        FredericGoal.empty(FredericBackend.instance.goalManager),
+        FredericGoal.empty(),
         sets: setData,
       )),
     );

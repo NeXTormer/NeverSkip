@@ -1,44 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/goals/frederic_goal_manager.dart';
+import 'package:frederic/backend/database/frederic_data_object.dart';
 
 ///
 /// Represents a single Goal
 ///
-class FredericGoal {
+class FredericGoal implements FredericDataObject {
   ///
   /// Construct FredericGoal usin a DocumentSnapshot from the database
   ///
-  FredericGoal(DocumentSnapshot<Object?> snapshot, this._goalManager)
-      : goalID = snapshot.id {
+  FredericGoal(DocumentSnapshot<Object?> snapshot) : id = snapshot.id {
     var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
     if (data == null) return;
-    _activityID = data['activity'];
-    _title = data['title'];
-    _image = data['image'];
-    _unit = data['unit'];
-    _startState = data['startstate'];
-    _endState = data['endstate'];
-    _currentState = data['currentstate'];
-    _startDate = data['startdate'];
-    _endDate = data['enddate'];
-    _isCompleted = data['iscompleted'];
-    _isDeleted = data['isdeleted'];
+    fromMap(snapshot.id, data);
+  }
+
+  FredericGoal.fromMap(this.id, Map<String, dynamic> data) {
+    fromMap(id, data);
   }
 
   ///
   /// Constructs an empty Goal with an empty goalID
   ///
-  FredericGoal.empty(this._goalManager) : goalID = 'new';
+  FredericGoal.empty() : id = 'new';
 
   ///
   /// Returns an existing Goal usin the provided ID. If the Goal
   /// does not exist, an empty Goal is returned.
   ///
   factory FredericGoal.fromID(String id) {
-    return FredericBackend.instance.goalManager[id] ??
-        FredericGoal.empty(FredericBackend.instance.goalManager);
+    return FredericBackend.instance.goalManager[id] ?? FredericGoal.empty();
   }
 
   FredericGoal.create({
@@ -49,11 +40,11 @@ class FredericGoal {
     required num startState,
     required num endState,
     required num currentState,
-    required Timestamp startDate,
-    required Timestamp endDate,
+    required DateTime startDate,
+    required DateTime endDate,
     required bool isComleted,
     required bool isDeleted,
-  })  : goalID = 'new',
+  })  : id = 'new',
         _title = title,
         _activityID = activity,
         _image = image,
@@ -64,11 +55,10 @@ class FredericGoal {
         _startDate = startDate,
         _endDate = endDate,
         _isCompleted = isComleted,
-        _isDeleted = isDeleted,
-        _goalManager = FredericBackend.instance.goalManager;
+        _isDeleted = isDeleted;
 
-  final FredericGoalManager _goalManager;
-  final String goalID;
+  String id;
+
   String? _activityID;
   String? _title;
   String? _image;
@@ -77,8 +67,8 @@ class FredericGoal {
   num? _startState;
   num? _endState;
   num? _currentState;
-  Timestamp? _startDate;
-  Timestamp? _endDate;
+  DateTime? _startDate;
+  DateTime? _endDate;
   bool? _isCompleted;
   bool? _isDeleted;
 
@@ -91,203 +81,38 @@ class FredericGoal {
   num get startState => _startState ?? 0;
   num get endState => _endState ?? 0;
   num get currentState => _currentState ?? -1;
-  DateTime get startDate => _startDate?.toDate() ?? DateTime.now();
-  DateTime get endDate => _endDate?.toDate() ?? DateTime.now();
+  DateTime get startDate => _startDate ?? DateTime.now();
+  DateTime get endDate => _endDate ?? DateTime.now();
   bool get isCompleted => _isCompleted ?? false;
   bool get isNotCompleted => !isCompleted;
   bool get isDeleted => _isDeleted ?? false;
   bool get isLoss => startState > endState;
 
-  ///
-  /// Updates the title of the goal in the Database
-  ///
-  set title(String value) {
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'title': value});
-      _title = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
+  @override
+  void fromMap(String id, Map<String, dynamic> data) {
+    this.id = id;
+    _activityID = data['activity'];
+    _title = data['title'];
+    _image = data['image'];
+    _unit = data['unit'];
+    _startState = data['startstate'];
+    _endState = data['endstate'];
+    _currentState = data['currentstate'];
+    _startDate = _loadDate(data['startdate']);
+    _endDate = _loadDate(data['enddate']);
+    _isCompleted = data['iscompleted'];
+    _isDeleted = data['isdeleted'];
   }
 
-  set activityID(String value) {
-    if (value != '') {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'activity': value});
-      _activityID = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
+  DateTime? _loadDate(dynamic data) {
+    if (data is DateTime || data is DateTime?) return data;
+    if (data is Timestamp || data is Timestamp?) return data?.toDate();
+    return null;
   }
 
-  ///
-  /// Updates the image url of the goal in the Database
-  ///
-  set image(String value) {
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'image': value});
-      _image = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  set unit(String value) {
-    if (value.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'unit': value});
-      _unit = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the start state of the goal in the Database
-  ///
-  set startState(num value) {
-    if (value >= 0) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'startstate': value});
-      _startState = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the end state of the goal in the Database
-  ///
-  set endState(num value) {
-    if (value >= 0) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'endstate': value});
-      _endState = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the current state of the goal in the Database
-  ///
-  set currentState(num value) {
-    if (value >= 0) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'currentstate': value});
-      _currentState = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the start date of the goal in the Database
-  ///
-  set startDate(DateTime value) {
-    if (true) {
-      // TODO sinnvoller check
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'startDate': value});
-      _startDate = Timestamp.fromDate(value);
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the end date of the goal in the Database
-  ///
-  set endDate(DateTime value) {
-    if (true) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'endDate': value});
-      _endDate = Timestamp.fromDate(value);
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the isCompleted boolean of the goal in the Database
-  ///
-  set isCompleted(bool value) {
-    if (value != _isCompleted) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'iscompleted': value});
-      _isCompleted = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  ///
-  /// Updates the isDeleted boolean of the goal in the Database
-  ///
-  set isDeleted(bool value) {
-    if (value != _isDeleted) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser?.uid)
-          .collection('goals')
-          .doc(goalID)
-          .update({'isdeleted': value});
-      _isDeleted = value;
-      FredericBackend.instance.goalManager.add(FredericGoalUpdateEvent(goalID));
-    }
-  }
-
-  void save({
-    required String activityID,
-    required String title,
-    required String image,
-    required String unit,
-    required num startState,
-    required num endState,
-    required num currentState,
-    required Timestamp startDate,
-    required Timestamp endDate,
-    required bool isComleted,
-    required bool isDeleted,
-  }) async {
-    if (goalID != 'new') return;
-    CollectionReference goals = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection('goals');
-    var newGoal = await goals.add({
+  @override
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
       'activity': activityID,
       'title': title,
       'image': image,
@@ -299,27 +124,46 @@ class FredericGoal {
       'enddate': endDate,
       'iscompleted': isCompleted,
       'isdeleted': isDeleted,
-    });
-    var snapshot = await newGoal.get();
-    _goalManager
-        .add(FredericGoalCreateEvent(FredericGoal(snapshot, _goalManager)));
+    };
   }
 
-  void delete() {
-    _goalManager.add(FredericGoalDeleteEvent(this));
+  void updateData({
+    String? activityID,
+    String? title,
+    String? image,
+    String? unit,
+    num? startState,
+    num? endState,
+    num? currentState,
+    DateTime? startDate,
+    DateTime? endDate,
+    bool? isCompleted,
+    bool? isDeleted,
+  }) {
+    _activityID = activityID ?? _activityID;
+    _title = title ?? _title;
+    _image = image ?? _image;
+    _unit = unit ?? _unit;
+    _startState = startState ?? _startState;
+    _endState = endState ?? _endState;
+    _currentState = currentState ?? _currentState;
+    _startDate = startDate ?? _startDate;
+    _endDate = endDate ?? _endDate;
+    _isCompleted = isCompleted ?? _isCompleted;
+    _isDeleted = isDeleted ?? _isDeleted;
   }
 
   @override
   String toString() {
-    return 'FredericGoal[id: $goalID, title: $title]';
+    return 'FredericGoal[id: $id, title: $title]';
   }
 
   @override
   bool operator ==(Object other) {
-    if (other is FredericGoal) return this.goalID == other.goalID;
+    if (other is FredericGoal) return this.id == other.id;
     return false;
   }
 
   @override
-  int get hashCode => goalID.hashCode;
+  int get hashCode => id.hashCode;
 }

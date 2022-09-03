@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class FredericVerticalDivider extends StatelessWidget {
-  const FredericVerticalDivider({this.length = 18, this.thickness = 1});
+  const FredericVerticalDivider(
+      {this.length = 18,
+      this.thickness = 1,
+      this.color = const Color(0xFFCDCDCD)});
 
   final double length;
   final double thickness;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +16,7 @@ class FredericVerticalDivider extends StatelessWidget {
       width: thickness,
       height: length,
       decoration: BoxDecoration(
-          color: const Color(0xFFCDCDCD),
-          borderRadius: BorderRadius.all(Radius.circular(100))),
+          color: color, borderRadius: BorderRadius.all(Radius.circular(100))),
     );
   }
 }

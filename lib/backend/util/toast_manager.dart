@@ -43,6 +43,29 @@ class ToastManager {
     );
   }
 
+  void showPurchaseSuccessfulToast(BuildContext context) {
+    FToast toast = FToast();
+    toast.init(context);
+    toast.showToast(
+      toastDuration: Duration(seconds: 3),
+      gravity: ToastGravity.CENTER,
+      child: Container(
+        decoration: boxDecoration,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Thanks for your purchase :)',
+              style: textStyle,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void removeLoginLoadingToast(BuildContext context) {
     _loginLoadingToast.removeQueuedCustomToasts();
     _loginLoadingToast.removeCustomToast();

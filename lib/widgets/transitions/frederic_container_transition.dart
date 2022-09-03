@@ -11,6 +11,7 @@ class FredericContainerTransition extends StatelessWidget {
     this.customBorder,
     this.containerKey,
     this.onClose,
+    this.closedColor,
     this.tappable = false,
     this.transitionType = ContainerTransitionType.fadeThrough,
     Key? key,
@@ -25,6 +26,8 @@ class FredericContainerTransition extends StatelessWidget {
   final ShapeBorder? customBorder;
   final ContainerTransitionType transitionType;
   final void Function()? onClose;
+  final Color? closedColor;
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +35,25 @@ class FredericContainerTransition extends StatelessWidget {
       key: containerKey,
       tappable: tappable,
       closedBuilder: childBuilder,
-      openBuilder: (context, closeContainer) => GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            if (details.delta.dx >= dragThreshold) {
-              onClose?.call();
-              closeContainer();
-            }
-          },
-          child: SafeArea(bottom: false, child: expandedChild)),
+      openBuilder: (context, closeContainer) =>
+          GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                if (details.delta.dx >= dragThreshold) {
+                  onClose?.call();
+                  closeContainer();
+                }
+              },
+              child: SafeArea(bottom: false, child: expandedChild)),
       openElevation: 0,
       closedElevation: 0,
       transitionType: transitionType,
       openColor: theme.backgroundColor,
-      closedColor: theme.backgroundColor,
+      closedColor: closedColor ?? theme.backgroundColor,
       closedShape: customBorder != null
           ? customBorder!
           : RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(closedBorderRadius))),
+          borderRadius:
+          BorderRadius.all(Radius.circular(closedBorderRadius))),
     );
   }
 }

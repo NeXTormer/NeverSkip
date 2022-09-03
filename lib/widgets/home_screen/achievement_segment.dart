@@ -53,7 +53,7 @@ class AchievementSegment extends StatelessWidget {
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       physics: BouncingScrollPhysics(),
-                      itemCount: user.achievementsCount,
+                      itemCount: goals.length,
                       itemBuilder: (context, index) {
                         try {
                           return Padding(

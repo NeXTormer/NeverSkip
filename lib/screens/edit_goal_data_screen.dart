@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
+import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
@@ -35,8 +35,9 @@ enum FormError {
 
 class EditGoalDataScreen extends StatefulWidget {
   EditGoalDataScreen(this.goal, {this.sets, this.activity}) {
-    isNewGoal = goal.goalID == 'new';
+    isNewGoal = goal.id == 'new';
   }
+
   final FredericGoal goal;
 
   final FredericSetListData? sets;
@@ -136,6 +137,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                 children: [
                   buildDatePickerRow('Start Date', Datepicker.Start,
                       initialDate: DateTime.now()),
+                  const SizedBox(height: 8),
                   buildDatePickerRow(
                     'End Date',
                     Datepicker.End,
@@ -171,12 +173,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
-// enum FormError {
-//   CurrentStateEqualsEndStart,
-//   StartStateEqualsEndState,
-//   EndDateSmallerThenStartDate,
-//   StartDateEqualsEndDate
-// }
   void saveData() {
     FormError _checkForm() {
       if (startStateController.value == endStateController.value) {
@@ -224,7 +220,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           _showErrorMessage('The end date must not be before the start date!');
           break;
         case FormError.Success:
-          widget.goal.save(
+          widget.goal.updateData(
             activityID: dummyActivity == null ? '' : dummyActivity!.id,
             title: titleController.text,
             image: dummyActivity != null
@@ -234,11 +230,14 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             startState: startStateController.value,
             currentState: currentStateController.value,
             endState: endStateController.value,
-            startDate: Timestamp.fromDate(selectedStartDate!),
-            endDate: Timestamp.fromDate(selectedEndDate!),
-            isComleted: false,
+            startDate: selectedStartDate!,
+            endDate: selectedEndDate!,
+            isCompleted: false,
             isDeleted: false,
           );
+          FredericBackend.instance.goalManager
+              .add(FredericGoalCreateEvent(widget.goal));
+
           FredericBackend.instance.userManager.state.goalsCount += 1;
           return;
         default:
@@ -246,15 +245,18 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           return;
       }
     } else {
-      widget.goal.title = titleController.text;
-      widget.goal.startState = startStateController.value;
-      widget.goal.currentState = currentStateController.value == 0
-          ? dummyCurrentState
-          : currentStateController.value;
-      widget.goal.endState = endStateController.value;
-      widget.goal.startDate = selectedStartDate!;
-      widget.goal.endDate = selectedEndDate!;
-      widget.goal.unit = unitSliderController.value;
+      widget.goal.updateData(
+        title: titleController.text,
+        unit: unitSliderController.value,
+        startState: startStateController.value,
+        currentState: currentStateController.value,
+        endState: endStateController.value,
+        startDate: selectedStartDate!,
+        endDate: selectedEndDate!,
+      );
+
+      FredericBackend.instance.goalManager
+          .add(FredericGoalUpdateEvent(widget.goal));
     }
   }
 
@@ -589,11 +591,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
         AnimatedContainer(
           height: datepickerStatus ? 150 : 0,
           duration: Duration(microseconds: 200),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(color: theme.cardBorderColor),
-          ),
           child: FredericDatePicker(
             initialDate: initialDate,
             onDateChanged: (date) {

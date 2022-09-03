@@ -6,7 +6,9 @@ import 'package:frederic/backend/analytics/frederic_analytics_service.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/concurrency/frederic_concurrency_message.dart';
 import 'package:frederic/backend/database/firebase/firebase_auth_interface.dart';
+import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
+import 'package:frederic/backend/purchases/purchase_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/storage/frederic_storage_manager.dart';
@@ -39,6 +41,8 @@ class FredericBackend implements FredericMessageProcessor {
     _userManager = FredericUserManager(
         backend: this, authInterface: firebaseAuthInterface);
 
+    _purchaseManager = PurchaseManager(_userManager);
+
     _activityManager = FredericActivityManager();
     _workoutManager = FredericWorkoutManager(activityManager: _activityManager);
 
@@ -56,40 +60,57 @@ class FredericBackend implements FredericMessageProcessor {
   late final FirebaseFirestore firestoreInstance;
 
   late final FredericUserManager _userManager;
+
   FredericUserManager get userManager => _userManager;
 
   late final FredericSetManager _setManager;
+
   FredericSetManager get setManager => _setManager;
 
   late final FredericActivityManager _activityManager;
+
   FredericActivityManager get activityManager => _activityManager;
 
   late final FredericWorkoutManager _workoutManager;
+
   FredericWorkoutManager get workoutManager => _workoutManager;
 
   late final FredericGoalManager _goalManager;
+
   FredericGoalManager get goalManager => _goalManager;
 
   late final FredericMessageBus _eventBus;
+
   FredericMessageBus get messageBus => _eventBus;
 
   late final FredericStorageManager _storageManager;
+
   FredericStorageManager get storageManager => _storageManager;
 
   late final FredericAnalytics _analytics;
+
   FredericAnalytics get analytics => _analytics;
+
+  late final PurchaseManager _purchaseManager;
+
+  PurchaseManager get purchaseManager => _purchaseManager;
 
   final ToastManager toastManager = ToastManager();
 
+  bool get canUseApp => _userManager.state.canUseApp;
+
   WaitForX _waitUntilCoreDataHasLoaded = WaitForX();
+
   Future<void> waitUntilCoreDataIsLoaded() =>
       _waitUntilCoreDataHasLoaded.waitForX();
 
   WaitForX _waitUntilUserHasAuthenticated = WaitForX();
+
   Future<void> waitUntilUserHasAuthenticated() =>
       _waitUntilUserHasAuthenticated.waitForX();
 
   FredericDefaults? _defaults;
+
   FredericDefaults get defaults => _defaults ?? FredericDefaults.empty();
   DocumentReference<Map<String, dynamic>> _defaultsReference =
       FirebaseFirestore.instance.collection('defaults').doc('defaults');
@@ -98,13 +119,16 @@ class FredericBackend implements FredericMessageProcessor {
     await activityManager.triggerManualFullReload();
     await workoutManager.triggerManualFullReload();
     await setManager.triggerManualFullReload();
+    await goalManager.triggerManualFullReload();
   }
 
   void _initialize() async {
     FredericProfiler.log('Start _initialize');
 
+    Future<void> purchaseManagerFuture = _purchaseManager.initialize();
+
     await waitUntilUserHasAuthenticated();
-    FredericProfiler.log('User has Authenticated');
+    FredericProfiler.log('waitUntilUserHasAuthenticated completed');
 
     _initializeDefaults(); // no await for faster start times
     _initializeSets();
@@ -114,6 +138,7 @@ class FredericBackend implements FredericMessageProcessor {
 
     _setManager.initializeDataRepresentations(); // asynchronous
 
+    await purchaseManagerFuture;
     _waitUntilCoreDataHasLoaded.complete();
 
     FredericProfiler.log('Finished _initialize');
@@ -132,6 +157,7 @@ class FredericBackend implements FredericMessageProcessor {
       _activityManager.reload(true);
       _setManager.reload(true);
       _workoutManager.reload(true);
+      _goalManager.reload(true);
     }
   }
 
@@ -183,12 +209,28 @@ class FredericBackend implements FredericMessageProcessor {
             .collection('users')
             .doc(_userManager.state.id)
             .collection('sets'),
+        queries: [
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(_userManager.state.id)
+              .collection('sets')
+              .orderBy('month')
+        ],
         firestoreInstance: firestoreInstance,
         generateObject: (id, data) => FredericSetDocument.fromMap(id, data)));
     return _setManager.reload();
   }
 
   Future<void> _initializeGoals() {
+    _goalManager.setDataInterface(FirestoreCachingDataInterface(
+        name: 'Goals',
+        collectionReference: FirebaseFirestore.instance
+            .collection('users')
+            .doc(_userManager.state.id)
+            .collection('goals'),
+        firestoreInstance: firestoreInstance,
+        generateObject: (id, data) => FredericGoal.fromMap(id, data)));
+
     return _goalManager.reload();
   }
 
@@ -217,7 +259,9 @@ class FredericBackend implements FredericMessageProcessor {
     }
   }
 
-  void dispose() {}
+  void dispose() {
+    _purchaseManager.dispose();
+  }
 }
 
 class FredericDefaults {
@@ -226,13 +270,18 @@ class FredericDefaults {
         document.data()?['featured_activities']?.cast<String>() ??
             const <String>[];
     _alwaysReloadFromDB = document.data()?['always_reload_from_db'];
+    _trialDuration = document.data()?['trial_duration'];
   }
 
   FredericDefaults.empty();
 
   List<String>? _featuredActivities;
   bool? _alwaysReloadFromDB;
+  int? _trialDuration;
+
+  int get trialDuration => _trialDuration ?? 30;
 
   List<String> get featuredActivities => _featuredActivities ?? <String>[];
+
   bool get alwaysReloadFromDB => _alwaysReloadFromDB ?? false;
 }
