@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.0.1
   flutter_bloc: ^8.0.1
   hive_flutter: ^1.1.0
+  path_provider: ^2.0.2
   flutter_phoenix: ^1.0.0
   shared_preferences: ^2.0.5
 
@@ -54,10 +55,12 @@ dependencies:
   shimmer: ^2.0.0
   fl_chart: ^0.45.0
   confetti: ^0.6.0
+  screenshot: ^1.2.3
   animations: ^2.0.1
   fluttertoast: ^8.0.6
   image_picker: ^0.8.3+2
   url_launcher: ^6.0.6
+  social_share: ^2.2.1
   auto_size_text: ^3.0.0
   in_app_purchase: ^3.0.7
   cupertino_icons: ^1.0.3

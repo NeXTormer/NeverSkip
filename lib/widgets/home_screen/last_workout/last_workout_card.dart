@@ -12,7 +12,9 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/unit_text.dart';
 
 class LastWorkoutCard extends StatelessWidget {
-  const LastWorkoutCard({Key? key}) : super(key: key);
+  const LastWorkoutCard({this.screenshot = false, Key? key}) : super(key: key);
+
+  final bool screenshot;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,7 @@ class LastWorkoutCard extends StatelessWidget {
               const SizedBox(height: 8),
               LastWorkoutActivityList(
                 title: 'Personal Records',
+                hideButton: screenshot,
                 activityFilter:
                     FredericBackend.instance.userManager.state.progressMonitors,
                 lastWorkoutSets: lastWorkoutSets,
@@ -79,6 +82,7 @@ class LastWorkoutCard extends StatelessWidget {
               const SizedBox(height: 8),
               LastWorkoutActivityList(
                 title: 'Other Exercises',
+                hideButton: screenshot,
                 inverseActivityFilter:
                     FredericBackend.instance.userManager.state.progressMonitors,
                 lastWorkoutSets: lastWorkoutSets,

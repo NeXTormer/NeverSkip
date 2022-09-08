@@ -14,6 +14,7 @@ class LastWorkoutActivityList extends StatefulWidget {
       this.inverseActivityFilter = const <String>[],
       required this.setListData,
       required this.lastWorkoutSets,
+      this.hideButton = false,
       required this.activityListData,
       Key? key})
       : super(key: key);
@@ -24,6 +25,7 @@ class LastWorkoutActivityList extends StatefulWidget {
   final List<String> inverseActivityFilter;
   final FredericActivityListData activityListData;
   final FredericSetListData setListData;
+  final bool hideButton;
 
   @override
   State<LastWorkoutActivityList> createState() =>
@@ -41,9 +43,11 @@ class _LastWorkoutActivityListState extends State<LastWorkoutActivityList> {
         child: FredericHeading(
           widget.title,
           fontSize: 14,
-          icon: statsHidden
-              ? Icons.toggle_off_outlined
-              : Icons.toggle_on_outlined,
+          icon: widget.hideButton
+              ? null
+              : (statsHidden
+                  ? Icons.toggle_off_outlined
+                  : Icons.toggle_on_outlined),
           onPressed: () => setState(() => statsHidden = !statsHidden),
         ),
       ),

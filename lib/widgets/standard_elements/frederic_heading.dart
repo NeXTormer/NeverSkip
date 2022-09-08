@@ -20,7 +20,7 @@ class FredericHeading extends StatelessWidget {
   final Function? onPressed;
   final String heading;
   final String? subHeading;
-  final IconData icon;
+  final IconData? icon;
   final double fontSize;
 
   @override
@@ -57,7 +57,7 @@ class FredericHeading extends StatelessWidget {
                   letterSpacing: 0.6)),
         if (!(subHeading == null && onPressed == null))
           Expanded(child: Container()),
-        if (onPressed != null)
+        if (onPressed != null && icon != null)
           InkWell(
             onTap: onPressed as void Function()?,
             child: Icon(
