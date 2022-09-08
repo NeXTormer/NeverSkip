@@ -27,7 +27,6 @@ class FredericHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     bool showSubHeading = subHeading != null;
     return Row(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           fit: FlexFit.tight,

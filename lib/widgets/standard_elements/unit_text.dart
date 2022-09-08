@@ -3,10 +3,12 @@ import 'package:frederic/main.dart';
 
 class UnitText extends StatelessWidget {
   UnitText(this.value, this.unit,
-      {this.valueWeight = FontWeight.w600,
+      {Key? key,
+      this.valueWeight = FontWeight.w600,
       this.unitWeight = FontWeight.w500,
       this.unitSize = 14,
-      this.valueSize = 16}) {
+      this.valueSize = 16})
+      : super(key: key) {
     valueStyle = TextStyle(
         color: theme.textColor,
         fontWeight: valueWeight,

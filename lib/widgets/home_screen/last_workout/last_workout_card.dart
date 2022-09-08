@@ -20,6 +20,24 @@ class LastWorkoutCard extends StatelessWidget {
         builder: (context, activityListData) {
       return BlocBuilder<FredericSetManager, FredericSetListData>(
           builder: (context, setListData) {
+        final lastWorkoutSets = setListData.getLastWorkoutSets();
+
+        DateTime? first;
+        DateTime? last;
+
+        double volume = 0;
+
+        for (final sets in lastWorkoutSets.values) {
+          for (final set in sets) {
+            if (set.weight != 0)
+              volume += set.weight * set.reps;
+            else
+              volume += set.reps * 50;
+            if (first?.isAfter(set.timestamp) ?? true) first = set.timestamp;
+            if (last?.isBefore(set.timestamp) ?? true) last = set.timestamp;
+          }
+        }
+
         return Container(
           child: Column(
             children: [
@@ -33,52 +51,37 @@ class LastWorkoutCard extends StatelessWidget {
               ),
               LastWorkoutListItem(
                   text: 'Total volume',
-                  value: '5540',
+                  value: '${volume.toInt()}',
                   unit: 'kg',
                   icon: ExtraIcons.dumbbell),
               LastWorkoutListItem(
-                  text: 'Streak',
-                  value: '5',
+                  text: 'Current Streak',
+                  value: '${FredericBackend.instance.userManager.state.streak}',
                   unit: 'days',
                   icon: Icons.local_fire_department_outlined),
-              LastWorkoutListItem(
-                  text: 'Duration',
-                  value: '90',
-                  unit: 'min',
-                  icon: Icons.timelapse_outlined),
+              if (last != null && first != null)
+                LastWorkoutListItem(
+                    text: 'Duration',
+                    value: '${last.difference(first).inMinutes.abs()}',
+                    unit: 'min',
+                    icon: Icons.timelapse_outlined),
               const SizedBox(height: 8),
               FredericDivider(),
               const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: FredericHeading(
-                  'Personal records',
-                  fontSize: 14,
-                ),
+              LastWorkoutActivityList(
+                title: 'Personal Records',
+                activityFilter:
+                    FredericBackend.instance.userManager.state.progressMonitors,
+                lastWorkoutSets: lastWorkoutSets,
+                activityListData: activityListData,
+                setListData: setListData,
               ),
-              LastWorkoutListItem(
-                  text: 'Bench Press',
-                  value: '80',
-                  unit: 'kg',
-                  iconUrl:
-                      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe'),
-              LastWorkoutListItem(
-                  text: 'Bench Press',
-                  value: '80',
-                  unit: 'kg',
-                  iconUrl:
-                      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe'),
-              LastWorkoutListItem(
-                  text: 'Bench Press',
-                  value: '80',
-                  unit: 'kg',
-                  iconUrl:
-                      'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fdumbbell.png?alt=media&token=89899620-f4b0-4624-bd07-e06c76c113fe'),
               const SizedBox(height: 8),
               LastWorkoutActivityList(
-                title: 'Other exercises',
-                activities:
+                title: 'Other Exercises',
+                inverseActivityFilter:
                     FredericBackend.instance.userManager.state.progressMonitors,
+                lastWorkoutSets: lastWorkoutSets,
                 activityListData: activityListData,
                 setListData: setListData,
               ),
@@ -138,7 +141,13 @@ class LastWorkoutListItem extends StatelessWidget {
                 fontSize: 15),
           ),
           Expanded(child: Container()),
-          UnitText(value, unit),
+          AnimatedSwitcher(
+              duration: const Duration(milliseconds: 100),
+              child: UnitText(
+                value,
+                unit,
+                key: ValueKey<int>(value.hashCode + unit.hashCode),
+              )),
         ],
       ),
     );
