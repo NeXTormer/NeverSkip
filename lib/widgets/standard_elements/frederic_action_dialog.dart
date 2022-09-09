@@ -11,6 +11,7 @@ class FredericActionDialog extends StatelessWidget {
       this.childText,
       required this.onConfirm,
       this.destructiveAction = false,
+      this.noOkayButton = false,
       this.infoOnly = false,
       this.closeOnConfirm = false,
       Key? key})
@@ -27,6 +28,7 @@ class FredericActionDialog extends StatelessWidget {
   final String? childText;
   final bool destructiveAction;
   final bool infoOnly;
+  final bool noOkayButton;
   final bool closeOnConfirm;
   final void Function() onConfirm;
 
@@ -63,7 +65,7 @@ class FredericActionDialog extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(childText!, textAlign: TextAlign.center),
                     ),
-                  if (infoOnly)
+                  if (infoOnly && !noOkayButton)
                     Container(
                       padding: EdgeInsets.only(
                           left: 12, right: 12, bottom: 12, top: 8),

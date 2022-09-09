@@ -71,6 +71,13 @@
     "current_performance": "Aktuelle Leistung",
     "previous_performance": "Letzte Leistungen",
     "smart_suggestions": "Intelligente Vorschläge",
+    "my_last_workout": "Mein letztes Workout",
+    "no_last_workout": "Kein Workout in den letzten Tagen",
+    "total_volume": "Totales Volumen",
+    "current_streak": "Aktueller Streak",
+    "duration": "Dauer",
+    "date": "Datum",
+    "other_exercises": "Andere Übungen",
     "repetitions": {
       "one": "Wiederholung",
       "other": "Wiederholungen"
@@ -272,6 +279,11 @@
     "delete_activity": "Willst du diese Übung löschen?",
     "delete_workout": "Willst du dieses Workout löschen?",
     "set_reps_and_sets": "Stelle deine gewünschten Wiederholungen und Sätze für diese Übung ein."
+  },
+  "sharing": {
+    "share_to": "Teilen an...",
+    "share_to_instagram_stories": "Instagram Story",
+    "share_to_other": "Andere"
   },
   "create": "Erstellen",
   "submit": "Speichern",

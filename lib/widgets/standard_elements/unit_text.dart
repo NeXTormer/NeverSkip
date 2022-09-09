@@ -23,7 +23,7 @@ class UnitText extends StatelessWidget {
   }
 
   final String value;
-  final String unit;
+  final String? unit;
 
   final FontWeight valueWeight;
   final FontWeight unitWeight;
@@ -39,8 +39,8 @@ class UnitText extends StatelessWidget {
     return Row(
       children: [
         Text(value, style: valueStyle),
-        SizedBox(width: 2),
-        Text(unit, style: unitStyle)
+        if (unit != null) SizedBox(width: 2),
+        if (unit != null) Text(unit!, style: unitStyle)
       ],
     );
   }

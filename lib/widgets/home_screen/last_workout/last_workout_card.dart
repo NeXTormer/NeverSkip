@@ -1,13 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/widgets/home_screen/last_workout/last_workout_activity_list.dart';
 import 'package:frederic/widgets/standard_elements/frederic_divider.dart';
-import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/unit_text.dart';
 
@@ -40,38 +41,53 @@ class LastWorkoutCard extends StatelessWidget {
           }
         }
 
+        if (first == null || last == null) {
+          return Container(
+              width: double.infinity,
+              height: 40,
+              child: Center(
+                child: Text(
+                  tr('progress.no_last_workout'),
+                  style: TextStyle(color: theme.greyTextColor),
+                ),
+              ));
+        }
+
         return Container(
           child: Column(
             children: [
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: FredericHeading(
-                  'Stats',
-                  fontSize: 14,
-                ),
-              ),
+              // const SizedBox(height: 8),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 12),
+              //   child: FredericHeading(
+              //     'Stats',
+              //     fontSize: 14,
+              //   ),
+              // ),
               LastWorkoutListItem(
-                  text: 'Total volume',
+                  text: tr('progress.total_volume'),
                   value: '${volume.toInt()}',
                   unit: 'kg',
                   icon: ExtraIcons.dumbbell),
               LastWorkoutListItem(
-                  text: 'Current Streak',
+                  text: tr('progress.current_streak'),
                   value: '${FredericBackend.instance.userManager.state.streak}',
                   unit: 'days',
                   icon: Icons.local_fire_department_outlined),
-              if (last != null && first != null)
-                LastWorkoutListItem(
-                    text: 'Duration',
-                    value: '${last.difference(first).inMinutes.abs()}',
-                    unit: 'min',
-                    icon: Icons.timelapse_outlined),
-              const SizedBox(height: 8),
+              LastWorkoutListItem(
+                  text: tr('progress.duration'),
+                  value: '${last.difference(first).inMinutes.abs()}',
+                  unit: 'min',
+                  icon: Icons.timelapse_outlined),
+              LastWorkoutListItem(
+                  text: tr('progress.date'),
+                  value: '${first.formattedEuropean()}',
+                  icon: Icons.date_range_outlined),
+              const SizedBox(height: 10),
               FredericDivider(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               LastWorkoutActivityList(
-                title: 'Personal Records',
+                title: tr('home.personal_records'),
                 hideButton: screenshot,
                 activityFilter:
                     FredericBackend.instance.userManager.state.progressMonitors,
@@ -81,7 +97,7 @@ class LastWorkoutCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               LastWorkoutActivityList(
-                title: 'Other Exercises',
+                title: tr('progress.other_exercises'),
                 hideButton: screenshot,
                 inverseActivityFilter:
                     FredericBackend.instance.userManager.state.progressMonitors,
@@ -101,7 +117,7 @@ class LastWorkoutCard extends StatelessWidget {
 class LastWorkoutListItem extends StatelessWidget {
   const LastWorkoutListItem(
       {required this.text,
-      required this.unit,
+      this.unit,
       required this.value,
       this.icon,
       this.iconUrl,
@@ -110,7 +126,7 @@ class LastWorkoutListItem extends StatelessWidget {
 
   final String text;
   final String value;
-  final String unit;
+  final String? unit;
   final IconData? icon;
   final String? iconUrl;
 

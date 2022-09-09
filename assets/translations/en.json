@@ -71,6 +71,13 @@
     "current_performance": "Current Performance",
     "previous_performance": "Previous Performance",
     "smart_suggestions": "Smart Suggestions",
+    "my_last_workout": "My Last Workout",
+    "no_last_workout": "No workouts in the last few days",
+    "total_volume": "Total volume",
+    "current_streak": "Current streak",
+    "duration": "Duration",
+    "date": "Date",
+    "other_exercises": "Other Exercises",
     "repetitions": {
       "one": "Repetition",
       "other": "Repetitions"
@@ -149,7 +156,7 @@
       },
       "picture": {
         "title": "Profile Picture",
-        "button": "Uplaod new image",
+        "button": "Upload new image",
         "changer_title": "Upload a new Profile Picture",
         "description": "Your new profile picture may not be immediately visible in the app. If your profile picture doesn't change within a few seconds you can restart the app."
       },
@@ -250,7 +257,7 @@
     "new_workout": "New workout",
     "activity_not_found": "Exercise not found",
     "activity_not_found_description": "Maybe this exercise was deleted",
-    "workout_not_found": "Wortkout not found",
+    "workout_not_found": "Workout not found",
     "workout_not_found_description": "Maybe this workout was deleted",
     "create_workout": "Create Workout",
     "edit_workout": "Edit Workout",
@@ -272,6 +279,11 @@
     "delete_activity": "Do you want to delete the Exercise? This cannot be undone!",
     "delete_workout": "Do you want to delete the workout plan? This cannot be undone!",
     "set_reps_and_sets": "Set the desired number of sets and reps for this exercise."
+  },
+  "sharing": {
+    "share_to": "Share to...",
+    "share_to_instagram_stories": "Instagram Story",
+    "share_to_other": "Other"
   },
   "create": "Create",
   "submit": "Submit",

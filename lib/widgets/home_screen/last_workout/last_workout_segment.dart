@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/home_screen/last_workout/last_workout_card.dart';
+import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
+import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,7 +50,7 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
                               letterSpacing: 0.6),
                         ),
                         Text(
-                          'My last workout',
+                          tr('progress.my_last_workout'),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -61,7 +63,7 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
                 ),
               if (!screenshot)
                 FredericHeading(
-                  'Last workout',
+                  tr('progress.my_last_workout'),
                   icon: screenshot
                       ? null
                       : (Platform.isAndroid
@@ -87,10 +89,10 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
       screenshot = true;
     });
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 1));
 
     Uint8List? image = await screenshotController.capture(
-        pixelRatio: MediaQuery.of(context).devicePixelRatio * 2.5);
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
 
     setState(() {
       screenshot = false;
@@ -102,13 +104,48 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
     final file = await File('${directory.path}/temp.png').create();
     await file.writeAsBytes(image);
 
-    final result = await SocialShare.shareInstagramStory(file.path,
-        backgroundTopColor: '#${theme.mainColor.value.toRadixString(16)}',
-        backgroundBottomColor: '#${theme.accentColor.value.toRadixString(16)}',
-        attributionURL: 'https://neverskipfitness.com');
-
-    // final result =
-    //     SocialShare.shareOptions('Share your workout', imagePath: file.path);
-    print(result);
+    FredericActionDialog.show(
+        context: context,
+        dialog: FredericActionDialog(
+          onConfirm: () {},
+          infoOnly: true,
+          title: tr('sharing.share_to'),
+          noOkayButton: true,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                FredericButton(tr('sharing.share_to_instagram_stories'),
+                    onPressed: () async {
+                  final result = await SocialShare.shareInstagramStory(
+                      file.path,
+                      backgroundTopColor:
+                          '#${theme.mainColor.value.toRadixString(16)}',
+                      backgroundBottomColor:
+                          '#${theme.accentColor.value.toRadixString(16)}',
+                      attributionURL: 'https://neverskipfitness.com');
+                  print(result);
+                  Navigator.of(context).pop();
+                }),
+                const SizedBox(height: 8),
+                FredericButton(tr('sharing.share_to_other'), onPressed: () {
+                  final result = SocialShare.shareOptions(
+                      tr('progress.my_last_workout'),
+                      imagePath: file.path);
+                  print(result);
+                  Navigator.of(context).pop();
+                }),
+                const SizedBox(height: 12),
+                FredericButton(
+                  tr('cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  inverted: true,
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
