@@ -153,14 +153,16 @@ class LastWorkoutListItem extends StatelessWidget {
                   )),
             ),
           if (icon != null || iconUrl != null) const SizedBox(width: 8),
-          Text(
-            text,
-            style: TextStyle(
-                color: theme.textColor,
-                fontWeight: FontWeight.w400,
-                fontSize: 15),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                  color: theme.textColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15),
+            ),
           ),
-          Expanded(child: Container()),
+          // Expanded(child: Container()),
           AnimatedSwitcher(
               duration: const Duration(milliseconds: 100),
               child: UnitText(
@@ -173,10 +175,3 @@ class LastWorkoutListItem extends StatelessWidget {
     );
   }
 }
-
-///
-/// Volume
-/// Streak
-/// Activity List
-/// personal records
-///

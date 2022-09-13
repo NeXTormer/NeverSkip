@@ -18,6 +18,7 @@ class FredericButton extends StatelessWidget {
             ? theme.backgroundColor
             : theme.textColorColorfulBackground);
   }
+
   late final Color mainColor;
   late final Color textColor;
   final double height = 44;
@@ -64,14 +65,17 @@ class FredericButton extends StatelessWidget {
                         color: inverted ? mainColor : textColor,
                       )),
                 )
-              : Text(
-                  text,
-                  key: ValueKey<String>(text),
-                  style: TextStyle(
-                      letterSpacing: 0.2,
-                      color: inverted ? mainColor : textColor,
-                      fontWeight: fontWeight,
-                      fontSize: fontSize),
+              : FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    text,
+                    key: ValueKey<String>(text),
+                    style: TextStyle(
+                        letterSpacing: 0.2,
+                        color: inverted ? mainColor : textColor,
+                        fontWeight: fontWeight,
+                        fontSize: fontSize),
+                  ),
                 ),
         )),
       ),

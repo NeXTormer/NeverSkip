@@ -29,9 +29,10 @@ class FredericHeading extends StatelessWidget {
     return Row(
       children: [
         Flexible(
-          fit: FlexFit.tight,
+          //fit: FlexFit.tight,
           flex: subHeading == null && onPressed == null ? 1 : 0,
           child: Text(heading,
+              maxLines: 1,
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: fontSize,
@@ -49,14 +50,21 @@ class FredericHeading extends StatelessWidget {
           ),
         if (showSubHeading) SizedBox(width: 8),
         if (showSubHeading)
-          Text(subHeading!,
-              style: const TextStyle(
-                  color: const Color(0xF2A5A5A5),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  letterSpacing: 0.6)),
-        if (!(subHeading == null && onPressed == null))
-          Expanded(child: Container()),
+          Expanded(
+            child: Text(subHeading!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: const Color(0xF2A5A5A5),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    letterSpacing: 0.6)),
+          ),
+        if (subHeading == null && onPressed != null)
+          Flexible(
+              child: Container(
+            height: 20,
+          )),
         if (onPressed != null && icon != null)
           InkWell(
             onTap: onPressed as void Function()?,

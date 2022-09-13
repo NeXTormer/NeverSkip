@@ -34,15 +34,14 @@ class SmallActivityCardContent extends StatelessWidget {
               aspectRatio: 1,
               child: PictureIcon(activity.image,
                   mainColor: theme.mainColorInText)),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 93,
-                  child: Text(
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
                     activity.getNameLocalized(context.locale.languageCode),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -50,27 +49,27 @@ class SmallActivityCardContent extends StatelessWidget {
                         fontSize: 10,
                         letterSpacing: 0.3),
                   ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '${bestProgress.truncateToDouble() == bestProgress ? bestProgress.toInt() : bestProgress}',
-                      style: TextStyle(
-                          color: theme.textColor,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                          fontSize: 16),
-                    ),
-                    SizedBox(width: 2),
-                    Text(activity.progressUnit,
+                  Row(
+                    children: [
+                      Text(
+                        '${bestProgress.truncateToDouble() == bestProgress ? bestProgress.toInt() : bestProgress}',
                         style: TextStyle(
                             color: theme.textColor,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
-                            fontSize: 14))
-                  ],
-                )
-              ],
+                            fontSize: 16),
+                      ),
+                      SizedBox(width: 2),
+                      Text(activity.progressUnit,
+                          style: TextStyle(
+                              color: theme.textColor,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.5,
+                              fontSize: 14))
+                    ],
+                  )
+                ],
+              ),
             ),
           )
         ],

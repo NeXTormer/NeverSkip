@@ -22,13 +22,13 @@ class MiscStuffSegment extends StatelessWidget {
               onTap: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (c) => HistoryScreen())),
             ),
-            const SizedBox(height: 8),
-            MiscListItem(
-              text: tr('home.create_chart_button'),
-              icon: Icons.add_chart,
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (c) => HistoryScreen())),
-            )
+            // const SizedBox(height: 8),
+            // MiscListItem(
+            //   text: tr('home.create_chart_button'),
+            //   icon: Icons.add_chart,
+            //   onTap: () => Navigator.of(context)
+            //       .push(MaterialPageRoute(builder: (c) => HistoryScreen())),
+            // )
           ],
         ),
       ),
