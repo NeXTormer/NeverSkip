@@ -49,7 +49,7 @@ class GoalSegment extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                   child: Center(
                       child: Text(
-                    'You don\'t have any active goals.\nPress + to add one.',
+                    tr('home.no_active_goals'),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: theme.greyTextColor),
                   )),

@@ -9,7 +9,7 @@
   "home": {
     "chart": {
       "title_training_volume_week": "Trainingsvolumen",
-      "title_muscle_group_volume": "Muskelgruppenverteilung",
+      "title_muscle_group_volume": "Muskelgruppen",
       "0week": "Aktuelle Woche",
       "1week": "Letzte Woche",
       "2week": "Vor zwei Wochen",
@@ -18,6 +18,8 @@
       "title_activity_of_last_year": "Aktive Tage",
       "title_progress_chart": "Fortschritt"
     },
+    "no_active_goals": "Du hast noch keine Ziele eingetragen.\nKlicke das + um eins hinzuzufügen.",
+    "no_achievements": "Du hast noch keine Errungenschaften.\nErreichte Ziele werden hier angezeigt.",
     "create_chart_button": "Neue Diagrammanzeige erstellen",
     "title": "An die Arbeit!",
     "subtitle": "Guten {}, {}!",
@@ -207,7 +209,7 @@
           "bugs": "Zu viele Fehler/Bugs"
         },
         "optional_feedback": "Optionales Feedback",
-        "contact": "Wenn du einen Fehler gefunden hast oder sonstige Wünsche hast würden wir uns freuen wenn du uns auf office@hawkford.io bescheid gibst :)",
+        "contact": "Wenn du einen Fehler gefunden hast oder sonstige Wünsche hast würden wir uns freuen wenn du uns auf neverskipfitness@icloud.com bescheid gibst :)",
         "button": "Account für immer löschen"
       }
     }
@@ -234,6 +236,8 @@
     "need_to_accept_tc": "Du musst die Geschäftsbedingungen akzeptieren um diese App zu nutzen."
   },
   "trial": {
+    "day_remaining": "tag übrig",
+    "days_remaining": "tage übrig",
     "purchase_app": "NeverSkip kaufen",
     "list_item_1": "Plane deine Workouts",
     "list_item_2": "Verfolge deinen Fortschritt",
@@ -241,14 +245,14 @@
     "discount_description": "Wenn du die App noch während der Testzeit kaufst, bekommst du einen €{} Rabatt!",
     "purchase_button_discount": "In der Testphase kaufen (€{})",
     "purchase_button_normal": "Nach der Testphase kaufen (€{})",
-    "help_text": "Wenn du noch Fragen bezüglich des Kaufprozesses hast, schreib mir gerne eine E-Mail: hawkford@icloud.com",
+    "help_text": "Wenn du noch Fragen bezüglich des Kaufprozesses hast, schreib mir gerne eine E-Mail: neverskipfitness@icloud.com",
     "purchase_pending_text": "Zahlung erfolgt...\nBitte lass die App offen, bis die Zahlung bestätigt ist.",
     "day_free_trial_text": "{} Tage Testversion",
     "trial_description": "Du kannst die App {} Tage lang gratis verwenden. Damit hast du genügend Zeit um alle Features zu testen.\n\nWenn du die App noch während der Testzeit kaufst, bekommst du einen €2 Rabatt!",
     "start_trial_button": "Starte die Testphase",
     "trial_over_dialog": {
       "buy": "Kaufen",
-      "title": "Testphase ist vorüuber",
+      "title": "Testphase ist vorüber",
       "description": "Deine Testphase ist zu Ende. Du musst die App kaufen um wieder alle Features nutzen zu können."
     }
   },
@@ -274,7 +278,7 @@
     "type": "Typ",
     "weighted": "Gewichte",
     "calisthenics": "Calisthenics",
-    "recommended_reps": "Empfohlene Widerholungen",
+    "recommended_reps": "Empfohlene Wiederholungen",
     "recommended_sets": "Empfohlene Sätze",
     "delete_activity": "Willst du diese Übung löschen?",
     "delete_workout": "Willst du dieses Workout löschen?",

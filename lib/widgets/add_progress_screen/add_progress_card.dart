@@ -37,75 +37,67 @@ class AddProgressCard extends StatelessWidget {
     bool hasSuggestions = suggestions?.isNotEmpty ?? false;
 
     return LayoutBuilder(builder: (context, constraints) {
-      double scalingFactor = constraints.maxWidth / fullWidth;
-      return Transform.scale(
+      return FittedBox(
         alignment: Alignment.topLeft,
-        scale: scalingFactor,
+        fit: BoxFit.scaleDown,
+        //scale: scalingFactor,
         child: Row(
           children: [
             ConstrainedBox(
-              constraints: BoxConstraints.tightFor(width: fullWidth),
-              child: StreamBuilder<Object>(
-                  stream: null,
-                  builder: (context, snapshot) {
-                    return LayoutBuilder(builder: (context, cs) {
-                      return ChangeNotifierProvider<
-                          AddProgressController>.value(
-                        value: controller,
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: theme.cardBackgroundColor,
-                              border: Border.all(color: theme.cardBorderColor)),
-                          child: Column(
-                            children: [
-                              buildSubHeading(tr('progress.repetitions.other'),
-                                  Icons.repeat_outlined),
-                              SizedBox(height: 12),
-                              EnterRepsCounterWidget(
-                                onTap: onUseRepsWeight,
-                              ),
-                              if (activity.type ==
-                                  FredericActivityType.Weighted) ...[
-                                SizedBox(height: 12),
-                                buildSubHeading(
-                                    tr('progress.weight'), ExtraIcons.dumbbell),
-                                SizedBox(height: 12),
-                                EnterWeightWidget(
-                                  onTap: onUseRepsWeight,
-                                ),
-                              ],
-                              if (hasSuggestions) SizedBox(height: 8),
-                              if (hasSuggestions)
-                                buildSubHeading(
-                                    tr('progress.smart_suggestions'),
-                                    Icons.smart_button_outlined),
-                              if (hasSuggestions) SizedBox(height: 8),
-                              if (hasSuggestions)
-                                RepsWeightSmartSuggestions(
-                                  suggestions!,
-                                  onTap: onUseSmartSuggestions,
-                                ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 0, right: 0, top: 16),
-                                child:
-                                    FredericButton(tr('save'), onPressed: () {
-                                  if (FredericBackend.instance.canUseApp) {
-                                    onSave();
-                                  } else {
-                                    FeatureNotPurchasedDialog.show(context);
-                                  }
-                                }),
-                              )
-                            ],
+                constraints: BoxConstraints.tightFor(width: fullWidth),
+                child: LayoutBuilder(builder: (context, cs) {
+                  return ChangeNotifierProvider<AddProgressController>.value(
+                    value: controller,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: theme.cardBackgroundColor,
+                          border: Border.all(color: theme.cardBorderColor)),
+                      child: Column(
+                        children: [
+                          buildSubHeading(tr('progress.repetitions.other'),
+                              Icons.repeat_outlined),
+                          SizedBox(height: 12),
+                          EnterRepsCounterWidget(
+                            onTap: onUseRepsWeight,
                           ),
-                        ),
-                      );
-                    });
-                  }),
-            ),
+                          if (activity.type ==
+                              FredericActivityType.Weighted) ...[
+                            SizedBox(height: 12),
+                            buildSubHeading(
+                                tr('progress.weight'), ExtraIcons.dumbbell),
+                            SizedBox(height: 12),
+                            EnterWeightWidget(
+                              onTap: onUseRepsWeight,
+                            ),
+                          ],
+                          if (hasSuggestions) SizedBox(height: 8),
+                          if (hasSuggestions)
+                            buildSubHeading(tr('progress.smart_suggestions'),
+                                Icons.smart_button_outlined),
+                          if (hasSuggestions) SizedBox(height: 8),
+                          if (hasSuggestions)
+                            RepsWeightSmartSuggestions(
+                              suggestions!,
+                              onTap: onUseSmartSuggestions,
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 0, right: 0, top: 16),
+                            child: FredericButton(tr('save'), onPressed: () {
+                              if (FredericBackend.instance.canUseApp) {
+                                onSave();
+                              } else {
+                                FeatureNotPurchasedDialog.show(context);
+                              }
+                            }),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                })),
           ],
         ),
       );
@@ -132,8 +124,7 @@ class AddProgressCard extends StatelessWidget {
 
 class AddProgressController extends ChangeNotifier {
   AddProgressController(int reps, double weight)
-      : //_sets = sets,
-        _reps = reps,
+      : _reps = reps,
         _weight = weight;
 
   set reps(int value) {
@@ -147,6 +138,7 @@ class AddProgressController extends ChangeNotifier {
   }
 
   int get reps => _reps;
+
   double get weight => _weight;
 
   void setRepsAndWeight(RepsWeightSuggestion suggestion) {
@@ -155,7 +147,6 @@ class AddProgressController extends ChangeNotifier {
     notifyListeners();
   }
 
-  //int _sets;
   int _reps;
   double _weight;
 }

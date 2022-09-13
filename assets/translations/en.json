@@ -18,6 +18,8 @@
       "title_activity_of_last_year": "Active days",
       "title_progress_chart": "Progress"
     },
+    "no_active_goals": "You don't have any active goals.\nPress + to add one.",
+    "no_achievements": "You do not have any achievements yet.\nAdd one by completing a goal.",
     "create_chart_button": "Create a chart display",
     "title": "Let's find you a Workout!",
     "subtitle": "Good {}, {}!",
@@ -207,7 +209,7 @@
           "bugs": "Too many errors/bugs"
         },
         "optional_feedback": "Optional Feedback",
-        "contact": "If you have any issues of suggestions we would love to hear from you at office@hawkford.io.",
+        "contact": "If you have any issues of suggestions we would love to hear from you at neverskipfitness@icloud.com.",
         "button": "Delete account forever"
       }
     }
@@ -234,6 +236,8 @@
     "need_to_accept_tc": "You need to accept the Terms & Conditions to use this app."
   },
   "trial": {
+    "day_remaining": "day remaining",
+    "days_remaining": "days remaining",
     "purchase_app": "Purchase NeverSkip",
     "list_item_1": "Plan your workouts",
     "list_item_2": "See your progress",
@@ -241,7 +245,7 @@
     "discount_description": "If you purchase within the trial period you get a €{} discount!",
     "purchase_button_discount": "Purchase during trial for €{}",
     "purchase_button_normal": "Purchase after trial for €{}",
-    "help_text": "If you have any questions regarding the purchase process feel free to contact me at hawkford@icloud.com.",
+    "help_text": "If you have any questions regarding the purchase process feel free to contact me at neverskipfitness@icloud.com.",
     "purchase_pending_text": "Purchase is pending, please keep the app open until the purchase is completed.",
     "day_free_trial_text": "{} day free trial",
     "trial_description": "You get a generous {} day free trial, so you have enough time to test and use all features.\n\nIf you purchase the app within the trial period you get a €2 discount!",

@@ -26,79 +26,84 @@ class HistorySetCard extends StatelessWidget {
         ),
         SizedBox(width: 6),
         Expanded(
-          child: FredericCard(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: theme.mainColorLight,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: FredericCard(
+                height: 50,
+                width: 300,
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: theme.mainColorLight,
+                      ),
+                      child: Icon(
+                        ExtraIcons.statistics,
+                        color: theme.mainColorInText,
+                        size: 18,
+                      ),
                     ),
-                    child: Icon(
-                      ExtraIcons.statistics,
-                      color: theme.mainColorInText,
-                      size: 18,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '${set.reps}',
-                            style: TextStyle(
-                                color: theme.textColor,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.5,
-                                fontSize: 14),
-                          ),
-                          SizedBox(width: 3),
-                          Text('reps',
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${set.reps}',
                               style: TextStyle(
                                   color: theme.textColor,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
-                                  fontSize: 12)),
-                          SizedBox(width: 10),
-                          FredericVerticalDivider(length: 16),
-                          SizedBox(width: 10),
-                          Text(
-                            '${set.weight}',
-                            style: TextStyle(
-                                color: theme.textColor,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.5,
-                                fontSize: 14),
-                          ),
-                          SizedBox(width: 3),
-                          Text('kg',
+                                  fontSize: 14),
+                            ),
+                            SizedBox(width: 3),
+                            Text('reps',
+                                style: TextStyle(
+                                    color: theme.textColor,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 0.5,
+                                    fontSize: 12)),
+                            SizedBox(width: 10),
+                            FredericVerticalDivider(length: 16),
+                            SizedBox(width: 10),
+                            Text(
+                              '${set.weight}',
                               style: TextStyle(
                                   color: theme.textColor,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 0.5,
-                                  fontSize: 12)),
-                          Expanded(child: Container()),
-                          Text(
-                            '${format.format(set.timestamp)}',
-                            style: TextStyle(
-                                color: theme.textColor,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 0.3,
-                                fontSize: 14),
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(ExtraIcons.calendar,
-                              color: theme.mainColorInText, size: 18),
-                          const SizedBox(width: 8),
-                        ]),
-                  ),
-                ],
-              )),
+                                  fontSize: 14),
+                            ),
+                            SizedBox(width: 3),
+                            Text('kg',
+                                style: TextStyle(
+                                    color: theme.textColor,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 0.5,
+                                    fontSize: 12)),
+                            Expanded(child: Container()),
+                            Text(
+                              '${format.format(set.timestamp)}',
+                              style: TextStyle(
+                                  color: theme.textColor,
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 0.3,
+                                  fontSize: 14),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(ExtraIcons.calendar,
+                                color: theme.mainColorInText, size: 18),
+                            const SizedBox(width: 8),
+                          ]),
+                    ),
+                  ],
+                )),
+          ),
         ),
       ],
     );
@@ -107,6 +112,7 @@ class HistorySetCard extends StatelessWidget {
 
 class _ListIcon extends StatelessWidget {
   _ListIcon({this.finished = false, this.disabled = false});
+
   final bool finished;
   final bool disabled;
 

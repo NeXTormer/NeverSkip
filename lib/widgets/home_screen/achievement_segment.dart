@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
@@ -42,7 +43,7 @@ class AchievementSegment extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     child: Center(
                         child: Text(
-                      'You do not have any achievements yet.\nAdd one by completing a goal.',
+                      tr('home.no_achievements'),
                       textAlign: TextAlign.center,
                       style: TextStyle(color: theme.greyTextColor),
                     )),
