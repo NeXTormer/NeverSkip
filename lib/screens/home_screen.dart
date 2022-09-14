@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/onboarding_screen.dart';
 import 'package:frederic/screens/start_trial_screen.dart';
@@ -27,10 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     startupTimeProfiler?.stop();
     FredericBackend.instance.toastManager.removeLoginLoadingToast(context);
-    super.initState();
     Future(() async {
       if (FredericBackend.instance.userManager.state.id.isEmpty) {
-        print(
+        FredericProfiler.log(
             "=====SHOULD NOT HAPPEN===== Showing homescreen with no user doc");
       }
 
@@ -47,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (ctx) => StartTrialScreen());
       }
     });
+
+    super.initState();
   }
 
   @override

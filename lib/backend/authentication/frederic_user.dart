@@ -54,29 +54,47 @@ class FredericUser {
   DateTime? _trialStartDate;
 
   bool get authenticated => authState == FredericAuthState.Authenticated;
+
   bool get finishedLoading => _name != null;
+
   bool get hasStreak => streak != 0;
+
   bool get hasCompletedStreakToday => _hasCompletedStreakToday ?? false;
+
   bool get shouldReloadFromDB => _shouldReloadData ?? false;
+
   bool get isDeveloper => _isDeveloper ?? false;
+
   bool get hasActiveTrial => getTrialDaysLeft() >= 0;
+
   bool get inTrialMode =>
       !hasPurchased && !(_purchaseOverride ?? false) && trialStarted;
+
   bool get trialStarted => _trialStartDate != null;
+
   bool get hasPurchased => _hasPurchased ?? false;
+
   bool get canUseApp => ((_hasPurchased ?? false) ||
       (_purchaseOverride ?? false) ||
       hasActiveTrial);
 
   String get email => _email;
+
   String get name => _name ?? '';
+
   String get username => _username ?? '';
+
   String get image =>
       _image ?? 'https://via.placeholder.com/300x300?text=profile';
+
   int get weight => _weight ?? -1;
+
   int get height => _height ?? -1;
+
   int get streak => _currentStreak ?? 0;
+
   int get goalsCount => _goalsCount ?? 0;
+
   int get achievementsCount => _achievementsCount ?? 0;
 
   List<String> get progressMonitors {
@@ -116,10 +134,15 @@ class FredericUser {
   }
 
   set name(String value) => _name = value;
+
   set username(String value) => _username = value;
+
   set goalsCount(int value) => _goalsCount = value;
+
   set achievementsCount(int value) => _achievementsCount = value;
+
   set image(String value) => _image = value;
+
   set shouldReloadFromDB(bool value) => _shouldReloadData = value;
 
   void fromMap(String id, String email, Map<String, dynamic> data) {
@@ -177,7 +200,8 @@ class FredericUser {
       'streaklatest': streakLatestDate,
       'should_reload_data': _shouldReloadData,
       'trial_start': _trialStartDate,
-      'has_purchased': _hasPurchased
+      'has_purchased': _hasPurchased,
+      'uid': id
     };
   }
 

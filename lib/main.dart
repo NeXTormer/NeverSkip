@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 final getIt = GetIt.instance;
 
 FredericColorTheme _colorTheme = FredericColorTheme.blue();
+
 FredericColorTheme get theme => _colorTheme;
 
 FredericProfiler? startupTimeProfiler;
@@ -49,6 +50,10 @@ void main() async {
   // == Record all errors outside a Flutter context ==
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
     final List<dynamic> errorAndStacktrace = pair;
+    print('ERROR IN CURRENT/MAIN ISOLATE');
+    print(errorAndStacktrace.first);
+    print(errorAndStacktrace.last);
+
     await FirebaseCrashlytics.instance.recordError(
       errorAndStacktrace.first,
       errorAndStacktrace.last,

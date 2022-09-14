@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
 import 'package:frederic/backend/database/frederic_auth_interface.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:hive/hive.dart';
 
 class FirebaseAuthInterface implements FredericAuthInterface {
@@ -16,6 +17,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
 
     Hive.openBox<Map<dynamic, dynamic>>(_name).then((value) => _box = value);
   }
+
   final FirebaseAuth firebaseAuthInstance;
   final FirebaseFirestore firestoreInstance;
 
@@ -111,7 +113,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
           await firestoreInstance.collection('users').doc(uid).get();
 
       if (!userDocument.exists) {
-        print(
+        FredericProfiler.log(
             'User Document not found, probably because auth stream updated while doc was not yet created');
         return FredericUser.noAuth();
       }
@@ -138,9 +140,17 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     _box = await Hive.openBox(_name);
     if ((_box?.isEmpty ?? true)) return _reloadUserData(uid, email, false);
     final data = _box?.get(0);
-    if (data != null) {
+
+    if (data != null && data['uid'] == uid) {
+      FredericProfiler.log(
+          'FirebaseAuthInterface: UID matching, using cached data');
+
       _reloadUserData(uid, email, true); // NO AWAIT, load data from db
       return FredericUser.fromMap(uid, email, Map<String, dynamic>.from(data));
+    }
+    if (data != null && data['uid'] != uid) {
+      FredericProfiler.log(
+          'FirebaseAuthInterface: UID NOT matching, reloading from firestore');
     }
     return _reloadUserData(uid, email, false);
   }

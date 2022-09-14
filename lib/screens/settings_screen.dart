@@ -114,6 +114,12 @@ class SettingsScreen extends StatelessWidget {
                   changeAttributeWidget: FredericProfiler.evaluateAsWidget(),
                 ),
                 SettingsElement(
+                  text: 'Show logs',
+                  icon: Icons.bug_report_outlined,
+                  changerTitle: 'Debug logs',
+                  changeAttributeWidget: FredericProfiler.showLogsAsWidget(),
+                ),
+                SettingsElement(
                   text: 'Crash the app',
                   icon: Icons.fire_extinguisher,
                   onTap: () => FirebaseCrashlytics.instance.crash(),

@@ -71,7 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             physics: ClampingScrollPhysics(),
             child: Container(
-              height: 880,
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
@@ -128,82 +127,80 @@ class _LoginScreenState extends State<LoginScreen> {
                         //SizedBox(height: 80),
                       ],
                     ),
-                    Expanded(
-                      child: Container(
-                        child: Column(
-                          children: [
-                            SizedBox(height: 24),
-                            AuthenticateWithEmailButton(
-                              login: login,
-                              hasError: hasError,
-                              onError: (error) {
-                                if (error == null) {
-                                  setState(() {
-                                    hasError = false;
-                                  });
-                                } else {
-                                  setState(() {
-                                    errorText = error;
-                                    hasError = true;
-                                  });
-                                }
-                              },
+                    Container(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 24),
+                          AuthenticateWithEmailButton(
+                            login: login,
+                            hasError: hasError,
+                            onError: (error) {
+                              if (error == null) {
+                                setState(() {
+                                  hasError = false;
+                                });
+                              } else {
+                                setState(() {
+                                  errorText = error;
+                                  hasError = true;
+                                });
+                              }
+                            },
+                          ),
+                          if (Platform.isIOS) SizedBox(height: 20),
+                          if (Platform.isIOS)
+                            SignInWithAppleButton(
+                                borderRadius: BorderRadius.circular(10),
+                                style: theme.isDark
+                                    ? SignInWithAppleButtonStyle.white
+                                    : SignInWithAppleButtonStyle.black,
+                                onPressed: () => handleAppleSignIn(context)),
+                          SizedBox(height: 20),
+                          if (Platform.isAndroid)
+                            SignInWithGoogleButton(
+                              signUp: !login,
                             ),
-                            if (Platform.isIOS) SizedBox(height: 20),
-                            if (Platform.isIOS)
-                              SignInWithAppleButton(
-                                  borderRadius: BorderRadius.circular(10),
-                                  style: theme.isDark
-                                      ? SignInWithAppleButtonStyle.white
-                                      : SignInWithAppleButtonStyle.black,
-                                  onPressed: () => handleAppleSignIn(context)),
-                            SizedBox(height: 20),
-                            if (Platform.isAndroid)
-                              SignInWithGoogleButton(
-                                signUp: !login,
-                              ),
-                            if (Platform.isAndroid) SizedBox(height: 12),
-                            if (hasError)
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(errorText,
-                                    style: TextStyle(
-                                        color: Colors.redAccent, fontSize: 14)),
-                              ),
-                            //Expanded(flex: 50, child: Container()),
-                            SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  login
-                                      ? tr('login.not_have_account')
-                                      : tr('login.have_account'),
+                          if (Platform.isAndroid) SizedBox(height: 12),
+                          if (hasError)
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(errorText,
                                   style: TextStyle(
-                                      color: theme.textColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                GestureDetector(
-                                  onTap: () => setState(() {
-                                    login = !login;
-                                    hasError = false;
-                                  }),
-                                  child: Text(
-                                    login
-                                        ? tr('login.sign_up')
-                                        : tr('login.log_in'),
-                                    style: TextStyle(
-                                        color: theme.mainColorInText,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                )
-                              ],
+                                      color: Colors.redAccent, fontSize: 14)),
                             ),
-                            SizedBox(height: 8)
-                          ],
-                        ),
+                          //Expanded(flex: 50, child: Container()),
+                          SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                login
+                                    ? tr('login.not_have_account')
+                                    : tr('login.have_account'),
+                                style: TextStyle(
+                                    color: theme.textColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              GestureDetector(
+                                onTap: () => setState(() {
+                                  login = !login;
+                                  hasError = false;
+                                }),
+                                child: Text(
+                                  login
+                                      ? tr('login.sign_up')
+                                      : tr('login.log_in'),
+                                  style: TextStyle(
+                                      color: theme.mainColorInText,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 8)
+                        ],
                       ),
                     ),
                   ],

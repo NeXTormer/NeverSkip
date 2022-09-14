@@ -41,6 +41,8 @@ class FredericProfiler {
   static HashMap<String, List<FredericProfiler>> _profilers =
       HashMap<String, List<FredericProfiler>>();
 
+  static List<String> _debugLogs = <String>[];
+
   static void evaluate() {
     if (profilerDisabled) return;
     log('Completed Profilers:');
@@ -64,6 +66,32 @@ class FredericProfiler {
       average = sum / count;
       log('-> ${profilerList.key}: Avg: ${average.toStringAsFixed(4)}, Max: $maximum, Min: $minimum, #$count');
     }
+  }
+
+  static Widget showLogsAsWidget() {
+    List<Widget> entries = <Widget>[];
+
+    for (var debugEntry in _debugLogs) {
+      entries.add(Text(
+        debugEntry,
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ));
+
+      entries.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Divider(),
+      ));
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: entries,
+        ),
+      ),
+    );
   }
 
   static Widget evaluateAsWidget() {
@@ -130,7 +158,9 @@ class FredericProfiler {
       DateFormat(DateFormat.HOUR24_MINUTE_SECOND, 'en-US');
 
   static void log(String text) {
+    if (profilerDisabled) return;
     final now = DateTime.now();
+    _debugLogs.add('[${timeFormat.format(now)}.${now.millisecond}]: $text');
     print(
         '\x1B[34m[${timeFormat.format(now)}.${now.millisecond}]:\x1B[0m $text');
   }

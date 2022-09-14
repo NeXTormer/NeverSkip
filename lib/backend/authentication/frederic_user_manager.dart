@@ -64,6 +64,9 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     }
     if (event is FredericEmailSignupEvent) {
       firstUserSignUp = true;
+
+      FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+          FredericConcurrencyMessageType.UserHasAuthenticated));
     }
   }
 
@@ -88,12 +91,12 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
   @override
   void onTransition(
       Transition<FredericAuthEvent, FredericUser> transition) async {
-    // print("USER TRANSITION");
+    // print("\nUSER TRANSITION");
     // print("event: ${transition.event}");
     // print('current: ${transition.currentState.id}');
     // print("===");
     // print('next: ${transition.nextState.id}');
-    // print('\n\n');
+    // print('\n');
     super.onTransition(transition);
   }
 

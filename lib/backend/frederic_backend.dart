@@ -130,6 +130,12 @@ class FredericBackend implements FredericMessageProcessor {
     await waitUntilUserHasAuthenticated();
     FredericProfiler.log('waitUntilUserHasAuthenticated completed');
 
+    while (userManager.state.id.isEmpty) {
+      FredericProfiler.log(
+          'ERROR: User ID is empty after waitUntilUserHasAuthenticated, waiting');
+      await Future(() {});
+    }
+
     _initializeDefaults(); // no await for faster start times
     _initializeSets();
     await _initializeActivities();
@@ -203,6 +209,7 @@ class FredericBackend implements FredericMessageProcessor {
   }
 
   Future<void> _initializeSets() {
+    print(_userManager.state);
     _setManager.setDataInterface(FirestoreCachingDataInterface(
         name: 'Sets',
         collectionReference: firestoreInstance

@@ -29,8 +29,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    //return PurchaseScreen(FredericBackend.instance.userManager.state);
-    //return StartTrialScreen();
     return FutureBuilder<SharedPreferences>(
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {
