@@ -26,17 +26,15 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
 
   Box<Map<dynamic, dynamic>>? _box;
 
-  Future<void> reCalculateAndInitialize() async {
-    if (_box == null) _box = await Hive.openBox('SetVolumeDataRepresentation');
-    _box?.clear();
-
-    return initialize();
-  }
-
   @override
-  Future<void> initialize() async {
+  Future<void> initialize({required bool clearCachedData}) async {
     var profiler;
     if (_box == null) _box = await Hive.openBox('SetVolumeDataRepresentation');
+
+    if (clearCachedData) {
+      await _box?.clear();
+    }
+
     if (_box!.isEmpty) {
       profiler = await FredericProfiler.trackFirebase(
           'Calculate SetVolumeDataRepresentation');
@@ -54,9 +52,7 @@ class SetVolumeDataRepresentation implements SetDataRepresentation {
           'Load SetVolumeDataRepresentation');
       final data = _box!.getAt(0);
       if (data == null) {
-        await _box!.clear();
-        initialize();
-        return;
+        return initialize(clearCachedData: true);
       }
       _data = HashMap<DateTime, VolumeDataRepresentation>.from(data);
     }
