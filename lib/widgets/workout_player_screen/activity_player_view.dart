@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/sets/frederic_set.dart';
+import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/state/workout_player_state.dart';
@@ -142,9 +143,11 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
 
 class BooleanChangeNotifier extends ChangeNotifier {
   BooleanChangeNotifier();
+
   bool _value = false;
 
   bool get value => _value;
+
   set value(bool v) {
     _value = v;
     notifyListeners();

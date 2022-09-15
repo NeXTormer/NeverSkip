@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/widgets/standard_elements/shadow_list_view.dart';
@@ -39,15 +40,12 @@ class ActivityPlayerSetSegment extends StatelessWidget {
             jumpTo(indexCurrentSet * itemExtent);
           });
           Future(() {
-            Provider
-                .of<BooleanChangeNotifier>(context, listen: false)
-                .value =
+            Provider.of<BooleanChangeNotifier>(context, listen: false).value =
                 everythingComplete;
           });
 
           //int currentFirstItem = widget.controller.offset ~/ itemExtent;
           //print(currentFirstItem);
-
 
           return LayoutBuilder(builder: (context, constraints) {
             double availableHeight = constraints.maxHeight;
@@ -68,7 +66,7 @@ class ActivityPlayerSetSegment extends StatelessWidget {
                       }
                     },
                     child:
-                    NotificationListener<OverscrollIndicatorNotification>(
+                        NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
                         overscroll.disallowIndicator();
                         return true;

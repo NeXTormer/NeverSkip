@@ -5,6 +5,7 @@ import 'package:frederic/backend/activities/frederic_activity_list_data.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
+import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/activity_list_screen.dart';

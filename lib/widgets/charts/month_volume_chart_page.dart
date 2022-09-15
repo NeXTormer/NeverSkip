@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
