@@ -235,10 +235,6 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                   AnimatedContainer(
                       height: datePickerOpen ? 128 : 0,
                       duration: const Duration(milliseconds: 160),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: theme.backgroundColor,
-                          border: Border.all(color: theme.cardBorderColor)),
                       child: FredericDatePicker(
                           initialDate: widget.workout.startDate,
                           onDateChanged: (date) {

@@ -51,6 +51,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
   Widget build(BuildContext context) {
     isRepeating = widget.repeating ?? widget.workout.repeating;
 
+    bool hasStartDate = widget.workout.canEdit ||
+        FredericBackend.instance.userManager.state.activeWorkouts
+            .containsKey(widget.workout.id);
+
     return FredericCard(
         height: 114,
         onLongPress: () => handleLongPress(context),
@@ -60,8 +64,10 @@ class _WorkoutCardState extends State<WorkoutCard> {
                     builder: (context) => CupertinoScaffold(
                             body: EditWorkoutScreen(
                           widget.workout.id,
-                          defaultPage: widget.workout.activities
-                              .getDayIndex(DateTime.now()),
+                          defaultPage: hasStartDate
+                              ? widget.workout.activities
+                                  .getDayIndex(DateTime.now())
+                              : 0,
                         ))));
               }
             : null,

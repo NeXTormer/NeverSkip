@@ -66,7 +66,8 @@
     "delete_text": "Willst du diesen Workoutplan wirklich Löschen?",
     "action_the_workout": "Workout {}?",
     "action_the_workout_long": "Willst du das Workout {}?",
-    "select_another_startdate": "Falls nötig, kannst du hier das Startdatum verändern."
+    "select_another_startdate": "Falls nötig, kannst du hier das Startdatum verändern.",
+    "not_started": "noch nicht gestartet"
   },
   "progress": {
     "add_progress_title": "Übungsfortschritt",

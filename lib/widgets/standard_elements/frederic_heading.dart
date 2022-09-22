@@ -7,12 +7,14 @@ class FredericHeading extends StatelessWidget {
   const FredericHeading(this.heading,
       {this.onPressed,
       this.subHeading,
+      this.iconWidget,
       this.icon = ExtraIcons.dots,
       this.fontSize = 15});
 
   FredericHeading.translate(String key,
       {this.onPressed,
       this.subHeading,
+      this.iconWidget,
       this.icon = ExtraIcons.dots,
       this.fontSize = 15})
       : heading = tr(key);
@@ -22,11 +24,15 @@ class FredericHeading extends StatelessWidget {
   final String? subHeading;
   final IconData? icon;
   final double fontSize;
+  final Widget? iconWidget;
 
   @override
   Widget build(BuildContext context) {
     bool showSubHeading = subHeading != null;
     return Row(
+      mainAxisAlignment: iconWidget != null && subHeading == null
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.start,
       children: [
         Flexible(
           //fit: FlexFit.tight,
@@ -65,6 +71,7 @@ class FredericHeading extends StatelessWidget {
               child: Container(
             height: 20,
           )),
+        if (iconWidget != null) iconWidget!,
         if (onPressed != null && icon != null)
           InkWell(
             onTap: onPressed as void Function()?,

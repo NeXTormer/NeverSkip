@@ -37,7 +37,8 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   }
 
   void addSet(FredericActivity activity, FredericSet set) {
-    if (set.timestamp.isAfter(list.last.set.timestamp)) {
+    return;
+    if (list.isNotEmpty && set.timestamp.isAfter(list.last.set.timestamp)) {
       list.add(TimeSeriesSet(activity.id, set));
     } else {
       //TODO: find where to put it using custom binary search
@@ -47,6 +48,7 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   }
 
   void deleteSet(FredericActivity activity, FredericSet set) {
+    return;
     int index = binarySearch(list, TimeSeriesSet(activity.id, set));
     if (index == -1) return;
 

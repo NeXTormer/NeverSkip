@@ -417,6 +417,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
             ),
             SizedBox(height: 12),
             if (!trackActivity) buildSubHeading('Unit', Icons.alarm),
+            if (!trackActivity) SizedBox(height: 12),
             if (!trackActivity)
               UnitSlider(
                 startingUnit: Unit.Sets,
@@ -510,26 +511,22 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            FredericHeading('Current State'),
-            if (!trackActivity && widget.isNewGoal)
-              Positioned(
-                right: 0,
-                top: 2,
-                child: FredericCard(
+        child: FredericHeading(
+          'Current State',
+          iconWidget: (!trackActivity && widget.isNewGoal)
+              ? FredericCard(
                   onTap: () => addNewActivityTracker(context),
-                  color: theme.accentColor,
+                  color: theme.mainColor,
+                  borderRadius: 6,
+                  borderWidth: 0,
                   padding:
                       const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
                   child: Text(
                     'Link Activity',
                     style: TextStyle(color: Colors.white),
                   ),
-                ),
-              )
-          ],
+                )
+              : null,
         ),
       ),
     );

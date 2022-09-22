@@ -19,8 +19,21 @@ class EditWorkoutHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String dateFormatString =
-        formatDate(workout.startDate, const [dd, ' ', M, ' ', yyyy]);
+    DateTime? startDate;
+    if (workout.canEdit) {
+      startDate = workout.startDate;
+    } else {
+      final user = FredericBackend.instance.userManager.state;
+      startDate = user.activeWorkouts[workout.id];
+    }
+
+    String? dateFormatString;
+
+    if (startDate != null) {
+      dateFormatString = formatDate(startDate, const [dd, ' ', M, ' ', yyyy]);
+    } else {
+      dateFormatString = tr('workouts.not_started');
+    }
     return FredericBasicAppBar(
         title: workout.name,
         //height: 75,
