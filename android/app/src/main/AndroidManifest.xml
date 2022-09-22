@@ -5,7 +5,8 @@
     <application
         android:name="${applicationName}"
         android:label="NeverSkip"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/neverskip_icon"
+        android:roundIcon="@mipmap/neverskip_icon">
 
         <provider
             android:name="androidx.core.content.FileProvider"
