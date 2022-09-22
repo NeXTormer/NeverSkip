@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/sets/set_data_representation.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 
 class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   SetTimeSeriesDataRepresentation(this.activityManager, this.setManager);
@@ -19,19 +20,21 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   FutureOr<void> initialize({required bool clearCachedData}) {
     // TODO: implement initialize
 
-    throw UnimplementedError();
+    FredericProfiler.log(
+        'Init SetTimeSeriesDataRepresentation NOT IMPLEMENTED');
+    //throw UnimplementedError();
   }
 
-  Map<FredericActivity, List<FredericSet>> getSetsBetween(DateTime start,
-      DateTime end) {
+  Map<FredericActivity, List<FredericSet>> getSetsBetween(
+      DateTime start, DateTime end) {
     return {};
   }
 
-  Map<FredericActivity, List<FredericSet>> getLastWorkout({int maxDaysAgo = 2,
-    Duration maxTimeBetweenSets = const Duration(hours: 1)}) {
+  Map<FredericActivity, List<FredericSet>> getLastWorkout(
+      {int maxDaysAgo = 2,
+      Duration maxTimeBetweenSets = const Duration(hours: 1)}) {
     return {};
   }
-
 
   void addSet(FredericActivity activity, FredericSet set) {
     if (set.timestamp.isAfter(list.last.set.timestamp)) {
@@ -62,9 +65,9 @@ class TimeSeriesSet implements Comparable<TimeSeriesSet> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is TimeSeriesSet &&
-              runtimeType == other.runtimeType &&
-              set.timestamp == other.set.timestamp;
+      other is TimeSeriesSet &&
+          runtimeType == other.runtimeType &&
+          set.timestamp == other.set.timestamp;
 
   @override
   int get hashCode => set.timestamp.hashCode;

@@ -169,7 +169,10 @@ class FredericUser {
       }
     } else {
       if (activeWorkoutsData != null) {
-        _activeWorkouts = Map.from(activeWorkoutsData);
+        Map<String, dynamic> activeWorkoutsMap = Map.from(activeWorkoutsData);
+
+        _activeWorkouts = activeWorkoutsMap.map(
+            (key, value) => MapEntry<String, DateTime?>(key, _loadDate(value)));
       } else {
         _activeWorkouts = <String, DateTime?>{};
       }

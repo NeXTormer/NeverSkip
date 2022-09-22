@@ -120,6 +120,7 @@ class FredericBackend implements FredericMessageProcessor {
     await workoutManager.triggerManualFullReload();
     await setManager.triggerManualFullReload();
     await goalManager.triggerManualFullReload();
+    print("werner");
   }
 
   void _initialize() async {

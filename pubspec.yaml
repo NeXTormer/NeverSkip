@@ -73,7 +73,6 @@ dependencies:
   easy_localization_loader: ^1.0.0
 
   date_format: ^2.0.2
-  sorted_list: ^1.0.0
 
 
 dev_dependencies:
