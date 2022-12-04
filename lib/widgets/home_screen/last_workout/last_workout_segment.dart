@@ -67,8 +67,8 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
                   icon: screenshot
                       ? null
                       : (Platform.isAndroid
-                          ? Icons.share_outlined
-                          : Icons.ios_share),
+                      ? Icons.share_outlined
+                      : Icons.ios_share),
                   onPressed: () => handleShare(context),
                 ),
               const SizedBox(height: 8),
@@ -92,7 +92,9 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
     await Future.delayed(const Duration(milliseconds: 1));
 
     Uint8List? image = await screenshotController.capture(
-        pixelRatio: MediaQuery.of(context).devicePixelRatio);
+        pixelRatio: MediaQuery
+            .of(context)
+            .devicePixelRatio);
 
     setState(() {
       screenshot = false;
@@ -117,16 +119,18 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
               children: [
                 FredericButton(tr('sharing.share_to_instagram_stories'),
                     onPressed: () async {
-                  final result = await SocialShare.shareInstagramStory(
-                      file.path,
-                      backgroundTopColor:
+                      final result = await SocialShare.shareInstagramStory(
+                          imagePath:
+                          file.path,
+                          backgroundTopColor:
                           '#${theme.mainColor.value.toRadixString(16)}',
-                      backgroundBottomColor:
+                          backgroundBottomColor:
                           '#${theme.accentColor.value.toRadixString(16)}',
-                      attributionURL: 'https://neverskipfitness.com');
-                  print(result);
-                  Navigator.of(context).pop();
-                }),
+                          attributionURL: 'https://neverskipfitness.com',
+                          appId: '');
+                      print(result);
+                      Navigator.of(context).pop();
+                    }),
                 const SizedBox(height: 8),
                 FredericButton(tr('sharing.share_to_other'), onPressed: () {
                   final result = SocialShare.shareOptions(

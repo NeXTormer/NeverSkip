@@ -46,6 +46,7 @@ class ProgressLineChart extends StatelessWidget {
           );
         },
       ),
+      /*
       titlesData: FlTitlesData(
         show: true,
         rightTitles: SideTitles(showTitles: false),
@@ -61,6 +62,7 @@ class ProgressLineChart extends StatelessWidget {
           reservedSize: 12,
         ),
       ),
+       */
       borderData: FlBorderData(
           show: true,
           border: Border.all(color: theme.disabledGreyColor, width: 1)),
@@ -81,7 +83,7 @@ class ProgressLineChart extends StatelessWidget {
             FlSpot(11, 4),
           ],
           isCurved: true,
-          colors: gradientColors,
+          gradient: LinearGradient(colors: gradientColors),
           barWidth: 4,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -89,7 +91,8 @@ class ProgressLineChart extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: gradientColors.map((e) => e.withOpacity(0.2)).toList(),
+            gradient: LinearGradient(
+                colors: gradientColors.map((e) => e.withOpacity(0.2)).toList()),
           ),
         ),
       ],
