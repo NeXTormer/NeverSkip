@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/authentication/frederic_user.dart';
@@ -117,10 +119,11 @@ class FirebaseAuthInterface implements FredericAuthInterface {
             'User Document not found, probably because auth stream updated while doc was not yet created');
         return FredericUser.noAuth();
       }
-      firestoreInstance
-          .collection('users')
-          .doc(uid)
-          .update({'last_login': Timestamp.now()});
+      firestoreInstance.collection('users').doc(uid).update({
+        'last_login': Timestamp.now(),
+        'last_os': Platform.operatingSystem,
+        'last_os_version': Platform.operatingSystemVersion,
+      });
 
       if (_box == null) _box = await Hive.openBox(_name);
       _box!.put(0, Map.from(userDocument.data()!));
@@ -229,7 +232,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
         await firestoreInstance.collection('users').doc(id).get();
 
     if (userDocument.data() == null) {
-      print('UDNFAS');
+      print('User document not found at signup');
       return FredericUser.noAuth(
           statusMessage:
               'Sign up Error. Please contact support. [Error UDNFAS]');

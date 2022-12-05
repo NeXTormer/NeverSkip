@@ -11,22 +11,31 @@ class ActiveDaysChartSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double scaleFactor = MediaQuery
+        .of(context)
+        .textScaleFactor;
+
+    double chartHeight = 216;
+    if (scaleFactor > 1.14) chartHeight = 224;
+
+
     return SliverToBoxAdapter(child:
-        BlocBuilder<FredericSetManager, FredericSetListData>(
-            builder: (context, setListData) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: FredericChart(
-          title: tr('home.chart.title_activity_of_last_year'),
-          pages: [
-            FredericChartPage(
-                title: null,
-                page: ActiveDaysChartPage(
-                  setListData: setListData,
-                ))
-          ],
-        ),
-      );
-    }));
+    BlocBuilder<FredericSetManager, FredericSetListData>(
+        builder: (context, setListData) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: FredericChart(
+              height: chartHeight,
+              title: tr('home.chart.title_activity_of_last_year'),
+              pages: [
+                FredericChartPage(
+                    title: null,
+                    page: ActiveDaysChartPage(
+                      setListData: setListData,
+                    ))
+              ],
+            ),
+          );
+        }));
   }
 }

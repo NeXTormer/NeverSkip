@@ -81,6 +81,7 @@
     "duration": "Dauer",
     "date": "Datum",
     "other_exercises": "Andere Übungen",
+    "favourites": "Favoriten",
     "repetitions": {
       "one": "Wiederholung",
       "other": "Wiederholungen"

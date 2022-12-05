@@ -70,11 +70,13 @@ class LastWorkoutCard extends StatelessWidget {
                   value: '${volume.toInt()}',
                   unit: 'kg',
                   icon: ExtraIcons.dumbbell),
-              LastWorkoutListItem(
-                  text: tr('progress.current_streak'),
-                  value: '${FredericBackend.instance.userManager.state.streak}',
-                  unit: 'days',
-                  icon: Icons.local_fire_department_outlined),
+              if (FredericBackend.instance.userManager.state.streak != 0)
+                LastWorkoutListItem(
+                    text: tr('progress.current_streak'),
+                    value:
+                        '${FredericBackend.instance.userManager.state.streak}',
+                    unit: 'days',
+                    icon: Icons.local_fire_department_outlined),
               LastWorkoutListItem(
                   text: tr('progress.duration'),
                   value: '${last.difference(first).inMinutes.abs()}',
@@ -88,7 +90,7 @@ class LastWorkoutCard extends StatelessWidget {
               FredericDivider(),
               const SizedBox(height: 6),
               LastWorkoutActivityList(
-                title: tr('home.personal_records'),
+                title: tr('progress.favourites'),
                 hideButton: screenshot,
                 activityFilter:
                     FredericBackend.instance.userManager.state.progressMonitors,
