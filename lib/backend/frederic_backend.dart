@@ -120,12 +120,12 @@ class FredericBackend implements FredericMessageProcessor {
     await workoutManager.triggerManualFullReload();
     await setManager.triggerManualFullReload();
     await goalManager.triggerManualFullReload();
-    print("werner");
   }
 
   void _initialize() async {
     FredericProfiler.log('Start _initialize');
 
+    _initializeDefaults();
     Future<void> purchaseManagerFuture = _purchaseManager.initialize();
 
     await waitUntilUserHasAuthenticated();
@@ -137,7 +137,7 @@ class FredericBackend implements FredericMessageProcessor {
       await Future(() {});
     }
 
-    _initializeDefaults(); // no await for faster start times
+    _reloadDataFromDBIfNecessary(); // no await for faster start times
     _initializeSets();
     await _initializeActivities();
     await _initializeWorkouts();
@@ -151,10 +151,7 @@ class FredericBackend implements FredericMessageProcessor {
     FredericProfiler.log('Finished _initialize');
   }
 
-  Future<void> _initializeDefaults() async {
-    final data = await _defaultsReference.get();
-    _defaults = FredericDefaults(data);
-
+  void _reloadDataFromDBIfNecessary() {
     bool reloadFromDB =
         _userManager.state.shouldReloadFromDB || _defaults!.alwaysReloadFromDB;
     _userManager.state.shouldReloadFromDB = false;
@@ -166,6 +163,11 @@ class FredericBackend implements FredericMessageProcessor {
       _workoutManager.reload(true);
       _goalManager.reload(true);
     }
+  }
+
+  Future<void> _initializeDefaults() async {
+    final data = await _defaultsReference.get();
+    _defaults = FredericDefaults(data);
   }
 
   Future<void> _initializeActivities() {
@@ -279,12 +281,14 @@ class FredericDefaults {
             const <String>[];
     _alwaysReloadFromDB = document.data()?['always_reload_from_db'];
     _trialDuration = document.data()?['trial_duration'];
+    _trialEnabled = document.data()?['trial_enabled'];
   }
 
   FredericDefaults.empty();
 
   List<String>? _featuredActivities;
   bool? _alwaysReloadFromDB;
+  bool? _trialEnabled;
   int? _trialDuration;
 
   int get trialDuration => _trialDuration ?? 30;
@@ -292,4 +296,6 @@ class FredericDefaults {
   List<String> get featuredActivities => _featuredActivities ?? <String>[];
 
   bool get alwaysReloadFromDB => _alwaysReloadFromDB ?? false;
+
+  bool get trialEnabled => _trialEnabled ?? true;
 }

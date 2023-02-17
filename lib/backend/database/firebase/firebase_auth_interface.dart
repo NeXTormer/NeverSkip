@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:frederic/backend/authentication/frederic_user.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_auth_interface.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:hive/hive.dart';
@@ -37,7 +37,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   @override
   Future<bool> reAuthenticate(FredericUser user, String password) async {
     AuthCredential cred =
-        EmailAuthProvider.credential(email: user.email, password: password);
+    EmailAuthProvider.credential(email: user.email, password: password);
     bool success = false;
     try {
       await FirebaseAuth.instance.currentUser
@@ -86,7 +86,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   Future<FredericUser> logInOAuth(OAuthCredential credential,
       {String? name}) async {
     final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential);
 
     String? displayName = name ?? userCredential.user?.displayName;
     String? image = userCredential.user?.photoURL;
@@ -108,11 +108,11 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     }
   }
 
-  Future<FredericUser> _reloadUserData(
-      String uid, String email, bool callCallback) async {
+  Future<FredericUser> _reloadUserData(String uid, String email,
+      bool callCallback) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> userDocument =
-          await firestoreInstance.collection('users').doc(uid).get();
+      await firestoreInstance.collection('users').doc(uid).get();
 
       if (!userDocument.exists) {
         FredericProfiler.log(
@@ -164,10 +164,9 @@ class FirebaseAuthInterface implements FredericAuthInterface {
   }
 
   @override
-  Future<FredericUser> signUp(
-      {required String email,
-      required String name,
-      required String password}) async {
+  Future<FredericUser> signUp({required String email,
+    required String name,
+    required String password}) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -206,16 +205,19 @@ class FirebaseAuthInterface implements FredericAuthInterface {
         .update(user.toMap());
   }
 
-  Future<FredericUser> _createDBEntry(
-      {required String id,
-      required String email,
-      String? name,
-      String? image,
-      String? username}) async {
+  Future<FredericUser> _createDBEntry({required String id,
+    required String email,
+    String? name,
+    String? image,
+    String? username}) async {
     DocumentSnapshot<Map<String, dynamic>> defaultDoc = await firestoreInstance
         .collection('defaults')
         .doc('default_user')
         .get();
+
+    bool trialEnabled = FredericBackend.instance.defaults.trialEnabled;
+    print("Trial Enabled: $trialEnabled");
+
 
     await firestoreInstance.collection('users').doc(id).set({
       'id': id,
@@ -226,16 +228,19 @@ class FirebaseAuthInterface implements FredericAuthInterface {
       'progressmonitors': defaultDoc.data()?['progressmonitors'] ?? <String>[],
       'streakstart': null,
       'streaklatest': null,
+      //TODO: find a way to move this to another class
+      //TODO: this breaks the abstraction of the auth interface maybe?
+      'has_purchased': trialEnabled ? false : true,
     });
 
     final userDocument =
-        await firestoreInstance.collection('users').doc(id).get();
+    await firestoreInstance.collection('users').doc(id).get();
 
     if (userDocument.data() == null) {
       print('User document not found at signup');
       return FredericUser.noAuth(
           statusMessage:
-              'Sign up Error. Please contact support. [Error UDNFAS]');
+          'Sign up Error. Please contact support. [Error UDNFAS]');
     }
 
     return FredericUser.fromMap(id, email, userDocument.data()!);

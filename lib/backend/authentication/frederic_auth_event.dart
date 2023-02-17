@@ -12,6 +12,7 @@ abstract class FredericAuthEvent {
 
 class FredericRestoreLoginStatusEvent extends FredericAuthEvent {
   FredericRestoreLoginStatusEvent(this.user);
+
   FredericUser user;
 
   @override
@@ -59,7 +60,7 @@ class FredericEmailSignupEvent extends FredericAuthEvent {
   final String password;
 
   @override
-  Future<FredericUser> process(FredericUserManager userManager) {
+  Future<FredericUser> process(FredericUserManager userManager) async {
     FredericBackend.instance.analytics.analytics
         .logSignUp(signUpMethod: 'email');
     return userManager.authInterface
@@ -69,6 +70,7 @@ class FredericEmailSignupEvent extends FredericAuthEvent {
 
 class FredericSignOutEvent extends FredericAuthEvent {
   FredericSignOutEvent([this.reason]);
+
   final String? reason;
 
   @override

@@ -65,9 +65,13 @@ dependencies:
   in_app_purchase: ^3.0.7
   cupertino_icons: ^1.0.3
   infinite_listview: ^1.1.0
-  modal_bottom_sheet: ^2.0.1
   introduction_screen: ^3.0.0
   cached_network_image: ^3.0.0
+
+  modal_bottom_sheet:
+    git:
+      url: git@github.com:jamesblasco/modal_bottom_sheet.git
+      path: modal_bottom_sheet
 
   easy_localization: ^3.0.0
   easy_localization_loader: ^1.0.0

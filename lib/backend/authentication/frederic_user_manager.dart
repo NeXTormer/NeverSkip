@@ -132,14 +132,4 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
     state.removeProgressMonitor(id);
     userDataChanged();
   }
-
-  Future<void> createUserEntryInDB(
-      {required String uid,
-      String? name,
-      String? image,
-      String? username}) async {
-    FredericBackend.instance.messageBus.add(
-        FredericConcurrencyMessage(FredericConcurrencyMessageType.UserSignUp));
-    firstUserSignUp = true;
-  }
 }

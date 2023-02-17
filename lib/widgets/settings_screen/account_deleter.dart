@@ -134,7 +134,8 @@ class _AccountDeleterState extends State<AccountDeleter> {
                 FredericBase.forceFullRestart(context);
               },
               mainColor: confirmed ? theme.negativeColor : theme.greyColor,
-            )
+            ),
+            SizedBox(height: 16)
           ],
         ),
       ),

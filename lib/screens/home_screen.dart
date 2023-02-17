@@ -39,7 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
         await Navigator.of(context)
             .push(MaterialPageRoute(builder: (c) => OnboardingScreen()));
       }
-      if (!FredericBackend.instance.userManager.state.trialStarted) {
+      if (!FredericBackend.instance.userManager.state.trialStarted &&
+          !FredericBackend.instance.userManager.state.canUseApp) {
         CupertinoScaffold.showCupertinoModalBottomSheet(
             enableDrag: false,
             isDismissible: false,
