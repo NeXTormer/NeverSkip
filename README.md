@@ -1,4 +1,3 @@
-# frederic
-[![build_for_android](https://github.com/Hawkford/frederic/actions/workflows/build_for_android.yml/badge.svg)](https://github.com/Hawkford/frederic/actions/workflows/build_for_android.yml)
+# NeverSkip Fitness
 
-Frederic helps you creating workout plans and tracking your progress, as simple as possible.
+Ever set a fitness goal and quit halfway through? NeverSkip keeps you motivated all the way through and helps you build healthy behaviors.
