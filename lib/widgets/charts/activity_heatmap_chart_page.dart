@@ -6,8 +6,8 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/shadow_custom_scroll_view.dart';
 
-class ActiveDaysChartPage extends StatelessWidget {
-  const ActiveDaysChartPage({required this.setListData, Key? key})
+class ActivityHeatmapChartPage extends StatelessWidget {
+  const ActivityHeatmapChartPage({required this.setListData, Key? key})
       : super(key: key);
 
   final FredericSetListData setListData;

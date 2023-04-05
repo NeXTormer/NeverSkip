@@ -18,7 +18,7 @@ import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
-import 'package:frederic/backend/sets/set_volume_data_representation.dart';
+import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
@@ -83,10 +83,8 @@ void main() async {
       Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSetDocument>(3,
           create: (id, data) => FredericSetDocument.fromMap(id, data)));
     if (!Hive.isAdapterRegistered(4))
-      Hive.registerAdapter(
-          FredericUniversalTypeAdapter<VolumeDataRepresentation>(4,
-              create: (id, data) =>
-                  VolumeDataRepresentation.fromMap(id, data)));
+      Hive.registerAdapter(FredericUniversalTypeAdapter<TimeSeriesSetData>(4,
+          create: (id, data) => TimeSeriesSetData.fromMap(id, data)));
     if (!Hive.isAdapterRegistered(5))
       Hive.registerAdapter(FredericUniversalTypeAdapter<FredericGoal>(5,
           create: (id, data) => FredericGoal.fromMap(id, data)));

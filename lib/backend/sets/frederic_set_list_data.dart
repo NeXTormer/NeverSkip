@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:frederic/backend/activities/frederic_activity.dart';
 import 'package:frederic/backend/sets/frederic_set.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
-import 'package:frederic/backend/sets/set_volume_data_representation.dart';
+import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/extensions.dart';
 
@@ -19,7 +19,7 @@ class FredericSetListData {
   final List<int> weeklyTrainingVolume;
   final List<int> muscleSplit;
   final HashMap<String, FredericSetList> sets;
-  final HashMap<DateTime, VolumeDataRepresentation> volume;
+  final HashMap<DateTime, TimeSeriesSetData> volume;
 
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {

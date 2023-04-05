@@ -6,8 +6,7 @@ import 'package:frederic/extensions.dart';
 import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestions.dart';
 
 ///
-/// Represents all loaded sets of a specific activity. Use this class to add
-/// and remove single sets.
+/// Represents all loaded sets of a specific activity.
 ///
 class FredericSetList {
   FredericSetList.create(this.activityID);
@@ -28,6 +27,7 @@ class FredericSetList {
   List<FredericSetDocument> _setDocuments = <FredericSetDocument>[];
 
   double get bestWeight => _bestWeight;
+
   int get bestReps => _bestReps;
 
   List<FredericSetDocument> get setDocuments => _setDocuments;

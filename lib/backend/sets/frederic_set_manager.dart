@@ -8,28 +8,24 @@ import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
-import 'package:frederic/backend/sets/set_volume_data_representation.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 
 class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   FredericSetManager([FredericActivityManager? activityManager])
       : super(FredericSetListData(
-      changedActivities: <String>[],
-      sets: HashMap<String, FredericSetList>(),
-      volume: HashMap<DateTime, VolumeDataRepresentation>(),
-      muscleSplit: List<int>.filled(5, 0),
-      weeklyTrainingVolume: List<int>.filled(28, 0))) {
+            changedActivities: <String>[],
+            sets: HashMap<String, FredericSetList>(),
+            volume: HashMap<DateTime, TimeSeriesSetData>(),
+            muscleSplit: List<int>.filled(5, 0),
+            weeklyTrainingVolume: List<int>.filled(28, 0))) {
     on<FredericSetEvent>(_onEvent);
 
     if (activityManager != null) {
-      volumeDataRepresentation =
-          SetVolumeDataRepresentation(activityManager, this);
       timeSeriesDataRepresentation =
           SetTimeSeriesDataRepresentation(activityManager, this);
     }
   }
 
-  SetVolumeDataRepresentation? volumeDataRepresentation;
   SetTimeSeriesDataRepresentation? timeSeriesDataRepresentation;
 
   final int currentMonth = FredericSetDocument.calculateMonth(DateTime.now());
@@ -63,22 +59,21 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     }
   }
 
-  FutureOr<void> _onEvent(FredericSetEvent event,
-      Emitter<FredericSetListData> emit) async {
+  FutureOr<void> _onEvent(
+      FredericSetEvent event, Emitter<FredericSetListData> emit) async {
     final profiler = FredericProfiler.track('SetManager onEvent');
     final data = FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
-      volume: volumeDataRepresentation!.volume,
-      muscleSplit: volumeDataRepresentation!.getMuscleGroupSplit(),
-      weeklyTrainingVolume: volumeDataRepresentation!.getVolumeXDays(28),
+      volume: timeSeriesDataRepresentation!.volume,
+      muscleSplit: timeSeriesDataRepresentation!.getMuscleGroupSplit(),
+      weeklyTrainingVolume: timeSeriesDataRepresentation!.getVolumeXDays(28),
     );
     profiler.stop();
     emit(data);
   }
 
   FutureOr<void> initializeDataRepresentations() async {
-    await volumeDataRepresentation?.initialize(clearCachedData: false);
     await timeSeriesDataRepresentation?.initialize(clearCachedData: false);
     add(FredericSetEvent(['data representations initialized']));
   }
@@ -86,10 +81,10 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
   Future<void> reload([bool fullReloadFromDB = false]) async {
     _sets.clear();
     HashMap<String, List<FredericSetDocument>> documentMap =
-    HashMap<String, List<FredericSetDocument>>();
+        HashMap<String, List<FredericSetDocument>>();
 
     final documents =
-    await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
     for (var doc in documents) {
       if (!documentMap.containsKey(doc.activityID)) {
         documentMap[doc.activityID] = <FredericSetDocument>[];
@@ -102,7 +97,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     }
 
     if (fullReloadFromDB) {
-      await volumeDataRepresentation?.initialize(clearCachedData: true);
       await timeSeriesDataRepresentation?.initialize(clearCachedData: true);
     }
 
@@ -113,7 +107,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     //TODO: Why is this state[activityid] and not _sets[activityid]?
     await state[activity.id].addSet(set, dataInterface);
 
-    volumeDataRepresentation?.addSet(activity, set);
     timeSeriesDataRepresentation?.addSet(activity, set);
 
     add(FredericSetEvent([activity.id]));
@@ -123,7 +116,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     //TODO: Why is this state[activityid] and not _sets[activityid]?
     await state[activity.id].deleteSet(set, dataInterface);
 
-    volumeDataRepresentation?.deleteSet(activity, set);
     timeSeriesDataRepresentation?.deleteSet(activity, set);
 
     add(FredericSetEvent([activity.id]));

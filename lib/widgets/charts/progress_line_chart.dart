@@ -20,14 +20,15 @@ class ProgressLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, right: 12, left: 12, bottom: 12),
       child: LineChart(mainData()),
     );
   }
 
   LineChartData mainData() {
     return LineChartData(
+      lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -36,33 +37,41 @@ class ProgressLineChart extends StatelessWidget {
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: theme.disabledGreyColor,
-            strokeWidth: 1,
+            strokeWidth: 0.5,
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
             color: theme.disabledGreyColor,
-            strokeWidth: 1,
+            strokeWidth: 0.5,
           );
         },
       ),
-      /*
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: SideTitles(showTitles: false),
-        topTitles: SideTitles(showTitles: false),
-        bottomTitles: SideTitles(
-          showTitles: false,
-          reservedSize: 12,
-          interval: 1,
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
         ),
-        leftTitles: SideTitles(
-          showTitles: false,
-          interval: 1,
-          reservedSize: 12,
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 16,
+            interval: 1,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 24,
+          ),
         ),
       ),
-       */
       borderData: FlBorderData(
           show: true,
           border: Border.all(color: theme.disabledGreyColor, width: 1)),
@@ -92,10 +101,62 @@ class ProgressLineChart extends StatelessWidget {
           belowBarData: BarAreaData(
             show: true,
             gradient: LinearGradient(
-                colors: gradientColors.map((e) => e.withOpacity(0.2)).toList()),
+                colors:
+                    gradientColors.map((e) => e.withOpacity(0.15)).toList()),
           ),
         ),
       ],
     );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = const Text('MAR', style: style);
+        break;
+      case 2:
+        text = const Text('JUN', style: style);
+        break;
+      case 11:
+        text = const Text('Sep', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+      space: 2,
+    );
+  }
+
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 1:
+        text = '10K';
+        break;
+      case 3:
+        text = '30k';
+        break;
+      case 5:
+        text = '50k';
+        break;
+      default:
+        return Container();
+    }
+
+    return Text(text, style: style, textAlign: TextAlign.left);
   }
 }

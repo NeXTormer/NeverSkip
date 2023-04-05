@@ -1,25 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 
-///
 /// Contains the reps, weight and timestamp of a Set of an Activity
 ///
 /// Immutable, cant be changed. Can only be deleted using the FredericSetDocument
 /// class.
 ///
-class FredericSet implements Comparable {
+class FredericSet implements Comparable, FredericDataObject {
   FredericSet(this.reps, this.weight, this.timestamp);
 
   FredericSet.fromMap(Map<String, dynamic> map)
       : reps = map['reps'],
-        weight = map['value']?.toDouble() {
-    timestamp = map['timestamp']?.toDate();
-  }
+        weight = map['value']?.toDouble(),
+        timestamp = map['timestamp']?.toDate();
 
-  final int reps;
-  final double weight;
-  late final DateTime timestamp;
+  int reps;
+  double weight;
+  DateTime timestamp;
 
   int get monthID {
     int yearDiff = timestamp.year - FredericSetManager.startingYear;
@@ -51,5 +49,23 @@ class FredericSet implements Comparable {
   }
 
   @override
-  int get hashCode => hashValues(reps, weight, timestamp);
+  int get hashCode => Object.hash(reps, weight, timestamp);
+
+  @override
+  void fromMap(String id, Map<String, dynamic> data) {
+    reps = data['reps'];
+    weight = data['value']?.toDouble();
+    timestamp = data['timestamp']?.toDate();
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    // TODO: implement toMap
+    throw UnimplementedError();
+  }
+
+  @override
+  String get id => timestamp.hashCode.toString();
 }
+
+///
