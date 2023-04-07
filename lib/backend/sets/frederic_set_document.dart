@@ -16,7 +16,9 @@ class FredericSetDocument implements Comparable, FredericDataObject {
 
   @deprecated
   String get documentID => id;
+
   String get activityID => _activityID;
+
   int get month => _month;
 
   final String id;
@@ -43,7 +45,7 @@ class FredericSetDocument implements Comparable, FredericDataObject {
     assert(_activityID != '', 'ActivityID can\'t be empty');
     List<Map<String, dynamic>> setMapList = <Map<String, dynamic>>[];
     for (FredericSet set in sets) {
-      setMapList.add(set.asMap());
+      setMapList.add(set.toMap());
     }
     return <String, dynamic>{
       'activityid': _activityID,

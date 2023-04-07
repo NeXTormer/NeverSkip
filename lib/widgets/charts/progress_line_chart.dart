@@ -1,17 +1,22 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/sets/frederic_set.dart';
+import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
 import 'package:frederic/main.dart';
 
 class ProgressLineChart extends StatelessWidget {
-  ProgressLineChart(this.sets, {Key? key}) : super(key: key);
+  ProgressLineChart(
+      {required this.data, required this.activity, this.months = 3, Key? key})
+      : super(key: key);
 
   // final List<Color> gradientColors = [
   //   const Color(0xff23b6e6),
   //   const Color(0xff02d39a),
   // ];
 
-  final List<FredericSet> sets;
+  final FredericActivity activity;
+  final TimeSeriesSetData data;
+  final int months;
 
   final List<Color> gradientColors = [
     theme.mainColor,

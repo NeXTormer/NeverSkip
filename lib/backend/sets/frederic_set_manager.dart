@@ -15,7 +15,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
       : super(FredericSetListData(
             changedActivities: <String>[],
             sets: HashMap<String, FredericSetList>(),
-            volume: HashMap<DateTime, TimeSeriesSetData>(),
+            setsByTime: HashMap<DateTime, TimeSeriesSetData>(),
             muscleSplit: List<int>.filled(5, 0),
             weeklyTrainingVolume: List<int>.filled(28, 0))) {
     on<FredericSetEvent>(_onEvent);
@@ -65,7 +65,7 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
     final data = FredericSetListData(
       changedActivities: event.changedActivities,
       sets: _sets,
-      volume: timeSeriesDataRepresentation!.volume,
+      setsByTime: timeSeriesDataRepresentation!.volume,
       muscleSplit: timeSeriesDataRepresentation!.getMuscleGroupSplit(),
       weeklyTrainingVolume: timeSeriesDataRepresentation!.getVolumeXDays(28),
     );

@@ -25,6 +25,11 @@ class HomeScreenAppbar extends StatelessWidget {
       height: 124,
       title: tr('home.title'),
       subtitle: tr('home.subtitle', args: [timeOfDay, userName]),
+      icon: GestureDetector(
+        onTap: () {},
+        child: Icon(Icons.app_settings_alt,
+            color: theme.textColorColorfulBackground),
+      ),
       leading: Row(
         children: [
           Stack(

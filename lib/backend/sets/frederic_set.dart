@@ -7,6 +7,8 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 /// Immutable, cant be changed. Can only be deleted using the FredericSetDocument
 /// class.
 ///
+/// !*IMPORTANT*!: The ID property of this class is unused
+///
 class FredericSet implements Comparable, FredericDataObject {
   FredericSet(this.reps, this.weight, this.timestamp);
 
@@ -22,14 +24,6 @@ class FredericSet implements Comparable, FredericDataObject {
   int get monthID {
     int yearDiff = timestamp.year - FredericSetManager.startingYear;
     return timestamp.month + (yearDiff * 12);
-  }
-
-  Map<String, dynamic> asMap() {
-    return {
-      'reps': reps,
-      'value': weight,
-      'timestamp': Timestamp.fromDate(timestamp)
-    };
   }
 
   bool operator ==(other) {
@@ -60,12 +54,13 @@ class FredericSet implements Comparable, FredericDataObject {
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    return {
+      'reps': reps,
+      'value': weight,
+      'timestamp': Timestamp.fromDate(timestamp)
+    };
   }
 
   @override
-  String get id => timestamp.hashCode.toString();
+  String get id => "not-implemented";
 }
-
-///

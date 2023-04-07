@@ -88,11 +88,14 @@ void main() async {
     if (!Hive.isAdapterRegistered(5))
       Hive.registerAdapter(FredericUniversalTypeAdapter<FredericGoal>(5,
           create: (id, data) => FredericGoal.fromMap(id, data)));
+    if (!Hive.isAdapterRegistered(6))
+      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSet>(6,
+          create: (id, data) => FredericSet.fromMap(data)));
     if (!Hive.isAdapterRegistered(100))
       Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
     // == Hive == End ==
 
-    //await Hive.deleteBoxFromDisk('Sets');
+    //await Hive.deleteBoxFromDisk('SetVolumeDataRepresentation');
 
     // == Load Startup Preferences ==
     SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -171,7 +171,8 @@ class VolumeSliderMonth extends StatelessWidget {
                       _DayCard(dates[i]?.day.toString(),
                           volume: dates[i] == null
                               ? 0
-                              : setListData.volume[dates[i]]?.volume ?? 0.88,
+                              : setListData.setsByTime[dates[i]]?.volume ??
+                                  0.88,
                           size: size,
                           tinted: tinted
                               ? (dates[i]?.month == startingDay.month &&

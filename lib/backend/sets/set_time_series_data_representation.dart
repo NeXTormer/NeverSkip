@@ -42,9 +42,10 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
         final setIterator = setList.getAllSets();
         final activity = activityManager[setList.activityID];
         for (var set in setIterator) {
-          _addDataToChart(activity, set);
+          _addDataToChart(activity, set, updateCachedData: false);
         }
       }
+      _updateCachedData();
 
       await _box!.put(0, Map<DateTime, TimeSeriesSetData>.of(_data));
     } else {
@@ -87,7 +88,8 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     return list;
   }
 
-  void _addDataToChart(FredericActivity? activity, FredericSet set) {
+  void _addDataToChart(FredericActivity? activity, FredericSet set,
+      {bool updateCachedData = true}) {
     final day =
         DateTime(set.timestamp.year, set.timestamp.month, set.timestamp.day);
     if (!_data.containsKey(day)) {
@@ -104,13 +106,29 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
         dayData.allSetsOnDay[activity.id] = <FredericSet>[];
       }
 
+      if (dayData.bestSetOnDay.containsKey(activity.id)) {
+        if (activity.type == FredericActivityType.Weighted) {
+          if (dayData.bestSetOnDay[activity.id]!.weight < set.weight) {
+            dayData.bestSetOnDay[activity.id] = set;
+          }
+        } else {
+          if (dayData.bestSetOnDay[activity.id]!.reps < set.reps) {
+            dayData.bestSetOnDay[activity.id] = set;
+          }
+        }
+      } else {
+        dayData.bestSetOnDay[activity.id] = set;
+      }
+
+      dayData.allSetsOnDay[activity.id]!.add(set);
+
       for (final muscleGroup in activity.muscleGroups) {
         dayData.muscleGroupReps[dayData.getMuscleGroupID(muscleGroup)] +=
             set.reps;
       }
     }
 
-    _updateCachedData();
+    if (updateCachedData) _updateCachedData();
   }
 
   void _removeDataFromChart(FredericActivity activity, FredericSet set) {
@@ -119,6 +137,32 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
 
     final dayData = _data[day];
     if (dayData == null) return;
+
+    assert(dayData.allSetsOnDay.containsKey(activity.id));
+    assert(dayData.bestSetOnDay.containsKey(activity.id));
+
+    dayData.allSetsOnDay[activity.id]!.remove(set);
+
+    if (dayData.bestSetOnDay[activity.id] == set) {
+      if (dayData.allSetsOnDay[activity.id]!.isEmpty) {
+        dayData.bestSetOnDay.remove(activity.id);
+      } else {
+        final setList = dayData.allSetsOnDay[activity.id]!;
+        FredericSet bestSet = setList.first;
+        for (FredericSet temp in setList) {
+          if (activity.type == FredericActivityType.Weighted) {
+            if (bestSet.weight < temp.weight) {
+              bestSet = temp;
+            }
+          } else {
+            if (bestSet.reps < temp.reps) {
+              bestSet = temp;
+            }
+          }
+        }
+        dayData.bestSetOnDay[activity.id] = bestSet;
+      }
+    }
 
     dayData.sets -= 1;
     dayData.reps -= set.reps;
@@ -149,7 +193,8 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
 class TimeSeriesSetData implements FredericDataObject {
   TimeSeriesSetData(this.sets, this.reps, this.volume, this.id)
       : muscleGroupReps = List.filled(5, 0),
-        allSetsOnDay = HashMap<String, List<FredericSet>>();
+        allSetsOnDay = HashMap<String, List<FredericSet>>(),
+        bestSetOnDay = HashMap<String, FredericSet>();
 
   TimeSeriesSetData.fromMap(String id, Map<String, dynamic> data)
       : this.id = id,
@@ -157,7 +202,8 @@ class TimeSeriesSetData implements FredericDataObject {
         this.sets = 0,
         this.volume = 0,
         this.muscleGroupReps = <double>[],
-        allSetsOnDay = HashMap<String, List<FredericSet>>() {
+        allSetsOnDay = HashMap<String, List<FredericSet>>(),
+        bestSetOnDay = HashMap<String, FredericSet>() {
     fromMap(id, data);
   }
 
@@ -166,7 +212,8 @@ class TimeSeriesSetData implements FredericDataObject {
   int sets;
   double volume;
   List<double> muscleGroupReps;
-  HashMap<String, List<FredericSet>> allSetsOnDay;
+  Map<String, List<FredericSet>> allSetsOnDay;
+  Map<String, FredericSet> bestSetOnDay;
 
   int getMuscleGroupID(FredericActivityMuscleGroup group) {
     switch (group) {
@@ -192,8 +239,21 @@ class TimeSeriesSetData implements FredericDataObject {
     this.sets = data['sets'];
     this.volume = data['volume'];
     this.muscleGroupReps = data['musclegroups'];
-    this.allSetsOnDay =
-        data['allsetsonday'] ?? HashMap<String, List<FredericSet>>();
+    this.allSetsOnDay = HashMap<String, List<FredericSet>>();
+    this.bestSetOnDay = HashMap<String, FredericSet>();
+
+    if (data['allsetsonday'] != null) {
+      Map<dynamic, dynamic> temp = data['allsetsonday'];
+
+      for (var entry in temp.entries) {
+        assert(entry.key is String);
+        this.allSetsOnDay[entry.key] = List<FredericSet>.from(entry.value);
+      }
+    }
+
+    if (data['bestsetonday'] != null) {
+      bestSetOnDay = HashMap<String, FredericSet>.from(data['bestsetonday']);
+    }
   }
 
   @override
@@ -203,7 +263,8 @@ class TimeSeriesSetData implements FredericDataObject {
       'sets': sets,
       'volume': volume,
       'musclegroups': muscleGroupReps,
-      'allsetsonday': allSetsOnDay
+      'allsetsonday': allSetsOnDay,
+      'bestsetonday': bestSetOnDay
     };
   }
 }

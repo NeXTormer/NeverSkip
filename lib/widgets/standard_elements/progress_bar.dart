@@ -26,7 +26,7 @@ class ProgressBar extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: progress,
                 backgroundColor: alternateColor
-                    ? theme.accentColorLight
+                    ? theme.accentColorLight.withAlpha(255)
                     : theme.mainColorLight,
                 valueColor: AlwaysStoppedAnimation<Color>(
                     alternateColor ? theme.accentColor : theme.mainColor),

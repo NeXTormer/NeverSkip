@@ -61,13 +61,13 @@ class FredericAnalytics {
   Future<void> logAddProgressOnActivity([bool useSmartSuggestions = false]) {
     return analytics.logEvent(
         name: 'add_progress_using_activity',
-        parameters: {'used_smart_suggestions': useSmartSuggestions});
+        parameters: {'used_smart_suggestions': useSmartSuggestions ? 1 : 0});
   }
 
   Future<void> logAddProgressOnCalendar([bool useSmartSuggestions = false]) {
     return analytics.logEvent(
         name: 'add_progress_using_calendar',
-        parameters: {'used_smart_suggestions': useSmartSuggestions});
+        parameters: {'used_smart_suggestions': useSmartSuggestions ? 1 : 0});
   }
 
   Future<void> logAddProgressOnWorkoutPlayer() {

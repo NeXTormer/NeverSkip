@@ -197,7 +197,7 @@ class FredericSetList {
     var doc = await dataInterface.createFromMap({
       'activityid': activityID,
       'month': set.monthID,
-      'sets': <Map<String, dynamic>>[set.asMap()]
+      'sets': <Map<String, dynamic>>[set.toMap()]
     });
     _setDocuments.add(doc);
   }
