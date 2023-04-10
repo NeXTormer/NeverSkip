@@ -1,13 +1,19 @@
+import 'dart:collection';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
+import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 
-class ProgressLineChart extends StatelessWidget {
+class ProgressLineChart extends StatefulWidget {
   ProgressLineChart(
-      {required this.data, required this.activity, this.months = 3, Key? key})
-      : super(key: key);
+      {required this.timeSeriesData,
+      required this.activity,
+      this.months = 3,
+      Key? key})
+      : super(key: key) {}
 
   // final List<Color> gradientColors = [
   //   const Color(0xff23b6e6),
@@ -15,13 +21,65 @@ class ProgressLineChart extends StatelessWidget {
   // ];
 
   final FredericActivity activity;
-  final TimeSeriesSetData data;
+  final HashMap<DateTime, TimeSeriesSetData> timeSeriesData;
   final int months;
+
+  @override
+  State<ProgressLineChart> createState() => _ProgressLineChartState();
+}
+
+class _ProgressLineChartState extends State<ProgressLineChart> {
+  final List<FlSpot> chartData = <FlSpot>[];
 
   final List<Color> gradientColors = [
     theme.mainColor,
     theme.accentColor,
   ];
+
+  void initState() {
+    super.initState();
+    var profiler = FredericProfiler.track('ProgressLineChart initData');
+    initData();
+    profiler.stop();
+  }
+
+  //TODO: also move this to SetTimeSeriesDataRepresentation
+  void initData() {
+    chartData.clear();
+    final now = DateTime.now();
+    final end = DateTime(now.year, now.month, now.day + 1);
+
+    int startMonth = now.month - widget.months;
+    int startYear = now.year;
+    while (startMonth < 1) {
+      startMonth += 12;
+      startYear -= 1;
+    }
+
+    final start = DateTime(startYear, startMonth, now.day);
+    DateTime current = start;
+    print("Start");
+    int dayIndex = 0;
+    while (current.isBefore(end)) {
+      final TimeSeriesSetData? data = widget
+          .timeSeriesData[DateTime(current.year, current.month, current.day)];
+
+      if (data != null) {
+        FredericSet? set = data.bestSetOnDay['wFoYDrwnV8zDzXFuOlwF'];
+        // FredericSet? set =
+        //     data.allSetsOnDay['wFoYDrwnV8zDzXFuOlwF']?.isEmpty ?? true
+        //         ? null
+        //         : data.allSetsOnDay['wFoYDrwnV8zDzXFuOlwF']?.first;
+        if (set != null) {
+          chartData.add(FlSpot(dayIndex.toDouble(), set.weight));
+        }
+      }
+
+      current = current.add(const Duration(days: 1));
+      dayIndex++;
+    }
+    print("END");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +93,10 @@ class ProgressLineChart extends StatelessWidget {
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
+        // show: true,
+        // drawVerticalLine: true,
+        // horizontalInterval: 1,
+        // verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: theme.disabledGreyColor,
@@ -53,7 +111,7 @@ class ProgressLineChart extends StatelessWidget {
         },
       ),
       titlesData: FlTitlesData(
-        show: true,
+        // show: true,
         rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
@@ -80,22 +138,22 @@ class ProgressLineChart extends StatelessWidget {
       borderData: FlBorderData(
           show: true,
           border: Border.all(color: theme.disabledGreyColor, width: 1)),
-      minX: 0,
-      maxX: 11,
+      minX: chartData.first.x,
+      maxX: chartData.last.x,
       minY: 0,
-      maxY: 6,
+      maxY: 100,
       lineBarsData: [
         LineChartBarData(
-          spots: //sets.map((e) => FlSpot(e.weight, e.timestamp)).toList(),
-              const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: chartData,
+          //     const [
+          //   FlSpot(0, 3),
+          //   FlSpot(2.6, 2),
+          //   FlSpot(4.9, 5),
+          //   FlSpot(6.8, 3.1),
+          //   FlSpot(8, 4),
+          //   FlSpot(9.5, 3),
+          //   FlSpot(11, 4),
+          // ],
           isCurved: true,
           gradient: LinearGradient(colors: gradientColors),
           barWidth: 4,

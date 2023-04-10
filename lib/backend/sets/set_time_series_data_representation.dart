@@ -22,7 +22,10 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   HashMap<DateTime, TimeSeriesSetData> _data =
       HashMap<DateTime, TimeSeriesSetData>();
 
+  @deprecated
   HashMap<DateTime, TimeSeriesSetData> get volume => _data;
+
+  HashMap<DateTime, TimeSeriesSetData> get timeSeriesData => _data;
 
   Box<Map<dynamic, dynamic>>? _box;
 
