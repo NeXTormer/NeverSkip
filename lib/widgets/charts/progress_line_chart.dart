@@ -11,7 +11,7 @@ class ProgressLineChart extends StatefulWidget {
   ProgressLineChart(
       {required this.timeSeriesData,
       required this.activity,
-      this.months = 3,
+      this.months = 12,
       Key? key})
       : super(key: key) {}
 
@@ -23,6 +23,7 @@ class ProgressLineChart extends StatefulWidget {
   final FredericActivity activity;
   final HashMap<DateTime, TimeSeriesSetData> timeSeriesData;
   final int months;
+  final bool isStepLineChart = false;
 
   @override
   State<ProgressLineChart> createState() => _ProgressLineChartState();
@@ -55,6 +56,7 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
       startMonth += 12;
       startYear -= 1;
     }
+    print("StartMonth: $startMonth, startYear: $startYear");
 
     final start = DateTime(startYear, startMonth, now.day);
     DateTime current = start;
@@ -65,19 +67,19 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
           .timeSeriesData[DateTime(current.year, current.month, current.day)];
 
       if (data != null) {
-        FredericSet? set = data.bestSetOnDay['wFoYDrwnV8zDzXFuOlwF'];
-        // FredericSet? set =
-        //     data.allSetsOnDay['wFoYDrwnV8zDzXFuOlwF']?.isEmpty ?? true
-        //         ? null
-        //         : data.allSetsOnDay['wFoYDrwnV8zDzXFuOlwF']?.first;
+        FredericSet? set = data.bestSetOnDay['NPZDVAhfqtapwXHHIRul'];
+
         if (set != null) {
           chartData.add(FlSpot(dayIndex.toDouble(), set.weight));
+          print('${dayIndex}: ${set.weight}');
         }
       }
 
       current = current.add(const Duration(days: 1));
       dayIndex++;
     }
+    print("END");
+    print("END");
     print("END");
   }
 
@@ -93,10 +95,9 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
-        // show: true,
-        // drawVerticalLine: true,
-        // horizontalInterval: 1,
-        // verticalInterval: 1,
+        show: true,
+        drawVerticalLine: true,
+        drawHorizontalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: theme.disabledGreyColor,
@@ -145,18 +146,11 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
       lineBarsData: [
         LineChartBarData(
           spots: chartData,
-          //     const [
-          //   FlSpot(0, 3),
-          //   FlSpot(2.6, 2),
-          //   FlSpot(4.9, 5),
-          //   FlSpot(6.8, 3.1),
-          //   FlSpot(8, 4),
-          //   FlSpot(9.5, 3),
-          //   FlSpot(11, 4),
-          // ],
-          isCurved: true,
+          isCurved: false,
           gradient: LinearGradient(colors: gradientColors),
           barWidth: 4,
+          isStrokeJoinRound: true,
+          isStepLineChart: widget.isStepLineChart,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,

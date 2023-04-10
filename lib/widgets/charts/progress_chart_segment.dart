@@ -26,7 +26,7 @@ class ProgressChartSegment extends StatelessWidget {
                   page: ProgressLineChart(
                     timeSeriesData: data.setsByTime,
                     activity: FredericActivity.noSuchActivity('id'),
-                    months: 1,
+                    months: 24,
                   ))
             ]),
       );
