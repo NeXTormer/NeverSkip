@@ -3,11 +3,9 @@ import 'dart:collection';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
-import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
-import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 
-class ProgressLineChart extends StatefulWidget {
+class ProgressLineChart extends StatelessWidget {
   ProgressLineChart(
       {required this.timeSeriesData,
       required this.activity,
@@ -15,73 +13,15 @@ class ProgressLineChart extends StatefulWidget {
       Key? key})
       : super(key: key) {}
 
-  // final List<Color> gradientColors = [
-  //   const Color(0xff23b6e6),
-  //   const Color(0xff02d39a),
-  // ];
-
-  final FredericActivity activity;
-  final HashMap<DateTime, TimeSeriesSetData> timeSeriesData;
-  final int months;
-  final bool isStepLineChart = false;
-
-  @override
-  State<ProgressLineChart> createState() => _ProgressLineChartState();
-}
-
-class _ProgressLineChartState extends State<ProgressLineChart> {
-  final List<FlSpot> chartData = <FlSpot>[];
-
   final List<Color> gradientColors = [
-    theme.mainColor,
-    theme.accentColor,
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
   ];
 
-  void initState() {
-    super.initState();
-    var profiler = FredericProfiler.track('ProgressLineChart initData');
-    initData();
-    profiler.stop();
-  }
-
-  //TODO: also move this to SetTimeSeriesDataRepresentation
-  void initData() {
-    chartData.clear();
-    final now = DateTime.now();
-    final end = DateTime(now.year, now.month, now.day + 1);
-
-    int startMonth = now.month - widget.months;
-    int startYear = now.year;
-    while (startMonth < 1) {
-      startMonth += 12;
-      startYear -= 1;
-    }
-    print("StartMonth: $startMonth, startYear: $startYear");
-
-    final start = DateTime(startYear, startMonth, now.day);
-    DateTime current = start;
-    print("Start");
-    int dayIndex = 0;
-    while (current.isBefore(end)) {
-      final TimeSeriesSetData? data = widget
-          .timeSeriesData[DateTime(current.year, current.month, current.day)];
-
-      if (data != null) {
-        FredericSet? set = data.bestSetOnDay['NPZDVAhfqtapwXHHIRul'];
-
-        if (set != null) {
-          chartData.add(FlSpot(dayIndex.toDouble(), set.weight));
-          print('${dayIndex}: ${set.weight}');
-        }
-      }
-
-      current = current.add(const Duration(days: 1));
-      dayIndex++;
-    }
-    print("END");
-    print("END");
-    print("END");
-  }
+  final FredericActivity activity;
+  final HashMap<String, List<double?>> timeSeriesData;
+  final int months;
+  final bool isStepLineChart = false;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +32,17 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
   }
 
   LineChartData mainData() {
+    final List<FlSpot> chartData = <FlSpot>[];
+
+    final list = timeSeriesData['NPZDVAhfqtapwXHHIRul'];
+    if (list != null) {
+      for (int i = 0; i < list.length; i++) {
+        if (list[i] != null) {
+          chartData.add(FlSpot(i.toDouble(), list[i]!));
+        }
+      }
+    }
+
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
@@ -150,7 +101,7 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
           gradient: LinearGradient(colors: gradientColors),
           barWidth: 4,
           isStrokeJoinRound: true,
-          isStepLineChart: widget.isStepLineChart,
+          isStepLineChart: isStepLineChart,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,
@@ -217,3 +168,53 @@ class _ProgressLineChartState extends State<ProgressLineChart> {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 }
+
+// class _ProgressLineChartState extends State<ProgressLineChart> {
+//
+//
+//
+//   void initState() {
+//     super.initState();
+//   }
+//
+//   // //TODO: also move this to SetTimeSeriesDataRepresentation
+//   // void initData() {
+//   //   chartData.clear();
+//   //   final now = DateTime.now();
+//   //   final end = DateTime(now.year, now.month, now.day + 1);
+//   //
+//   //   int startMonth = now.month - widget.months;
+//   //   int startYear = now.year;
+//   //   while (startMonth < 1) {
+//   //     startMonth += 12;
+//   //     startYear -= 1;
+//   //   }
+//   //   print("StartMonth: $startMonth, startYear: $startYear");
+//   //
+//   //   final start = DateTime(startYear, startMonth, now.day);
+//   //   DateTime current = start;
+//   //   print("Start");
+//   //   int dayIndex = 0;
+//   //   while (current.isBefore(end)) {
+//   //     final TimeSeriesSetData? data = widget
+//   //         .timeSeriesData[DateTime(current.year, current.month, current.day)];
+//   //
+//   //     if (data != null) {
+//   //       FredericSet? set = data.bestSetOnDay['NPZDVAhfqtapwXHHIRul'];
+//   //
+//   //       if (set != null) {
+//   //         chartData.add(FlSpot(dayIndex.toDouble(), set.weight));
+//   //         print('${dayIndex}: ${set.weight}');
+//   //       }
+//   //     }
+//   //
+//   //     current = current.add(const Duration(days: 1));
+//   //     dayIndex++;
+//   //   }
+//   //   print("END");
+//   //   print("END");
+//   //   print("END");
+//   // }
+//
+//
+// }
