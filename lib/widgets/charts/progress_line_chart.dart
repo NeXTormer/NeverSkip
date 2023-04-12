@@ -1,27 +1,27 @@
+import 'dart:collection';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:frederic/backend/activities/frederic_activity.dart';
-import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 
 class ProgressLineChart extends StatelessWidget {
   ProgressLineChart(
-      {required this.data, required this.activity, this.months = 3, Key? key})
-      : super(key: key);
-
-  // final List<Color> gradientColors = [
-  //   const Color(0xff23b6e6),
-  //   const Color(0xff02d39a),
-  // ];
-
-  final FredericActivity activity;
-  final TimeSeriesSetData data;
-  final int months;
+      {required this.timeSeriesData,
+      required this.activity,
+      this.months = 12,
+      Key? key})
+      : super(key: key) {}
 
   final List<Color> gradientColors = [
-    theme.mainColor,
-    theme.accentColor,
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
   ];
+
+  final FredericActivity activity;
+  final HashMap<String, List<double?>> timeSeriesData;
+  final int months;
+  final bool isStepLineChart = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,23 @@ class ProgressLineChart extends StatelessWidget {
   }
 
   LineChartData mainData() {
+    final List<FlSpot> chartData = <FlSpot>[];
+
+    final list = timeSeriesData['NPZDVAhfqtapwXHHIRul'];
+    if (list != null) {
+      for (int i = 0; i < list.length; i++) {
+        if (list[i] != null) {
+          chartData.add(FlSpot(i.toDouble(), list[i]!));
+        }
+      }
+    }
+
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        horizontalInterval: 1,
-        verticalInterval: 1,
+        drawHorizontalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: theme.disabledGreyColor,
@@ -53,7 +63,7 @@ class ProgressLineChart extends StatelessWidget {
         },
       ),
       titlesData: FlTitlesData(
-        show: true,
+        // show: true,
         rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
@@ -80,25 +90,18 @@ class ProgressLineChart extends StatelessWidget {
       borderData: FlBorderData(
           show: true,
           border: Border.all(color: theme.disabledGreyColor, width: 1)),
-      minX: 0,
-      maxX: 11,
+      minX: chartData.first.x,
+      maxX: chartData.last.x,
       minY: 0,
-      maxY: 6,
+      maxY: 100,
       lineBarsData: [
         LineChartBarData(
-          spots: //sets.map((e) => FlSpot(e.weight, e.timestamp)).toList(),
-              const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
+          spots: chartData,
+          isCurved: false,
           gradient: LinearGradient(colors: gradientColors),
           barWidth: 4,
+          isStrokeJoinRound: true,
+          isStepLineChart: isStepLineChart,
           isStrokeCapRound: true,
           dotData: FlDotData(
             show: false,
@@ -165,3 +168,53 @@ class ProgressLineChart extends StatelessWidget {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 }
+
+// class _ProgressLineChartState extends State<ProgressLineChart> {
+//
+//
+//
+//   void initState() {
+//     super.initState();
+//   }
+//
+//   // //TODO: also move this to SetTimeSeriesDataRepresentation
+//   // void initData() {
+//   //   chartData.clear();
+//   //   final now = DateTime.now();
+//   //   final end = DateTime(now.year, now.month, now.day + 1);
+//   //
+//   //   int startMonth = now.month - widget.months;
+//   //   int startYear = now.year;
+//   //   while (startMonth < 1) {
+//   //     startMonth += 12;
+//   //     startYear -= 1;
+//   //   }
+//   //   print("StartMonth: $startMonth, startYear: $startYear");
+//   //
+//   //   final start = DateTime(startYear, startMonth, now.day);
+//   //   DateTime current = start;
+//   //   print("Start");
+//   //   int dayIndex = 0;
+//   //   while (current.isBefore(end)) {
+//   //     final TimeSeriesSetData? data = widget
+//   //         .timeSeriesData[DateTime(current.year, current.month, current.day)];
+//   //
+//   //     if (data != null) {
+//   //       FredericSet? set = data.bestSetOnDay['NPZDVAhfqtapwXHHIRul'];
+//   //
+//   //       if (set != null) {
+//   //         chartData.add(FlSpot(dayIndex.toDouble(), set.weight));
+//   //         print('${dayIndex}: ${set.weight}');
+//   //       }
+//   //     }
+//   //
+//   //     current = current.add(const Duration(days: 1));
+//   //     dayIndex++;
+//   //   }
+//   //   print("END");
+//   //   print("END");
+//   //   print("END");
+//   // }
+//
+//
+// }

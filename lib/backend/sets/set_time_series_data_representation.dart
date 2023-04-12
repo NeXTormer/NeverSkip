@@ -1,13 +1,11 @@
 import 'dart:collection';
 
-import 'package:frederic/backend/activities/frederic_activity_manager.dart';
+import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
-import 'package:frederic/backend/sets/frederic_set.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/sets/set_data_representation.dart';
 import 'package:hive/hive.dart';
 
-import '../activities/frederic_activity.dart';
 import '../util/frederic_profiler.dart';
 
 ///
@@ -19,10 +17,22 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   final FredericSetManager setManager;
   final FredericActivityManager activityManager;
 
-  HashMap<DateTime, TimeSeriesSetData> _data =
+  HashMap<DateTime, TimeSeriesSetData> _timeSeriesSetData =
       HashMap<DateTime, TimeSeriesSetData>();
 
-  HashMap<DateTime, TimeSeriesSetData> get volume => _data;
+  // stores the best set of each day in ascending order
+  // used for optimizing the progress chart display
+  HashMap<String, List<double?>> _optimizedBestSetData =
+      HashMap<String, List<double?>>();
+
+  // stores the first and last days in the above list
+  DateTime? _optimizedBestSetDataLastDate;
+  DateTime? _optimizedBestSetDataFirstDate;
+
+  HashMap<DateTime, TimeSeriesSetData> get timeSeriesData => _timeSeriesSetData;
+
+  HashMap<String, List<double?>> get optimizedBestSetData =>
+      _optimizedBestSetData;
 
   Box<Map<dynamic, dynamic>>? _box;
 
@@ -38,16 +48,71 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     if (_box!.isEmpty) {
       profiler = await FredericProfiler.trackFirebase(
           'Calculate SetVolumeDataRepresentation');
+
+      DateTime earliestSet = DateTime.now();
+      DateTime latestSet = DateTime.fromMillisecondsSinceEpoch(0);
       for (var setList in setManager.sets.values) {
         final setIterator = setList.getAllSets();
         final activity = activityManager[setList.activityID];
         for (var set in setIterator) {
+          if (set.timestamp.isBefore(earliestSet)) {
+            earliestSet = set.timestamp;
+          }
+          if (set.timestamp.isAfter(latestSet)) {
+            latestSet = set.timestamp;
+          }
           _addDataToChart(activity, set, updateCachedData: false);
         }
       }
       _updateCachedData();
 
-      await _box!.put(0, Map<DateTime, TimeSeriesSetData>.of(_data));
+      // If there was at least one FredericSet present
+      if (latestSet != DateTime.fromMillisecondsSinceEpoch(0)) {
+        _optimizedBestSetDataFirstDate = earliestSet;
+        _optimizedBestSetDataLastDate = latestSet;
+        _optimizedBestSetData.clear();
+        final lastIndex =
+            _getOptimizedListIndex(_optimizedBestSetDataLastDate!);
+
+        DateTime end = DateTime(
+            _optimizedBestSetDataLastDate!.year,
+            _optimizedBestSetDataLastDate!.month,
+            _optimizedBestSetDataLastDate!.day + 1);
+        DateTime current = _optimizedBestSetDataFirstDate!;
+        while (current.isBefore(end)) {
+          final TimeSeriesSetData? data = timeSeriesData[
+              DateTime(current.year, current.month, current.day)];
+
+          if (data != null) {
+            for (final set in data.bestSetOnDay.entries) {
+              if (!_optimizedBestSetData.containsKey(set.key)) {
+                _optimizedBestSetData[set.key] =
+                    List<double?>.filled(lastIndex + 1, null, growable: true);
+              }
+              final bestListForActivity = _optimizedBestSetData[set.key]!;
+              if (bestListForActivity.length < (lastIndex + 1)) {
+                bestListForActivity.addAll(List<double?>.filled(
+                    (lastIndex + 1) - bestListForActivity.length, null));
+              }
+
+              bool isWeighted = activityManager[set.key]?.type ==
+                  FredericActivityType.Weighted;
+
+              int index = _getOptimizedListIndex(current);
+
+              _optimizedBestSetData[set.key]![index] =
+                  isWeighted ? set.value.weight : set.value.reps.toDouble();
+            }
+          }
+
+          current = current.add(const Duration(days: 1));
+        }
+      }
+
+      await _box!
+          .put(0, Map<DateTime, TimeSeriesSetData>.of(_timeSeriesSetData));
+      // await _box!.put(1, Map<String, List<int>>.of(_optimizedBestSetData));
+      // await _box!.put(2, {1: _optimizedBestSetDataLastDate});
     } else {
       profiler = await FredericProfiler.trackFirebase(
           'Load SetVolumeDataRepresentation');
@@ -55,7 +120,7 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
       if (data == null) {
         return initialize(clearCachedData: true);
       }
-      _data = HashMap<DateTime, TimeSeriesSetData>.from(data);
+      _timeSeriesSetData = HashMap<DateTime, TimeSeriesSetData>.from(data);
     }
 
     profiler.stop();
@@ -66,7 +131,7 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     for (int i = 0; i < x; i++) {
-      final data = _data[today.subtract(Duration(days: i))];
+      final data = _timeSeriesSetData[today.subtract(Duration(days: i))];
       if (data != null) list[i] = data.volume.toInt();
     }
     list = list.reversed.toList();
@@ -78,7 +143,7 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     for (int i = 0; i < 28; i++) {
-      final data = _data[today.subtract(Duration(days: i))];
+      final data = _timeSeriesSetData[today.subtract(Duration(days: i))];
       if (data != null) {
         for (int j = 0; j < 5; j++) {
           list[j] += data.muscleGroupReps[j].toInt();
@@ -88,16 +153,32 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     return list;
   }
 
+  int _getOptimizedListIndex(DateTime date) {
+    final indexZero = _optimizedBestSetDataFirstDate;
+    assert(indexZero != null);
+    if (date.timeZoneOffset != indexZero!.timeZoneOffset) {
+      final offset = Duration(
+          milliseconds: date.timeZoneOffset.inMilliseconds -
+              indexZero.timeZoneOffset.inMilliseconds);
+
+      indexZero.add(offset);
+    }
+    int index =
+        DateTime(date.year, date.month, date.day).difference(indexZero).inDays;
+
+    return index;
+  }
+
   void _addDataToChart(FredericActivity? activity, FredericSet set,
       {bool updateCachedData = true}) {
     final day =
         DateTime(set.timestamp.year, set.timestamp.month, set.timestamp.day);
-    if (!_data.containsKey(day)) {
-      _data[day] =
+    if (!_timeSeriesSetData.containsKey(day)) {
+      _timeSeriesSetData[day] =
           TimeSeriesSetData(0, 0, 0, set.timestamp.hashCode.toString());
     }
 
-    final dayData = _data[day]!;
+    final dayData = _timeSeriesSetData[day]!;
     dayData.sets += 1;
     dayData.reps += set.reps;
     dayData.volume += set.reps * (set.weight == 0 ? 50 : set.weight);
@@ -135,7 +216,7 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     final day =
         DateTime(set.timestamp.year, set.timestamp.month, set.timestamp.day);
 
-    final dayData = _data[day];
+    final dayData = _timeSeriesSetData[day];
     if (dayData == null) return;
 
     assert(dayData.allSetsOnDay.containsKey(activity.id));
@@ -174,8 +255,9 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     _updateCachedData();
   }
 
-  Future<void> _updateCachedData() async {
-    await _box!.put(0, Map<DateTime, TimeSeriesSetData>.of(_data));
+  Future<void> _updateCachedData() {
+    return _box!
+        .put(0, Map<DateTime, TimeSeriesSetData>.of(_timeSeriesSetData));
   }
 
   @override

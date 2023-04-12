@@ -12,6 +12,7 @@ class FredericSetListData {
       {required this.changedActivities,
       required this.sets,
       required this.setsByTime,
+      required this.optimizedBestSetsByDay,
       required this.weeklyTrainingVolume,
       required this.muscleSplit});
 
@@ -20,6 +21,7 @@ class FredericSetListData {
   final List<int> muscleSplit;
   final HashMap<String, FredericSetList> sets;
   final HashMap<DateTime, TimeSeriesSetData> setsByTime;
+  final HashMap<String, List<double?>> optimizedBestSetsByDay;
 
   FredericSetList operator [](String value) {
     if (!sets.containsKey(value)) {
