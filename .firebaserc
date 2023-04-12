@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "hawkford-frederic"
+  },
+  "targets": {
+    "hawkford-frederic": {
+      "hosting": {
+        "cms": [
+          "neverskip-cms"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
