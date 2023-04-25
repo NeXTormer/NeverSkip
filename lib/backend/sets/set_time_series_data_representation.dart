@@ -34,6 +34,10 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
   HashMap<String, List<double?>> get optimizedBestSetData =>
       _optimizedBestSetData;
 
+  DateTime? get optimizedBestSetDataFirstDate => _optimizedBestSetDataFirstDate;
+
+  DateTime? get optimizedBestSetDataLastDate => _optimizedBestSetDataFirstDate;
+
   Box<Map<dynamic, dynamic>>? _box;
 
   @override
