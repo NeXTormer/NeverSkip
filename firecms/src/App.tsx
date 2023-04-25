@@ -24,19 +24,19 @@ type FredericUser = {
   name: String,
   email: String,
   image: String,
-  hasPurchased: Boolean,
-  lastLogin: Date,
-  lastOS: String,
-  lastOSVersion: String,
-  isDeveloper: Boolean,
-  shouldReloadData: Boolean,
-  trialStart: Date
+  has_purchased: Boolean,
+  last_login: Date,
+  last_os: String,
+  last_os_version: String,
+  is_developer: Boolean,
+  should_reload_data: Boolean,
+  trial_start: Date
 }
 
 const usersCollection = buildCollection<FredericUser>({
   path: "users",
   name: "Users",
-  icon: "Addchart",
+  icon: "group",
   singularName: "User",
   properties: {
     name: {
@@ -56,15 +56,16 @@ const usersCollection = buildCollection<FredericUser>({
       dataType: "string",
       readOnly: true,
     },
-    hasPurchased: {
+    has_purchased: {
       name: "Has purchased",
       dataType: "boolean",
     },
-    lastLogin: {
+    last_login: {
       name: "Last login",
       dataType: "date",
       readOnly: true
     }
+    last_os
   }
 });
 
