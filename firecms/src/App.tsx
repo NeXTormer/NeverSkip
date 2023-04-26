@@ -13,6 +13,9 @@ import "typeface-rubik";
 import "@fontsource/ibm-plex-mono";
 import {firebaseConfig} from "./firebase-config";
 
+import logo from "./assets/icon.png";
+
+
 type FredericUser = {
   image: string,
   name: string,
@@ -26,10 +29,99 @@ type FredericUser = {
   trial_start: Date
 }
 
+type FredericActivity = {
+  image: string,
+  name: string,
+  description: string,
+  recommendedreps: number,
+  recommendedsets: number,
+  type: string,
+  musclegroup: Array<string>,
+  owner: string,
+}
+
+const activitiesCollection = buildCollection<FredericActivity>({
+  path: "activities",
+  name: "Exercises",
+  icon: "MenuBook",
+  singularName: "Exercise",
+  properties: {
+    image: buildProperty({
+      dataType: "string",
+      name: "Image",
+      url: "image",
+      // storage: {
+      //   storagePath: "icons",
+      //   acceptedFiles: ["image/*"],
+      //   maxSize: 256 * 256,
+      //   metadata: {
+      //     cacheControl: "max-age=1000000"
+      //   },
+      //   fileName: (context) => {
+      //     return context.file.name;
+      //   }
+      // },
+      readOnly: false,
+    }),
+    name: buildProperty({
+      dataType: "string",
+      name: "Name",
+      validation: { required: true },
+      readOnly: false,
+    }),
+    description: buildProperty({
+      dataType: "string",
+      name: "Description",
+      validation: { required: false },
+      readOnly: false,
+      multiline: true,
+    }),
+    type: buildProperty({
+      dataType: "string",
+      name: "Type",
+      validation: { required: true },
+      readOnly: false,
+      enumValues: {
+        weighted: "Weighted",
+        cali: "Calisthenics"
+      }
+    }),
+    musclegroup: buildProperty({
+      dataType: "array",
+      name: "Muscle Groups",
+      validation: { required: false },
+      of: {
+        dataType: "string",
+        enumValues: {
+          "arms": "Arms", "chest": "Chest", "back": "Back", "legs": "Legs", "core": "Core"
+        }
+      }
+    }),
+    recommendedreps: buildProperty({
+      dataType: "number",
+      name: "Reps",
+      validation: { required: false },
+      readOnly: false,
+    }),
+    recommendedsets: buildProperty({
+      dataType: "number",
+      name: "Sets",
+      validation: { required: false },
+      readOnly: false,
+    }),
+    owner: buildProperty({
+      dataType: "string",
+      name: "Owner",
+      validation: { required: true },
+      readOnly: false,
+    }),
+  }
+});
+
 const usersCollection = buildCollection<FredericUser>({
   path: "users",
   name: "Users",
-  icon: "group",
+  icon: "Person",
   singularName: "User",
   properties: {
     image: buildProperty({
@@ -112,7 +204,8 @@ export default function App() {
   return <FirebaseCMSApp
     name={"NeverSkip Fitness"}
     authentication={myAuthenticator}
-    collections={[usersCollection]}
+    collections={[usersCollection, activitiesCollection]}
     firebaseConfig={firebaseConfig}
+    logo={logo}
   />;
 }
