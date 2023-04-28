@@ -87,23 +87,32 @@ class FredericActivity
       <FredericActivityMuscleGroup>[];
 
   String get name => _name ?? '';
+
   String get description => _description ?? '';
+
   String get image =>
       _image ??
       'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Floading.png?alt=media&token=4f99ab1f-c0bb-4881-b010-4c395b3206a1';
+
   String get owner => _owner ?? 'No owner';
+
   int get recommendedReps => _recommendedReps ?? 1;
+
   int get recommendedSets => _recommendedSets ?? 1;
+
   bool get isNotLoaded => _name == null;
+
   bool get isEmpty => id == '';
 
   /// A proper activity is stored in the DB and has a valid [id]
   bool get isProper => id.length > 16;
 
   bool get isGlobalActivity => _owner == 'global';
+
   bool get canEdit => !isGlobalActivity;
 
   List<FredericActivityMuscleGroup> get muscleGroups => _muscleGroups;
+
   FredericActivityType get type => _type;
 
   String get progressUnit {
