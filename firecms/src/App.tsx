@@ -15,6 +15,27 @@ import {firebaseConfig} from "./firebase-config";
 
 import logo from "./assets/icon.png";
 
+type FredericDefaults = {
+
+}
+
+
+type FredericDeleteFeedback = {
+  email: string,
+  name: string,
+  delete_reason: string,
+  delete_reason_choices: Array<string>,
+  timestamp: Date,
+}
+
+type FredericFeedback = {
+  email: string,
+  name: string,
+  rating: string,
+  text: string,
+  timestamp: Date,
+  uid: string,
+}
 
 type FredericUser = {
   image: string,
@@ -40,11 +61,149 @@ type FredericActivity = {
   owner: string,
 }
 
+type FredericWorkout = {
+  image: string,
+  name: string,
+  description: string,
+  period: number,
+  repeating: boolean,
+  startdate: Date,
+  owner: string,
+}
+
+const workoutCollection = buildCollection<FredericWorkout>({
+  path: "workouts",
+  name: "Workoutplans",
+  icon: "DateRange",
+  singularName: "Workoutplan",
+  initialFilter: {
+    owner: ["==", "global"]
+  },
+  pagination: 20,
+  properties: {
+    image: buildProperty({
+      dataType: "string",
+      name: "Image",
+      url: "image",
+      readOnly: false,
+    }),
+    name: buildProperty({
+      dataType: "string",
+      name: "Name",
+      readOnly: false,
+    }),
+    description: buildProperty({
+      dataType: "string",
+      name: "Description",
+      readOnly: false,
+    }),
+    period: buildProperty({
+      dataType: "number",
+      name: "Period",
+      readOnly: false,
+    }),
+    repeating: buildProperty({
+      dataType: "boolean",
+      name: "Repeating",
+      readOnly: false,
+    }),
+    startdate: buildProperty({
+      dataType: "date",
+      name: "Startdate",
+      readOnly: false,
+    }),
+    owner: buildProperty({
+      dataType: "string",
+      name: "Owner",
+      readOnly: false,
+    }),
+  }
+});
+
+const deleteFeedbackCollection = buildCollection<FredericDeleteFeedback>({
+  path: "delete_feedback",
+  name: "Delete-Feedback",
+  icon: "DeleteSweep",
+  initialSort: ["timestamp", "desc"],
+  pagination: 20,
+  properties: {
+    email: buildProperty({
+      dataType: "string",
+      name: "EMail",
+      readOnly: true,
+    }),
+    name: buildProperty({
+      dataType: "string",
+      name: "Name",
+      readOnly: true,
+    }),
+    delete_reason: buildProperty({
+      dataType: "string",
+      name: "Delete reason",
+      readOnly: true,
+    }),
+    delete_reason_choices: buildProperty({
+      dataType: "array",
+      name: "Selected choices",
+      of: {
+        dataType: "string"
+      },
+      readOnly: true,
+    }),
+    timestamp: buildProperty({
+      dataType: "date",
+      name: "Timestamp",
+      readOnly: true,
+    }),
+  }
+});
+
+const feedbackCollection = buildCollection<FredericFeedback>({
+  path: "feedback",
+  name: "In-App Feedback",
+  icon: "Feedback",
+  initialSort: ["timestamp", "desc"],
+  pagination: 20,
+  properties: {
+    email: buildProperty({
+      dataType: "string",
+      name: "EMail",
+      readOnly: true,
+    }),
+    name: buildProperty({
+      dataType: "string",
+      name: "Name",
+      readOnly: true,
+    }),
+    rating: buildProperty({
+      dataType: "string",
+      name: "Rating",
+      readOnly: true,
+    }),
+    text: buildProperty({
+      dataType: "string",
+      name: "Text",
+      readOnly: true,
+    }),
+    timestamp: buildProperty({
+      dataType: "date",
+      name: "Timestamp",
+      readOnly: true,
+    }),
+    uid: buildProperty({
+      dataType: "string",
+      name: "User ID",
+      readOnly: true,
+    }),
+  }
+});
+
 const activitiesCollection = buildCollection<FredericActivity>({
   path: "activities",
   name: "Exercises",
   icon: "MenuBook",
   singularName: "Exercise",
+  pagination: 20,
   properties: {
     image: buildProperty({
       dataType: "string",
@@ -123,6 +282,8 @@ const usersCollection = buildCollection<FredericUser>({
   name: "Users",
   icon: "Person",
   singularName: "User",
+  initialSort: ["last_login", "desc"],
+  pagination: 20,
   properties: {
     image: buildProperty({
       dataType: "string",
@@ -204,7 +365,7 @@ export default function App() {
   return <FirebaseCMSApp
     name={"NeverSkip Fitness"}
     authentication={myAuthenticator}
-    collections={[usersCollection, activitiesCollection]}
+    collections={[usersCollection, activitiesCollection, workoutCollection, feedbackCollection, deleteFeedbackCollection]}
     firebaseConfig={firebaseConfig}
     logo={logo}
   />;
