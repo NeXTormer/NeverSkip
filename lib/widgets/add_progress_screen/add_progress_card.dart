@@ -26,7 +26,7 @@ class AddProgressCard extends StatelessWidget {
   final AddProgressController controller;
   final FredericActivity activity;
   final List<RepsWeightSuggestion>? suggestions;
-  final void Function() onSave;
+  final void Function(bool longpress) onSave;
   final void Function()? onUseSmartSuggestions;
   final void Function()? onUseRepsWeight;
 
@@ -85,13 +85,23 @@ class AddProgressCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 0, right: 0, top: 16),
-                            child: FredericButton(tr('save'), onPressed: () {
-                              if (FredericBackend.instance.canUseApp) {
-                                onSave();
-                              } else {
-                                FeatureNotPurchasedDialog.show(context);
-                              }
-                            }),
+                            child: FredericButton(
+                              tr('save'),
+                              onPressed: () {
+                                if (FredericBackend.instance.canUseApp) {
+                                  onSave(false);
+                                } else {
+                                  FeatureNotPurchasedDialog.show(context);
+                                }
+                              },
+                              onLongPress: () {
+                                if (FredericBackend.instance.canUseApp) {
+                                  onSave(true);
+                                } else {
+                                  FeatureNotPurchasedDialog.show(context);
+                                }
+                              },
+                            ),
                           )
                         ],
                       ),

@@ -5,6 +5,7 @@ import 'package:frederic/main.dart';
 class FredericButton extends StatelessWidget {
   FredericButton(this.text,
       {required this.onPressed,
+      this.onLongPress,
       Color? mainColor,
       Color? textColor,
       this.inverted = false,
@@ -30,6 +31,7 @@ class FredericButton extends StatelessWidget {
   final FontWeight fontWeight;
 
   final void Function() onPressed;
+  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,16 @@ class FredericButton extends StatelessWidget {
           onPressed.call();
         }
       },
+      onLongPress: onLongPress == null
+          ? null
+          : () {
+              if (haptics) {
+                HapticFeedback.selectionClick();
+              }
+              if (!loading) {
+                onLongPress?.call();
+              }
+            },
       child: Container(
         width: double.infinity,
         height: height,

@@ -93,7 +93,7 @@ class _ActivityPlayerViewState extends State<ActivityPlayerView> {
                         return AddProgressCard(
                             controller: addProgressController,
                             activity: widget.activity.activity,
-                            onSave: () => saveProgress(playerState),
+                            onSave: (_) => saveProgress(playerState),
                             suggestions: widget.showSmartSuggestions
                                 ? setListData[widget.activity.activity.id]
                                     .getSuggestions(

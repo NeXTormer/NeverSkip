@@ -141,9 +141,9 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                           child: AddProgressCard(
                               controller: controller,
                               activity: widget.activity,
-                              onSave: () {
+                              onSave: (bool longPress) {
                                 saveData();
-                                Navigator.of(context).pop();
+                                if (!longPress) Navigator.of(context).pop();
                               },
                               onUseSmartSuggestions: () {
                                 lastUsedRepsWeight = false;
