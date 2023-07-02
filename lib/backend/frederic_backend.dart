@@ -152,8 +152,8 @@ class FredericBackend implements FredericMessageProcessor {
   }
 
   void _reloadDataFromDBIfNecessary() {
-    bool reloadFromDB =
-        _userManager.state.shouldReloadFromDB || _defaults!.alwaysReloadFromDB;
+    bool reloadFromDB = _userManager.state.shouldReloadFromDB ||
+        (_defaults?.alwaysReloadFromDB ?? false);
     _userManager.state.shouldReloadFromDB = false;
     _userManager.userDataChanged();
 

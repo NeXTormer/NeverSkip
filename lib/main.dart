@@ -61,68 +61,69 @@ void main() async {
   }).sendPort);
 
   // == Record all errors within a Flutter context ==
-  runZonedGuarded<Future<void>>(() async {
-    await EasyLocalization.ensureInitialized();
+  //runZonedGuarded<Future<void>>(() async { //TODO: fix zone error or remove completely
+  await EasyLocalization.ensureInitialized();
 
-    // == Crashlytics & Performance ==
-    if (kReleaseMode) {
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    }
+  // == Crashlytics & Performance ==
+  if (kReleaseMode) {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  }
 
-    // == Crashlytics & Performance == End ==
+  // == Crashlytics & Performance == End ==
 
-    // == Hive == Register Adapters ==
-    await Hive.initFlutter();
-    if (!Hive.isAdapterRegistered(1))
-      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
-          create: (id, data) => FredericActivity.fromMap(id, data)));
-    if (!Hive.isAdapterRegistered(2))
-      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,
-          create: (id, data) => FredericWorkout.fromMap(id, data)));
-    if (!Hive.isAdapterRegistered(3))
-      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSetDocument>(3,
-          create: (id, data) => FredericSetDocument.fromMap(id, data)));
-    if (!Hive.isAdapterRegistered(4))
-      Hive.registerAdapter(FredericUniversalTypeAdapter<TimeSeriesSetData>(4,
-          create: (id, data) => TimeSeriesSetData.fromMap(id, data)));
-    if (!Hive.isAdapterRegistered(5))
-      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericGoal>(5,
-          create: (id, data) => FredericGoal.fromMap(id, data)));
-    if (!Hive.isAdapterRegistered(6))
-      Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSet>(6,
-          create: (id, data) => FredericSet.fromMap(data)));
-    if (!Hive.isAdapterRegistered(100))
-      Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
-    // == Hive == End ==
+  // == Hive == Register Adapters ==
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(1))
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericActivity>(1,
+        create: (id, data) => FredericActivity.fromMap(id, data)));
+  if (!Hive.isAdapterRegistered(2))
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericWorkout>(2,
+        create: (id, data) => FredericWorkout.fromMap(id, data)));
+  if (!Hive.isAdapterRegistered(3))
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSetDocument>(3,
+        create: (id, data) => FredericSetDocument.fromMap(id, data)));
+  if (!Hive.isAdapterRegistered(4))
+    Hive.registerAdapter(FredericUniversalTypeAdapter<TimeSeriesSetData>(4,
+        create: (id, data) => TimeSeriesSetData.fromMap(id, data)));
+  if (!Hive.isAdapterRegistered(5))
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericGoal>(5,
+        create: (id, data) => FredericGoal.fromMap(id, data)));
+  if (!Hive.isAdapterRegistered(6))
+    Hive.registerAdapter(FredericUniversalTypeAdapter<FredericSet>(6,
+        create: (id, data) => FredericSet.fromMap(data)));
+  if (!Hive.isAdapterRegistered(100))
+    Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
+  // == Hive == End ==
 
-    //await Hive.deleteBoxFromDisk('SetVolumeDataRepresentation');
+  //await Hive.deleteBoxFromDisk('SetVolumeDataRepresentation');
 
-    // == Load Startup Preferences ==
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    Object? themeID = preferences.get('colortheme');
-    if (themeID != null && themeID is int) {
-      _colorTheme = FredericColorTheme.find(themeID);
-    }
-    // == Load Startup Preferences == End ==
+  // == Load Startup Preferences ==
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  Object? themeID = preferences.get('colortheme');
+  if (themeID != null && themeID is int) {
+    _colorTheme = FredericColorTheme.find(themeID);
+  }
+  // == Load Startup Preferences == End ==
 
-    // == Disable Analytics in debug mode
-    if (kDebugMode) {
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
-    } else {
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
-    }
-    await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+  // == Disable Analytics in debug mode
+  if (kDebugMode) {
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+  } else {
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+  }
+  await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 
-    timeUntilRunApp.stop();
-    runApp(EasyLocalization(
-        supportedLocales: [Locale('en'), Locale('de')],
-        fallbackLocale: Locale('en'),
-        useOnlyLangCode: true,
-        path: 'assets/translations',
-        child: FredericBase()));
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+  timeUntilRunApp.stop();
+  runApp(EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('de')],
+      fallbackLocale: Locale('en'),
+      useOnlyLangCode: true,
+      path: 'assets/translations',
+      child: FredericBase()));
+
+  //}, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 class FredericBase extends StatefulWidget {
