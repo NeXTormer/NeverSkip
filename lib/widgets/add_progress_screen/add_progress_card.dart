@@ -87,6 +87,7 @@ class AddProgressCard extends StatelessWidget {
                                 left: 0, right: 0, top: 16),
                             child: FredericButton(
                               tr('save'),
+                              haptics: true,
                               onPressed: () {
                                 if (FredericBackend.instance.canUseApp) {
                                   onSave(false);
