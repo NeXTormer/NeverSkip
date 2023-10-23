@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/edit_workout_data_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_basic_app_bar.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
 /// Part of the EditWorkoutScreen. Responsible for displaying
@@ -43,7 +43,7 @@ class EditWorkoutHeader extends StatelessWidget {
         subtitle: '${tr("misc.start_day")}: $dateFormatString',
         icon: workout.canEdit
             ? InkWell(
-                onTap: () => CupertinoScaffold.showCupertinoModalBottomSheet(
+                onTap: () => showFredericBottomSheet(
                     context: context,
                     builder: (c) =>
                         Scaffold(body: EditWorkoutDataScreen(workout))),

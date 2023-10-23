@@ -6,12 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CalendarActivityCardContent extends StatefulWidget {
   const CalendarActivityCardContent(this.activity,
@@ -127,7 +127,7 @@ class _CalendarActivityCardContentState
   void handleClick(BuildContext context) {
     if (widget.onClick != null) return widget.onClick!();
 
-    CupertinoScaffold.showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
         enableDrag: true,
         context: context,
         builder: (newContext) {

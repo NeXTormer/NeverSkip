@@ -3,6 +3,7 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/goals/frederic_goal.dart';
 import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/achievement_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
@@ -10,7 +11,6 @@ import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card_medaille_indicator.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/standard_elements/progress_bar.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AchievementGoalCard extends StatelessWidget {
   const AchievementGoalCard(this.goal, {this.index = 0});
@@ -129,7 +129,7 @@ class AchievementGoalCard extends StatelessWidget {
   }
 
   void handleClick(BuildContext context) {
-    CupertinoScaffold.showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
         context: context, builder: (c) => AchievementScreen(goal, context));
   }
 

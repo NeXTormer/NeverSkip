@@ -8,11 +8,11 @@ import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ProgressIndicatorSegment extends StatelessWidget {
   ProgressIndicatorSegment({this.sidePadding = 16});
@@ -84,7 +84,7 @@ class ProgressIndicatorSegment extends StatelessWidget {
   }
 
   void addNewProgressIndicator(BuildContext context) {
-    CupertinoScaffold.showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
         context: context,
         builder: (ctx) => BlocProvider.value(
             value: BlocProvider.of<FredericSetManager>(context),

@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/frederic_user_manager.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/edit_workout_data_screen.dart';
 import 'package:frederic/state/workout_search_term.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_list_appbar.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_list_segment.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class WorkoutListScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   Widget buildAlternativeAddWorkoutButton(BuildContext context) {
     return FloatingActionButton(
         backgroundColor: theme.mainColor,
-        onPressed: () => CupertinoScaffold.showCupertinoModalBottomSheet(
+        onPressed: () => showFredericBottomSheet(
             context: context,
             builder: (c) => Scaffold(
                 body: EditWorkoutDataScreen(FredericWorkout.create()))),
@@ -76,7 +76,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
         elevation: 0,
         highlightElevation: 0,
         backgroundColor: theme.mainColor,
-        onPressed: () => CupertinoScaffold.showCupertinoModalBottomSheet(
+        onPressed: () => showFredericBottomSheet(
             context: context,
             builder: (c) => Scaffold(
                 body: EditWorkoutDataScreen(FredericWorkout.create()))),

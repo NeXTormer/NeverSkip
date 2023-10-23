@@ -8,7 +8,6 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AdminListIconScreen extends StatefulWidget {
   const AdminListIconScreen({this.onSelect, Key? key}) : super(key: key);
@@ -88,9 +87,6 @@ class _AdminListIconScreenState extends State<AdminListIconScreen> {
                     Expanded(
                       child: GridView.builder(
                           scrollDirection: Axis.vertical,
-                          controller: widget.onSelect != null
-                              ? ModalScrollController.of(context)
-                              : null,
                           gridDelegate:
                               SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 120,

@@ -12,7 +12,6 @@ import 'package:frederic/widgets/add_progress_screen/reps_weight_smart_suggestio
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AddProgressScreen extends StatefulWidget {
   AddProgressScreen(this.activity, {this.openedFromCalendar = false}) {
@@ -124,7 +123,6 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                           : null;
                   return CustomScrollView(
                     physics: ClampingScrollPhysics(),
-                    controller: ModalScrollController.of(context),
                     slivers: [
                       SliverPadding(padding: EdgeInsets.only(bottom: 12)),
                       _DisplayActivityCard(widget.activity),

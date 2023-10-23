@@ -14,7 +14,6 @@ import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../main.dart';
 
@@ -78,7 +77,6 @@ class _EditActivityScreenState extends State<EditActivityScreen> {
 
     return FredericScaffold(
         body: CustomScrollView(
-      controller: ModalScrollController.of(context),
       slivers: [
         SliverToBoxAdapter(
             child: FredericBasicAppBar(

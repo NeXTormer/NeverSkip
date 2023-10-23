@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/activity_list_screen.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_activity_list_segment.dart';
 import 'package:frederic/widgets/edit_workout_screen/edit_workout_header.dart';
@@ -10,7 +11,6 @@ import 'package:frederic/widgets/edit_workout_screen/weekdays_slider_segment.dar
 import 'package:frederic/widgets/standard_elements/frederic_divider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 ///
 /// Screen create/edit individual workouts
@@ -52,7 +52,17 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           }
           return FredericScaffold(
             floatingActionButton: workout.canEdit
-                ? buildAlternativeAddExerciseButton(width, 44)
+                ? FloatingActionButton(
+                    key: UniqueKey(),
+                    // because the FAB disappears after resulting sheet is closed,
+                    // the unique key combined with the setState after the sheet is closed makes it reappear
+                    backgroundColor: theme.mainColor,
+                    onPressed: () => showActivityList(context),
+                    child: Icon(
+                      Icons.post_add_outlined,
+                      color: Colors.white,
+                    ),
+                  )
                 : null,
             body: Column(
               children: [
@@ -79,36 +89,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     );
   }
 
-  Widget buildAlternativeAddExerciseButton(double width, double height) {
-    return FloatingActionButton(
-      backgroundColor: theme.mainColor,
-      onPressed: () => showActivityList(context),
-      child: Icon(
-        Icons.post_add_outlined,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget buildAddExerciseButton(double width, double height) {
-    return Container(
-      height: height,
-      width: width,
-      margin: const EdgeInsets.all(16.0),
-      child: FloatingActionButton(
-        elevation: 0,
-        highlightElevation: 0,
-        backgroundColor: theme.mainColor,
-        onPressed: () => showActivityList(context),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-        ),
-      ),
-    );
-  }
-
   void handleAddActivity(FredericActivity activity) {
     bool success = FredericBackend
             .instance.workoutManager.state.workouts[widget.workoutID]
@@ -122,12 +102,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
     }
   }
 
-  void showActivityList(BuildContext context) {
-    CupertinoScaffold.showCupertinoModalBottomSheet(
+  void showActivityList(BuildContext context) async {
+    await showFredericBottomSheet(
       context: context,
       builder: (ctx) {
         return Container(
-          //height: MediaQuery.of(ctx).size.height * 0.8,
+          // height: MediaQuery.of(ctx).size.height * 0.8,
           child: ActivityListScreen(
             isSelector: true,
             onSelect: (activity) {
@@ -138,6 +118,8 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         );
       },
     );
+    // calling setState to generate a new unique key for the FAB, to make it reappear
+    setState(() {});
   }
 
   @override
@@ -149,6 +131,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
 class WeekdaysSliderController {
   WeekdaysSliderController();
+
   late Function(int) _setChangeDayCallback;
 
   void setCallback(Function(int) handleChangeDay) {

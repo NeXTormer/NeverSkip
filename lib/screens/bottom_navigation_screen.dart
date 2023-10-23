@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   BottomNavigationScreen(this.screens);
@@ -39,58 +38,55 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoScaffold(
-      body: Scaffold(
-        backgroundColor: theme.backgroundColor,
-        extendBodyBehindAppBar: false,
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: theme.isDark || theme.isColorful
-              ? SystemUiOverlayStyle.light
-              : SystemUiOverlayStyle.dark,
-          child: PageView(
-            children: screens,
-            controller: pageController,
-            onPageChanged: (index) {
+    return Scaffold(
+      backgroundColor: theme.backgroundColor,
+      extendBodyBehindAppBar: false,
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: theme.isDark || theme.isColorful
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        child: PageView(
+          children: screens,
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+            _sendCurrentTabToAnalytics();
+          },
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(12), topLeft: Radius.circular(12)),
+          boxShadow: [
+            BoxShadow(color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+          child: BottomNavigationBar(
+            items: items,
+            elevation: 0,
+            backgroundColor:
+                theme.isColorful ? theme.mainColor : theme.backgroundColor,
+            selectedItemColor: theme.isColorful
+                ? theme.textColorColorfulBackground
+                : theme.accentColor,
+            unselectedItemColor: theme.isColorful
+                ? theme.textColorColorfulBackground
+                : theme.mainColor,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: currentIndex,
+            onTap: (index) {
               setState(() {
                 currentIndex = index;
+                pageController.jumpToPage(index);
               });
-              _sendCurrentTabToAnalytics();
             },
-          ),
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(12), topLeft: Radius.circular(12)),
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0x17000000), spreadRadius: 0, blurRadius: 3),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(12), topRight: Radius.circular(12)),
-            child: BottomNavigationBar(
-              items: items,
-              elevation: 0,
-              backgroundColor:
-                  theme.isColorful ? theme.mainColor : theme.backgroundColor,
-              selectedItemColor: theme.isColorful
-                  ? theme.textColorColorfulBackground
-                  : theme.accentColor,
-              unselectedItemColor: theme.isColorful
-                  ? theme.textColorColorfulBackground
-                  : theme.mainColor,
-              showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: currentIndex,
-              onTap: (index) {
-                setState(() {
-                  currentIndex = index;
-                  pageController.jumpToPage(index);
-                });
-              },
-            ),
           ),
         ),
       ),

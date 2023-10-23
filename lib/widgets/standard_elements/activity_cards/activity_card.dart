@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/sets/frederic_set_list.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/add_progress_screen.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/normal_activity_card_content.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/small_activity_card_content.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 enum ActivityCardType { Calendar, Small, Normal }
 
@@ -77,7 +76,7 @@ class ActivityCard extends StatelessWidget {
   void handleClick(BuildContext context) {
     if (onClick != null) return onClick!();
     if (activity.id.isEmpty) return;
-    CupertinoScaffold.showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
         enableDrag: true,
         context: context,
         builder: (newContext) {

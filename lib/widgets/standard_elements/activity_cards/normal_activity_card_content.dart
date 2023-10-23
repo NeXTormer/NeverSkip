@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/edit_activity_screen.dart';
 import 'package:frederic/widgets/standard_elements/circular_plus_icon.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../backend/activities/frederic_activity.dart';
 import '../../../main.dart';
@@ -29,7 +29,7 @@ class NormalActivityCardContent extends StatelessWidget {
           return;
         }
         if (!activity.isGlobalActivity) {
-          CupertinoScaffold.showCupertinoModalBottomSheet(
+          showFredericBottomSheet(
               context: context, builder: (c) => EditActivityScreen(activity));
         }
       },

@@ -9,7 +9,6 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/workout_list_screen/enable_workout_dialog.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class WorkoutCard extends StatefulWidget {
   const WorkoutCard(this.workout,
@@ -61,14 +60,13 @@ class _WorkoutCardState extends State<WorkoutCard> {
         onTap: widget.clickable
             ? () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CupertinoScaffold(
-                            body: EditWorkoutScreen(
+                    builder: (context) => EditWorkoutScreen(
                           widget.workout.id,
                           defaultPage: hasStartDate
                               ? widget.workout.activities
                                   .getDayIndex(DateTime.now())
                               : 0,
-                        ))));
+                        )));
               }
             : null,
         padding: EdgeInsets.only(top: 12, left: 12, bottom: 10, right: 3),

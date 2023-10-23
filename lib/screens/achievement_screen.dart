@@ -13,7 +13,6 @@ import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card_medaille_indicator.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AchievementScreen extends StatelessWidget {
   const AchievementScreen(this.goal, this.parentContext, {Key? key})
@@ -28,7 +27,6 @@ class AchievementScreen extends StatelessWidget {
       body: Stack(
         children: [
           CustomScrollView(
-            controller: ModalScrollController.of(context),
             slivers: [
               AchievementHeader(),
               SliverDivider(),
@@ -107,6 +105,7 @@ class AchievementScreen extends StatelessWidget {
 
 class _AchievementTitle extends StatelessWidget {
   const _AchievementTitle(this.text);
+
   final String text;
 
   Widget build(BuildContext context) {

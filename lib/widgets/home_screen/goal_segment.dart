@@ -10,11 +10,11 @@ import 'package:frederic/backend/goals/frederic_goal_manager.dart';
 import 'package:frederic/backend/sets/frederic_set_list_data.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/main.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/edit_goal_data_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class GoalSegment extends StatelessWidget {
   @override
@@ -97,7 +97,7 @@ class GoalSegment extends StatelessWidget {
   }
 
   void handleClick(BuildContext context, FredericSetListData setData) {
-    CupertinoScaffold.showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
       context: context,
       builder: (c) => Scaffold(
           body: EditGoalDataScreen(

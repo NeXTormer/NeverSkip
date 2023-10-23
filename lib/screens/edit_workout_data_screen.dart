@@ -15,7 +15,6 @@ import 'package:frederic/widgets/standard_elements/frederic_slider.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/workout_list_screen/workout_card.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class EditWorkoutDataScreen extends StatefulWidget {
   EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key) {
@@ -84,7 +83,6 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
     return Scaffold(
       backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
-        controller: ModalScrollController.of(context),
         slivers: [
           SliverToBoxAdapter(
               child: FredericBasicAppBar(

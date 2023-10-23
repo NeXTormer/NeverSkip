@@ -9,6 +9,7 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/extensions.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/misc/ExtraIcons.dart';
+import 'package:frederic/misc/bottom_sheet.dart';
 import 'package:frederic/screens/screens.dart';
 import 'package:frederic/widgets/standard_elements/activity_cards/activity_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -22,7 +23,6 @@ import 'package:frederic/widgets/standard_elements/goal_cards/goal_card.dart';
 import 'package:frederic/widgets/standard_elements/number_wheel.dart';
 import 'package:frederic/widgets/standard_elements/sliver_divider.dart';
 import 'package:frederic/widgets/standard_elements/unit_slider.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 enum Datepicker { Start, End }
 
@@ -105,7 +105,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     return Scaffold(
       backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
-        controller: ModalScrollController.of(context),
         slivers: [
           SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
           buildHeaderSegment(),
@@ -262,7 +261,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   }
 
   void addNewActivityTracker(BuildContext context) {
-    showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
       context: context,
       builder: (ctx) => BlocProvider.value(
         value: BlocProvider.of<FredericSetManager>(context),
@@ -296,7 +295,7 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   }
 
   void showAddProgressScreen(BuildContext context, FredericActivity activity) {
-    showCupertinoModalBottomSheet(
+    showFredericBottomSheet(
         context: context,
         builder: (ctx) {
           return BlocProvider.value(
