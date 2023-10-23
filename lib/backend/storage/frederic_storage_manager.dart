@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 class FredericStorageManager {
   FredericStorageManager(this.backend);
+
   final FredericBackend backend;
 
   Future<String?> uploadXFileImageToUserStorage(
@@ -28,7 +29,7 @@ class FredericStorageManager {
   Future<Uint8List?> _convertXFileToRawJPEG(XFile file,
       [int quality = 80]) async {
     Image? image =
-        decodeNamedImage(await File(file.path).readAsBytes(), file.name);
+        decodeNamedImage(file.path, await File(file.path).readAsBytes());
     if (image == null) return null;
     var jpeg = encodeJpg(image, quality: quality);
     var data = Uint8List.fromList(jpeg);
