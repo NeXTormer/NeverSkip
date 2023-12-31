@@ -57,6 +57,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
   Widget buildAlternativeAddWorkoutButton(BuildContext context) {
     return FloatingActionButton(
         backgroundColor: theme.mainColor,
+        heroTag: 'fab_workoutlistscreen',
         onPressed: () => showFredericBottomSheet(
             context: context,
             builder: (c) => Scaffold(
@@ -74,6 +75,7 @@ class _WorkoutListScreenState extends State<WorkoutListScreen> {
       margin: const EdgeInsets.all(16.0),
       child: FloatingActionButton(
         elevation: 0,
+        heroTag: 'fab_workoutlistscreen',
         highlightElevation: 0,
         backgroundColor: theme.mainColor,
         onPressed: () => showFredericBottomSheet(

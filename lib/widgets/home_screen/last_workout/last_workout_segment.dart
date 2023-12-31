@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/home_screen/last_workout/last_workout_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
@@ -23,6 +24,13 @@ class LastWorkoutSegment extends StatefulWidget {
 class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
   bool screenshot = false;
   ScreenshotController screenshotController = ScreenshotController();
+  String? imageBackgroundPath;
+
+  @override
+  void initState() {
+    copyBundleAssets();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +75,8 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
                   icon: screenshot
                       ? null
                       : (Platform.isAndroid
-                      ? Icons.share_outlined
-                      : Icons.ios_share),
+                          ? Icons.share_outlined
+                          : Icons.ios_share),
                   onPressed: () => handleShare(context),
                 ),
               const SizedBox(height: 8),
@@ -84,6 +92,19 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
     );
   }
 
+  Future<void> copyBundleAssets() async {
+    imageBackgroundPath = await copyImage('social-share-insta-background.jpg');
+  }
+
+  Future<String> copyImage(String filename) async {
+    final tempDir = await getTemporaryDirectory();
+    ByteData bytes = await rootBundle.load("assets/images/$filename");
+    final assetPath = '${tempDir.path}/$filename';
+    File file = await File(assetPath).create();
+    await file.writeAsBytes(bytes.buffer.asUint8List());
+    return file.path;
+  }
+
   void handleShare(BuildContext context) async {
     setState(() {
       screenshot = true;
@@ -92,9 +113,7 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
     await Future.delayed(const Duration(milliseconds: 1));
 
     Uint8List? image = await screenshotController.capture(
-        pixelRatio: MediaQuery
-            .of(context)
-            .devicePixelRatio);
+        pixelRatio: MediaQuery.of(context).devicePixelRatio);
 
     setState(() {
       screenshot = false;
@@ -119,18 +138,19 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
               children: [
                 FredericButton(tr('sharing.share_to_instagram_stories'),
                     onPressed: () async {
-                      final result = await SocialShare.shareInstagramStory(
-                          imagePath:
-                          file.path,
-                          backgroundTopColor:
-                          '#${theme.mainColor.value.toRadixString(16)}',
-                          backgroundBottomColor:
-                          '#${theme.accentColor.value.toRadixString(16)}',
-                          attributionURL: 'https://neverskipfitness.com',
-                          appId: '');
-                      print(result);
-                      Navigator.of(context).pop();
-                    }),
+                  final result = await SocialShare.shareInstagramStory(
+                      imagePath: file.path,
+                      backgroundResourcePath: imageBackgroundPath,
+                      // backgroundTopColor:
+                      //     '#${theme.mainColor.value.toRadixString(16)}',
+                      // backgroundBottomColor:
+                      //     '#${theme.accentColor.value.toRadixString(16)}',
+
+                      attributionURL: 'https://neverskipfitness.com',
+                      appId: '');
+                  print(result);
+                  Navigator.of(context).pop();
+                }),
                 const SizedBox(height: 8),
                 FredericButton(tr('sharing.share_to_other'), onPressed: () {
                   final result = SocialShare.shareOptions(

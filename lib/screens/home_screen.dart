@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               GoalSegment(),
               LastWorkoutSegment(),
               ActivityHeatmapChartSegment(),
-              ProgressChartSegment(),
+              if (false) ProgressChartSegment(),
               MuscleGroupChartSegment(),
               WeekVolumeChartSegment(),
               AchievementSegment(),

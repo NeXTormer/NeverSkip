@@ -38,7 +38,7 @@ class FredericButton extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (haptics) {
-          HapticFeedback.selectionClick();
+          HapticFeedback.mediumImpact();
         }
         if (!loading) {
           onPressed.call();

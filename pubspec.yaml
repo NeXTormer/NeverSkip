@@ -124,6 +124,7 @@ flutter:
     - assets/translations/
     - assets/images/credits/felix.jpg
     - assets/images/credits/stefan.jpg
+    - assets/images/social-share-insta-background.jpg
 
   fonts:
     - family: ExtraIcons

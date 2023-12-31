@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/screens/edit_workout_screen.dart';
@@ -59,6 +60,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
         onLongPress: () => handleLongPress(context),
         onTap: widget.clickable
             ? () {
+                HapticFeedback.selectionClick();
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => EditWorkoutScreen(
                           widget.workout.id,

@@ -36,6 +36,7 @@ class ActivityListScreen extends StatelessWidget {
       child: FredericScaffold(
         floatingActionButton: FloatingActionButton(
           key: ValueKey<String>('fab_activitylistscreen'),
+          heroTag: 'fab_activitylistscreen',
           onPressed: () {
             // if (CupertinoScaffold.of(context) == null) {
             if (false) {

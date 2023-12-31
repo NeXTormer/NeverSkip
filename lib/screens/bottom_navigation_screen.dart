@@ -82,6 +82,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
             type: BottomNavigationBarType.fixed,
             currentIndex: currentIndex,
             onTap: (index) {
+              HapticFeedback.selectionClick();
               setState(() {
                 currentIndex = index;
                 pageController.jumpToPage(index);
