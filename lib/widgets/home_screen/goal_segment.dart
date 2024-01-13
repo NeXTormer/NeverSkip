@@ -38,7 +38,7 @@ class GoalSegment extends StatelessWidget {
                     left: 16, right: 16, top: 6, bottom: 8),
                 child: FredericHeading(
                   tr('home.my_goals'),
-                  onPressed: () => handleClick(context, setData),
+                  onPressed: () => handleNewGoal(context, setData),
                   icon: Icons.add,
                 ),
               ),
@@ -96,7 +96,7 @@ class GoalSegment extends StatelessWidget {
     });
   }
 
-  void handleClick(BuildContext context, FredericSetListData setData) {
+  void handleNewGoal(BuildContext context, FredericSetListData setData) {
     showFredericBottomSheet(
       context: context,
       builder: (c) => Scaffold(

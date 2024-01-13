@@ -122,7 +122,7 @@ class _NormalGoalCard extends State<NormalGoalCard> {
       fit: widget.interactable ? StackFit.loose : StackFit.expand,
       children: [
         FredericCard(
-          shimmer: isCompleted ? true : false,
+          //shimmer: isCompleted ? true : false, // doesn't make sense here
           onLongPress: () {
             if (widget.interactable) handleLongClick(context);
           },
