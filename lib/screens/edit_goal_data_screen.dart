@@ -35,16 +35,14 @@ enum FormError {
 }
 
 class EditGoalDataScreen extends StatefulWidget {
-  EditGoalDataScreen(this.goal, {this.sets, this.activity}) {
-    isNewGoal = goal.id == 'new';
-  }
+  EditGoalDataScreen(this.goal, {this.sets, this.activity});
 
   final FredericGoal goal;
 
   final FredericSetListData? sets;
   final FredericActivity? activity;
 
-  late final bool isNewGoal;
+  bool get isNewGoal => goal.id == 'new';
 
   @override
   _EditGoalDataScreenState createState() => _EditGoalDataScreenState();
@@ -59,8 +57,6 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   final NumberSliderController endStateController = NumberSliderController();
 
   final UnitSliderController unitSliderController = UnitSliderController();
-
-  PageController? endPageController;
 
   String startDateText = '';
   String endDateText = '';
@@ -173,20 +169,20 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     );
   }
 
-  void saveData() {
-    FormError _checkForm() {
-      if (startStateController.value == endStateController.value) {
-        return FormError.StartStateEqualsEndState;
-      } else if (currentStateController.value == endStateController.value) {
-        return FormError.CurrentStateEqualsEndStart;
-      } else if (startDateText == endDateText) {
-        return FormError.StartDateEqualsEndDate;
-      } else if (selectedStartDate!.compareTo(selectedEndDate!) > 0) {
-        return FormError.EndDateSmallerThenStartDate;
-      }
-      return FormError.Success;
+  FormError _checkFormInputs() {
+    if (startStateController.value == endStateController.value) {
+      return FormError.StartStateEqualsEndState;
+    } else if (currentStateController.value == endStateController.value) {
+      return FormError.CurrentStateEqualsEndStart;
+    } else if (startDateText == endDateText) {
+      return FormError.StartDateEqualsEndDate;
+    } else if (selectedStartDate!.compareTo(selectedEndDate!) > 0) {
+      return FormError.EndDateSmallerThenStartDate;
     }
+    return FormError.Success;
+  }
 
+  void saveData() {
     Future<void> _showErrorMessage(String text) async {
       await showDialog<bool>(
         context: context,
@@ -206,9 +202,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     }
 
     if (widget.isNewGoal) {
-      switch (_checkForm()) {
+      final formStatus = _checkFormInputs();
+      switch (formStatus) {
         case FormError.CurrentStateEqualsEndStart:
-          _showErrorMessage('The curret state must not match the end state!');
+          _showErrorMessage('The current state must not match the end state!');
           return;
         case FormError.StartStateEqualsEndState:
           _showErrorMessage('The start state must not match the end state!');

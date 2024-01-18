@@ -48,12 +48,13 @@ class FredericGoalManager
   FutureOr<void> _onEvent(
       FredericGoalEvent event, Emitter<FredericGoalListData> emit) async {
     if (event is FredericGoalUpdateEvent) {
+      // new goals on update get into the list twice
       _goals[event.updatedGoal.id] = event.updatedGoal;
       await _dataInterface.update(event.updatedGoal);
       emit(FredericGoalListData(event.changed, _goals));
     } else if (event is FredericGoalCreateEvent) {
-      _goals[event.newGoal.id] = event.newGoal;
-      await _dataInterface.create(event.newGoal);
+      final newGoalFromDatabase = await _dataInterface.create(event.newGoal);
+      _goals[event.newGoal.id] = newGoalFromDatabase;
       emit(FredericGoalListData(event.changed, _goals));
     } else if (event is FredericGoalDeleteEvent) {
       _goals.remove(event.goal.id);
@@ -67,6 +68,7 @@ class FredericGoalManager
 
 class FredericGoalEvent {
   FredericGoalEvent(this.changed);
+
   List<String> changed;
 }
 

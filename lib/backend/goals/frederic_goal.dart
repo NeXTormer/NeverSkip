@@ -7,7 +7,7 @@ import 'package:frederic/backend/database/frederic_data_object.dart';
 ///
 class FredericGoal implements FredericDataObject {
   ///
-  /// Construct FredericGoal usin a DocumentSnapshot from the database
+  /// Construct FredericGoal using a DocumentSnapshot from the database
   ///
   FredericGoal(DocumentSnapshot<Object?> snapshot) : id = snapshot.id {
     var data = (snapshot as DocumentSnapshot<Map<String, dynamic>?>).data();
@@ -73,19 +73,31 @@ class FredericGoal implements FredericDataObject {
   bool? _isDeleted;
 
   String get title => _title ?? 'Goal';
+
   String get image =>
       _image ??
       'https://firebasestorage.googleapis.com/v0/b/hawkford-frederic.appspot.com/o/icons%2Fgoal.png?alt=media&token=9f580776-3dec-47f6-b4e2-ea8788fa02a1';
+
   String get activityID => _activityID ?? '';
+
   String get unit => _unit ?? '';
+
   num get startState => _startState ?? 0;
+
   num get endState => _endState ?? 0;
+
   num get currentState => _currentState ?? -1;
+
   DateTime get startDate => _startDate ?? DateTime.now();
+
   DateTime get endDate => _endDate ?? DateTime.now();
+
   bool get isCompleted => _isCompleted ?? false;
+
   bool get isNotCompleted => !isCompleted;
+
   bool get isDeleted => _isDeleted ?? false;
+
   bool get isLoss => startState > endState;
 
   @override
