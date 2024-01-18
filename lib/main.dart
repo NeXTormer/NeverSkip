@@ -191,6 +191,7 @@ class _FredericBaseState extends State<FredericBase> {
             showPerformanceOverlay: false,
             title: 'NeverSkip Fitness',
             locale: context.locale,
+            debugShowCheckedModeBanner: false,
             supportedLocales: context.supportedLocales,
             localizationsDelegates: context.localizationDelegates,
             theme: ThemeData(

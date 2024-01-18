@@ -278,7 +278,7 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
 /// Represents a Day
 class TimeSeriesSetData implements FredericDataObject {
   TimeSeriesSetData(this.sets, this.reps, this.volume, this.id)
-      : muscleGroupReps = List.filled(5, 0),
+      : muscleGroupReps = List.filled(6, 0),
         allSetsOnDay = HashMap<String, List<FredericSet>>(),
         bestSetOnDay = HashMap<String, FredericSet>();
 
