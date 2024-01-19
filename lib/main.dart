@@ -195,6 +195,7 @@ class _FredericBaseState extends State<FredericBase> {
             supportedLocales: context.supportedLocales,
             localizationsDelegates: context.localizationDelegates,
             theme: ThemeData(
+                useMaterial3: false,
                 primaryColor: theme.mainColor,
                 brightness: theme.isBright ? Brightness.light : Brightness.dark,
                 fontFamily: 'Montserrat',

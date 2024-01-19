@@ -8,6 +8,10 @@
         android:icon="@mipmap/neverskip_icon"
         android:roundIcon="@mipmap/neverskip_icon">
 
+<!--        <meta-data-->
+<!--            android:name="io.flutter.embedding.android.EnableImpeller"-->
+<!--            android:value="true" />-->
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.com.shekarmudaliyar.social_share"
