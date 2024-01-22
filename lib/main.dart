@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:isolate';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -105,13 +103,11 @@ void main() async {
   }
   // == Load Startup Preferences == End ==
 
-  // == Disable Analytics in debug mode
+  // == Disable Crashlytics in debug mode
   if (kDebugMode) {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
   } else {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
   }
   await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
 

@@ -49,7 +49,7 @@ class FredericBackend implements FredericMessageProcessor {
     _setManager = FredericSetManager(_activityManager);
     _goalManager = FredericGoalManager();
     _storageManager = FredericStorageManager(this);
-    _analytics = FredericAnalytics();
+    _analytics = UmamiAnalyticsService();
 
     _registerEventProcessors();
     _initialize();
@@ -87,9 +87,9 @@ class FredericBackend implements FredericMessageProcessor {
 
   FredericStorageManager get storageManager => _storageManager;
 
-  late final FredericAnalytics _analytics;
+  late final FredericAnalyticsService _analytics;
 
-  FredericAnalytics get analytics => _analytics;
+  FredericAnalyticsService get analytics => _analytics;
 
   late final PurchaseManager _purchaseManager;
 
@@ -124,6 +124,8 @@ class FredericBackend implements FredericMessageProcessor {
 
   void _initialize() async {
     FredericProfiler.log('Start _initialize');
+
+    _analytics.initialize();
 
     _initializeDefaults();
     Future<void> purchaseManagerFuture = _purchaseManager.initialize();

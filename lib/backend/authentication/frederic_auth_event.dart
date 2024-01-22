@@ -31,7 +31,7 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) {
-    FredericBackend.instance.analytics.analytics.logLogin(loginMethod: 'email');
+    FredericBackend.instance.analytics.logLogin('email');
     SharedPreferences.getInstance()
         .then((value) => value.setBool('wasLoggedIn', true));
     return userManager.authInterface.logIn(email: email, password: password);
@@ -47,7 +47,7 @@ class FredericOAuthSignInEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    FredericBackend.instance.analytics.analytics.logLogin(loginMethod: 'oauth');
+    FredericBackend.instance.analytics.logLogin('oauth');
     return userManager.authInterface.logInOAuth(authCredential, name: name);
   }
 }
@@ -61,8 +61,7 @@ class FredericEmailSignupEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    FredericBackend.instance.analytics.analytics
-        .logSignUp(signUpMethod: 'email');
+    FredericBackend.instance.analytics.logSignUp('email');
     return userManager.authInterface
         .signUp(email: email, name: name, password: password);
   }
@@ -75,7 +74,6 @@ class FredericSignOutEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
-    FredericBackend.instance.analytics.analytics.logEvent(name: 'sign-out');
     FredericBackend.instance.dispose();
     await userManager.authInterface.logOut();
     return FredericUser.noAuth();

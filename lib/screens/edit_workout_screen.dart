@@ -17,8 +17,7 @@ import 'package:frederic/widgets/user_feedback/user_feedback_toast.dart';
 ///
 class EditWorkoutScreen extends StatefulWidget {
   EditWorkoutScreen(this.workoutID, {this.defaultPage = 0}) {
-    FredericBackend.instance.analytics.analytics
-        .setCurrentScreen(screenName: 'edit_workout_screen');
+    FredericBackend.instance.analytics.logCurrentScreen('edit_workout_screen');
   }
 
   final String workoutID;

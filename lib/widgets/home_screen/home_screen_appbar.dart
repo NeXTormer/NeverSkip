@@ -40,8 +40,6 @@ class HomeScreenAppbar extends StatelessWidget {
                   tappable: true,
                   closedBorderRadius: 32,
                   transitionType: ContainerTransitionType.fadeThrough,
-                  onClose: () =>
-                      FredericBackend.instance.analytics.logEnterHomeScreen(),
                   childBuilder: (context, openContainer) {
                     return CircleAvatar(
                       radius: 22,
@@ -77,8 +75,6 @@ class HomeScreenAppbar extends StatelessWidget {
                 closedColor:
                     theme.isColorful ? theme.mainColor : theme.backgroundColor,
                 transitionType: ContainerTransitionType.fadeThrough,
-                onClose: () =>
-                    FredericBackend.instance.analytics.logEnterHomeScreen(),
                 childBuilder: (context, openContainer) {
                   return Row(
                     children: [

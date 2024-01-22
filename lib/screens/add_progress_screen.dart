@@ -15,8 +15,7 @@ import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
 class AddProgressScreen extends StatefulWidget {
   AddProgressScreen(this.activity, {this.openedFromCalendar = false}) {
-    FredericBackend.instance.analytics.analytics
-        .setCurrentScreen(screenName: 'add-progress-screen');
+    FredericBackend.instance.analytics.logCurrentScreen('add-progress-screen');
   }
 
   final bool openedFromCalendar;

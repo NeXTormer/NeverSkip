@@ -19,8 +19,8 @@ import 'package:frederic/widgets/workout_list_screen/workout_card.dart';
 class EditWorkoutDataScreen extends StatefulWidget {
   EditWorkoutDataScreen(this.workout, {Key? key}) : super(key: key) {
     isNewWorkout = workout.id == '';
-    FredericBackend.instance.analytics.analytics
-        .setCurrentScreen(screenName: 'edit-workout-data-screen');
+    FredericBackend.instance.analytics
+        .logCurrentScreen('edit-workout-data-screen');
   }
 
   final FredericWorkout workout;

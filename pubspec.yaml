@@ -26,12 +26,9 @@ dependencies:
   firebase_auth: ^4.11.1
   cloud_firestore: ^4.11.0
   firebase_storage: ^11.3.1
-  firebase_analytics: ^10.6.1
-  firebase_messaging: ^14.7.1
   firebase_app_check: ^0.2.1+1
   firebase_crashlytics: ^3.4.1
   firebase_performance: ^0.9.3+1
-  firebase_remote_config: ^4.3.1
 
   google_sign_in: ^6.1.5
   sign_in_with_apple: ^5.0.0
@@ -61,6 +58,8 @@ dependencies:
   image_picker: ^1.0.4
   url_launcher: ^6.1.14
   social_share: ^2.3.1
+  umami_tracker: ^0.2.0
+  mixpanel_flutter: 2.2.0
   auto_size_text: ^3.0.0
   in_app_purchase: ^3.1.11
   cupertino_icons: ^1.0.6
