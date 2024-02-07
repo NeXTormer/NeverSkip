@@ -159,7 +159,7 @@ abstract class FredericAnalyticsService {
 //   // Future<void> logEnterHomeScreen() {
 //   //   return analytics.setCurrentScreen(screenName: 'Home');
 //   // }
-//   //
+//   //e
 //   // Future<void> logChangeColorTheme(FredericColorTheme theme) {
 //   //   return analytics.logEvent(
 //   //       name: 'change_color_theme', parameters: {'theme': theme.name});
@@ -189,7 +189,7 @@ class UmamiAnalyticsService extends FredericAnalyticsService {
         }));
 
     if (kDebugMode) {
-      // enabled = false;
+      enabled = false;
     }
   }
 

@@ -43,6 +43,7 @@ type FredericUser = {
   // email: string,
   has_purchased: boolean,
   last_login: Date,
+  login_count: number,
   last_os: string,
   last_os_version: string,
   is_developer: boolean,
@@ -312,6 +313,11 @@ const usersCollection = buildCollection<FredericUser>({
       name: "Last login",
       dataType: "date",
       model: "date_time",
+      readOnly: true
+    }),
+    login_count: buildProperty({
+      name: "Login Count",
+      dataType: "number",
       readOnly: true
     }),
     should_reload_data: buildProperty({

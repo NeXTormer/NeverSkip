@@ -124,6 +124,7 @@ class FirebaseAuthInterface implements FredericAuthInterface {
         'last_login': Timestamp.now(),
         'last_os': Platform.operatingSystem,
         'last_os_version': Platform.operatingSystemVersion,
+        'login_count': FieldValue.increment(1),
       });
 
       if (_box == null) _box = await Hive.openBox(_name);
@@ -233,6 +234,10 @@ class FirebaseAuthInterface implements FredericAuthInterface {
       //TODO: find a way to move this to another class
       //TODO: this breaks the abstraction of the auth interface maybe?
       'has_purchased': trialEnabled ? false : true,
+      'last_login': Timestamp.now(),
+      'last_os': Platform.operatingSystem,
+      'last_os_version': Platform.operatingSystemVersion,
+      'login_count': 1,
     });
 
     final userDocument =
