@@ -28,6 +28,7 @@ jobs:
           echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties.asc
           gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/release.keystore.asc > android/app/release.keystore
           gpg -d --passphrase "${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSPHRASE }}" --batch android/key.properties.asc > android/key.properties
+          gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_KEY }}" --batch android/app/google-services.json.asc > android/app/google-services.json
 
       #      - run: flutter test
 
