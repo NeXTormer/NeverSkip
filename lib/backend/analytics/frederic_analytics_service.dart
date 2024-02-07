@@ -1,7 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:frederic/theme/frederic_theme.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
-import 'package:umami_tracker/umami_tracker.dart';
 
 abstract class FredericAnalyticsService {
   Future<void> initialize();
@@ -165,336 +167,218 @@ abstract class FredericAnalyticsService {
 // }
 
 class UmamiAnalyticsService extends FredericAnalyticsService {
-  UmamiTracker? analytics;
+  Dio? dio;
+  String trackingID = '7ad92f04-e9c1-4044-914e-a0a55946de40';
   bool enabled = true;
 
   @override
   Future<void> initialize() async {
-    analytics = await createUmamiTracker(
-      url: 'http://localhost:3000',
-      id: '7c26e5db-eef9-4285-9d77-b88e18415e3a',
-      hostname: 'io.hawkford.fredericapp',
-    );
+    print('Initializing Umami Analytics Service');
+
+    String userAgent =
+        'NeverSkipFitness/1.0 (${Platform.operatingSystem == 'android' ? 'Android' : 'iOS'} 1; Google Pixel 1) Dart/1.0 (dart:io)';
+
+    print('User Agent: $userAgent');
+
+    dio = Dio(BaseOptions(
+        baseUrl: 'https://analytics.neverskipfitness.com',
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json',
+          'User-Agent': userAgent
+        }));
 
     if (kDebugMode) {
       // enabled = false;
     }
   }
 
-  @override
-  Future<void> enable() async {
-    return analytics?.trackEvent(eventType: 'enable-analytics');
-    enabled = true;
-  }
-
-  @override
-  Future<void> disable() async {
-    return analytics?.trackEvent(eventType: 'disable-analytics');
-    enabled = false;
-  }
-
-  @override
-  Future<void> logLogin(String method) async {
+  Future<void> trackEvent({required String type, String? data}) async {
     if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'user-login', eventValue: method);
+    final payload = {
+      "payload": {
+        "hostname": "app.neverskipfitness.com",
+        "language": Platform.localeName,
+        "referrer": "",
+        "screen": "1920x1080",
+        "website": trackingID,
+        "name": data == null ? '$type' : '$type-$data'
+      },
+      "type": "event"
+    };
+
+    print("Analytics: $payload");
+
+    try {
+      dio?.post('/api/send', data: payload);
+    } catch (e) {
+      print(e);
+    }
   }
 
-  @override
-  Future<void> logSignUp(String method) async {
+  Future<void> trackScreen(String name) async {
     if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'user-signup', eventValue: method);
-  }
 
-  @override
-  Future<void> logGoalCreated() async {
-    if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'create-goal');
-  }
+    final payload = {
+      "payload": {
+        "hostname": "app.neverskipfitness.com",
+        "referrer": "",
+        "language": Platform.localeName,
+        "screen":
+            '${MediaQueryData.fromView(WidgetsBinding.instance.window).size.width.toInt()}x${MediaQueryData.fromView(WidgetsBinding.instance.window).size.height.toInt()}',
+        "title": name.split('/').last,
+        "url": "/" + name,
+        "website": trackingID
+      },
+      "type": "event"
+    };
 
-  @override
-  Future<void> logGoalDeleted() async {
-    if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'delete-goal');
-  }
+    print("Analytics: $payload");
 
-  @override
-  Future<void> logGoalSavedAsAchievement() async {
-    if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'goal-saved-to-achievement');
-  }
-
-  @override
-  Future<void> logAchievementDeleted() async {
-    if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'delete-achievement');
-  }
-
-  @override
-  Future<void> logWorkoutCreated([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'create-custom-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logWorkoutSaved([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'update-custom-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logWorkoutDeleted([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'delete-custom-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logAddProgressOnActivity(
-      [bool useSmartSuggestions = false]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'add-progress', eventValue: 'activity');
-  }
-
-  @override
-  Future<void> logAddProgressOnCalendar(
-      [bool useSmartSuggestions = false]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'add-progress', eventValue: 'calendar');
-  }
-
-  @override
-  Future<void> logAddProgressOnWorkoutPlayer() async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'add-progress', eventValue: 'workout-player');
-  }
-
-  @override
-  Future<void> logCompleteCalendarDay() async {
-    if (!enabled) return;
-    return analytics?.trackEvent(eventType: 'complete-calendar-day');
-  }
-
-  @override
-  Future<void> logEnableCustomWorkout([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'enable-custom-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logEnableGlobalWorkout([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'enable-global-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logDisableCustomWorkout([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'disable-custom-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logDisableGlobalWorkout([String? name]) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'disable-global-workout', eventValue: name);
-  }
-
-  @override
-  Future<void> logEnterSettingsScreen() async {
-    if (!enabled) return;
-    return analytics?.trackScreenView('settings-screen');
-  }
-
-  @override
-  Future<void> logEnterUserSettingsScreen() async {
-    if (!enabled) return;
-    return analytics?.trackScreenView('user-settings-screen');
-  }
-
-  @override
-  Future<void> logChangeColorTheme(FredericColorTheme theme) async {
-    if (!enabled) return;
-    return analytics?.trackEvent(
-        eventType: 'change-color-theme', eventValue: theme.name);
-  }
-
-  @override
-  Future<void> logCurrentScreen(String screen) async {
-    if (!enabled) return;
-    return analytics?.trackScreenView(screen);
-  }
-}
-
-class MixpanelAnalyticsService extends FredericAnalyticsService {
-  Mixpanel? analytics;
-  bool enabled = true;
-
-  @override
-  Future<void> initialize() async {
-    analytics = await Mixpanel.init('7f9a851fefbb827181af6244147968de',
-        trackAutomaticEvents: true);
-
-    if (kDebugMode) {
-      // enabled = false;
+    try {
+      dio?.post('/api/send', data: payload);
+    } catch (e) {
+      print(e);
     }
   }
 
   @override
   Future<void> enable() async {
-    return analytics?.track('enable-analytics');
     enabled = true;
+    return trackEvent(type: 'enable-analytics');
   }
 
   @override
   Future<void> disable() async {
-    return analytics?.track('disable-analytics');
     enabled = false;
+    return trackEvent(type: 'disable-analytics');
   }
 
   @override
   Future<void> logLogin(String method) async {
     if (!enabled) return;
-    return analytics?.track('user-login', properties: {'method': method});
+    return trackEvent(type: 'user-login', data: method);
   }
 
   @override
   Future<void> logSignUp(String method) async {
     if (!enabled) return;
-    return analytics?.track('user-signup', properties: {'method': method});
+    return trackEvent(type: 'user-signup', data: method);
   }
 
   @override
   Future<void> logGoalCreated() async {
     if (!enabled) return;
-    return analytics?.track('create-goal');
+    return trackEvent(type: 'create-goal');
   }
 
   @override
   Future<void> logGoalDeleted() async {
     if (!enabled) return;
-    return analytics?.track('delete-goal');
+    return trackEvent(type: 'delete-goal');
   }
 
   @override
   Future<void> logGoalSavedAsAchievement() async {
     if (!enabled) return;
-    return analytics?.track('goal-saved-to-achievement');
+    return trackEvent(type: 'goal-saved-to-achievement');
   }
 
   @override
   Future<void> logAchievementDeleted() async {
     if (!enabled) return;
-    return analytics?.track('delete-achievement');
+    return trackEvent(type: 'delete-achievement');
   }
 
   @override
   Future<void> logWorkoutCreated([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('create-custom-workout', properties: {'name': name});
+    return trackEvent(type: 'create-custom-workout');
   }
 
   @override
   Future<void> logWorkoutSaved([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('update-custom-workout', properties: {'name': name});
+    return trackEvent(type: 'update-custom-workout');
   }
 
   @override
   Future<void> logWorkoutDeleted([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('delete-custom-workout', properties: {'name': name});
+    return trackEvent(type: 'delete-custom-workout');
   }
 
   @override
   Future<void> logAddProgressOnActivity(
       [bool useSmartSuggestions = false]) async {
     if (!enabled) return;
-    return analytics?.track('add-progress', properties: {'where': 'activity'});
+    return trackEvent(type: 'add-progress', data: 'activity');
   }
 
   @override
   Future<void> logAddProgressOnCalendar(
       [bool useSmartSuggestions = false]) async {
     if (!enabled) return;
-    return analytics?.track('add-progress', properties: {'where': 'calendar'});
+    return trackEvent(type: 'add-progress', data: 'calendar');
   }
 
   @override
   Future<void> logAddProgressOnWorkoutPlayer() async {
     if (!enabled) return;
-    return analytics
-        ?.track('add-progress', properties: {'where': 'workout-player'});
+    return trackEvent(type: 'add-progress', data: 'workout-player');
   }
 
   @override
   Future<void> logCompleteCalendarDay() async {
     if (!enabled) return;
-    return analytics?.track('complete-calendar-day');
+    return trackEvent(type: 'complete-calendar-day');
   }
 
   @override
   Future<void> logEnableCustomWorkout([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('enable-custom-workout', properties: {'name': name});
+    return trackEvent(type: 'enable-custom-workout');
   }
 
   @override
   Future<void> logEnableGlobalWorkout([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('enable-global-workout', properties: {'name': name});
+    return trackEvent(type: 'enable-global-workout');
   }
 
   @override
   Future<void> logDisableCustomWorkout([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('disable-custom-workout', properties: {'name': name});
+    return trackEvent(type: 'disable-custom-workout');
   }
 
   @override
   Future<void> logDisableGlobalWorkout([String? name]) async {
     if (!enabled) return;
-    return analytics
-        ?.track('disable-global-workout', properties: {'name': name});
+    return trackEvent(type: 'disable-global-workout');
   }
 
   @override
   Future<void> logEnterSettingsScreen() async {
     if (!enabled) return;
-    return analytics
-        ?.track('view-page', properties: {'page': 'settings-screen'});
+    return trackScreen('settings-screen');
   }
 
   @override
   Future<void> logEnterUserSettingsScreen() async {
     if (!enabled) return;
-    return analytics
-        ?.track('view-page', properties: {'page': 'user-settings-screen'});
+    return trackScreen('user-settings-screen');
   }
 
   @override
   Future<void> logChangeColorTheme(FredericColorTheme theme) async {
     if (!enabled) return;
-    return analytics
-        ?.track('change-color-theme', properties: {'theme': theme.name});
+    return trackEvent(type: 'change-color-theme', data: theme.name);
   }
 
   @override
   Future<void> logCurrentScreen(String screen) async {
     if (!enabled) return;
-    return analytics?.track('view-page', properties: {'page': screen});
+    return trackScreen(screen);
   }
 }

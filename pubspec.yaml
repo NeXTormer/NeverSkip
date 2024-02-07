@@ -36,6 +36,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^16.1.0
 
+  dio: ^5.4.0
   hive: ^2.2.3
   async: ^2.11.0
   crypto: ^3.0.3
@@ -58,8 +59,6 @@ dependencies:
   image_picker: ^1.0.4
   url_launcher: ^6.1.14
   social_share: ^2.3.1
-  umami_tracker: ^0.2.0
-  mixpanel_flutter: 2.2.0
   auto_size_text: ^3.0.0
   in_app_purchase: ^3.1.11
   cupertino_icons: ^1.0.6

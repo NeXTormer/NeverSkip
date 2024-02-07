@@ -34,6 +34,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen>
           label: screen.label));
       screens.add(screen.screen);
     }
+
+    _sendCurrentTabToAnalytics();
   }
 
   @override
