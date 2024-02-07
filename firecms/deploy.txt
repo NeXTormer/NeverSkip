@@ -1,3 +1,4 @@
 yarn run build
 firebase deploy --only hosting
 
+https://firecms.co/docs/deployment

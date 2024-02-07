@@ -283,12 +283,11 @@ class _NormalGoalCard extends State<NormalGoalCard> {
           )
         : showFredericBottomSheet(
             context: context,
-            builder: (c) => Scaffold(
-                    body: EditGoalDataScreen(
+            builder: (c) => EditGoalDataScreen(
                   widget.goal,
                   sets: widget.sets,
                   activity: widget.activity,
-                )));
+                ));
   }
 
   void handleLongClick(BuildContext context) {

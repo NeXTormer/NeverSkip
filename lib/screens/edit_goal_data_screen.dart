@@ -100,69 +100,80 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: theme.backgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(padding: const EdgeInsets.only(bottom: 12)),
+      body: Column(
+        children: [
+          Padding(padding: const EdgeInsets.only(bottom: 12)),
           buildHeaderSegment(),
-          SliverDivider(),
-          buildGoalCard(),
-          SliverDivider(),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Title'),
-            ),
-          ),
-          buildTitleSegment(),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: FredericHeading('Goal State'),
-            ),
-          ),
-          buildGoalStateSegment(),
-          buildCurrentStateHeadingAndLinkActivity(),
-          buildCurrentStateSegment(),
-          SliverPadding(
-            padding: const EdgeInsets.only(bottom: 42),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                children: [
-                  buildDatePickerRow('Start Date', Datepicker.Start,
-                      initialDate: DateTime.now()),
-                  const SizedBox(height: 8),
-                  buildDatePickerRow(
-                    'End Date',
-                    Datepicker.End,
-                    initialDate: DateTime.now().add(
-                      Duration(days: 7),
+          Divider(),
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                buildGoalCard(),
+                SliverDivider(),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FredericHeading('Title'),
+                  ),
+                ),
+                buildTitleSegment(),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: FredericHeading('Goal State'),
+                  ),
+                ),
+                buildGoalStateSegment(),
+                buildCurrentStateHeadingAndLinkActivity(),
+                buildCurrentStateSegment(),
+                SliverPadding(
+                  padding: const EdgeInsets.only(bottom: 42),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Column(
+                      children: [
+                        buildDatePickerRow('Start Date', Datepicker.Start,
+                            initialDate: DateTime.now()),
+                        const SizedBox(height: 8),
+                        buildDatePickerRow(
+                          'End Date',
+                          Datepicker.End,
+                          initialDate: DateTime.now().add(
+                            Duration(days: 7),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: FredericButton(
+                                widget.isNewGoal ? 'Create' : 'Save',
+                                onPressed: () {
+                              saveData();
+                              Navigator.of(context).pop();
+                            })),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: 16),
+                ),
+              ],
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 2,
-                      child: FredericButton(
-                          widget.isNewGoal ? 'Create' : 'Save', onPressed: () {
-                        saveData();
-                        Navigator.of(context).pop();
-                      })),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(height: 16),
           ),
         ],
       ),
@@ -311,34 +322,32 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
   }
 
   Widget buildHeaderSegment() {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Row(
-          children: [
-            Icon(
-              ExtraIcons.dumbbell,
-              color: theme.mainColor,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Row(
+        children: [
+          Icon(
+            ExtraIcons.dumbbell,
+            color: theme.mainColor,
+          ),
+          SizedBox(width: 32),
+          Text(
+            widget.isNewGoal ? 'Create Goal' : 'Edit Goal',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          Expanded(child: Container()),
+          GestureDetector(
+            onTap: () {
+              saveData();
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              widget.isNewGoal ? 'Create' : 'Save',
+              style: TextStyle(
+                  color: theme.mainColor, fontWeight: FontWeight.w500),
             ),
-            SizedBox(width: 32),
-            Text(
-              widget.isNewGoal ? 'Create Goal' : 'Edit Goal',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            Expanded(child: Container()),
-            GestureDetector(
-              onTap: () {
-                saveData();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                widget.isNewGoal ? 'Create' : 'Save',
-                style: TextStyle(
-                    color: theme.mainColor, fontWeight: FontWeight.w500),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

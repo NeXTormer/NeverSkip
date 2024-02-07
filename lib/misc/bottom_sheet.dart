@@ -13,7 +13,7 @@ Future<void> showFredericBottomSheet(
   return showCupertinoModalSheet(
     context: context,
     builder: builder,
-    barrierDismissible: isDismissible,
+    //barrierDismissible: isDismissible,
   );
 
   // return Navigator.of(context)
