@@ -1,14 +1,14 @@
 name: build_for_android
 
 on:
+  workflow_dispatch:
   push:
     tag:
       - "v*.*.*"
 
 jobs:
   build_aab:
-
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
