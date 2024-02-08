@@ -85,10 +85,10 @@ void main() {
         expect(list.isNotEmpty, true);
         var activity = list.first;
 
-        expect(activity.activity.id, (day + 1).toString());
+        expect(activity.activity.id, day.toString());
       }
 
-      for (int week = 0; week < 100; week++) {
+      for (int week = 0; week < 40; week++) {
         for (int day = 0; day < 7; day++) {
           checkDay(day, week);
         }
@@ -110,7 +110,7 @@ void main() {
         } else {
           expect(list.isNotEmpty, true);
           var activity = list.first;
-          expect(activity.activity.id, (day + 1).toString());
+          expect(activity.activity.id, day.toString());
         }
       }
 

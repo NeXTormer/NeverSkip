@@ -47,9 +47,9 @@ android {
 
     defaultConfig {
         applicationId "io.hawkford.fredericapp"
-        minSdkVersion 19
+        minSdkVersion 28
         multiDexEnabled true
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -68,9 +68,9 @@ android {
         release {
             signingConfig signingConfigs.release
 //           Enable this to add debug symbols to the application binary
-//           ndk {
-//               debugSymbolLevel 'SYMBOL_TABLE'
-//           }
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
     }
 }
