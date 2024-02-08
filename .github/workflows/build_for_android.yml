@@ -46,11 +46,13 @@ jobs:
       - name: Build AAB
         run: flutter build appbundle --release --build-number ${{ steps.date.outputs.date }}01 --build-name ${{ env.GIT_TAG_NAME }}
 
+      - name: Build APK
+        run: flutter build apk --release --build-number ${{ steps.date.outputs.date }}01 --build-name ${{ env.GIT_TAG_NAME }}
+
       - name: Create Github Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/bundle/release/*.aab"
-          token: ${{ secrets.PERSONAL_RELEASE_TOKEN }}
+          artifacts: "build/app/outputs/bundle/release/*.aab,build/app/outputs/bundle/release/*.apk"
 
       - name: Save APPBUNDLE to Artifacts
         uses: actions/upload-artifact@v2
