@@ -79,14 +79,17 @@ class FredericWorkoutManager
       FredericWorkoutEvent event, Emitter<FredericWorkoutListData> emit) async {
     if (event is FredericWorkoutUpdateEvent) {
       emit(FredericWorkoutListData(_workouts, event.changed));
+      FredericBackend.instance.analytics.logWorkoutSaved();
     } else if (event is FredericWorkoutCreateEvent) {
       var workout = await dataInterface.create(event.workout);
       workout.onUpdate = updateWorkoutInDB;
       _workouts[workout.id] = workout;
       emit(FredericWorkoutListData(_workouts, event.changed));
+      FredericBackend.instance.analytics.logWorkoutCreated();
     } else if (event is FredericWorkoutDeleteEvent) {
       _deleteWorkout(event.workout);
       emit(FredericWorkoutListData(_workouts, event.changed));
+      FredericBackend.instance.analytics.logWorkoutDeleted();
     } else {
       emit(FredericWorkoutListData(_workouts, event.changed));
     }
@@ -95,6 +98,7 @@ class FredericWorkoutManager
 
 class FredericWorkoutEvent {
   FredericWorkoutEvent(this.changed);
+
   List<String> changed;
 }
 

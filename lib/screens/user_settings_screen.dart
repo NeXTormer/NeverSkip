@@ -24,7 +24,7 @@ class UserSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FredericBackend.instance.analytics.logEnterUserSettingsScreen();
+    FredericBackend.instance.analytics.logCurrentScreen('user-settings-screen');
     return FredericScaffold(
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) => CustomScrollView(
@@ -54,72 +54,77 @@ class UserSettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SettingsSegment(title: tr('settings.user.your_data'), elements: <
-                SettingsElement>[
-              SettingsElement(
-                text: tr('settings.user.name.title'),
-                icon: Icons.drive_file_rename_outline,
-                subText: user.name,
-                changerTitle: tr('settings.user.name.changer_title'),
-                changeAttributeWidget: TextAttributeChanger(
-                  placeholder: 'Name',
-                  currentValue: () => user.name,
-                  updateValue: (newValue) {
-                    user.name = newValue;
-                    FredericBackend.instance.userManager.userDataChanged();
-                  },
-                ),
-              ),
-              // SettingsElement(
-              //   text: 'Username',
-              //   subText: user.username,
-              //   icon: Icons.supervised_user_circle_outlined,
-              //   changerTitle: 'Update your username',
-              //   infoText:
-              //       'Others can find your profile using your username if your profile is discoverable. You can change your username every month. It must be unique.',
-              //   changeAttributeWidget: TextAttributeChanger(
-              //     placeholder: 'Username',
-              //     currentValue: () => user.username,
-              //     updateValue: (newValue) {
-              //       user.username = newValue;
-              //       FredericBackend.instance.userManager.userDataChanged();
-              //     },
-              //   ),
-              // ),
-              SettingsElement(
-                text: tr('settings.user.picture.title'),
-                changerTitle: tr('settings.user.picture.changer_title'),
-                icon: Icons.person,
-                changeAttributeWidget: ImageAttributeChanger(
-                    currentValue: () => user.image,
-                    updateValue: (imageFile) async {
-                      bool success = await user.updateProfilePicture(imageFile);
-                      if (success) {
+            SettingsSegment(
+                title: tr('settings.user.your_data'),
+                elements: <SettingsElement>[
+                  SettingsElement(
+                    text: tr('settings.user.name.title'),
+                    icon: Icons.drive_file_rename_outline,
+                    subText: user.name,
+                    changerTitle: tr('settings.user.name.changer_title'),
+                    changeAttributeWidget: TextAttributeChanger(
+                      placeholder: 'Name',
+                      currentValue: () => user.name,
+                      updateValue: (newValue) {
+                        user.name = newValue;
                         FredericBackend.instance.userManager.userDataChanged();
-                      }
-                      return success;
-                    }),
-              ),
-              SettingsElement(
-                  text: tr('settings.user.date_of_birth.title'),
-                  subText: user.birthdayFormatted,
-                  infoText: tr('settings.user.date_of_birth.description'),
-                  changerTitle: tr('settings.user.date_of_birth.changer_title'),
-                  changeAttributeWidget: DateTimeAttributeChanger(
-                    currentValue: () => user.birthday,
-                    updateValue: (newDate) {
-                      user.birthday = newDate;
-                      FredericBackend.instance.userManager.userDataChanged();
-                    },
+                      },
+                    ),
                   ),
-                  icon: Icons.cake_outlined),
-              SettingsElement(
-                text: tr('settings.user.email_address_title'),
-                subText: FirebaseAuth.instance.currentUser?.email,
-                icon: Icons.mail_outline_rounded,
-                clickable: false,
-              ),
-            ]),
+                  // SettingsElement(
+                  //   text: 'Username',
+                  //   subText: user.username,
+                  //   icon: Icons.supervised_user_circle_outlined,
+                  //   changerTitle: 'Update your username',
+                  //   infoText:
+                  //       'Others can find your profile using your username if your profile is discoverable. You can change your username every month. It must be unique.',
+                  //   changeAttributeWidget: TextAttributeChanger(
+                  //     placeholder: 'Username',
+                  //     currentValue: () => user.username,
+                  //     updateValue: (newValue) {
+                  //       user.username = newValue;
+                  //       FredericBackend.instance.userManager.userDataChanged();
+                  //     },
+                  //   ),
+                  // ),
+                  SettingsElement(
+                    text: tr('settings.user.picture.title'),
+                    changerTitle: tr('settings.user.picture.changer_title'),
+                    icon: Icons.person,
+                    changeAttributeWidget: ImageAttributeChanger(
+                        currentValue: () => user.image,
+                        updateValue: (imageFile) async {
+                          bool success =
+                              await user.updateProfilePicture(imageFile);
+                          if (success) {
+                            FredericBackend.instance.userManager
+                                .userDataChanged();
+                          }
+                          return success;
+                        }),
+                  ),
+                  SettingsElement(
+                      text: tr('settings.user.date_of_birth.title'),
+                      subText: user.birthdayFormatted,
+                      infoText: tr('settings.user.date_of_birth.description'),
+                      changerTitle:
+                          tr('settings.user.date_of_birth.changer_title'),
+                      changeAttributeWidget: DateTimeAttributeChanger(
+                        currentValue: () => user.birthday,
+                        updateValue: (newDate) {
+                          user.birthday = newDate;
+                          FredericBackend.instance.userManager
+                              .userDataChanged();
+                        },
+                      ),
+                      icon: Icons.cake_outlined),
+                  SettingsElement(
+                    text: tr('settings.user.email_address_title'),
+                    subText: FirebaseAuth.instance.currentUser?.email,
+                    icon: Icons.mail_outline_rounded,
+                    clickable: false,
+                  ),
+                ]),
             SliverPadding(padding: const EdgeInsets.symmetric(vertical: 12)),
             FutureBuilder<SharedPreferences>(
                 future: SharedPreferences.getInstance(),

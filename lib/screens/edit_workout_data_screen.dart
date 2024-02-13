@@ -255,8 +255,6 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
                                     context: context,
                                     builder: (ctx) => FredericActionDialog(
                                           onConfirm: () {
-                                            FredericBackend.instance.analytics
-                                                .logWorkoutDeleted();
                                             FredericBackend
                                                 .instance.workoutManager
                                                 .add(FredericWorkoutDeleteEvent(
@@ -311,12 +309,9 @@ class _EditWorkoutDataScreenState extends State<EditWorkoutDataScreen> {
             ? (selectedStartDate ?? DateTime.now())
             : selectedStartDate);
     if (widget.isNewWorkout) {
-      FredericBackend.instance.analytics.logWorkoutCreated();
-
       FredericBackend.instance.workoutManager
           .add(FredericWorkoutCreateEvent(widget.workout));
     } else {
-      FredericBackend.instance.analytics.logWorkoutSaved();
       FredericBackend.instance.workoutManager.updateWorkoutInDB(widget.workout);
     }
   }

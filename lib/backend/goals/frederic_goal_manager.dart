@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/database/frederic_data_interface.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 import 'package:frederic/backend/goals/frederic_goal_list_data.dart';
 
 import 'frederic_goal.dart';
@@ -57,10 +58,12 @@ class FredericGoalManager
       final newGoalFromDatabase = await _dataInterface.create(event.newGoal);
       _goals[event.newGoal.id] = newGoalFromDatabase;
       emit(FredericGoalListData(event.changed, _goals));
+      FredericBackend.instance.analytics.logGoalCreated();
     } else if (event is FredericGoalDeleteEvent) {
       _goals.remove(event.goal.id);
       await _dataInterface.delete(event.goal);
       emit(FredericGoalListData(event.changed, _goals));
+      FredericBackend.instance.analytics.logGoalDeleted();
     } else {
       emit(FredericGoalListData(event.changed, _goals));
     }

@@ -13,6 +13,7 @@ class StreakManager {
       }
     });
   }
+
   final FredericUserManager userManager;
 
   void handleUserDataChange() {
@@ -25,7 +26,7 @@ class StreakManager {
     if (!userManager.state.finishedLoading) return;
     final now = DateTime.now();
     //if (userManager.state.streakLatestDate?.isSameDay(now) ?? false) return;
-
+    FredericBackend.instance.analytics.logCompleteCalendarDay();
     if (userManager.state.hasStreak) {
       if (userManager.state.streakLatestDate?.isNotSameDay(now) ?? true) {
         userManager.state.streakLatestDate = now;

@@ -26,7 +26,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FredericBackend.instance.analytics.logEnterSettingsScreen();
+    FredericBackend.instance.analytics.logCurrentScreen('settings-screen');
     return FredericScaffold(
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) => CustomScrollView(
