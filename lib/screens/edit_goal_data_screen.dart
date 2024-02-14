@@ -162,8 +162,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
                             child: FredericButton(
                                 widget.isNewGoal ? 'Create' : 'Save',
                                 onPressed: () {
-                              saveData();
-                              Navigator.of(context).pop();
+                              final success = saveData();
+                              if (success) {
+                                Navigator.of(context).pop();
+                              }
                             })),
                       ],
                     ),
@@ -193,40 +195,35 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
     return FormError.Success;
   }
 
-  void saveData() {
-    Future<void> _showErrorMessage(String text) async {
-      await showDialog<bool>(
-        context: context,
-        builder: (ctx) {
-          return Container();
-        },
-      );
-      await showDialog(
-        context: context,
-        builder: (ctx) {
-          return FredericActionDialog(
-              title: text,
-              infoOnly: true,
-              onConfirm: () => Navigator.of(ctx).pop());
-        },
-      );
-    }
+  Future<void> _showErrorMessage(String text) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return FredericActionDialog(
+          title: text,
+          infoOnly: true,
+          onConfirm: () {},
+        );
+      },
+    );
+  }
 
+  bool saveData() {
     if (widget.isNewGoal) {
       final formStatus = _checkFormInputs();
       switch (formStatus) {
         case FormError.CurrentStateEqualsEndStart:
           _showErrorMessage('The current state must not match the end state!');
-          return;
+          return false;
         case FormError.StartStateEqualsEndState:
           _showErrorMessage('The start state must not match the end state!');
-          return;
+          return false;
         case FormError.StartDateEqualsEndDate:
           _showErrorMessage('The start date must not match the end date!');
-          break;
+          return false;
         case FormError.EndDateSmallerThenStartDate:
           _showErrorMessage('The end date must not be before the start date!');
-          break;
+          return false;
         case FormError.Success:
           widget.goal.updateData(
             activityID: dummyActivity == null ? '' : dummyActivity!.id,
@@ -247,10 +244,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
               .add(FredericGoalCreateEvent(widget.goal));
 
           FredericBackend.instance.userManager.state.goalsCount += 1;
-          return;
+          return true;
         default:
           _showErrorMessage('Some error happened');
-          return;
+          return false;
       }
     } else {
       widget.goal.updateData(
@@ -266,6 +263,8 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
       FredericBackend.instance.goalManager
           .add(FredericGoalUpdateEvent(widget.goal));
     }
+
+    return true;
   }
 
   void addNewActivityTracker(BuildContext context) {
@@ -338,8 +337,10 @@ class _EditGoalDataScreenState extends State<EditGoalDataScreen> {
           Expanded(child: Container()),
           GestureDetector(
             onTap: () {
-              saveData();
-              Navigator.of(context).pop();
+              final success = saveData();
+              if (success) {
+                Navigator.of(context).pop();
+              }
             },
             child: Text(
               widget.isNewGoal ? 'Create' : 'Save',
