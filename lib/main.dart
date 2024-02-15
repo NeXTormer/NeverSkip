@@ -1,5 +1,6 @@
 import 'dart:isolate';
 
+import 'package:cupertino_modal_sheet/cupertino_modal_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -184,38 +185,48 @@ class _FredericBaseState extends State<FredericBase> {
               value: FredericBackend.instance.goalManager),
         ],
         child: MaterialApp(
-            showPerformanceOverlay: false,
-            title: 'NeverSkip Fitness',
-            locale: context.locale,
-            debugShowCheckedModeBanner: false,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            theme: ThemeData(
-                useMaterial3: false,
-                primaryColor: theme.mainColor,
-                brightness: theme.isBright ? Brightness.light : Brightness.dark,
-                fontFamily: 'Montserrat',
-                colorScheme: ColorScheme.fromSwatch().copyWith(
-                    secondary: theme.accentColor,
-                    primary: theme.mainColor,
-                    brightness:
-                        theme.isBright ? Brightness.light : Brightness.dark)),
-            home: FredericMainApp()
-            // OrientationBuilder(
-            //     builder: (context, orientation) {
-            //       if (orientation == Orientation.portrait) {
-            //         return FredericMainApp();
-            //       }
-            //
-            //       if (getIt.isRegistered<AdminBackend>())
-            //         getIt.unregister<AdminBackend>();
-            //       getIt.registerSingleton<AdminBackend>(AdminBackend());
-            //       return BlocProvider<AdminIconManager>.value(
-            //           value: AdminBackend.instance.iconManager,
-            //           child: FredericAdminPanel());
-            //     },
-            //   ),
-            ),
+          showPerformanceOverlay: false,
+          title: 'NeverSkip Fitness',
+          locale: context.locale,
+          debugShowCheckedModeBanner: false,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          theme: ThemeData(
+              useMaterial3: false,
+              primaryColor: theme.mainColor,
+              brightness: theme.isBright ? Brightness.light : Brightness.dark,
+              fontFamily: 'Montserrat',
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                  secondary: theme.accentColor,
+                  primary: theme.mainColor,
+                  brightness:
+                      theme.isBright ? Brightness.light : Brightness.dark)),
+          onGenerateRoute: (RouteSettings settings) {
+            switch (settings.name) {
+              case '/':
+                return CupertinoModalSheetRoute(
+                    settings: settings,
+                    builder: (context) {
+                      return FredericMainApp();
+                    });
+            }
+          },
+          //home: FredericMainApp()
+          // OrientationBuilder(
+          //     builder: (context, orientation) {
+          //       if (orientation == Orientation.portrait) {
+          //         return FredericMainApp();
+          //       }
+          //
+          //       if (getIt.isRegistered<AdminBackend>())
+          //         getIt.unregister<AdminBackend>();
+          //       getIt.registerSingleton<AdminBackend>(AdminBackend());
+          //       return BlocProvider<AdminIconManager>.value(
+          //           value: AdminBackend.instance.iconManager,
+          //           child: FredericAdminPanel());
+          //     },
+          //   ),
+        ),
       ),
     );
   }

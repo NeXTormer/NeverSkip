@@ -65,11 +65,7 @@ dependencies:
   infinite_listview: ^1.1.0
   introduction_screen: ^3.1.12
   cached_network_image: ^3.3.0
-
-  smooth_sheets:
-    git:
-      url: https://github.com/fujidaiti/smooth_sheets.git
-      path: package
+  cupertino_modal_sheet: ^1.1.0
 
   sheet:
     git:
