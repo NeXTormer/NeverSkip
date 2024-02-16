@@ -34,16 +34,12 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
-        checkReleaseBuilds false //TODO: Maybe this is a bad idea?
-    }
 
     defaultConfig {
         applicationId "io.hawkford.fredericapp"
@@ -72,6 +68,11 @@ android {
                 debugSymbolLevel 'SYMBOL_TABLE'
             }
         }
+    }
+    namespace 'io.hawkford.fredericapp'
+    lint {
+        checkReleaseBuilds false
+        disable 'InvalidPackage'
     }
 }
 
