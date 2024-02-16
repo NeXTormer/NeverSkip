@@ -8,7 +8,7 @@ import 'misc/ExtraIcons.dart';
 import 'screens/screens.dart';
 
 class FredericMainApp extends StatelessWidget {
-  FredericMainApp({Key? key}) : super(key: key);
+  const FredericMainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

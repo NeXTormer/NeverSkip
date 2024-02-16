@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/main.dart';
@@ -10,6 +9,7 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_chip.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 import 'package:frederic/widgets/workout_list_screen/enable_workout_dialog.dart';
+import 'package:sheet/route.dart';
 
 class WorkoutCard extends StatefulWidget {
   const WorkoutCard(this.workout,
@@ -61,7 +61,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
         onTap: widget.clickable
             ? () {
                 HapticFeedback.selectionClick();
-                Navigator.of(context).push(MaterialPageRoute(
+                Navigator.of(context).push(MaterialExtendedPageRoute(
                     builder: (context) => EditWorkoutScreen(
                           widget.workout.id,
                           defaultPage: hasStartDate

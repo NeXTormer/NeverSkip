@@ -122,6 +122,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                           : null;
                   return CustomScrollView(
                     physics: ClampingScrollPhysics(),
+                    primary: true,
                     slivers: [
                       SliverPadding(padding: EdgeInsets.only(bottom: 12)),
                       _DisplayActivityCard(widget.activity),

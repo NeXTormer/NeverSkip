@@ -1,6 +1,5 @@
 import 'dart:isolate';
 
-import 'package:cupertino_modal_sheet/cupertino_modal_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -24,6 +23,7 @@ import 'package:frederic/theme/frederic_theme.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sheet/route.dart';
 
 final getIt = GetIt.instance;
 
@@ -202,16 +202,16 @@ class _FredericBaseState extends State<FredericBase> {
                   brightness:
                       theme.isBright ? Brightness.light : Brightness.dark)),
           onGenerateRoute: (RouteSettings settings) {
-            switch (settings.name) {
-              case '/':
-                return CupertinoModalSheetRoute(
-                    settings: settings,
-                    builder: (context) {
-                      return FredericMainApp();
-                    });
+            if (settings.name == '/') {
+              return MaterialExtendedPageRoute<void>(
+                builder: (BuildContext context) {
+                  return const FredericMainApp();
+                },
+              );
             }
+            return null;
           },
-          //home: FredericMainApp()
+          // home: FredericMainApp()
           // OrientationBuilder(
           //     builder: (context, orientation) {
           //       if (orientation == Orientation.portrait) {

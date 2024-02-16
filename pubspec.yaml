@@ -65,11 +65,10 @@ dependencies:
   infinite_listview: ^1.1.0
   introduction_screen: ^3.1.12
   cached_network_image: ^3.3.0
-  cupertino_modal_sheet: ^1.1.0
 
   sheet:
     git:
-      url: https://github.com/jamesblasco/modal_bottom_sheet.git
+      url: https://github.com/nextormer/modal_bottom_sheet.git
       path: sheet
 
   easy_localization: ^3.0.3
