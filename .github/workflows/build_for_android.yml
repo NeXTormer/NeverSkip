@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.8'
+          flutter-version: '3.19.0'
       - run: flutter pub get
 
       - name: Decrypt keys
@@ -43,9 +43,6 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y%m%d')"
 
-      - name: Build AAB
-        run: flutter build appbundle --release --build-number ${{ steps.date.outputs.date }}01 --build-name ${{ env.GIT_TAG_NAME }}
-
       - name: Build APK
         run: flutter build apk --release --build-number ${{ steps.date.outputs.date }}01 --build-name ${{ env.GIT_TAG_NAME }}
 
@@ -58,5 +55,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           tag: ${{ env.GIT_TAG_NAME }}
-          name: APPBUNDLE
-          path: build/app/outputs/bundle/release/app-release.aab
+          name: APK
+          path: build/app/outputs/bundle/release/app-release.apk
