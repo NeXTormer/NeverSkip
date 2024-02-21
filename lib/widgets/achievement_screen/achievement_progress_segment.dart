@@ -29,7 +29,7 @@ class AchievementProgressSegment extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AchievementProgressBar(goal, goal.startState.toDouble(),
-                      length: adjustedProgressBarLength),
+                      progressRatio: 0.1, length: adjustedProgressBarLength),
                 ],
               ),
             ),
@@ -44,7 +44,7 @@ class AchievementProgressSegment extends StatelessWidget {
                     goal,
                     goal.endState.toDouble(),
                     progressRatio: 0.96,
-                    delayInMillisecond: 200,
+                    delayInMillisecond: 0,
                     length: adjustedProgressBarLength,
                   ),
                 ],

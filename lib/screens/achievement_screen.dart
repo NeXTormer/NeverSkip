@@ -6,8 +6,6 @@ import 'package:frederic/main.dart';
 import 'package:frederic/widgets/achievement_screen/achievement_goal_title_segment.dart';
 import 'package:frederic/widgets/achievement_screen/achievement_header.dart';
 import 'package:frederic/widgets/achievement_screen/achievement_progress_segment.dart';
-import 'package:frederic/widgets/achievement_screen/achievement_stats_segment.dart';
-import 'package:frederic/widgets/achievement_screen/achievement_timeline_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_action_dialog.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
@@ -34,9 +32,10 @@ class AchievementScreen extends StatelessWidget {
               AchievementGoalTitleSegment(goal),
               _AchievementTitle('Your Progress'),
               AchievementProgressSegment(goal),
-              _AchievementTitle('Stats'),
-              AchievementStatsSegment(goal),
-              AchievementTimelineSegment(goal),
+              //TODO: implement correctly
+              // _AchievementTitle('Stats'),
+              // AchievementStatsSegment(goal),
+              // AchievementTimelineSegment(goal),
               buildDeleteButton(),
             ],
           ),
@@ -55,7 +54,7 @@ class AchievementScreen extends StatelessWidget {
   Widget buildDeleteButton() {
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 28),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
