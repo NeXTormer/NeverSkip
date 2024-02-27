@@ -105,7 +105,7 @@ class _AddProgressScreenState extends State<AddProgressScreen> {
                     next.hasChanged(widget.activity.id),
                 builder: (context, setListData) {
                   List<FredericSet> sets =
-                      setListData[widget.activity.id].getLatestSets(0, 3);
+                      setListData[widget.activity.id].getLatestSets(0, 4);
                   if (sets.isEmpty) {
                     controller.setRepsAndWeight(RepsWeightSuggestion(
                         widget.activity.recommendedReps, 30));

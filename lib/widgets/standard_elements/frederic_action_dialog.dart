@@ -102,7 +102,7 @@ class FredericActionDialog extends StatelessWidget {
                                   }
                                 },
                                 mainColor: destructiveAction
-                                    ? Colors.red
+                                    ? theme.negativeColor
                                     : theme.mainColor,
                               )),
                         ),

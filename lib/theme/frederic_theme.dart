@@ -64,8 +64,8 @@ class FredericColorTheme {
       this.negativeColor = Colors.red,
       this.negativeColorLight = const Color(0x1AB71C1C),
       this.dividerColor = const Color(0xFFC9C9C9),
-      this.backgroundColor = const Color(0xFF131313),
-      this.cardBackgroundColor = const Color(0xFF1F1F1F),
+      this.backgroundColor = const Color(0xFF1E1E1E),
+      this.cardBackgroundColor = const Color(0xFF2B2B2B),
       this.greyColor = const Color(0xFFC4C4C4),
       this.disabledGreyColor = const Color(0x66A5A5A5),
       this.textColor = Colors.white,
@@ -358,6 +358,81 @@ class FredericColorTheme {
     this.cardBorderColor = Colors.transparent;
   }
 
+  FredericColorTheme.red(
+      {this.name = "Hot Rod Red",
+      this.uid = 14,
+      this.mainColor = const Color(0xFFAA0505),
+      this.mainColorInText = const Color(0xFFAA0505),
+      this.mainColorLight = const Color(0x1AAA0505),
+      this.accentColor = const Color(0xFFB97D10),
+      this.accentColorLight = const Color(0x1AB97D10),
+      this.positiveColor = const Color(0xFF1CBB3F),
+      this.positiveColorLight = const Color(0x1A1CBB3F),
+      this.negativeColor = const Color(0xFF6A0C0B),
+      this.negativeColorLight = const Color(0x1A6A0C0B),
+      this.dividerColor = const Color(0xFFC9C9C9),
+      this.backgroundColor = Colors.white,
+      this.cardBackgroundColor = Colors.white,
+      this.greyColor = const Color(0xFFC4C4C4),
+      this.disabledGreyColor = const Color(0x66A5A5A5),
+      this.textColor = const Color(0xFF272727),
+      this.textColorBright = Colors.white,
+      this.textColorColorfulBackground = const Color(0xFF272727),
+      this.isDark = false,
+      this.isColorful = false,
+      this.greyTextColor = const Color(0xBF3A3A3A),
+      this.cardBorderColor = const Color(0xFFE2E2E2)});
+
+  FredericColorTheme.redColorful(
+      {this.name = "Hot Rod Red Colorful",
+      this.uid = 15,
+      this.mainColor = const Color(0xFFAA0505),
+      this.mainColorInText = const Color(0xFFAA0505),
+      this.mainColorLight = const Color(0x1AAA0505),
+      this.accentColor = const Color(0xFFB97D10),
+      this.accentColorLight = const Color(0x1AB97D10),
+      this.positiveColor = const Color(0xFF1CBB3F),
+      this.positiveColorLight = const Color(0x1A1CBB3F),
+      this.negativeColor = const Color(0xFF6A0C0B),
+      this.negativeColorLight = const Color(0x1A6A0C0B),
+      this.dividerColor = const Color(0xFFC9C9C9),
+      this.backgroundColor = Colors.white,
+      this.cardBackgroundColor = Colors.white,
+      this.greyColor = const Color(0xFFC4C4C4),
+      this.disabledGreyColor = const Color(0x66A5A5A5),
+      this.textColor = const Color(0xFF272727),
+      this.textColorBright = Colors.white,
+      this.textColorColorfulBackground = Colors.white,
+      this.isDark = false,
+      this.isColorful = true,
+      this.greyTextColor = const Color(0xBF3A3A3A),
+      this.cardBorderColor = const Color(0xFFE2E2E2)});
+
+  FredericColorTheme.redDark(
+      {this.name = "Hot Rod Red Dark",
+      this.uid = 16,
+      this.mainColor = const Color(0xFFAA0505),
+      this.mainColorInText = const Color(0xFFD11616),
+      this.mainColorLight = const Color(0x1AAA0505),
+      this.accentColor = const Color(0xFFB97D10),
+      this.accentColorLight = const Color(0x1AB97D10),
+      this.positiveColor = const Color(0xFF1CBB3F),
+      this.positiveColorLight = const Color(0x1A1CBB3F),
+      this.negativeColor = const Color(0xFF6A0C0B),
+      this.negativeColorLight = const Color(0x1A6A0C0B),
+      this.dividerColor = const Color(0xFFC9C9C9),
+      this.backgroundColor = const Color(0xFF1F1F1F),
+      this.cardBackgroundColor = const Color(0xFF282828),
+      this.greyColor = const Color(0xFFC4C4C4),
+      this.disabledGreyColor = const Color(0x66A5A5A5),
+      this.textColor = Colors.white,
+      this.textColorBright = Colors.black,
+      this.textColorColorfulBackground = Colors.white,
+      this.isDark = true,
+      this.isColorful = true,
+      this.greyTextColor = const Color(0xFFC4C4C4),
+      this.cardBorderColor = Colors.transparent});
+
   static FredericColorTheme find(int id) {
     switch (id) {
       case 1:
@@ -425,6 +500,21 @@ class FredericColorTheme {
         assert(theme.uid == id,
             'Color theme UIDs not matching! [${theme.uid} != $id]');
         return theme;
+      case 14:
+        FredericColorTheme theme = FredericColorTheme.red();
+        assert(theme.uid == id,
+            'Color theme UIDs not matching! [${theme.uid} != $id]');
+        return theme;
+      case 15:
+        FredericColorTheme theme = FredericColorTheme.redColorful();
+        assert(theme.uid == id,
+            'Color theme UIDs not matching! [${theme.uid} != $id]');
+        return theme;
+      case 16:
+        FredericColorTheme theme = FredericColorTheme.redDark();
+        assert(theme.uid == id,
+            'Color theme UIDs not matching! [${theme.uid} != $id]');
+        return theme;
     }
     return FredericColorTheme.blue();
   }
@@ -433,7 +523,7 @@ class FredericColorTheme {
 
   static List<FredericColorTheme> get allThemes {
     if (_allThemes.isEmpty) {
-      for (int i = 1; i <= 13; i++) {
+      for (int i = 1; i <= 16; i++) {
         _allThemes.add(find(i));
       }
     }

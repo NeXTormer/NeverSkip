@@ -11,8 +11,8 @@ import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 class PurchaseScreen extends StatelessWidget {
   const PurchaseScreen({Key? key}) : super(key: key);
 
-  final String normalPrice = "6,99";
-  final String discountPrice = '4,99';
+  final String normalPrice = "13,99";
+  final String discountPrice = '11,99';
   final String discount = "2";
 
   @override
@@ -29,7 +29,6 @@ class PurchaseScreen extends StatelessWidget {
                     .showPurchaseSuccessfulToast(context);
               });
             }
-
             return WillPopScope(
               onWillPop: () async => !(user.tempPurchaseIsPending ?? false),
               child: Container(
