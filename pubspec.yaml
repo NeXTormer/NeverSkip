@@ -58,6 +58,8 @@ dependencies:
   image_picker: ^1.0.4
   url_launcher: ^6.1.14
   social_share: ^2.3.1
+  system_theme: ^2.3.1
+  dynamic_color: ^1.6.9
   auto_size_text: ^3.0.0
   in_app_purchase: ^3.1.11
   cupertino_icons: ^1.0.6
