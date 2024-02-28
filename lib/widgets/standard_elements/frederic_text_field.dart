@@ -46,7 +46,7 @@ class FredericTextField extends StatefulWidget {
 
 class _FredericTextFieldState extends State<FredericTextField> {
   final Color textColor = Colors.black87;
-  final Color disabledBorderColor = Color(0xFFE2E2E2);
+  final Color disabledBorderColor = theme.greyColor; //Color(0xFFE2E2E2);
 
   bool showPassword = false;
 

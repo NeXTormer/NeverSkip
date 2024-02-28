@@ -170,9 +170,8 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
         }),
         child: Container(
           decoration: BoxDecoration(
-              color: selected
-                  ? theme.mainColorLight
-                  : (theme.isDark ? theme.cardBackgroundColor : Colors.white),
+              color:
+                  selected ? theme.mainColorLight : (theme.cardBackgroundColor),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                   color: selected

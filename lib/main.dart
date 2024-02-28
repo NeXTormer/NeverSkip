@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'dart:isolate';
 
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -42,6 +42,13 @@ void main() async {
   startupTimeProfiler =
       await FredericProfiler.trackFirebase('App Startup Time');
   final timeUntilRunApp = FredericProfiler.track('time until runApp()');
+
+  // TODO: may be a race condition
+  if (Platform.operatingSystem == 'android') {
+    final colorThemeLoading = FredericProfiler.track('load system color theme');
+    SystemTheme.accentColor.load().then((value) => colorThemeLoading.stop());
+  }
+
   LicenseRegistry.addLicense(() async* {
     final license =
         await rootBundle.loadString('assets/fonts/Montserrat/OFL.txt');
@@ -104,16 +111,6 @@ void main() async {
   if (themeID != null && themeID is int) {
     _colorTheme = FredericColorTheme.find(themeID);
   }
-
-  await SystemTheme.accentColor.load();
-  final palette = await DynamicColorPlugin.getCorePalette();
-  _colorTheme = FredericColorTheme.fromColor(palette!);
-
-  // DynamicColorPlugin.getCorePalette().then((palette) {
-  //   if (palette != null) {
-  //     _colorTheme = FredericColorTheme.fromColor(palette);
-  //   }
-  // });
 
   // == Load Startup Preferences == End ==
 
