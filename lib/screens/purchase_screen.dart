@@ -11,10 +11,6 @@ import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 class PurchaseScreen extends StatelessWidget {
   const PurchaseScreen({Key? key}) : super(key: key);
 
-  final String normalPrice = "13,99";
-  final String discountPrice = '11,99';
-  final String discount = "2";
-
   @override
   Widget build(BuildContext context) {
     return FredericScaffold(
@@ -86,7 +82,7 @@ class PurchaseScreen extends StatelessWidget {
                         const SizedBox(height: 30),
                       const SizedBox(height: 30),
                       Text(
-                        tr('trial.discount_description', args: [discount]),
+                        tr('trial.discount_description'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,
@@ -96,8 +92,10 @@ class PurchaseScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 18),
                       FredericButton(
-                          tr('trial.purchase_button_discount',
-                              args: [discountPrice]),
+                          tr('trial.purchase_button_discount', args: [
+                            FredericBackend
+                                .instance.purchaseManager.discountPrince
+                          ]),
                           loading: user.hasActiveTrial &&
                               (user.tempPurchaseIsPending ?? false),
                           mainColor: user.hasActiveTrial
@@ -109,8 +107,9 @@ class PurchaseScreen extends StatelessWidget {
                       }),
                       const SizedBox(height: 18),
                       FredericButton(
-                          tr('trial.purchase_button_normal',
-                              args: [normalPrice]),
+                          tr('trial.purchase_button_normal', args: [
+                            FredericBackend.instance.purchaseManager.normalPrice
+                          ]),
                           loading: (!user.hasActiveTrial) &&
                               (user.tempPurchaseIsPending ?? false),
                           mainColor: user.hasActiveTrial

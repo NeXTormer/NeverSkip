@@ -23,6 +23,9 @@ class PurchaseManager {
   ProductDetails? purchaseAppProduct;
   ProductDetails? purchaseAppDiscountedProduct;
 
+  String normalPrice = '';
+  String discountPrince = '';
+
   bool isAvailable = false;
 
   PurchaseManager(this._userManager) {
@@ -45,10 +48,12 @@ class PurchaseManager {
     for (var product in products) {
       if (product.id == PURCHASE_APP_KEY) {
         purchaseAppProduct = product;
+        normalPrice = product.price;
         continue;
       }
       if (product.id == PURCHASE_APP_DISCOUNTED_KEY) {
         purchaseAppDiscountedProduct = product;
+        discountPrince = product.price;
         continue;
       }
     }
