@@ -78,9 +78,6 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
 
   @override
   Future<List<T>> reload() async {
-    if (name == "Goals") {
-      print("G");
-    }
     if (_box == null) {
       _box = await Hive.openBox(name);
     } else {
@@ -108,5 +105,10 @@ class FirestoreCachingDataInterface<T extends FredericDataObject>
 
     _box!.putAll(entries);
     return data;
+  }
+
+  @override
+  Future<void> deleteFromDisk() {
+    return Hive.deleteBoxFromDisk(name);
   }
 }

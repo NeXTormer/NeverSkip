@@ -40,11 +40,6 @@ class FredericSetManager extends Bloc<FredericSetEvent, FredericSetListData> {
 
   bool _canFullReload = true;
 
-  FredericSetList operator [](String value) {
-    if (!_sets.containsKey(value)) _sets[value] = FredericSetList.create(value);
-    return _sets[value]!;
-  }
-
   void setDataInterface(FredericDataInterface<FredericSetDocument> interface) =>
       dataInterface = interface;
 

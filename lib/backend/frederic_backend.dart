@@ -274,6 +274,13 @@ class FredericBackend implements FredericMessageProcessor {
   void dispose() {
     _purchaseManager.dispose();
   }
+
+  Future<void> deleteEverythingFromDisk() async {
+    await activityManager.dataInterface.deleteFromDisk();
+    await workoutManager.dataInterface.deleteFromDisk();
+    await setManager.dataInterface.deleteFromDisk();
+    await goalManager.dataInterface.deleteFromDisk();
+  }
 }
 
 class FredericDefaults {

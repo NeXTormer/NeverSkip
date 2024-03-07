@@ -74,6 +74,7 @@ class FredericSignOutEvent extends FredericAuthEvent {
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
+    FredericBackend.instance.deleteEverythingFromDisk();
     FredericBackend.instance.dispose();
     await userManager.authInterface.logOut();
     return FredericUser.noAuth();

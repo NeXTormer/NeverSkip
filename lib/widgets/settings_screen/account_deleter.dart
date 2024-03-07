@@ -130,7 +130,8 @@ class _AccountDeleterState extends State<AccountDeleter> {
                 await FredericBackend.instance.userManager.authInterface
                     .deleteAccount(user);
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.clear();
+                await prefs.clear();
+                await FredericBackend.instance.deleteEverythingFromDisk();
                 FredericBase.forceFullRestart(context);
               },
               mainColor: confirmed ? theme.negativeColor : theme.greyColor,

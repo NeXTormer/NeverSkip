@@ -16,10 +16,10 @@ class FredericGoalManager
     on<FredericGoalEvent>(_onEvent);
   }
 
-  late final FredericDataInterface<FredericGoal> _dataInterface;
+  late final FredericDataInterface<FredericGoal> dataInterface;
 
   void setDataInterface(FredericDataInterface<FredericGoal> interface) =>
-      _dataInterface = interface;
+      dataInterface = interface;
 
   HashMap<String, FredericGoal> _goals = HashMap<String, FredericGoal>();
 
@@ -30,9 +30,8 @@ class FredericGoalManager
   Future<void> reload([bool fullReloadFromDB = true]) async {
     List<String> changed = <String>[];
     _goals.clear();
-    List<FredericGoal> list = await (fullReloadFromDB
-        ? _dataInterface.reload()
-        : _dataInterface.get());
+    List<FredericGoal> list =
+        await (fullReloadFromDB ? dataInterface.reload() : dataInterface.get());
     for (FredericGoal goal in list) {
       _goals[goal.id] = goal;
       changed.add(goal.id);
@@ -52,16 +51,16 @@ class FredericGoalManager
       if (_goals.containsKey(event.updatedGoal.id)) {
         _goals[event.updatedGoal.id] = event.updatedGoal;
       }
-      await _dataInterface.update(event.updatedGoal);
+      await dataInterface.update(event.updatedGoal);
       emit(FredericGoalListData(event.changed, _goals));
     } else if (event is FredericGoalCreateEvent) {
-      final newGoalFromDatabase = await _dataInterface.create(event.newGoal);
+      final newGoalFromDatabase = await dataInterface.create(event.newGoal);
       _goals[event.newGoal.id] = newGoalFromDatabase;
       emit(FredericGoalListData(event.changed, _goals));
       FredericBackend.instance.analytics.logGoalCreated();
     } else if (event is FredericGoalDeleteEvent) {
       _goals.remove(event.goal.id);
-      await _dataInterface.delete(event.goal);
+      await dataInterface.delete(event.goal);
       emit(FredericGoalListData(event.changed, _goals));
       FredericBackend.instance.analytics.logGoalDeleted();
     } else {

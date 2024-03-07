@@ -52,7 +52,9 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           return FredericScaffold(
             floatingActionButton: workout.canEdit
                 ? FloatingActionButton(
-                    key: UniqueKey(),
+                    // This seems to have fixed itself without a key and hero tag
+                    // key: UniqueKey(),
+                    // heroTag: UniqueKey(),
                     // because the FAB disappears after resulting sheet is closed,
                     // the unique key combined with the setState after the sheet is closed makes it reappear
                     backgroundColor: theme.mainColor,

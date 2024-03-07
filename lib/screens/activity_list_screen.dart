@@ -36,38 +36,13 @@ class ActivityListScreen extends StatelessWidget {
       child: FredericScaffold(
         floatingActionButton: FloatingActionButton(
           key: ValueKey<String>('fab_activitylistscreen'),
-          heroTag: 'fab_activitylistscreen',
-          onPressed: () {
-            // if (CupertinoScaffold.of(context) == null) {
-            if (false) {
-              showModalBottomSheet(
-                  enableDrag: true,
-                  isScrollControlled: true,
-                  isDismissible: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  context: context,
-                  builder: (newContext) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.93,
-                        child: EditActivityScreen(FredericActivity.create(
-                            FredericBackend.instance.userManager.state.id)),
-                      ),
-                    );
-                  });
-            } else {
-              showFredericBottomSheet(
-                  enableDrag: true,
-                  context: context,
-                  builder: (newContext) {
-                    return EditActivityScreen(FredericActivity.create(
-                        FredericBackend.instance.userManager.state.id));
-                  });
-            }
-          },
+          onPressed: () => showFredericBottomSheet(
+              enableDrag: true,
+              context: context,
+              builder: (newContext) {
+                return EditActivityScreen(FredericActivity.create(
+                    FredericBackend.instance.userManager.state.id));
+              }),
           child: Icon(
             Icons.post_add_outlined,
             color: Colors.white,

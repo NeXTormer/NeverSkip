@@ -8,6 +8,7 @@ class TestActivityDataInterface
   HashMap<String, FredericActivity> database =
       HashMap<String, FredericActivity>();
   int index = 0;
+
   void initData() {
     addActivity('Werner', FredericActivityType.Weighted,
         [FredericActivityMuscleGroup.Arms]);
@@ -66,6 +67,12 @@ class TestActivityDataInterface
   @override
   Future<List<FredericActivity>> reload() {
     // TODO: implement reload
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteFromDisk() {
+    // TODO: implement deleteFromDisk
     throw UnimplementedError();
   }
 }
