@@ -19,6 +19,7 @@ import 'package:frederic/backend/sets/frederic_set_document.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
 import 'package:frederic/backend/sets/set_time_series_data_representation.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
+import 'package:frederic/frederic_admin_panel.dart';
 import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +27,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sheet/route.dart';
 import 'package:system_theme/system_theme.dart';
+
+import 'admin_panel/backend/admin_backend.dart';
+import 'admin_panel/backend/admin_icon_manager.dart';
 
 final getIt = GetIt.instance;
 
@@ -68,8 +72,6 @@ void main() async {
     );
   }).sendPort);
 
-  // == Record all errors within a Flutter context ==
-  //runZonedGuarded<Future<void>>(() async { //TODO: fix zone error or remove completely
   await EasyLocalization.ensureInitialized();
 
   // == Crashlytics & Performance ==
@@ -103,8 +105,6 @@ void main() async {
     Hive.registerAdapter(TimestampTypeAdapter()); // typeId: 100
   // == Hive == End ==
 
-  //await Hive.deleteBoxFromDisk('SetVolumeDataRepresentation');
-
   // == Load Startup Preferences ==
   SharedPreferences preferences = await SharedPreferences.getInstance();
   Object? themeID = preferences.get('colortheme');
@@ -129,8 +129,6 @@ void main() async {
       useOnlyLangCode: true,
       path: 'assets/translations',
       child: FredericBase()));
-
-  //}, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 class FredericBase extends StatefulWidget {
@@ -219,23 +217,26 @@ class _FredericBaseState extends State<FredericBase> {
                 },
               );
             }
+            if (settings.name == '/admin') {
+              if (getIt.isRegistered<AdminBackend>())
+                getIt.unregister<AdminBackend>();
+              getIt.registerSingleton<AdminBackend>(AdminBackend());
+
+              return MaterialExtendedPageRoute<void>(
+                builder: (BuildContext context) {
+                  return OrientationBuilder(builder: (context, orientation) {
+                    if (orientation == Orientation.portrait) {
+                      return FredericMainApp();
+                    }
+                    return BlocProvider<AdminIconManager>.value(
+                        value: AdminBackend.instance.iconManager,
+                        child: FredericAdminPanel());
+                  });
+                },
+              );
+            }
             return null;
           },
-          // home: FredericMainApp()
-          // OrientationBuilder(
-          //     builder: (context, orientation) {
-          //       if (orientation == Orientation.portrait) {
-          //         return FredericMainApp();
-          //       }
-          //
-          //       if (getIt.isRegistered<AdminBackend>())
-          //         getIt.unregister<AdminBackend>();
-          //       getIt.registerSingleton<AdminBackend>(AdminBackend());
-          //       return BlocProvider<AdminIconManager>.value(
-          //           value: AdminBackend.instance.iconManager,
-          //           child: FredericAdminPanel());
-          //     },
-          //   ),
         ),
       ),
     );

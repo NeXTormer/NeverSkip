@@ -120,6 +120,11 @@ class SettingsScreen extends StatelessWidget {
                   changeAttributeWidget: FredericProfiler.showLogsAsWidget(),
                 ),
                 SettingsElement(
+                  text: 'Show admin view',
+                  icon: Icons.admin_panel_settings_outlined,
+                  onTap: () => Navigator.of(context).pushNamed('/admin'),
+                ),
+                SettingsElement(
                   text: 'Crash the app',
                   icon: Icons.fire_extinguisher,
                   onTap: () => FirebaseCrashlytics.instance.crash(),
