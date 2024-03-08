@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/main.dart';
 import 'package:frederic/widgets/activity_screen/activity_musclegroup_button.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../state/activity_filter_controller.dart';
 import '../standard_elements/frederic_heading.dart';
@@ -143,9 +144,11 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
           ),
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
       print(e);
       FredericProfiler.log('muscle group filter segment: ' + e.toString());
+      Sentry.captureException(e, stackTrace: stackTrace);
+
       return SliverToBoxAdapter(
           child: Container(
         child: kDebugMode ? Text(e.toString()) : Container(height: 16),

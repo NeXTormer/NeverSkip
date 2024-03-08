@@ -1,19 +1,16 @@
 import 'dart:collection';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_performance/firebase_performance.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class FredericProfiler {
   static final bool profilerDisabled = false;
 
-  static final FirebasePerformance firebasePerformance =
-      FirebasePerformance.instance;
+  final ISentrySpan transaction;
 
-  Trace? _trace;
-
-  FredericProfiler.track(this.component, {this.description}) {
+  FredericProfiler.track(this.component, {this.description})
+      : transaction = Sentry.startTransaction(component, 'FredericProfiler') {
     if (profilerDisabled) return;
 
     _stopwatch = Stopwatch();
@@ -22,20 +19,6 @@ class FredericProfiler {
       _profilers[component] = <FredericProfiler>[];
     }
     _profilers[component]!.add(this);
-  }
-
-  static Future<FredericProfiler>? trackFirebase(String name,
-      [String? description]) async {
-    final profiler = FredericProfiler.track(name, description: description);
-    profiler._trace =
-        firebasePerformance.newTrace(kReleaseMode ? name : '[D]: $name');
-    profiler._trace?.start();
-
-    return profiler;
-  }
-
-  void setMetric(String name, int value) {
-    _trace?.setMetric(name, value);
   }
 
   static HashMap<String, List<FredericProfiler>> _profilers =
@@ -151,7 +134,7 @@ class FredericProfiler {
   void stop() {
     if (profilerDisabled) return;
     _stopwatch!.stop();
-    _trace?.stop();
+    transaction.finish();
   }
 
   static final timeFormat =

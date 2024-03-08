@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -123,11 +122,6 @@ class SettingsScreen extends StatelessWidget {
                   text: 'Show admin view',
                   icon: Icons.admin_panel_settings_outlined,
                   onTap: () => Navigator.of(context).pushNamed('/admin'),
-                ),
-                SettingsElement(
-                  text: 'Crash the app',
-                  icon: Icons.fire_extinguisher,
-                  onTap: () => FirebaseCrashlytics.instance.crash(),
                 ),
               ]),
             if (kDebugMode || user.isDeveloper)

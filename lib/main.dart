@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +21,7 @@ import 'package:frederic/frederic_main_app.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sheet/route.dart';
 import 'package:system_theme/system_theme.dart';
@@ -43,8 +41,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  startupTimeProfiler =
-      await FredericProfiler.trackFirebase('App Startup Time');
+  startupTimeProfiler = await FredericProfiler.track('App Startup Time');
   final timeUntilRunApp = FredericProfiler.track('time until runApp()');
 
   // TODO: may be a race condition
@@ -59,27 +56,7 @@ void main() async {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  // == Record all errors outside a Flutter context ==
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final List<dynamic> errorAndStacktrace = pair;
-    print('ERROR IN CURRENT/MAIN ISOLATE');
-    print(errorAndStacktrace.first);
-    print(errorAndStacktrace.last);
-
-    await FirebaseCrashlytics.instance.recordError(
-      errorAndStacktrace.first,
-      errorAndStacktrace.last,
-    );
-  }).sendPort);
-
   await EasyLocalization.ensureInitialized();
-
-  // == Crashlytics & Performance ==
-  if (kReleaseMode) {
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  }
-
-  // == Crashlytics & Performance == End ==
 
   // == Hive == Register Adapters ==
   await Hive.initFlutter();
@@ -114,21 +91,21 @@ void main() async {
 
   // == Load Startup Preferences == End ==
 
-  // == Disable Crashlytics in debug mode
-  if (kDebugMode) {
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-  } else {
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  }
-  await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
-
   timeUntilRunApp.stop();
-  runApp(EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('de')],
-      fallbackLocale: Locale('en'),
-      useOnlyLangCode: true,
-      path: 'assets/translations',
-      child: FredericBase()));
+
+  SentryFlutter.init(
+      (options) => options
+        ..dsn =
+            'https://e0c3b76f6f3d43cc99ed5043389ae4fa@performance.neverskipfitness.com/1'
+        ..tracesSampleRate = 1 //0.01 // Performance trace 1% of events
+        ..enableAutoSessionTracking = false
+        ..environment = (kReleaseMode ? 'production' : 'development'),
+      appRunner: () => runApp(EasyLocalization(
+          supportedLocales: [Locale('en'), Locale('de')],
+          fallbackLocale: Locale('en'),
+          useOnlyLangCode: true,
+          path: 'assets/translations',
+          child: FredericBase())));
 }
 
 class FredericBase extends StatefulWidget {

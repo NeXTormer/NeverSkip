@@ -50,8 +50,8 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
     }
 
     if (_box!.isEmpty) {
-      profiler = await FredericProfiler.trackFirebase(
-          'Calculate SetVolumeDataRepresentation');
+      profiler =
+          await FredericProfiler.track('Calculate SetVolumeDataRepresentation');
 
       DateTime earliestSet = DateTime.now();
       DateTime latestSet = DateTime.fromMillisecondsSinceEpoch(0);
@@ -118,8 +118,8 @@ class SetTimeSeriesDataRepresentation implements SetDataRepresentation {
       // await _box!.put(1, Map<String, List<int>>.of(_optimizedBestSetData));
       // await _box!.put(2, {1: _optimizedBestSetDataLastDate});
     } else {
-      profiler = await FredericProfiler.trackFirebase(
-          'Load SetVolumeDataRepresentation');
+      profiler =
+          await FredericProfiler.track('Load SetVolumeDataRepresentation');
       final data = _box!.getAt(0);
       if (data == null) {
         return initialize(clearCachedData: true);
