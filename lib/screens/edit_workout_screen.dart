@@ -40,7 +40,6 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
     return FredericScaffold(
       body: BlocBuilder<FredericWorkoutManager, FredericWorkoutListData>(
         builder: (context, workoutListData) {

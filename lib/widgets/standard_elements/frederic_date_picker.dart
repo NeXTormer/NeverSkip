@@ -101,12 +101,6 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 12),
-                        decoration: true
-                            ? null
-                            : BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                    color: theme.cardBorderColor, width: 0.6)),
                         child: _WeekDaysSliderDayButton(
                             dayIndex: index,
                             selectedDate: selectedDayIndex,
@@ -217,19 +211,15 @@ class _FredericDatePickerState extends State<FredericDatePicker> {
 ///
 class _WeekDaysSliderDayButton extends StatelessWidget {
   _WeekDaysSliderDayButton(
-      {required this.dayIndex,
-      required this.selectedDate,
-      required this.date,
-      this.dayWidth});
+      {required this.dayIndex, required this.selectedDate, required this.date});
 
   final int dayIndex;
   final int selectedDate;
   final DateTime date;
-  final double? dayWidth;
 
   @override
   Widget build(BuildContext context) {
-    var width = dayWidth ?? (MediaQuery.of(context).size.width / 10);
+    var width = MediaQuery.of(context).size.width / 10;
     return selectedDate == dayIndex
         ? Container(
             width: width,

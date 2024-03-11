@@ -6,8 +6,6 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_vertical_divider.dart';
 import 'package:frederic/widgets/standard_elements/picture_icon.dart';
 
-import '../../main.dart';
-
 class ActivityPlayerActivityCard extends StatelessWidget {
   ActivityPlayerActivityCard(this.activity,
       {this.disabled = false, this.onTap, this.finished = false});

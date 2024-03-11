@@ -187,13 +187,6 @@ class _EditWorkoutActivityCardState extends State<EditWorkoutActivityCard> {
     Future.delayed(widget.animationDuration)
         .then((value) => widget.onDelete.call());
   }
-
-  Size _textSize(String text, TextStyle? style) {
-    final TextPainter textPainter =
-        TextPainter(text: TextSpan(text: text, style: style), maxLines: 1)
-          ..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size;
-  }
 }
 
 class SelectSetsAndRepsPopup extends StatefulWidget {
