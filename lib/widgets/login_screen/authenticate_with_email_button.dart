@@ -9,7 +9,7 @@ import 'package:frederic/misc/ExtraIcons.dart';
 import 'package:frederic/screens/forgot_password_screen.dart';
 import 'package:frederic/widgets/standard_elements/frederic_button.dart';
 import 'package:frederic/widgets/standard_elements/frederic_text_field.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AuthenticateWithEmailButton extends StatefulWidget {
   AuthenticateWithEmailButton(
@@ -135,7 +135,7 @@ class _AuthenticateWithEmailButtonState
                               .tr(),
                           GestureDetector(
                             onTap: () {
-                              launch(widget.termsAndContidionsURL);
+                              launchUrlString(widget.termsAndContidionsURL);
                             },
                             child: Text('login.agree_tc_2',
                                     style: TextStyle(

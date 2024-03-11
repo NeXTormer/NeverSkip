@@ -11,7 +11,8 @@ class ActivityHeatmapChartSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    //TODO: see if this still works correctly
+    double scaleFactor = MediaQuery.of(context).textScaler.scale(1);
 
     double chartHeight = 216;
     if (scaleFactor > 1.14) chartHeight = 224;

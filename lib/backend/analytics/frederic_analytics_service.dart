@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/theme/frederic_theme.dart';
 
@@ -114,7 +113,7 @@ class UmamiAnalyticsService extends FredericAnalyticsService {
         "referrer": "",
         "language": Platform.localeName,
         "screen":
-            '${MediaQueryData.fromView(WidgetsBinding.instance.window).size.width.toInt()}x${MediaQueryData.fromView(WidgetsBinding.instance.window).size.height.toInt()}',
+            '${PlatformDispatcher.instance.displays.first.size.width.toInt()}x${PlatformDispatcher.instance.displays.first.size.height.toInt()}',
         "title": name.split('/').last,
         "url": "/" + name,
         "website": trackingID

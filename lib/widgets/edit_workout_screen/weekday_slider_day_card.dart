@@ -41,8 +41,8 @@ class WeekDaysSliderDayCard extends StatelessWidget {
                 color: Colors.transparent,
                 child: buildContents(context, false, true, false)));
       },
-      onAccept: (data) {
-        onSwap?.call(data, dayIndex);
+      onAcceptWithDetails: (data) {
+        onSwap?.call(data.data, dayIndex);
       },
     );
   }
