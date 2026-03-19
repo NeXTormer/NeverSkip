@@ -11,7 +11,6 @@ import 'package:frederic/widgets/standard_elements/frederic_card.dart';
 import 'package:frederic/widgets/standard_elements/frederic_heading.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:social_share/social_share.dart';
 
 class LastWorkoutSegment extends StatefulWidget {
   const LastWorkoutSegment({Key? key}) : super(key: key);
@@ -137,26 +136,26 @@ class _LastWorkoutSegmentState extends State<LastWorkoutSegment> {
               children: [
                 FredericButton(tr('sharing.share_to_instagram_stories'),
                     onPressed: () async {
-                  final result = await SocialShare.shareInstagramStory(
-                      imagePath: file.path,
-                      backgroundResourcePath: imageBackgroundPath,
-                      // backgroundTopColor:
-                      //     '#${theme.mainColor.value.toRadixString(16)}',
-                      // backgroundBottomColor:
-                      //     '#${theme.accentColor.value.toRadixString(16)}',
-
-                      attributionURL: 'https://neverskipfitness.com',
-                      appId: '');
-                  print(result);
-                  Navigator.of(context).pop();
+                  // final result = await SocialShare.shareInstagramStory(
+                  //     imagePath: file.path,
+                  //     backgroundResourcePath: imageBackgroundPath,
+                  //     // backgroundTopColor:
+                  //     //     '#${theme.mainColor.value.toRadixString(16)}',
+                  //     // backgroundBottomColor:
+                  //     //     '#${theme.accentColor.value.toRadixString(16)}',
+                  //
+                  //     attributionURL: 'https://neverskipfitness.com',
+                  //     appId: '');
+                  // print(result);
+                  // Navigator.of(context).pop();
                 }),
                 const SizedBox(height: 8),
                 FredericButton(tr('sharing.share_to_other'), onPressed: () {
-                  final result = SocialShare.shareOptions(
-                      tr('progress.my_last_workout'),
-                      imagePath: file.path);
-                  print(result);
-                  Navigator.of(context).pop();
+                  // final result = SocialShare.shareOptions(
+                  //     tr('progress.my_last_workout'),
+                  //     imagePath: file.path);
+                  // print(result);
+                  // Navigator.of(context).pop();
                 }),
                 const SizedBox(height: 12),
                 FredericButton(

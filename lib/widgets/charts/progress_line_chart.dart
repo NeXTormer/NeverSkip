@@ -175,9 +175,9 @@ class ProgressLineChart extends StatelessWidget {
     final date = DateTime.now().subtract(Duration(days: value.toInt()));
     String text = '${date.year}-${date.month}-${date.day}';
     return SideTitleWidget(
-      axisSide: meta.axisSide,
       child: Text(text, style: style),
       space: 2,
+      meta: meta,
     );
   }
 
@@ -190,7 +190,6 @@ class ProgressLineChart extends StatelessWidget {
     String text = '${value.toInt()} ${activity.progressUnit}';
 
     return SideTitleWidget(
-        axisSide: meta.axisSide,
-        child: Text(text, style: style, textAlign: TextAlign.left));
+        meta: meta, child: Text(text, style: style, textAlign: TextAlign.left));
   }
 }

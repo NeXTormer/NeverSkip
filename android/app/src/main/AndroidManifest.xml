@@ -4,7 +4,7 @@
     <application
         android:name="${applicationName}"
         android:label="NeverSkip"
-        android:icon="@mipmap/neverskip_icon"
+        android:icon="@mipmap/launcher_icon"
         android:roundIcon="@mipmap/neverskip_icon">
 
 <!--        <meta-data-->

@@ -156,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     : SignInWithAppleButtonStyle.black,
                                 onPressed: () => handleAppleSignIn(context)),
                           SizedBox(height: 20),
-                          if (Platform.isAndroid)
+                          if (Platform.isAndroid && false)
                             SignInWithGoogleButton(
                               signUp: !login,
                             ),

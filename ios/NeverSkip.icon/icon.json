@@ -27,32 +27,44 @@
           "image-name" : "plate3.svg",
           "name" : "plate3",
           "position" : {
-            "scale" : 5,
+            "scale" : 5.21,
             "translation-in-points" : [
               0,
-              -134.5
+              -125
             ]
           }
         },
         {
+          "blend-mode" : "normal",
+          "glass" : true,
+          "hidden" : false,
           "image-name" : "plate2 2.svg",
           "name" : "plate2 2",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ],
           "position" : {
-            "scale" : 5,
+            "scale" : 5.21,
             "translation-in-points" : [
               0,
-              -55.6875
+              -46.1875
             ]
           }
         },
         {
+          "blend-mode" : "normal",
+          "glass" : true,
+          "hidden" : false,
           "image-name" : "plate1 2.svg",
           "name" : "plate1 2",
           "position" : {
-            "scale" : 5,
+            "scale" : 5.21,
             "translation-in-points" : [
               0,
-              37.5
+              47
             ]
           }
         }

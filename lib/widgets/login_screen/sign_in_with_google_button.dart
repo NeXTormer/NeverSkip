@@ -20,14 +20,15 @@ class SignInWithGoogleButton extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: InkWell(
         onTap: () async {
-          GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+          GoogleSignIn googleSignIn = GoogleSignIn.instance;
+          await googleSignIn.initialize();
+          GoogleSignInAccount? account =
+              await googleSignIn.attemptLightweightAuthentication();
 
-          GoogleSignInAccount? account = await googleSignIn.signIn();
           if (account != null) {
             final authentication = await account.authentication;
-            final authCredentials = GoogleAuthProvider.credential(
-                accessToken: authentication.accessToken,
-                idToken: authentication.idToken);
+            final authCredentials =
+                GoogleAuthProvider.credential(idToken: authentication.idToken);
 
             FredericBackend.instance.userManager
                 .add(FredericOAuthSignInEvent(authCredentials));
