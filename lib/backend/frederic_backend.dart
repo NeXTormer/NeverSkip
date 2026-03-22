@@ -19,9 +19,21 @@ import 'package:frederic/backend/util/frederic_profiler.dart';
 import 'package:frederic/backend/util/toast_manager.dart';
 import 'package:frederic/backend/util/wait_for_x.dart';
 import 'package:frederic/main.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:frederic/backend/database/pocketbase/pocketbase_sets_data_interface.dart';
+import 'package:frederic/backend/database/pocketbase/pocketbase_data_interface.dart';
+import 'package:frederic/backend/database/pocketbase/pocketbase_auth_interface.dart';
+import 'package:frederic/backend/database/frederic_auth_interface.dart';
+
+import 'package:frederic/backend/storage/firebase_storage_implementation.dart';
+import 'package:frederic/backend/storage/pocketbase_storage_implementation.dart';
 
 import 'backend.dart';
 import 'database/firebase/firestore_caching_data_interface.dart';
+
+const bool USE_POCKETBASE = true;
+// Change this to false to easily switch back to Firebase
+String pocketbaseUrl = 'https://api.neverskipfitness.com';
 
 ///
 /// Main class of the Backend. Manages everything related to storing and loading
@@ -33,13 +45,19 @@ class FredericBackend implements FredericMessageProcessor {
     firestoreInstance = FirebaseFirestore.instance;
     FirebaseAuth firebaseAuthInstance = FirebaseAuth.instance;
 
-    // === User Authentication
-    FirebaseAuthInterface firebaseAuthInterface = FirebaseAuthInterface(
-        firebaseAuthInstance: firebaseAuthInstance,
-        firestoreInstance: firestoreInstance);
+    pb = PocketBase(pocketbaseUrl);
 
-    _userManager = FredericUserManager(
-        backend: this, authInterface: firebaseAuthInterface);
+    // === User Authentication
+    if (USE_POCKETBASE) {
+      _authInterface = PocketbaseAuthInterface(pb: pb);
+    } else {
+      _authInterface = FirebaseAuthInterface(
+          firebaseAuthInstance: firebaseAuthInstance,
+          firestoreInstance: firestoreInstance);
+    }
+
+    _userManager =
+        FredericUserManager(backend: this, authInterface: _authInterface!);
 
     _purchaseManager = PurchaseManager(_userManager);
 
@@ -48,7 +66,15 @@ class FredericBackend implements FredericMessageProcessor {
 
     _setManager = FredericSetManager(_activityManager);
     _goalManager = FredericGoalManager();
-    _storageManager = FredericStorageManager(this);
+
+    if (USE_POCKETBASE) {
+      _storageManager =
+          FredericStorageManager(PocketbaseStorageImplementation(pb, this));
+    } else {
+      _storageManager =
+          FredericStorageManager(FirebaseStorageImplementation(this));
+    }
+
     _analytics = UmamiAnalyticsService();
 
     _registerEventProcessors();
@@ -56,6 +82,9 @@ class FredericBackend implements FredericMessageProcessor {
   }
 
   static FredericBackend get instance => getIt<FredericBackend>();
+
+  late final PocketBase pb;
+  FredericAuthInterface? _authInterface;
 
   late final FirebaseFirestore firestoreInstance;
 
@@ -128,9 +157,11 @@ class FredericBackend implements FredericMessageProcessor {
     _analytics.initialize();
 
     _initializeDefaults();
+    
     Future<void> purchaseManagerFuture = _purchaseManager.initialize();
 
     await waitUntilUserHasAuthenticated();
+
     FredericProfiler.log('waitUntilUserHasAuthenticated completed');
 
     while (userManager.state.id.isEmpty) {
@@ -168,81 +199,135 @@ class FredericBackend implements FredericMessageProcessor {
   }
 
   Future<void> _initializeDefaults() async {
-    final data = await _defaultsReference.get();
-    _defaults = FredericDefaults(data);
+    if (USE_POCKETBASE) {
+      try {
+        final records =
+            await pb.collection('defaults').getList(page: 1, perPage: 1);
+        if (records.items.isNotEmpty) {
+          _defaults = FredericDefaults.fromPocketBase(records.items.first);
+        } else {
+          _defaults = FredericDefaults.empty();
+        }
+      } catch (e) {
+        print('Error loading PocketBase defaults: $e');
+        _defaults = FredericDefaults.empty();
+      }
+    } else {
+      final data = await _defaultsReference.get();
+      _defaults = FredericDefaults(data);
+    }
   }
 
   Future<void> _initializeActivities() {
-    _activityManager.setDataInterface(
-        FirestoreCachingDataInterface<FredericActivity>(
-            firestoreInstance: firestoreInstance,
-            collectionReference: firestoreInstance.collection('activities'),
-            name: 'activities',
-            generateObject: (id, data) => FredericActivity.fromMap(id, data),
-            queries: [
-          firestoreInstance
-              .collection('activities')
-              .where('owner', isEqualTo: 'global'),
-          firestoreInstance
-              .collection('activities')
-              .where('owner', isEqualTo: _userManager.state.id)
-        ]));
+    if (USE_POCKETBASE) {
+      _activityManager.setDataInterface(
+          PocketbaseCachingDataInterface<FredericActivity>(
+              pb: pb,
+              collectionName: 'activities',
+              name: 'activities',
+              generateObject: (id, data) => FredericActivity.fromMap(id, data),
+              filter:
+                  'owner = "global" || owner = "${_userManager.state.id}"'));
+    } else {
+      _activityManager.setDataInterface(
+          FirestoreCachingDataInterface<FredericActivity>(
+              firestoreInstance: firestoreInstance,
+              collectionReference: firestoreInstance.collection('activities'),
+              name: 'activities',
+              generateObject: (id, data) => FredericActivity.fromMap(id, data),
+              queries: [
+            firestoreInstance
+                .collection('activities')
+                .where('owner', isEqualTo: 'global'),
+            firestoreInstance
+                .collection('activities')
+                .where('owner', isEqualTo: _userManager.state.id)
+          ]));
+    }
     return _activityManager.reload();
   }
 
   Future<void> _initializeWorkouts() {
-    _workoutManager
-        .setDataInterface(FirestoreCachingDataInterface<FredericWorkout>(
-      firestoreInstance: firestoreInstance,
-      collectionReference: firestoreInstance.collection('workouts'),
-      generateObject: (id, data) {
-        final workout = FredericWorkout.fromMap(id, data);
-        workout.loadActivities(activityManager);
-        return workout;
-      },
-      name: 'workouts',
-      queries: [
-        firestoreInstance
-            .collection('workouts')
-            .where('owner', isEqualTo: 'global'),
-        firestoreInstance
-            .collection('workouts')
-            .where('owner', isEqualTo: _userManager.state.id)
-      ],
-    ));
+    if (USE_POCKETBASE) {
+      _workoutManager.setDataInterface(
+          PocketbaseCachingDataInterface<FredericWorkout>(
+              pb: pb,
+              collectionName: 'workouts',
+              generateObject: (id, data) {
+                final workout = FredericWorkout.fromMap(id, data);
+                workout.loadActivities(activityManager);
+                return workout;
+              },
+              name: 'workouts',
+              filter:
+                  'owner = "global" || owner = "${_userManager.state.id}"'));
+    } else {
+      _workoutManager
+          .setDataInterface(FirestoreCachingDataInterface<FredericWorkout>(
+        firestoreInstance: firestoreInstance,
+        collectionReference: firestoreInstance.collection('workouts'),
+        generateObject: (id, data) {
+          final workout = FredericWorkout.fromMap(id, data);
+          workout.loadActivities(activityManager);
+          return workout;
+        },
+        name: 'workouts',
+        queries: [
+          firestoreInstance
+              .collection('workouts')
+              .where('owner', isEqualTo: 'global'),
+          firestoreInstance
+              .collection('workouts')
+              .where('owner', isEqualTo: _userManager.state.id)
+        ],
+      ));
+    }
     return _workoutManager.reload();
   }
 
   Future<void> _initializeSets() {
     print(_userManager.state);
-    _setManager.setDataInterface(FirestoreCachingDataInterface(
-        name: 'Sets',
-        collectionReference: firestoreInstance
-            .collection('users')
-            .doc(_userManager.state.id)
-            .collection('sets'),
-        queries: [
-          FirebaseFirestore.instance
+    if (USE_POCKETBASE) {
+      _setManager.setDataInterface(PocketbaseSetsDataInterface(
+          pb: pb, userId: _userManager.state.id, name: 'Sets'));
+    } else {
+      _setManager.setDataInterface(FirestoreCachingDataInterface(
+          name: 'Sets',
+          collectionReference: firestoreInstance
               .collection('users')
               .doc(_userManager.state.id)
-              .collection('sets')
-              .orderBy('month')
-        ],
-        firestoreInstance: firestoreInstance,
-        generateObject: (id, data) => FredericSetDocument.fromMap(id, data)));
+              .collection('sets'),
+          queries: [
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(_userManager.state.id)
+                .collection('sets')
+                .orderBy('month')
+          ],
+          firestoreInstance: firestoreInstance,
+          generateObject: (id, data) => FredericSetDocument.fromMap(id, data)));
+    }
     return _setManager.reload();
   }
 
   Future<void> _initializeGoals() {
-    _goalManager.setDataInterface(FirestoreCachingDataInterface(
-        name: 'Goals',
-        collectionReference: FirebaseFirestore.instance
-            .collection('users')
-            .doc(_userManager.state.id)
-            .collection('goals'),
-        firestoreInstance: firestoreInstance,
-        generateObject: (id, data) => FredericGoal.fromMap(id, data)));
-
+    if (USE_POCKETBASE) {
+      _goalManager.setDataInterface(PocketbaseCachingDataInterface(
+          name: 'Goals',
+          collectionName: 'goals',
+          pb: pb,
+          filter: 'owner = "${_userManager.state.id}"',
+          generateObject: (id, data) => FredericGoal.fromMap(id, data)));
+    } else {
+      _goalManager.setDataInterface(FirestoreCachingDataInterface(
+          name: 'Goals',
+          collectionReference: FirebaseFirestore.instance
+              .collection('users')
+              .doc(_userManager.state.id)
+              .collection('goals'),
+          firestoreInstance: firestoreInstance,
+          generateObject: (id, data) => FredericGoal.fromMap(id, data)));
+    }
     return _goalManager.reload();
   }
 
@@ -291,6 +376,14 @@ class FredericDefaults {
     _alwaysReloadFromDB = document.data()?['always_reload_from_db'];
     _trialDuration = document.data()?['trial_duration'];
     _trialEnabled = document.data()?['trial_enabled'];
+  }
+
+  FredericDefaults.fromPocketBase(RecordModel record) {
+    _featuredActivities =
+        record.data['featured_activities']?.cast<String>() ?? const <String>[];
+    _alwaysReloadFromDB = record.data['always_reload_from_db'];
+    _trialDuration = record.data['trial_duration'];
+    _trialEnabled = record.data['trial_enabled'];
   }
 
   FredericDefaults.empty();

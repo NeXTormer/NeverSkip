@@ -65,8 +65,12 @@ class AdminUserModel implements DataTableElement<AdminUserModel> {
           DataCell(Container(
             width: 50,
             child: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                  image ?? 'https://via.placeholder.com/300x300?text=profile'),
+              foregroundImage: CachedNetworkImageProvider(
+                  image ?? 'https://ui-avatars.com/api/?name=User&background=random&format=png'),
+              onForegroundImageError: (exception, stackTrace) {
+                // Return a fallback or just let the backgroundColor show
+              },
+              child: Icon(Icons.person, color: Colors.grey),
             ),
           )),
           DataCell(Text(id)),

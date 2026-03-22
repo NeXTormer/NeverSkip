@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
+import 'package:frederic/backend/util/frederic_date_parser.dart';
 import 'package:frederic/extensions.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -85,7 +86,7 @@ class FredericUser {
   String get username => _username ?? '';
 
   String get image =>
-      _image ?? 'https://via.placeholder.com/300x300?text=profile';
+      _image ?? 'https://ui-avatars.com/api/?name=User&background=random&format=png';
 
   int get weight => _weight ?? -1;
 
@@ -152,12 +153,12 @@ class FredericUser {
     _name = data['name'] ?? '';
     _username = data['username'] ?? '';
     _image =
-        data['image'] ?? 'https://via.placeholder.com/300x300?text=profile';
+        data['image'] ?? 'https://ui-avatars.com/api/?name=User&background=random&format=png';
     _weight = data['weight'];
     _height = data['height'];
     _goalsCount = data['goalscount'];
     _achievementsCount = data['achievementscount'];
-    birthday = data['birthday']?.toDate();
+    birthday = _loadDate(data['birthday']);
     _progressMonitors = data['progressmonitors']?.cast<String>() ?? <String>[];
 
     dynamic activeWorkoutsData = data['activeworkouts'];
@@ -196,21 +197,23 @@ class FredericUser {
       'weight': _weight,
       'goalscount': _goalsCount,
       'achievementscount': _achievementsCount,
-      'birthday': birthday,
+      'birthday': FredericDateParser.serialize(birthday, usePocketBase: USE_POCKETBASE),
       'progressmonitors': _progressMonitors,
-      'activeworkouts': _activeWorkouts,
-      'streakstart': streakStartDate,
-      'streaklatest': streakLatestDate,
+      'activeworkouts': _activeWorkouts?.map((key, value) => MapEntry(key, FredericDateParser.serialize(value, usePocketBase: USE_POCKETBASE))) ?? {},
+      'streakstart': FredericDateParser.serialize(streakStartDate, usePocketBase: USE_POCKETBASE),
+      'streaklatest': FredericDateParser.serialize(streakLatestDate, usePocketBase: USE_POCKETBASE),
       'should_reload_data': _shouldReloadData,
-      'trial_start': _trialStartDate,
+      'trial_start': FredericDateParser.serialize(_trialStartDate, usePocketBase: USE_POCKETBASE),
       'has_purchased': _hasPurchased,
       'uid': id
     };
   }
 
   DateTime? _loadDate(dynamic data) {
-    if (data is DateTime || data is DateTime?) return data;
-    if (data is Timestamp || data is Timestamp?) return data?.toDate();
+    if (data == null) return null;
+    if (data is DateTime) return data;
+    if (data is Timestamp) return data.toDate();
+    if (data is String) return FredericDateParser.parse(data);
     return null;
   }
 

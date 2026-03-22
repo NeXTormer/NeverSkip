@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/backend/sets/frederic_set_manager.dart';
+import 'package:frederic/backend/util/frederic_date_parser.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 
 /// Contains the reps, weight and timestamp of a Set of an Activity
 ///
@@ -10,16 +11,19 @@ import 'package:frederic/backend/sets/frederic_set_manager.dart';
 /// !*IMPORTANT*!: The ID property of this class is unused
 ///
 class FredericSet implements Comparable, FredericDataObject {
-  FredericSet(this.reps, this.weight, this.timestamp);
+  FredericSet(this.reps, this.weight, this.timestamp, {this.id = ''});
 
-  FredericSet.fromMap(Map<String, dynamic> map)
+  FredericSet.fromMap(Map<String, dynamic> map, {String? id})
       : reps = map['reps'],
-        weight = map['value']?.toDouble(),
-        timestamp = map['timestamp']?.toDate();
+        weight = map['value']?.toDouble() ?? 0.0,
+        timestamp = FredericDateParser.parse(map['timestamp']) ?? DateTime.now(),
+        id = id ?? '';
 
   int reps;
   double weight;
   DateTime timestamp;
+  @override
+  final String id;
 
   int get monthID {
     int yearDiff = timestamp.year - FredericSetManager.startingYear;
@@ -49,7 +53,7 @@ class FredericSet implements Comparable, FredericDataObject {
   void fromMap(String id, Map<String, dynamic> data) {
     reps = data['reps'];
     weight = data['value']?.toDouble();
-    timestamp = data['timestamp']?.toDate();
+    timestamp = FredericDateParser.parse(data['timestamp'])!;
   }
 
   @override
@@ -57,10 +61,8 @@ class FredericSet implements Comparable, FredericDataObject {
     return {
       'reps': reps,
       'value': weight,
-      'timestamp': Timestamp.fromDate(timestamp)
+      'timestamp': FredericDateParser.serialize(timestamp, usePocketBase: USE_POCKETBASE)
     };
   }
 
-  @override
-  String get id => "not-implemented";
 }

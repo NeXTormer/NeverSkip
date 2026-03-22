@@ -5,7 +5,8 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_auth_event.dart';
 import 'package:frederic/backend/backend.dart';
@@ -224,16 +225,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       );
 
-      final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: credential.identityToken,
-        rawNonce: rawNonce,
-      );
-
       FredericBackend.instance.userManager.add(FredericOAuthSignInEvent(
-          oauthCredential,
+          provider: 'apple.com',
+          params: {
+            'idToken': credential.identityToken,
+            'rawNonce': rawNonce,
+          },
           context: context,
           name:
               '${credential.givenName ?? ''} ${credential.familyName ?? ''}'));
+
     } catch (e) {
       print(e);
     }

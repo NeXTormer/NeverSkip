@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frederic/backend/authentication/streak_manager.dart';
@@ -63,10 +62,14 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
       print("User has authenticated [OAuth] [$user]");
     }
     if (event is FredericEmailSignupEvent) {
-      firstUserSignUp = true;
+      if (user.id.isNotEmpty) {
+        firstUserSignUp = true;
 
-      FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
-          FredericConcurrencyMessageType.UserHasAuthenticated));
+        FredericBackend.instance.messageBus.add(FredericConcurrencyMessage(
+            FredericConcurrencyMessageType.UserHasAuthenticated));
+      } else {
+        print("Sign up failed: ${user.statusMessage}");
+      }
     }
   }
 
@@ -108,7 +111,7 @@ class FredericUserManager extends Bloc<FredericAuthEvent, FredericUser> {
 
   void signOut(BuildContext context) async {
     // await here is really important!
-    await FirebaseAuth.instance.signOut();
+    await authInterface.logOut();
     await Hive.deleteFromDisk();
     FredericBase.forceFullRestart(context);
   }

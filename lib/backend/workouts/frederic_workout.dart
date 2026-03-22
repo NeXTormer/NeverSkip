@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
+import 'package:frederic/backend/util/frederic_date_parser.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 
 ///
 /// Contains all the data for a workout.
@@ -80,7 +80,8 @@ class FredericWorkout implements FredericDataObject {
   bool get repeating => _repeating ?? false;
 
   // TODO: remove call to FirebaseAuth singleton, remove dependency
-  bool get canEdit => owner == FirebaseAuth.instance.currentUser?.uid;
+  bool get canEdit =>
+      owner == FredericBackend.instance.userManager.state.id;
 
   /// period of the workout in weeks
   int get period => _period ?? 1;
@@ -94,10 +95,10 @@ class FredericWorkout implements FredericDataObject {
     _description = data['description'];
     _image = data['image'];
     _owner = data['owner'];
-    _ownerName = data['ownername'];
+    _ownerName = data['ownername'] ?? (id.isNotEmpty ? 'Global' : 'You');
     _period = data['period'];
     _repeating = data['repeating'];
-    _startDate = data['startdate']?.toDate();
+    _startDate = FredericDateParser.parse(data['startdate']);
     _activitiesList = data['activities'];
 
     _activities = FredericWorkoutActivities(this);
@@ -112,7 +113,7 @@ class FredericWorkout implements FredericDataObject {
       'owner': _owner,
       'period': period,
       'repeating': repeating,
-      'startdate': Timestamp.fromDate(startDate),
+      'startdate': FredericDateParser.serialize(startDate, usePocketBase: USE_POCKETBASE),
       'activities': _activities.toList()
     };
   }

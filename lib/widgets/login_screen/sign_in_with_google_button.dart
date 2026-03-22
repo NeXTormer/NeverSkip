@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:frederic/backend/authentication/frederic_auth_event.dart';
 import 'package:frederic/backend/backend.dart';
@@ -27,11 +28,19 @@ class SignInWithGoogleButton extends StatelessWidget {
 
           if (account != null) {
             final authentication = await account.authentication;
-            final authCredentials =
-                GoogleAuthProvider.credential(idToken: authentication.idToken);
+//            final authCredentials =
+//                GoogleAuthProvider.credential(idToken: authentication.idToken);
 
-            FredericBackend.instance.userManager
-                .add(FredericOAuthSignInEvent(authCredentials));
+
+            FredericBackend.instance.userManager.add(FredericOAuthSignInEvent(
+              provider: 'google.com',
+              params: {
+                'idToken': authentication.idToken,
+                // 'accessToken': authentication.accessToken,
+
+              },
+            ));
+
             FredericBackend.instance.toastManager
                 .showLoginLoadingToast(context);
           }

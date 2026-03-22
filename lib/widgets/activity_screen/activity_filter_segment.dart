@@ -46,6 +46,9 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
     keys.add(legsKey);
 
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -62,6 +65,7 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
               children: [
                 FredericHeading.translate('exercises.muscle_groups.title'),
                 Stack(
+                  key: dotKey,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,19 +218,29 @@ class _ActivityFilterSegmentState extends State<ActivityFilterSegment> {
 
 extension GlobalKeyExtension on GlobalKey {
   double positionedDifference(GlobalKey other) {
-    final renderObject = currentContext?.findRenderObject();
-    var translation = renderObject
-        ?.getTransformTo(other.currentContext?.findRenderObject())
-        .getTranslation();
-    if (translation != null && renderObject?.paintBounds != null) {
+    var renderObject = currentContext?.findRenderObject();
+    var otherRenderObject = other.currentContext?.findRenderObject();
+
+    if (renderObject == null ||
+        renderObject is! RenderBox ||
+        !renderObject.hasSize) {
+      return 0;
+    }
+
+    if (otherRenderObject == null ||
+        otherRenderObject is! RenderBox ||
+        !otherRenderObject.hasSize) {
+      // If other (ancestor) doesn't have size, try to get global position
+      otherRenderObject = null;
+    }
+
+    try {
+      var translation =
+          renderObject.getTransformTo(otherRenderObject).getTranslation();
       Rect? rect =
-          renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
-      if (rect != null) {
-        return rect.left - 16;
-      } else {
-        return 0;
-      }
-    } else {
+          renderObject.paintBounds.shift(Offset(translation.x, translation.y));
+      return rect.left;
+    } catch (e) {
       return 0;
     }
   }

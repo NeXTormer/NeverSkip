@@ -21,16 +21,20 @@ class RoundPictureIcon extends StatelessWidget {
         backgroundColor: theme.backgroundColor,
         radius: radius - borderThickness,
         child: CachedNetworkImage(
+          color: theme.mainColorInText,
+          progressIndicatorBuilder: (context, text, progress) {
+            return CupertinoActivityIndicator(
+              color: theme.mainColor,
+            );
+          },
+          imageUrl: url,
+          height: (radius * 1.2) - borderThickness,
+          errorWidget: (context, url, error) => Icon(
+            Icons.person,
             color: theme.mainColorInText,
-            progressIndicatorBuilder: (context, text, progress) {
-              return CupertinoActivityIndicator(
-                color: theme.mainColor,
-
-                //    animating: true,
-              );
-            },
-            imageUrl: url,
-            height: (radius * 1.2) - borderThickness),
+            size: radius,
+          ),
+        ),
       ),
     );
   }

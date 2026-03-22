@@ -1,4 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,16 +40,20 @@ class FredericEmailLoginEvent extends FredericAuthEvent {
 }
 
 class FredericOAuthSignInEvent extends FredericAuthEvent {
-  FredericOAuthSignInEvent(this.authCredential, {this.name, this.context});
+  FredericOAuthSignInEvent({required this.provider, this.params, this.name, this.context});
+//  FredericOAuthSignInEvent(this.authCredential, {this.name, this.context});
 
-  final OAuthCredential authCredential;
+//  final OAuthCredential authCredential;
+  final String provider;
+  final Map<String, dynamic>? params;
   final BuildContext? context;
   final String? name;
 
   @override
   Future<FredericUser> process(FredericUserManager userManager) async {
     FredericBackend.instance.analytics.logLogin('oauth');
-    return userManager.authInterface.logInOAuth(authCredential, name: name);
+    return userManager.authInterface.logInOAuth(provider: provider, name: name, params: params);
+
   }
 }
 

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/database/frederic_data_object.dart';
+import 'package:frederic/backend/util/frederic_date_parser.dart';
+import 'package:frederic/backend/frederic_backend.dart';
 
 ///
 /// Represents a single Goal
@@ -110,17 +112,12 @@ class FredericGoal implements FredericDataObject {
     _startState = data['startstate'];
     _endState = data['endstate'];
     _currentState = data['currentstate'];
-    _startDate = _loadDate(data['startdate']);
-    _endDate = _loadDate(data['enddate']);
+    _startDate = FredericDateParser.parse(data['startdate']);
+    _endDate = FredericDateParser.parse(data['enddate']);
     _isCompleted = data['iscompleted'];
     _isDeleted = data['isdeleted'];
   }
 
-  DateTime? _loadDate(dynamic data) {
-    if (data is DateTime || data is DateTime?) return data;
-    if (data is Timestamp || data is Timestamp?) return data?.toDate();
-    return null;
-  }
 
   @override
   Map<String, dynamic> toMap() {
@@ -132,8 +129,8 @@ class FredericGoal implements FredericDataObject {
       'startstate': startState,
       'endstate': endState,
       'currentstate': currentState,
-      'startdate': startDate,
-      'enddate': endDate,
+      'startdate': FredericDateParser.serialize(startDate, usePocketBase: USE_POCKETBASE),
+      'enddate': FredericDateParser.serialize(endDate, usePocketBase: USE_POCKETBASE),
       'iscompleted': isCompleted,
       'isdeleted': isDeleted,
     };

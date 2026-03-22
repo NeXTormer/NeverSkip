@@ -16,6 +16,7 @@ dependencies:
   firebase_auth: ^6.1.0
   cloud_firestore: ^6.0.2
   firebase_storage: ^13.0.2
+  pocketbase: ^0.18.0
 
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^7.0.1
@@ -73,9 +74,8 @@ dev_dependencies:
 
 flutter_native_splash:
   background_image: "assets/icon/icon_background.png"
-  image: assets/icon/icon_foreground.png
-  android_disable_fullscreen: true
-  android12: true
+#  image: assets/icon/icon_foreground.png
+
 
 flutter_icons:
   android: "launcher_icon"

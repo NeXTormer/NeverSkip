@@ -66,11 +66,11 @@ class ActivityListScreen extends StatelessWidget {
                       isSelector: isSelector,
                       onSelect: onSelect,
                     ),
-                    FeaturedActivitySegment(
-                      tr('exercises.featured'),
-                      FredericBackend.instance.defaults.featuredActivities,
-                      onTap: onSelect,
-                    ),
+                    // FeaturedActivitySegment(
+                    //   tr('exercises.featured'),
+                    //   FredericBackend.instance.defaults.featuredActivities,
+                    //   onTap: onSelect,
+                    // ),
                     ActivityFilterSegment(filterController: filter),
                     ActivityListSegment(
                       isSelector: isSelector,

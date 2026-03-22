@@ -53,6 +53,10 @@ class HomeScreenAppbar extends StatelessWidget {
                         radius: 20,
                         backgroundColor: Colors.white,
                         foregroundImage: CachedNetworkImageProvider(user.image),
+                        onForegroundImageError: (exception, stackTrace) {
+                          // Fallback to Icon child
+                        },
+                        child: Icon(Icons.person, color: theme.greyColor),
                       ),
                     );
                   },
