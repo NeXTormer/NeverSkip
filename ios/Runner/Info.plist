@@ -77,5 +77,11 @@
 		<false/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>Allow Flutter tools on your computer to connect and debug your application. This prompt will not appear on release builds.</string>
+		<key>NSBonjourServices</key>
+		<array>
+			<string>_dartobservatory._tcp</string>
+		</array>
 	</dict>
 </plist>

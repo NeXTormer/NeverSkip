@@ -229,6 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
           provider: 'apple.com',
           params: {
             'idToken': credential.identityToken,
+            'authorizationCode': credential.authorizationCode,
             'rawNonce': rawNonce,
           },
           context: context,

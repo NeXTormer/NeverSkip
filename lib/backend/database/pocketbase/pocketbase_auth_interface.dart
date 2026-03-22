@@ -18,7 +18,7 @@ class PocketbaseAuthInterface implements FredericAuthInterface {
     // Listen to Pocketbase auth changes
     pb.authStore.onChange.listen((event) {
       _saveToDisk(event.token, event.model);
-      
+
       if (pb.authStore.isValid && pb.authStore.model != null) {
         final record = pb.authStore.model as RecordModel;
         if (record.id != _lastSignaledId) {
@@ -70,12 +70,14 @@ class PocketbaseAuthInterface implements FredericAuthInterface {
     } else {
       prefs.setString(_tokenKey, token);
       if (model is RecordModel) {
-        prefs.setString(_modelKey, jsonEncode({
-          'id': model.id,
-          'collectionId': model.collectionId,
-          'collectionName': model.collectionName,
-          'data': model.data,
-        }));
+        prefs.setString(
+            _modelKey,
+            jsonEncode({
+              'id': model.id,
+              'collectionId': model.collectionId,
+              'collectionName': model.collectionName,
+              'data': model.data,
+            }));
       }
     }
   }
@@ -137,18 +139,46 @@ class PocketbaseAuthInterface implements FredericAuthInterface {
       String? name,
       Map<String, dynamic>? params}) async {
     try {
-      // For PocketBase, we use the authWithOAuth2 flow.
-      // In a mobile app, this usually requires a urlCallback to open the browser.
-      final authData = await pb.collection('users').authWithOAuth2(
-        provider,
-        (url) async {
-          // This will be called to open the auth URL.
-          // The user must handle the redirect back to the app.
-          if (await canLaunchUrl(url)) {
-            await launchUrl(url);
-          }
-        },
-      );
+      String pbProvider = provider;
+      if (provider == 'apple.com') pbProvider = 'apple';
+
+      RecordAuth authData;
+
+      if (params != null &&
+          params.containsKey('authorizationCode') &&
+          params['authorizationCode'] != null) {
+        final authMethods = await pb.collection('users').listAuthMethods();
+        
+        // Check if the provider is actually enabled on the backend to prevent crashes
+        final hasProvider = authMethods.authProviders.any((p) => p.name == pbProvider);
+        if (!hasProvider) {
+          return FredericUser.noAuth(statusMessage: 'Apple Sign-In is not enabled on the server.');
+        }
+
+        final authProvider =
+            authMethods.authProviders.firstWhere((p) => p.name == pbProvider);
+
+        final redirectUrl = '${pb.baseUrl}/api/oauth2-redirect';
+        authData = await pb.collection('users').authWithOAuth2Code(pbProvider,
+            params['authorizationCode'], authProvider.codeVerifier, redirectUrl,
+            createData: {
+              'name': name ?? '',
+              'has_purchased': !FredericBackend.instance.defaults.trialEnabled,
+            });
+      } else {
+        // For PocketBase, we use the authWithOAuth2 flow.
+        // In a mobile app, this usually requires a urlCallback to open the browser.
+        authData = await pb.collection('users').authWithOAuth2(
+          pbProvider,
+          (url) async {
+            // This will be called to open the auth URL.
+            // The user must handle the redirect back to the app.
+            if (await canLaunchUrl(url)) {
+              await launchUrl(url);
+            }
+          },
+        );
+      }
 
       final record = authData.record;
       if (record == null) {
