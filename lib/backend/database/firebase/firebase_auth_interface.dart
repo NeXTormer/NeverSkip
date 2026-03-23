@@ -85,7 +85,9 @@ class FirebaseAuthInterface implements FredericAuthInterface {
 
   @override
   Future<FredericUser> logInOAuth(
-      {required String provider, String? name, Map<String, dynamic>? params}) async {
+      {required String provider,
+      String? name,
+      Map<String, dynamic>? params}) async {
     OAuthCredential? credential;
     if (provider == 'apple.com' && params != null) {
       credential = OAuthProvider("apple.com").credential(
@@ -95,7 +97,8 @@ class FirebaseAuthInterface implements FredericAuthInterface {
     }
 
     if (credential == null) {
-      return FredericUser.noAuth(statusMessage: 'OAuth Provider not supported in Firebase interface.');
+      return FredericUser.noAuth(
+          statusMessage: 'OAuth Provider not supported in Firebase interface.');
     }
 
     final userCredential =

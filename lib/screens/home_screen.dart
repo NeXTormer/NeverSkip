@@ -19,14 +19,28 @@ import 'package:frederic/widgets/home_screen/misc_stuff_segment.dart';
 import 'package:frederic/widgets/home_screen/progress_indicator_segment.dart';
 import 'package:frederic/widgets/standard_elements/frederic_scaffold.dart';
 
+import 'package:frederic/services/watch_service.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final WatchService _watchService = WatchService();
+
   @override
   void initState() {
+    _watchService.onDataReceived = (data) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Received from Watch: ${data['response']}")),
+      );
+    };
+    
+    // Sync data to watch and pull any pending offline sets
+    _watchService.syncCalendarToWatch();
+    _watchService.getPendingSets();
+
     startupTimeProfiler?.stop();
     FredericBackend.instance.toastManager.removeLoginLoadingToast(context);
     Future(() async {
@@ -56,6 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return FredericScaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _watchService.syncCalendarToWatch();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Syncing today\'s workout to Apple Watch...')),
+          );
+        },
+        child: Icon(Icons.sync),
+        backgroundColor: theme.mainColor,
+      ),
       body: BlocBuilder<FredericUserManager, FredericUser>(
         builder: (context, user) {
           return CustomScrollView(
@@ -71,6 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
               WeekVolumeChartSegment(),
               AchievementSegment(),
               MiscStuffSegment(),
+              // Adding some bottom padding to avoid FAB overlap
+              SliverToBoxAdapter(child: SizedBox(height: 80)),
             ],
           );
         },

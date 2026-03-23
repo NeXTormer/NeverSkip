@@ -21,6 +21,20 @@ class PocketbaseStorageImplementation implements FredericStorageInterface {
 
       final userId = backend.userManager.state.id;
       
+      if (name == 'profilepicture.jpeg') {
+        final record = await pb.collection('users').update(
+          userId,
+          files: [
+            http.MultipartFile.fromBytes(
+              'avatar',
+              imageData,
+              filename: 'avatar.jpg',
+            ),
+          ],
+        );
+        return pb.getFileUrl(record, record.getStringValue('avatar')).toString();
+      }
+
       // Upload to 'userdata' collection
       final record = await pb.collection('userdata').create(
         body: {

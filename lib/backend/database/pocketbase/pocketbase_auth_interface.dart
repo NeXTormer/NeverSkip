@@ -202,12 +202,19 @@ class PocketbaseAuthInterface implements FredericAuthInterface {
         'last_login': DateTime.now().toIso8601String(),
         'last_os': Platform.operatingSystem,
         'last_os_version': Platform.operatingSystemVersion,
+        'login_count': userRecord.getIntValue('login_count', 0) + 1,
       }).catchError((e) {
         print('Warning: Could not update user metadata: $e');
         return RecordModel();
       });
 
       final fullData = Map<String, dynamic>.from(userRecord.data);
+      
+      final avatarStr = userRecord.getStringValue('avatar');
+      if (avatarStr.isNotEmpty) {
+        fullData['image'] = pb.getFileUrl(userRecord, avatarStr).toString();
+      }
+      
       fullData['uid'] =
           uid; // Ensure uid is in the map for caching/model consistency
 
