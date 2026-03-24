@@ -3,12 +3,13 @@ import 'package:frederic/backend/backend.dart';
 import 'package:frederic/backend/workouts/frederic_workout_activity.dart';
 
 class WatchService {
-  static const MethodChannel _channel = MethodChannel('io.hawkford.frederic/watch');
+  static const MethodChannel _channel =
+      MethodChannel('io.hawkford.frederic/watch');
 
   // Singleton pattern
   static final WatchService _instance = WatchService._internal();
   factory WatchService() => _instance;
-  
+
   WatchService._internal() {
     _channel.setMethodCallHandler(_handleMethod);
   }
@@ -33,36 +34,43 @@ class WatchService {
 
     DateTime day = DateTime.now();
     List<FredericWorkoutActivity> activitiesDueToday = [];
-    
+
     for (var activeWorkoutPair in user.activeWorkouts.entries) {
       if (workoutManager.state.workouts[activeWorkoutPair.key] != null) {
-        activitiesDueToday.addAll(workoutManager.state
-            .workouts[activeWorkoutPair.key]!.activities
+        activitiesDueToday.addAll(workoutManager
+            .state.workouts[activeWorkoutPair.key]!.activities
             .getDay(day, activeWorkoutPair.value));
       }
     }
 
     List<Map<String, dynamic>> activitiesData = activitiesDueToday.map((wa) {
-      FredericSet? latestSet;
+      var maxWeight = -1.0;
+      var maxReps = -1;
       final setList = setManager.sets[wa.activity.id];
       if (setList != null) {
-        final latestList = setList.getLatestSets(1);
-        if (latestList.isNotEmpty) latestSet = latestList.first;
+        final latestList = setList.getLatestSets(3);
+        if (latestList.isNotEmpty) {
+          for (var set in latestList) {
+            if (set.weight > maxWeight) maxWeight = set.weight;
+            if (set.reps > maxReps) maxReps = set.reps;
+          }
+        }
       }
-      
+
       return {
         'id': wa.activity.id,
         'name': wa.activity.name,
         'targetSets': wa.sets,
         'targetReps': wa.reps,
-        'previousWeight': latestSet?.weight ?? 0.0,
-        'previousReps': latestSet?.reps ?? wa.reps,
+        'previousWeight': maxWeight,
+        'previousReps': maxReps,
         'type': wa.activity.type.toString().split('.').last,
       };
     }).toList();
 
     try {
-      await _channel.invokeMethod('updateApplicationContext', {'activities': activitiesData});
+      await _channel.invokeMethod(
+          'updateApplicationContext', {'activities': activitiesData});
     } on PlatformException catch (e) {
       print("Error updating watch context: ${e.message}");
     }
@@ -79,7 +87,8 @@ class WatchService {
   Future<void> _handleMethod(MethodCall call) async {
     switch (call.method) {
       case 'receivedDataFromWatch':
-        final Map<String, dynamic> data = Map<String, dynamic>.from(call.arguments);
+        final Map<String, dynamic> data =
+            Map<String, dynamic>.from(call.arguments);
         if (onDataReceived != null) {
           onDataReceived!(data);
         }
@@ -102,9 +111,10 @@ class WatchService {
         String activityId = setData['activityId'];
         int reps = setData['reps'];
         double weight = (setData['weight'] as num).toDouble();
-        
+
         // Find activity
-        FredericActivity? activity = activityManager.state.activities[activityId];
+        FredericActivity? activity =
+            activityManager.state.activities[activityId];
         if (activity != null) {
           // Use current time or decode timestamp if provided later
           FredericSet newSet = FredericSet(reps, weight, DateTime.now());
@@ -114,4 +124,3 @@ class WatchService {
     }
   }
 }
-
