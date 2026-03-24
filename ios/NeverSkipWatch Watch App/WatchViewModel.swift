@@ -9,6 +9,9 @@ class WatchViewModel: NSObject, ObservableObject, WCSessionDelegate {
         super.init()
         loadActivities()
         
+//            activities = [WatchActivity(id: "darm", name: "Underhand Dumbbell Bench Press", targetSets: 3, targetReps: 10, previousWeight: 40, previousReps: 8, type: "Weighted", completedSets: 1),
+//                          WatchActivity(id: "darm2", name: "Explosive Bulgarian Split Squat", targetSets: 3, targetReps: 10, previousWeight: 40, previousReps: 8, type: "Weighted", completedSets: 1)]
+        
         if WCSession.isSupported() {
             WCSession.default.delegate = self
             WCSession.default.activate()
@@ -47,9 +50,9 @@ class WatchViewModel: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
     
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
     
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+    nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         if let acts = applicationContext["activities"] as? [[String: Any]] {
             var newActivities: [WatchActivity] = []
             for act in acts {
@@ -66,9 +69,9 @@ class WatchViewModel: NSObject, ObservableObject, WCSessionDelegate {
                 }
             }
             
-            DispatchQueue.main.async {
-                self.activities = newActivities
-                self.saveActivities()
+            Task { @MainActor [weak self] in
+                self?.activities = newActivities
+                self?.saveActivities()
             }
         }
     }
